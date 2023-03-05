@@ -27,4 +27,12 @@ public class OrderProduct {
 
     private int requestCount;
 
+    public OrderProduct(Order order, Product product, int requestCount) {
+        this.order = order;
+        this.product = product;
+        this.requestCount = requestCount;
+        this.totalPrice = product.getPrice()*requestCount;
+
+        order.getOrderProducts().add(this);
+    }
 }
