@@ -28,4 +28,14 @@ public class Order extends AuditingEntity{
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    public Order(Customer customer) {
+        this.customer = customer;
+        this.status = OrderStatus.CREATE;
+
+        customer.getOrders().add(this);
+    }
+
+    public void changeOrderStatus(OrderStatus status){
+        this.status = status;
+    }
 }
