@@ -1,6 +1,8 @@
 package com.shopping.mosinsa;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +25,11 @@ public class ApiTest {
             RestAssured.port = port;
             databaseCleanup.afterPropertiesSet();
         }
+        databaseCleanup.execute();
+    }
+
+    @AfterEach
+    void clean(){
         databaseCleanup.execute();
     }
 }
