@@ -4,13 +4,11 @@ import com.shopping.mosinsa.controller.request.ProductAddRequest;
 import com.shopping.mosinsa.controller.request.ProductUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 @Entity
-@EqualsAndHashCode
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
