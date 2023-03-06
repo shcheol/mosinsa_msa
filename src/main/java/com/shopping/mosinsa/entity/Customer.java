@@ -2,6 +2,7 @@ package com.shopping.mosinsa.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.id.factory.spi.GeneratorDefinitionResolver;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Customer {
 
@@ -34,4 +36,8 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private List<Coupon> coupons = new ArrayList<>();
+
+    public Customer(CustomerGrade grade) {
+        this.grade = grade;
+    }
 }
