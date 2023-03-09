@@ -81,7 +81,7 @@ public class Product {
         Assert.isTrue(stock > 0, "수량은 양수 값이어야 합니다.");
         int remain = this.stock - stock;
         if(remain < 0){
-            throw new IllegalArgumentException("수량이 부족합니다.");
+            throw new IllegalArgumentException(this.name +" 수량이 부족합니다.");
         }
 
         this.stock = this.stock - stock;
@@ -89,6 +89,10 @@ public class Product {
 
     public int getDiscountPrice() {
         return this.discountPolicy.applyDiscountPrice(this.price);
+    }
+
+    public int getDiscountedPrice() {
+        return this.price - this.discountPolicy.applyDiscountPrice(this.price);
     }
 
 }
