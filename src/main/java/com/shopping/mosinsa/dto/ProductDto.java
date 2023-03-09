@@ -3,8 +3,10 @@ package com.shopping.mosinsa.dto;
 import com.shopping.mosinsa.entity.DiscountPolicy;
 import com.shopping.mosinsa.entity.Product;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ProductDto {
 
     private Long id;

@@ -30,9 +30,9 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> addProduct(@RequestBody ProductAddRequest request){
 
-        ProductDto product = productService.addProduct(request);
+        ProductDto productDto = productService.addProduct(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
     }
 
 
