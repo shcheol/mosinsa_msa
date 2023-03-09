@@ -1,18 +1,23 @@
 package com.shopping.mosinsa.order;
 
 import com.shopping.mosinsa.controller.request.OrderCreateRequest;
+import com.shopping.mosinsa.dto.OrderDto;
 import com.shopping.mosinsa.dto.ProductDto;
 import com.shopping.mosinsa.entity.*;
 import com.shopping.mosinsa.repository.CustomerRepository;
+import com.shopping.mosinsa.repository.OrderRepository;
+import com.shopping.mosinsa.repository.ProductRepository;
 import com.shopping.mosinsa.service.OrderService;
 import com.shopping.mosinsa.service.ProductService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static com.shopping.mosinsa.order.OrderSteps.*;
 import static com.shopping.mosinsa.product.ProductSteps.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -28,82 +33,74 @@ class OrderServiceTest {
     @Autowired
     CustomerRepository customerRepository;
 
-    Customer customer;
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    Customer customerA;
+    Customer customerB;
     ProductDto productA;
     ProductDto productB;
-    ProductDto productC;
 
     @BeforeEach
     void setUp(){
         productA = productService.addProduct(상품등록요청_생성());
         productB = productService.addProduct(상품등록요청_생성());
-        productC = productService.addProduct(상품등록요청_생성());
 
-        customer = new Customer(CustomerGrade.BRONZE);
-        customerRepository.save(customer);
+        customerA = new Customer(CustomerGrade.BRONZE);
+        customerRepository.save(customerA);
+        customerB = new Customer(CustomerGrade.BRONZE);
+        customerRepository.save(customerB);
 
-    }
-
-    @Test
-    void 상품주문생성(){
-
-        Order createOrder = orderService.createOrderService(new OrderCreateRequest(customer.getId()));
-
-        assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
     }
 
     @Test
     void 상품주문(){
-        Order createOrder = orderService.createOrderService(new OrderCreateRequest(customer.getId()));
 
-        orderService.addOrderProduct(createOrder, productA,3);
-        orderService.addOrderProduct(createOrder, productB,3);
+        OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
 
-        Order submitOrder = orderService.submitOrder(createOrder);
+        Long orderId = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getOrderProducts());
 
-        assertThat(submitOrder.getStatus()).isEqualTo(OrderStatus.REQUEST_SUCCESS);
-        assertThat(submitOrder.getOrderProducts().size()).isEqualTo(2);
+        Order createOrder = orderRepository.findById(orderId).get();
+
+        assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
+        assertThat(createOrder.getOrderProducts().size()).isEqualTo(2);
         assertThat(productService.getProduct(productA.getId()).getStock()).isEqualTo(7);
+        assertThat(productService.getProduct(productB.getId()).getStock()).isEqualTo(5);
+
     }
 
-    @Test
-    void 상품주문_실패_주문상품0개(){
-        Order createOrder = orderService.createOrderService(new OrderCreateRequest(customer.getId()));
-
-        assertThatThrownBy(() -> orderService.submitOrder(createOrder)).isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void 상품주문_실패_상품수량부족(){
-        Order createOrder = orderService.createOrderService(new OrderCreateRequest(customer.getId()));
-
-        orderService.addOrderProduct(createOrder, productA,11);
-        orderService.addOrderProduct(createOrder, productB,12);
-
-        assertThatThrownBy(() -> orderService.submitOrder(createOrder)).isInstanceOf(IllegalArgumentException.class);
-    }
 
     @Test
     void 주문취소(){
-        Order createOrder = orderService.createOrderService(new OrderCreateRequest(customer.getId()));
+        OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
 
-        orderService.addOrderProduct(createOrder, productA,3);
-        orderService.addOrderProduct(createOrder, productB,3);
+        Long orderId = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getOrderProducts());
 
-        Order submitOrder = orderService.submitOrder(createOrder);
+        orderService.cancelOrder(orderId);
 
-
-        Order cancelOrder = orderService.cancelOrder(submitOrder);
+        Order cancelOrder = orderRepository.findById(orderId).get();
 
         assertThat(cancelOrder.getStatus()).isEqualTo(OrderStatus.CANCEL);
-        assertThat(cancelOrder.getOrderProducts().size()).isEqualTo(2);
-
-
+        assertThat(cancelOrder.getOrderProducts().get(0).getProduct().getStock()).isEqualTo(10);
+        assertThat(cancelOrder.getOrderProducts().get(1).getProduct().getStock()).isEqualTo(10);
     }
 
     @Test
-    void 주문완료(){
-        // 결제, 배송
+    void 주문목록조회_회원(){
+
+        OrderCreateRequest orderCreateRequest1 = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
+        orderService.order(orderCreateRequest1.getCustomerId(), orderCreateRequest1.getOrderProducts());
+        OrderCreateRequest orderCreateRequest2 = 상품주문요청_생성(customerB.getId(),productA.getId(), productB.getId());
+        orderService.order(orderCreateRequest2.getCustomerId(), orderCreateRequest2.getOrderProducts());
+
+        List<OrderDto> orderCustomer = orderService.getOrderCustomer(orderCreateRequest2.getCustomerId());
+
+        System.out.println(orderCustomer.get(0).getOrderProducts().toString());
+        assertThat(orderCustomer.get(0).getCustomerId()).isEqualTo(customerB.getId());
+        assertThat(orderCustomer.get(0).getOrderProducts().size()).isEqualTo(2);
     }
 
 }
