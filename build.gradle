@@ -33,6 +33,7 @@ dependencies {
     implementation 'io.rest-assured:rest-assured:5.3.0'
     implementation 'com.google.guava:guava:31.1-jre'
 
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

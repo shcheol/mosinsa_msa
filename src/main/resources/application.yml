@@ -12,9 +12,9 @@ spring:
 
   # MySQL Setting
   datasource:
-    url: jdbc:mysql://222.109.210.214:3306/mosinsa
-    username: test
-    password: test
+    url: ENC(VdrdVvzXoagNeTVF9SOKNPXPUHCuDjFy82UrHh6jpuDZ5cDzW/9xxs46wC22y7AIuOrSPWajuAY=)
+    username: ENC(ypZdBoAHq65B8TWe9Wdh2Q==)
+    password: ENC(C0nmYFZwORpRT0lnRxdIsQ==)
     driver-class-name: com.mysql.cj.jdbc.Driver
   # JPA Setting
   jpa:
@@ -40,3 +40,7 @@ logging:
 # Embedded Tomcat Setting
 server:
   port: 9090
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
