@@ -61,9 +61,9 @@ class OrderServiceTest {
 
         OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
 
-        Long orderId = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getOrderProducts());
+        OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts());
 
-        Order createOrder = orderRepository.findById(orderId).get();
+        Order createOrder = orderRepository.findById(orderDto.getId()).get();
 
         assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
         assertThat(createOrder.getOrderProducts().size()).isEqualTo(2);
@@ -77,11 +77,11 @@ class OrderServiceTest {
     void 주문취소(){
         OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
 
-        Long orderId = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getOrderProducts());
+        OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts());
 
-        orderService.cancelOrder(orderId);
+        orderService.cancelOrder(orderDto.getCustomerId(), orderDto.getId());
 
-        Order cancelOrder = orderRepository.findById(orderId).get();
+        Order cancelOrder = orderRepository.findById(orderDto.getId()).get();
 
         assertThat(cancelOrder.getStatus()).isEqualTo(OrderStatus.CANCEL);
         assertThat(cancelOrder.getOrderProducts().get(0).getProduct().getStock()).isEqualTo(10);
@@ -92,13 +92,12 @@ class OrderServiceTest {
     void 주문목록조회_회원(){
 
         OrderCreateRequest orderCreateRequest1 = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
-        orderService.order(orderCreateRequest1.getCustomerId(), orderCreateRequest1.getOrderProducts());
+        orderService.order(orderCreateRequest1.getCustomerId(), orderCreateRequest1.getProducts());
         OrderCreateRequest orderCreateRequest2 = 상품주문요청_생성(customerB.getId(),productA.getId(), productB.getId());
-        orderService.order(orderCreateRequest2.getCustomerId(), orderCreateRequest2.getOrderProducts());
+        orderService.order(orderCreateRequest2.getCustomerId(), orderCreateRequest2.getProducts());
 
         List<OrderDto> orderCustomer = orderService.getOrderCustomer(orderCreateRequest2.getCustomerId());
 
-        System.out.println(orderCustomer.get(0).getOrderProducts().toString());
         assertThat(orderCustomer.get(0).getCustomerId()).isEqualTo(customerB.getId());
         assertThat(orderCustomer.get(0).getOrderProducts().size()).isEqualTo(2);
     }

@@ -91,8 +91,6 @@ class ProductServiceTest {
         PageRequest of = PageRequest.of(1, 3);
         Page<ProductDto> products = productService.getProducts(of);
 
-        System.out.println("products = " + products.toString());
-
         assertThat(products.getSize()).isEqualTo(3);
         assertThat(products.getTotalElements()).isEqualTo(10);
         assertThat(products.getContent().get(0).getName()).isEqualTo("product4");
