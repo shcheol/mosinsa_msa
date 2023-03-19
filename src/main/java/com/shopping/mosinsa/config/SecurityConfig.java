@@ -16,7 +16,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
-            "/", "/h2-console/**"
+            "/**", "/h2-console/**"
     };
 
     @Bean
