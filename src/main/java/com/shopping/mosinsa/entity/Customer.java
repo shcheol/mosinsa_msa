@@ -37,6 +37,13 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Coupon> coupons = new ArrayList<>();
 
+    @OneToMany(mappedBy = "customer")
+    private List<CustomerCouponEvent> couponEvents = new ArrayList<>();
+
+    public void setCouponEvents(List<CustomerCouponEvent> couponEvents) {
+        this.couponEvents = couponEvents;
+    }
+
     public Customer(CustomerGrade grade) {
         this.grade = grade;
     }

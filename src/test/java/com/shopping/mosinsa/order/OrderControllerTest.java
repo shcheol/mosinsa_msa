@@ -59,7 +59,6 @@ class OrderControllerTest extends ApiTest {
     }
 
     @Test
-    @Commit
     void 주문하기() {
 
         Long id1 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
