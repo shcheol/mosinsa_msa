@@ -47,8 +47,12 @@ public class CouponService {
         Assert.isTrue(couponEvent.getEventStartAt().isBefore(LocalDateTime.now()), "이벤트가 시작하지 않았습니다.");
         Assert.isTrue(couponEvent.getCoupons().size()>0, "남은 수량이 없습니다.");
 
-        Coupon coupon = couponEvent.getCoupons().remove(0);
-        coupon.issuanceCouponToCustomer(customer);
+        Coupon coupon = couponEvent.issuanceCoupon(customer);
+
         return coupon;
+    }
+
+    public CouponEvent findCouponEvent(Long id) {
+        return couponEventRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("쿠폰이벤트가 없습니다."));
     }
 }

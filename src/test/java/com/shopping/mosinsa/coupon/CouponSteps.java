@@ -28,7 +28,26 @@ public class CouponSteps {
                 .log().all().extract();
     }
 
+    public static ExtractableResponse<Response> 쿠폰이벤트조회(Long couponEventId) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/coupon/event/"+couponEventId)
+                .then()
+                .log().all().extract();
+    }
+
     public static CouponIssuanceRequest 쿠폰발급요청_생성(Long customerId, Long couponEventId) {
         return new CouponIssuanceRequest(customerId, couponEventId);
+    }
+
+    public static ExtractableResponse<Response> 쿠폰발급요청(CouponIssuanceRequest request) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .patch("/coupon")
+                .then()
+                .log().all().extract();
     }
 }

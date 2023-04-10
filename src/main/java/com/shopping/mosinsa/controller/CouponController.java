@@ -19,6 +19,15 @@ public class CouponController {
 
     private final CouponService couponService;
 
+
+    @GetMapping("/event/{id}")
+    public ResponseEntity<CouponEventDto> createEvent(@PathVariable Long id){
+
+        CouponEvent couponEvent = couponService.findCouponEvent(id);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CouponEventDto(couponEvent));
+    }
+
     @PostMapping("/event")
     public ResponseEntity<CouponEventDto> createEvent(@RequestBody CouponEventCreateRequest request){
 
@@ -34,4 +43,5 @@ public class CouponController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new CouponDto(coupon));
     }
+
 }

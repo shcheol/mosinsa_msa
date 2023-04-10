@@ -33,7 +33,6 @@ spring:
       name: test
       password: test
 
-
 # log level Setting
 logging:
   level:

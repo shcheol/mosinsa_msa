@@ -66,6 +66,8 @@ class CouponServiceTest {
         Coupon coupon = couponService.couponIssuanceRequest(couponCustomerRequest);
 
         Assertions.assertThat(coupon.getCustomer().getId()).isEqualTo(customer.getId());
+//        Assertions.assertThat(couponEvent.getCoupons().size()).isEqualTo(49);
+        Assertions.assertThat(couponEvent.getQuantity()).isEqualTo(49);
 
     }
 
