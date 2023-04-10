@@ -32,6 +32,10 @@ spring:
     user:
       name: test
       password: test
+  data:
+    redis:
+      port: 6666
+      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
 
 # log level Setting
 logging:
