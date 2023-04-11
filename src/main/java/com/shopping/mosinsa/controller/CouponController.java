@@ -1,5 +1,9 @@
 package com.shopping.mosinsa.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.shopping.mosinsa.controller.request.CouponEventCreateRequest;
 import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
 import com.shopping.mosinsa.dto.CouponDto;
@@ -7,12 +11,19 @@ import com.shopping.mosinsa.dto.CouponEventDto;
 import com.shopping.mosinsa.entity.Coupon;
 import com.shopping.mosinsa.entity.CouponEvent;
 import com.shopping.mosinsa.service.CouponService;
+import io.restassured.internal.mapping.Jackson1Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -21,7 +32,7 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    private final RedisTemplate<Long, Long> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @GetMapping("/event/{id}")
     public ResponseEntity<CouponEventDto> createEvent(@PathVariable Long id){
@@ -47,20 +58,31 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(new CouponDto(coupon));
     }
 
-    @PatchMapping("/redis")
-    public ResponseEntity<Void> couponIssuanceRequest(@RequestBody CouponIssuanceRequest request){
-        ValueOperations<Long, Long> value = redisTemplate.opsForValue();
+    @PostMapping("/redis")
+    public ResponseEntity<String> couponIssuanceRequest(@RequestBody CouponIssuanceRequest request) throws JsonProcessingException {
         Long customerId = request.getCustomerId();
+        String couponEventName = request.getEventName();
         Long couponEventId = request.getCouponEventId();
-        value.set(customerId,couponEventId);
+        ZSetOperations<String, String> sortedSet = redisTemplate.opsForZSet();
+        Timestamp timestamp = new Timestamp(System.nanoTime());
 
-        return ResponseEntity.ok().build();
+        ObjectMapper om = new ObjectMapper();
+        String s = om.writeValueAsString(request);
+
+        Boolean aBoolean = sortedSet.addIfAbsent(String.format("%s%s", couponEventName, couponEventId), s, Long.valueOf(timestamp.getTime()).doubleValue());
+
+        if(Boolean.TRUE.equals(aBoolean))
+            return ResponseEntity.ok().body("success");
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
     }
 
     @GetMapping("/redis/{key}")
     public ResponseEntity<?> getRedisKey(@PathVariable String key) {
-        ValueOperations<Long, Long> vop = redisTemplate.opsForValue();
-        Long value = vop.get(key);
+        ZSetOperations<String, String> sortedSet = redisTemplate.opsForZSet();
+        ZSetOperations.TypedTuple<String> stringTypedTuple = sortedSet.popMax(key);
+        assert stringTypedTuple != null;
+        String value = stringTypedTuple.getValue();
         return new ResponseEntity<>(value, HttpStatus.OK);
     }
 }

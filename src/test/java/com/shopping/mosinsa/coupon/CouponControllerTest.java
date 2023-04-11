@@ -6,6 +6,7 @@ import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
 import com.shopping.mosinsa.entity.Customer;
 import com.shopping.mosinsa.entity.CustomerGrade;
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
@@ -49,7 +50,8 @@ class CouponControllerTest extends ApiTest {
     @Test
     void issuanceRequest() {
         int stock = 50;
-        CouponIssuanceRequest request = 쿠폰발급요청_생성(고객생성요청(), 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath().getLong("id"));
+        JsonPath jsonPath = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath();
+        CouponIssuanceRequest request = 쿠폰발급요청_생성(jsonPath.getString("eventName"),jsonPath.getLong("id"), 고객생성요청());
 
         ExtractableResponse<Response> response = 쿠폰발급요청(request);
 
@@ -59,14 +61,16 @@ class CouponControllerTest extends ApiTest {
     @Test
     void issuanceRequest_수량초과() {
         int stock = 1;
-        long couponEventId = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath().getLong("id");
-        CouponIssuanceRequest request = 쿠폰발급요청_생성(고객생성요청(), couponEventId);
+        JsonPath jsonPath = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath();
+        String couponEventName = jsonPath.getString("eventName");
+        long couponEventId = jsonPath.getLong("id");
+        CouponIssuanceRequest request = 쿠폰발급요청_생성(couponEventName,couponEventId, 고객생성요청());
 
         ExtractableResponse<Response> response1 = 쿠폰발급요청(request);
 
         assertThat(response1.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        CouponIssuanceRequest request2 = 쿠폰발급요청_생성(고객생성요청(), couponEventId);
+        CouponIssuanceRequest request2 = 쿠폰발급요청_생성(couponEventName,couponEventId, 고객생성요청());
         ExtractableResponse<Response> response2 = 쿠폰발급요청(request2);
         System.out.println(response2.response().body());
         assertThat(response2.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -76,14 +80,15 @@ class CouponControllerTest extends ApiTest {
     @Test
     void issuanceRequest_중복참여() {
         int stock = 1;
-
-        long couponEventId = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath().getLong("id");
-        CouponIssuanceRequest request = 쿠폰발급요청_생성(고객생성요청(),couponEventId );
+        JsonPath jsonPath = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath();
+        String couponEventName = jsonPath.getString("eventName");
+        long couponEventId = jsonPath.getLong("id");
+        CouponIssuanceRequest request = 쿠폰발급요청_생성(couponEventName,couponEventId, 고객생성요청());
 
         ExtractableResponse<Response> response1 = 쿠폰발급요청(request);
         assertThat(response1.statusCode()).isEqualTo(HttpStatus.OK.value());
 
-        CouponIssuanceRequest request2 = 쿠폰발급요청_생성(고객생성요청(), couponEventId);
+        CouponIssuanceRequest request2 = 쿠폰발급요청_생성(couponEventName,couponEventId, 고객생성요청());
         ExtractableResponse<Response> response2 = 쿠폰발급요청(request2);
         assertThat(response2.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
@@ -92,13 +97,14 @@ class CouponControllerTest extends ApiTest {
 //    @Test
     void issuanceRequest_부하() {
         int stock = 10;
-        Long couponEventId = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath().getLong("id");
-
+        JsonPath jsonPath = 쿠폰이벤트생성(쿠폰이벤트생성_요청(stock)).body().jsonPath();
+        String couponEventName = jsonPath.getString("eventName");
+        long couponEventId = jsonPath.getLong("id");
         int users = 10;
         ExecutorService es = Executors.newFixedThreadPool(users);
         for (int i=0; i<users; i++){
             es.submit(() -> {
-                쿠폰발급요청(쿠폰발급요청_생성(고객생성요청(), couponEventId));
+                쿠폰발급요청(쿠폰발급요청_생성(couponEventName, couponEventId, 고객생성요청()));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
