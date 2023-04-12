@@ -10,6 +10,7 @@ import com.shopping.mosinsa.repository.CouponFactoryRepository;
 import com.shopping.mosinsa.repository.CouponRepository;
 import com.shopping.mosinsa.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -23,8 +24,9 @@ public class CouponService {
     private final CouponFactoryRepository couponFactoryRepository;
     private final CouponEventRepository couponEventRepository;
     private final CouponRepository couponRepository;
-
     private final CustomerRepository customerRepository;
+
+	private final RedisTemplate<String, String> redisTemplate;
 
 
     @Transactional
@@ -47,9 +49,7 @@ public class CouponService {
         Assert.isTrue(couponEvent.getEventStartAt().isBefore(LocalDateTime.now()), "이벤트가 시작하지 않았습니다.");
         Assert.isTrue(couponEvent.getCoupons().size()>0, "남은 수량이 없습니다.");
 
-        Coupon coupon = couponEvent.issuanceCoupon(customer);
-
-        return coupon;
+		return couponEvent.issuanceCoupon(customer);
     }
 
     public CouponEvent findCouponEvent(Long id) {
