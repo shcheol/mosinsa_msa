@@ -7,10 +7,8 @@ import com.shopping.mosinsa.entity.DiscountPolicy;
 import com.shopping.mosinsa.repository.CouponEventRepository;
 import com.shopping.mosinsa.repository.CouponFactoryRepository;
 import com.shopping.mosinsa.repository.CouponRepository;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static com.shopping.mosinsa.coupon.CouponSteps.쿠폰이벤트생성_요청;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest

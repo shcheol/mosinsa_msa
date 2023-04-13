@@ -8,6 +8,7 @@ import com.shopping.mosinsa.dto.CouponDto;
 import com.shopping.mosinsa.dto.CouponEventDto;
 import com.shopping.mosinsa.entity.Coupon;
 import com.shopping.mosinsa.entity.CouponEvent;
+import com.shopping.mosinsa.service.CouponQueueService;
 import com.shopping.mosinsa.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,7 +27,8 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    private final RedisTemplate<String, String> redisTemplate;
+	private final CouponQueueService couponQueueService;
+
 
     @GetMapping("/event/{id}")
     public ResponseEntity<CouponEventDto> createEvent(@PathVariable Long id){
@@ -54,38 +56,19 @@ public class CouponController {
 
     @PostMapping("/enqueue")
     public ResponseEntity<String> couponIssuanceRequest(@RequestBody CouponIssuanceRequest request) throws JsonProcessingException {
-        String eventName = request.getEventName();
-        Long couponEventId = request.getCouponEventId();
-        ZSetOperations<String, String> sortedSet = redisTemplate.opsForZSet();
-        Timestamp timestamp = new Timestamp(System.nanoTime());
 
-        ObjectMapper om = new ObjectMapper();
-        String s = om.writeValueAsString(request);
-		System.out.println("s = " + s);
-
-        Boolean aBoolean = sortedSet.addIfAbsent(String.format("%s%s", eventName, couponEventId), s, Long.valueOf(timestamp.getTime()).doubleValue());
-
-        if(Boolean.TRUE.equals(aBoolean))
-            return ResponseEntity.ok().body("success");
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+		if (couponQueueService.enqueue(request)){
+			Long rank = couponQueueService.lookupOrder(request);
+			return ResponseEntity.ok().body(String.format("success: %s번째 순서입니다.", rank));
+		} else{
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+		}
     }
 
     @GetMapping("/enqueue")
     public ResponseEntity<String> lookupOrder(@RequestBody CouponIssuanceRequest request) throws JsonProcessingException {
 
-		String eventName = request.getEventName();
-		Long couponEventId = request.getCouponEventId();
-		String key = String.format("%s%s", eventName, couponEventId);
-
-		Long size = redisTemplate.opsForZSet().size(key);
-		System.out.println("size = " + size);
-		ObjectMapper om = new ObjectMapper();
-		String s = om.writeValueAsString(request);
-		System.out.println("s = " + s);
-
-		Long rank = redisTemplate.opsForZSet().rank(key, s);
-		System.out.println("rank = " + rank);
+		Long rank = couponQueueService.lookupOrder(request);
 
         return new ResponseEntity<>(String.format("'%s' 님 앞에 %s명 남았습니다.",request.getCustomerId(), rank), HttpStatus.OK);
     }

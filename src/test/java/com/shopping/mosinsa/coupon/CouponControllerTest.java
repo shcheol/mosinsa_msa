@@ -1,42 +1,22 @@
 package com.shopping.mosinsa.coupon;
 
 import com.shopping.mosinsa.ApiTest;
-import com.shopping.mosinsa.controller.request.CouponEventCreateRequest;
 import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
-import com.shopping.mosinsa.entity.Customer;
-import com.shopping.mosinsa.entity.CustomerGrade;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Commit;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static com.shopping.mosinsa.coupon.CouponSteps.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CouponControllerTest extends ApiTest {
 
-
-    private Long 고객생성요청() {
-        Customer customer = new Customer(CustomerGrade.BRONZE);
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customer)
-                .when()
-                .post("/customer")
-                .then().log().all().extract();
-        return response.body().jsonPath().getLong("id");
-    }
 
     @Test
     void createEvent() {
