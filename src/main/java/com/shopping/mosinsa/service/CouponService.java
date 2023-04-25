@@ -5,12 +5,13 @@ import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
 import com.shopping.mosinsa.entity.Coupon;
 import com.shopping.mosinsa.entity.CouponEvent;
 import com.shopping.mosinsa.entity.Customer;
+import com.shopping.mosinsa.pub.CouponEventPublisher;
 import com.shopping.mosinsa.repository.CouponEventRepository;
 import com.shopping.mosinsa.repository.CouponFactoryRepository;
 import com.shopping.mosinsa.repository.CouponRepository;
 import com.shopping.mosinsa.repository.CustomerRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -25,6 +26,9 @@ public class CouponService {
     private final CouponEventRepository couponEventRepository;
     private final CouponRepository couponRepository;
     private final CustomerRepository customerRepository;
+    private final CouponEventPublisher couponEventPublisher;
+
+    private final EntityManager em;
 
 
     @Transactional
@@ -35,6 +39,11 @@ public class CouponService {
 
         couponFactoryRepository.bulkInsert(Coupon.createCoupon(couponEvent, request.getDiscountPolicy(), request.getExpiryDate()), request.getQuantity());
         couponEvent.getCoupons().addAll(couponRepository.findAllByCouponEvent(couponEvent));
+
+        em.flush();
+        em.clear();
+
+        couponEventPublisher.publishCouponEvent(couponEvent);
 
         return couponEvent;
     }
