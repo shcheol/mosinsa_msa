@@ -51,7 +51,7 @@ public class CouponBatchConfig {
         this.platformTransactionManager = platformTransactionManager;
     }
 
-    private static final int CHUNK_SIZE = 10;
+    private static final int CHUNK_SIZE = 1;
 
     @Bean
     public Job couponJob() {

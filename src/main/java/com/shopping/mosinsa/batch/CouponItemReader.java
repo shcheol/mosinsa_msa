@@ -11,8 +11,6 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,28 +19,33 @@ import java.util.Set;
 public class CouponItemReader implements ItemReader<Set<String>> {
 
     private final CouponQueueRepository repository;
-
     private final CouponEventRepository eventRepository;
     private final String eventKey;
     int size=0;
 
     @Override
-    public Set<String> read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public Set<String> read() throws Exception {
 
         int chunk = 10;
         Optional<CouponEventWrapper> eventKey1 = eventRepository.findEventKey(eventKey);
+        System.out.println(eventKey1.get());
 
         CouponEvent couponEvent = eventKey1.get().getCouponEvent();
 
         int quantity = couponEvent.getQuantity();
 
+        System.out.println("[eventKey]"+eventKey + "[quantity]" + quantity);
 
         Set<String> range = repository.range(eventKey, 0, chunk-1);
 
-        System.out.println(range);
-        size += range.size();
+        if (range.size()>0){
+            repository.dequeue(eventKey,chunk);
+            size += range.size();
+        }
 
-        if(size>quantity){
+        Thread.sleep(5000);
+
+        if(quantity<=0){
             return null;
         }
         return range;
