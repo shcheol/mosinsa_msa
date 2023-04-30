@@ -71,6 +71,9 @@ public class CouponBatchConfig {
                 .reader(couponItemReader(eventKey))
                 .processor(couponItemProcessor())
                 .writer(couponItemWriter())
+                .faultTolerant()
+                .skip(IllegalArgumentException.class)
+                .skipLimit(Integer.MAX_VALUE)
                 .build();
     }
 
