@@ -2,6 +2,8 @@ package com.shopping.mosinsa.coupon;
 
 import com.shopping.mosinsa.controller.request.CouponEventCreateRequest;
 import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
+import com.shopping.mosinsa.entity.Customer;
+import com.shopping.mosinsa.entity.CustomerGrade;
 import com.shopping.mosinsa.entity.DiscountPolicy;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -37,8 +39,8 @@ public class CouponSteps {
                 .log().all().extract();
     }
 
-    public static CouponIssuanceRequest 쿠폰발급요청_생성(Long customerId, Long couponEventId) {
-        return new CouponIssuanceRequest(customerId, couponEventId);
+    public static CouponIssuanceRequest 쿠폰발급요청_생성(String eventName, Long couponEventId, Long customerId) {
+        return new CouponIssuanceRequest(eventName, couponEventId,customerId);
     }
 
     public static ExtractableResponse<Response> 쿠폰발급요청(CouponIssuanceRequest request) {
@@ -50,4 +52,15 @@ public class CouponSteps {
                 .then()
                 .log().all().extract();
     }
+
+	public static Long 고객생성요청() {
+		Customer customer = new Customer(CustomerGrade.BRONZE);
+		ExtractableResponse<Response> response = RestAssured.given().log().all()
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.body(customer)
+				.when()
+				.post("/customer")
+				.then().log().all().extract();
+		return response.body().jsonPath().getLong("id");
+	}
 }

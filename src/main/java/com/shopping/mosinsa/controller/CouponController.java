@@ -1,18 +1,24 @@
 package com.shopping.mosinsa.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopping.mosinsa.controller.request.CouponEventCreateRequest;
 import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
 import com.shopping.mosinsa.dto.CouponDto;
 import com.shopping.mosinsa.dto.CouponEventDto;
 import com.shopping.mosinsa.entity.Coupon;
 import com.shopping.mosinsa.entity.CouponEvent;
+import com.shopping.mosinsa.service.CouponQueueService;
 import com.shopping.mosinsa.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -21,7 +27,8 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    private final RedisTemplate<Long, Long> redisTemplate;
+	private final CouponQueueService couponQueueService;
+
 
     @GetMapping("/event/{id}")
     public ResponseEntity<CouponEventDto> createEvent(@PathVariable Long id){
@@ -47,20 +54,22 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(new CouponDto(coupon));
     }
 
-    @PatchMapping("/redis")
-    public ResponseEntity<Void> couponIssuanceRequest(@RequestBody CouponIssuanceRequest request){
-        ValueOperations<Long, Long> value = redisTemplate.opsForValue();
-        Long customerId = request.getCustomerId();
-        Long couponEventId = request.getCouponEventId();
-        value.set(customerId,couponEventId);
+    @PostMapping("/enqueue")
+    public ResponseEntity<String> couponIssuanceRequest(@RequestBody CouponIssuanceRequest request) throws JsonProcessingException {
 
-        return ResponseEntity.ok().build();
+		if (couponQueueService.enqueue(request)){
+			Long rank = couponQueueService.lookupOrder(request);
+			return ResponseEntity.ok().body(String.format("success: %s번째 순서입니다.", rank));
+		} else{
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
+		}
     }
 
-    @GetMapping("/redis/{key}")
-    public ResponseEntity<?> getRedisKey(@PathVariable String key) {
-        ValueOperations<Long, Long> vop = redisTemplate.opsForValue();
-        Long value = vop.get(key);
-        return new ResponseEntity<>(value, HttpStatus.OK);
+    @GetMapping("/enqueue")
+    public ResponseEntity<String> lookupOrder(@RequestBody CouponIssuanceRequest request) throws JsonProcessingException {
+
+		Long rank = couponQueueService.lookupOrder(request);
+
+        return new ResponseEntity<>(String.format("'%s' 님 앞에 %s명 남았습니다.",request.getCustomerId(), rank), HttpStatus.OK);
     }
 }

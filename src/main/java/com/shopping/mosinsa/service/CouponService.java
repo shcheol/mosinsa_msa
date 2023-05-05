@@ -5,10 +5,12 @@ import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
 import com.shopping.mosinsa.entity.Coupon;
 import com.shopping.mosinsa.entity.CouponEvent;
 import com.shopping.mosinsa.entity.Customer;
+import com.shopping.mosinsa.pub.CouponEventPublisher;
 import com.shopping.mosinsa.repository.CouponEventRepository;
 import com.shopping.mosinsa.repository.CouponFactoryRepository;
 import com.shopping.mosinsa.repository.CouponRepository;
 import com.shopping.mosinsa.repository.CustomerRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +25,10 @@ public class CouponService {
     private final CouponFactoryRepository couponFactoryRepository;
     private final CouponEventRepository couponEventRepository;
     private final CouponRepository couponRepository;
-
     private final CustomerRepository customerRepository;
+    private final CouponEventPublisher couponEventPublisher;
+
+    private final EntityManager em;
 
 
     @Transactional
@@ -35,6 +39,11 @@ public class CouponService {
 
         couponFactoryRepository.bulkInsert(Coupon.createCoupon(couponEvent, request.getDiscountPolicy(), request.getExpiryDate()), request.getQuantity());
         couponEvent.getCoupons().addAll(couponRepository.findAllByCouponEvent(couponEvent));
+
+        em.flush();
+        em.clear();
+
+        couponEventPublisher.publishCouponEvent(couponEvent);
 
         return couponEvent;
     }
@@ -47,9 +56,7 @@ public class CouponService {
         Assert.isTrue(couponEvent.getEventStartAt().isBefore(LocalDateTime.now()), "이벤트가 시작하지 않았습니다.");
         Assert.isTrue(couponEvent.getCoupons().size()>0, "남은 수량이 없습니다.");
 
-        Coupon coupon = couponEvent.issuanceCoupon(customer);
-
-        return coupon;
+		return couponEvent.issuanceCoupon(customer);
     }
 
     public CouponEvent findCouponEvent(Long id) {

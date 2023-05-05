@@ -36,7 +36,14 @@ spring:
     redis:
       port: 6666
       host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
-
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations: classpath:init.sql
+  batch:
+    job:
+      names: ${job.name:NONE}
+      enabled: false
 # log level Setting
 logging:
   level:

@@ -62,7 +62,7 @@ class CouponServiceTest {
 
         CouponEvent couponEvent = couponService.createCouponEvent(request);
 
-        CouponIssuanceRequest couponCustomerRequest = 쿠폰발급요청_생성(customer.getId(), couponEvent.getId());
+        CouponIssuanceRequest couponCustomerRequest = 쿠폰발급요청_생성(couponEvent.getEventName(), couponEvent.getId(), customer.getId());
         Coupon coupon = couponService.couponIssuanceRequest(couponCustomerRequest);
 
         Assertions.assertThat(coupon.getCustomer().getId()).isEqualTo(customer.getId());
