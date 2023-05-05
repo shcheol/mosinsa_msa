@@ -1,13 +1,10 @@
 package com.shopping.mosinsa.batch;
 
 import com.shopping.mosinsa.controller.request.CouponIssuanceRequest;
-import com.shopping.mosinsa.entity.Coupon;
 import com.shopping.mosinsa.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JpaItemWriter;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
