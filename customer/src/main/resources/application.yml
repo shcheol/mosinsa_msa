@@ -5,17 +5,33 @@ server:
 spring:
   application:
     name: customer-service
+  datasource:
+    #    url: ENC(VdrdVvzXoagNeTVF9SOKNPXPUHCuDjFy82UrHh6jpuDZ5cDzW/9xxs46wC22y7AIuOrSPWajuAY=)
+    # batchUpdate 사용하기 위해 옵션 추가 : rewriteBatchedStatements=true
+    url: ENC(gu2Rv8YdQSuvWO/1RAL5ZaSj3xSqHj21sXBlbiDPiHNbuNN9DcpQuOFHpgrKFFsABrAVmWTxxOARnfwK8klG6GqpsGOQsxBq9ZrG36CEOok=)
+    username: ENC(ypZdBoAHq65B8TWe9Wdh2Q==)
+    password: ENC(C0nmYFZwORpRT0lnRxdIsQ==)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+
 eureka:
-  ## random port ?????? eureka server? ??? ????? ?? ?? ???
-  ## ?? ?????? ?? ??? ???? ????? ??? ???? ??
-  ## ???? ?????? ? ????? id ?? ??
   instance:
-    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
-    ## eureka ???? ?? ??
     register-with-eureka: true
-    ## eureka ????? ????? ?????? ??? ??? ?? ??
     fetch-registry: true
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
 
+# log level Setting
+logging:
+  level:
+    org.hibernate.type: trace
+    org.springframework.jdbc.core: trace
