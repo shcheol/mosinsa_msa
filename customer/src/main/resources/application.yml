@@ -1,25 +1,26 @@
 server:
   ## random port
-  port: 0
+  port: 8080
 
 spring:
   application:
     name: customer-service
   datasource:
-    #    url: ENC(VdrdVvzXoagNeTVF9SOKNPXPUHCuDjFy82UrHh6jpuDZ5cDzW/9xxs46wC22y7AIuOrSPWajuAY=)
-    # batchUpdate 사용하기 위해 옵션 추가 : rewriteBatchedStatements=true
-    url: ENC(gu2Rv8YdQSuvWO/1RAL5ZaSj3xSqHj21sXBlbiDPiHNbuNN9DcpQuOFHpgrKFFsABrAVmWTxxOARnfwK8klG6GqpsGOQsxBq9ZrG36CEOok=)
-    username: ENC(ypZdBoAHq65B8TWe9Wdh2Q==)
-    password: ENC(C0nmYFZwORpRT0lnRxdIsQ==)
+    url: ENC(S7oD+0XH91BYG/RHyVPrSJeqEOxtHpIEbRmiNIgCyylJJXFvucSI9zoNLNfQ6exjxUV7Dtwaedg=)
+    username: ENC(O7X+XjZySqGansb61khTfg0h+VYWzeka)
+    password: ENC(fTghhInL2PJjPioJiTHpXAhaPmhERI88)
     driver-class-name: com.mysql.cj.jdbc.Driver
   # JPA Setting
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
 
 eureka:
   instance:
@@ -35,3 +36,4 @@ logging:
   level:
     org.hibernate.type: trace
     org.springframework.jdbc.core: trace
+
