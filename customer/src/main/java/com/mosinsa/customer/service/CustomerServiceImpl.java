@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,9 +15,18 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Transactional
     public Long join(Customer customer){
-        validateDuplicateCustomer(customer);
+        if(validateDuplicateCustomer(customer)){
+            return null;
+        }
         repository.save(customer);
         return customer.getId();
+    }
+
+    private boolean validateDuplicateCustomer(Customer customer) {
+//        if(repository.findCustomerByLoginId(customer.getLoginId()).isPresent()){
+//            throw new IllegalStateException("이미 존재하는 Id입니다.");
+//        }
+        return repository.findCustomerByLoginId(customer.getLoginId()).isPresent();
     }
 
     @Override
@@ -30,9 +37,8 @@ public class CustomerServiceImpl implements CustomerService{
 
     }
 
-    private void validateDuplicateCustomer(Customer customer) {
-        if(repository.findCustomerByLoginId(customer.getLoginId()).isPresent()){
-            throw new IllegalStateException("이미 존재하는 Id입니다.");
-        }
+    public Customer findById(Long customerId){
+        return repository.findById(customerId).orElse(null);
     }
+
 }
