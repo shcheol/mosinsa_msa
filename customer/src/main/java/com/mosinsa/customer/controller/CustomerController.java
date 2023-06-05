@@ -1,5 +1,6 @@
 package com.mosinsa.customer.controller;
 
+import com.mosinsa.customer.argumentresolver.Login;
 import com.mosinsa.customer.session.SessionConst;
 import com.mosinsa.customer.entity.Customer;
 import com.mosinsa.customer.service.CustomerServiceImpl;
@@ -15,11 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Slf4j
 @Transactional
@@ -28,8 +27,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerServiceImpl customerService;
+
+//    @GetMapping("/")
+//    public String home(@SessionAttribute(name = SessionConst.LOGIN_CUSTOMER, required = false) Long customerId, Model model){
+//
+//        if(customerId == null){
+//            return "home";
+//        }
+//        Customer loginCustomer = customerService.findById(customerId);
+//        if(loginCustomer == null){
+//            return "home";
+//        }
+//        model.addAttribute("customer", loginCustomer);
+//
+//        return "loginHome";
+//    }
+
     @GetMapping("/")
-    public String home(@SessionAttribute(name = SessionConst.LOGIN_CUSTOMER, required = false) Long customerId, Model model){
+    public String home(@Login Long customerId, Model model){
 
         if(customerId == null){
             return "home";
@@ -49,20 +64,20 @@ public class CustomerController {
         return "health-check";
     }
 
-    @GetMapping("/add")
-    public String addForm(@ModelAttribute Customer customer){
-        return "customers/addCustomerForm";
+    @GetMapping("/join")
+    public String joinForm(@ModelAttribute Customer customer){
+        return "customers/joinCustomerForm";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/join")
     public String save(@Valid @ModelAttribute Customer customer, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return "customers/addCustomerForm";
+            return "customers/joinCustomerForm";
         }
 
         if(customerService.join(customer) == null){
             bindingResult.addError(new FieldError("customer","loginId","이미 존재하는 ID입니다."));
-            return "customers/addCustomerForm";
+            return "customers/joinCustomerForm";
         }
         return "redirect:/";
     }
