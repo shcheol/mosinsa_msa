@@ -19,7 +19,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         if (session == null || session.getAttribute(SessionConst.LOGIN_CUSTOMER) == null){
             log.info("미인증 사용자 요청");
 
-            response.sendRedirect("/login?redirectURL="+requestURI);
+            response.sendRedirect("/customer-service/login?redirectURL="+requestURI);
             return false;
         }
         return true;

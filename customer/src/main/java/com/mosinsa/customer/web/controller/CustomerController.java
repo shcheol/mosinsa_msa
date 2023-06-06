@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 @Slf4j
 @Transactional
 @Controller
-@RequestMapping
+@RequestMapping("/customer-service")
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerServiceImpl customerService;
@@ -43,7 +43,7 @@ public class CustomerController {
 //        return "loginHome";
 //    }
 
-    @GetMapping("/")
+    @GetMapping
     public String home(@Login Long customerId, Model model){
 
         if(customerId == null){
@@ -79,7 +79,7 @@ public class CustomerController {
             bindingResult.addError(new FieldError("customer","loginId","이미 존재하는 ID입니다."));
             return "customers/joinCustomerForm";
         }
-        return "redirect:/";
+        return "redirect:/customer-service";
     }
 
     @GetMapping("/login")
@@ -102,7 +102,7 @@ public class CustomerController {
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_CUSTOMER, loginCustomer.getId());
 
-        return "redirect:/";
+        return "redirect:/customer-service";
     }
 
     @PostMapping("/logout")
@@ -113,7 +113,7 @@ public class CustomerController {
             session.invalidate();
         }
 
-        return "redirect:/";
+        return "redirect:/customer-service";
     }
 
     @PostMapping("/customer")

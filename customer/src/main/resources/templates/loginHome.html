@@ -19,12 +19,12 @@
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-secondary btn-lg" type="button"
-                    th:onclick="|location.href='@{/}'|">
+                    th:onclick="|location.href='@{/customer-service}'|">
                 상품 관리
             </button>
         </div>
         <div class="col">
-            <form th:action="@{/logout}" method="post">
+            <form th:action="@{/customer-service/logout}" method="post">
                 <button class="w-100 btn btn-dark btn-lg" onclick="location.href='items.html'" type="submit">
                     로그아웃
                 </button>
