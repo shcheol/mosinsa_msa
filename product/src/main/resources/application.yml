@@ -1,0 +1,43 @@
+server:
+  ## random port
+  port: 0
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: product-service
+  datasource:
+    url: ENC(pHMxxASZrAc4eZiOR4l3a9bMuqxQW+jp6KBFQmYBM50/pW+ZKwU6fPeCJBueUHS/Q2J7D+1jenE=)
+    username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
+    password: ENC(8AvrvIm/Ria2OTgXu6tsqhToqOb0mI/I)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+# log level Setting
+logging:
+  level:
+    org.hibernate.type: trace
+    org.springframework.jdbc.core: trace
+
