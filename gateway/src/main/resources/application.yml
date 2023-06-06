@@ -10,11 +10,11 @@ eureka:
 spring:
   application:
     name: apigateway-service
-  cloud:
-    gateway:
-      routes:
-        - id: customer-service
-          uri: lb://CUSTOMER-SERVICE
-          predicates:
-            - Path=/customer-service/**
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: customer-service
+#          uri: lb://CUSTOMER-SERVICE
+#          predicates:
+#            - Path=/customer-service/**
 

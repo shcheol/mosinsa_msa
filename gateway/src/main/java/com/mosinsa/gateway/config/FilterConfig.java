@@ -12,10 +12,14 @@ public class FilterConfig {
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder){
         return builder.routes()
                 .route(r -> r.path("/customer-service/**")
-                        .filters(f -> f.addRequestHeader("gateway","gateway")
-                                .addResponseHeader("gateway","gateway")
-                                )
+//                        .filters(f -> f.addRequestHeader("gateway","gateway")
+//                                .addResponseHeader("gateway","gateway"))
                         .uri("lb://CUSTOMER-SERVICE")
+                )
+                .route(r -> r.path("/product-service/**")
+//                        .filters(f -> f.addRequestHeader("gateway","gateway")
+//                                .addResponseHeader("gateway","gateway"))
+                        .uri("lb://PRODUCT-SERVICE")
                 )
                 .build();
     }
