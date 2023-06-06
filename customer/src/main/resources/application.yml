@@ -1,6 +1,9 @@
 server:
   ## random port
-  port: 8080
+  port: 0
+  error:
+    whitelabel:
+      enabled: false
 
 spring:
   application:
@@ -14,13 +17,14 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
 #  thymeleaf:
 #    prefix: classpath:/templates/
 #    suffix: .html
+
 
 eureka:
   instance:

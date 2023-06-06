@@ -1,7 +1,7 @@
 package com.mosinsa.customer.config;
 
-import com.mosinsa.customer.argumentresolver.LoginCustomerArgumentResolver;
-import com.mosinsa.customer.interceptor.AuthorityInterceptor;
+import com.mosinsa.customer.web.argumentresolver.LoginCustomerArgumentResolver;
+import com.mosinsa.customer.web.interceptor.AuthorityInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

@@ -1,6 +1,6 @@
-package com.mosinsa.customer.argumentresolver;
+package com.mosinsa.customer.web.argumentresolver;
 
-import com.mosinsa.customer.session.SessionConst;
+import com.mosinsa.customer.web.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
-package com.mosinsa.customer.controller;
+package com.mosinsa.customer.web.controller;
 
-import com.mosinsa.customer.argumentresolver.Login;
-import com.mosinsa.customer.session.SessionConst;
+import com.mosinsa.customer.web.argumentresolver.Login;
+import com.mosinsa.customer.web.session.SessionConst;
 import com.mosinsa.customer.entity.Customer;
 import com.mosinsa.customer.service.CustomerServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;

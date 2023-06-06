@@ -1,4 +1,4 @@
-package com.mosinsa.customer.argumentresolver;
+package com.mosinsa.customer.web.argumentresolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

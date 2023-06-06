@@ -1,4 +1,4 @@
-package com.mosinsa.customer.controller;
+package com.mosinsa.customer.web.controller;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

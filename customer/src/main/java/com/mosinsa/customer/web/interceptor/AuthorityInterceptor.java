@@ -1,6 +1,6 @@
-package com.mosinsa.customer.interceptor;
+package com.mosinsa.customer.web.interceptor;
 
-import com.mosinsa.customer.session.SessionConst;
+import com.mosinsa.customer.web.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
