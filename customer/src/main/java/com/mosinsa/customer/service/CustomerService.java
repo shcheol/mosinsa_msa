@@ -1,25 +1,10 @@
 package com.mosinsa.customer.service;
 
 import com.mosinsa.customer.entity.Customer;
-import com.mosinsa.customer.repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
-public class CustomerService {
+public interface CustomerService {
 
-    private final CustomerRepository repository;
+    Long join(Customer customer);
 
-    @Transactional
-    public Long join(Customer customer){
-        validateDuplicateCustomer(customer);
-        repository.save(customer);
-        return customer.getId();
-    }
-
-    private void validateDuplicateCustomer(Customer customer) {
-
-    }
+    Customer login(String loginId, String password);
 }
