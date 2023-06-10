@@ -1,5 +1,7 @@
 package com.mosinsa.customer.web.controller;
 
+import com.mosinsa.customer.dto.CustomerDto;
+import com.mosinsa.customer.web.controller.response.ResponseCustomer;
 import com.mosinsa.customer.web.argumentresolver.Login;
 import com.mosinsa.customer.web.session.SessionConst;
 import com.mosinsa.customer.entity.Customer;
@@ -121,6 +123,14 @@ public class CustomerController {
 
         Long customerId = customerService.join(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable Long customerId){
+
+        CustomerDto customerDetails = customerService.getCustomerDetailsByCustomerId(customerId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(customerDetails);
     }
 
 //    @PostMapping

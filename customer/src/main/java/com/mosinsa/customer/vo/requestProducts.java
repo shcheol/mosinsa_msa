@@ -1,2 +1,6 @@
-package com.mosinsa.customer.vo;public class requestProducts {
+package com.mosinsa.customer.vo;
+
+public class requestProducts {
+
+
 }
