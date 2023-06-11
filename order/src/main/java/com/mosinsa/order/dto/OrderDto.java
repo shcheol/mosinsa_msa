@@ -14,24 +14,26 @@ import java.util.List;
 public class OrderDto {
 
     private Long id;
-
     private Long customerId;
-
+    private int totalPrice;
+    private OrderStatus status;
     private final List<OrderProductDto> orderProducts = new ArrayList<>();
 
-    private int totalPrice;
+    public OrderDto(Long id, Long customerId, int totalPrice, OrderStatus orderStatus,List<OrderProductDto> orderProducts) {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalPrice = totalPrice;
+        this.status = orderStatus;
 
-    private OrderStatus status;
+        orderProducts.addAll(orderProducts);
+
+    }
 
     public OrderDto(Order order) {
         this.id = order.getId();
-        this.customerId = order.getCustomer().getId();
-        this.totalPrice = order.getTotalPrice();
+        this.customerId = order.getCustomerId();
         this.status = order.getStatus();
 
-        List<OrderProduct> orderProductList = order.getOrderProducts();
-        for (OrderProduct orderProduct : orderProductList) {
-            orderProducts.add(new OrderProductDto(orderProduct));
-        }
     }
+
 }

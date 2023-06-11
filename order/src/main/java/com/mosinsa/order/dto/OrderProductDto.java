@@ -9,12 +9,12 @@ import lombok.ToString;
 public class OrderProductDto {
 
     private Long id;
-    private ProductDto productDto;
     private int orderCount;
+    private ProductDto productDto;
 
-    public OrderProductDto(OrderProduct orderProduct) {
-        this.id = orderProduct.getId();
-        this.productDto = new ProductDto(orderProduct.getProduct());
-        this.orderCount = orderProduct.getOrderCount();
+    public OrderProductDto(Long orderProductId, int orderCount, ProductDto productDto) {
+        this.id = orderProductId;
+        this.orderCount = orderCount;
+        this.productDto = productDto;
     }
 }

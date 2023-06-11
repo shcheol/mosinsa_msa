@@ -18,27 +18,26 @@ import java.util.List;
 
 @Transactional
 @RestController
-@RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
-//    @GetMapping
-    public ResponseEntity<List<OrderDto>> getOrderByCustomer(@RequestParam Long customerId){
+    @GetMapping("/{customerId}/orders")
+    public ResponseEntity<List<OrderDto>> getOrderByCustomer(@PathVariable Long customerId){
 
         List<OrderDto> orderCustomer = orderService.getOrderCustomer(customerId);
 
         return ResponseEntity.ok().body(orderCustomer);
     }
 
-    @GetMapping
+    @GetMapping("/orders")
     public ResponseEntity<Page<OrderDto>> getOrders(@PageableDefault Pageable pageable){
         Page<OrderDto> orderCustomer = orderService.getOrders(pageable);
         return ResponseEntity.ok().body(orderCustomer);
     }
 
-    @GetMapping("/{orderId}")
+    @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable Long orderId){
 
         OrderDto orderDto = orderService.getOrder(orderId);
@@ -47,14 +46,14 @@ public class OrderController {
     }
 
 
-    @PostMapping
+    @PostMapping("/orders")
     public ResponseEntity<OrderDto> orders(@RequestBody OrderCreateRequest request){
 
         OrderDto orderDto = orderService.order(request.getCustomerId(), request.getProducts());
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
     }
 
-    @PatchMapping
+    @PatchMapping("/orders")
     public ResponseEntity<Long> cancelOrders(@RequestBody OrderCancelRequest request){
 
 

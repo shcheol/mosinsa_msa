@@ -20,9 +20,9 @@ public class OrderProduct {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id")
+    private Long productId;
 
     private int orderCount;
 
@@ -30,33 +30,29 @@ public class OrderProduct {
         this.order = order;
     }
 
-    public void setProduct(Product product){
-        this.product = product;
+    public void setProductId(Long productId){
+        this.productId = productId;
     }
 
     public void setOrderCount(int orderCount){
         this.orderCount = orderCount;
     }
 
-    public static OrderProduct createOrderProduct(Product product, int requestCount) {
+    public static OrderProduct createOrderProduct(Long productId, int requestCount) {
 
         Assert.isTrue(requestCount>0,"상품은 1개 이상 구매해야 됩니다.");
 
         OrderProduct orderProduct = new OrderProduct();
-        orderProduct.setProduct(product);
+        orderProduct.setProductId(productId);
         orderProduct.setOrderCount(requestCount);
-
-        product.removeStock(requestCount);
 
         return orderProduct;
     }
 
     public void cancelOrderProduct(){
-        getProduct().addStock(orderCount);
+
+        //todo
+//        getProduct().addStock(orderCount);
     }
 
-    public int getTotalPrice(){
-        int discountedPrice = getProduct().getDiscountedPrice();
-        return discountedPrice * orderCount;
-    }
 }

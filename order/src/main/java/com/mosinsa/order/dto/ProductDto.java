@@ -1,5 +1,6 @@
 package com.mosinsa.order.dto;
 
+import com.mosinsa.order.controller.response.ResponseProduct;
 import com.mosinsa.order.entity.DiscountPolicy;
 import lombok.Getter;
 import lombok.ToString;
@@ -22,14 +23,14 @@ public class ProductDto {
 
     private long likes;
 
-    public ProductDto(Long id, String name, int price, int stock, DiscountPolicy discountPolicy, int discountPrice, long likes) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.discountPolicy = discountPolicy;
-        this.discountPrice = discountPrice;
-        this.likes = likes;
+    public ProductDto(ResponseProduct product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.stock = product.getStock();
+        this.discountPolicy = product.getDiscountPolicy();
+        this.discountPrice = product.getDiscountPrice();
+        this.likes = product.getLikes();
     }
 
     //    public ProductDto(Product product) {

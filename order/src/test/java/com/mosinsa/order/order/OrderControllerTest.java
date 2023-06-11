@@ -2,7 +2,14 @@ package com.mosinsa.order.order;
 
 
 import com.mosinsa.order.ApiTest;
+import com.mosinsa.order.controller.request.ProductAddRequest;
+import com.mosinsa.order.controller.request.RequestCreateCustomer;
+import com.mosinsa.order.controller.response.ResponseCustomer;
+import com.mosinsa.order.controller.response.ResponseProduct;
+import com.mosinsa.order.entity.DiscountPolicy;
 import com.mosinsa.order.entity.OrderStatus;
+import com.mosinsa.order.feignclient.CustomerServiceClient;
+import com.mosinsa.order.feignclient.ProductServiceClient;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -18,9 +25,10 @@ class OrderControllerTest extends ApiTest {
 
     private Long customerId;
 
+    ProductServiceClient productServiceClient;
     @BeforeEach
     public void init() {
-        Customer customer = new Customer(CustomerGrade.BRONZE);
+        RequestCreateCustomer customer = new RequestCreateCustomer("1","1","1","aa@aa.com");
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(customer)
@@ -28,6 +36,7 @@ class OrderControllerTest extends ApiTest {
                 .post("/customer")
                 .then().log().all().extract();
         customerId = response.body().jsonPath().getLong("id");
+
     }
 
 //    @Test
@@ -56,9 +65,8 @@ class OrderControllerTest extends ApiTest {
 
     @Test
     void 주문하기() {
-
-        Long id1 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
-        Long id2 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
+        Long id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getId();
+        Long id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getId();
 
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
 
@@ -68,9 +76,8 @@ class OrderControllerTest extends ApiTest {
 
     @Test
     void 주문취소() {
-
-        Long id1 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
-        Long id2 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
+        Long id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getId();
+        Long id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getId();
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
 
         long orderId = response.body().jsonPath().getLong("id");
@@ -90,8 +97,9 @@ class OrderControllerTest extends ApiTest {
 
     @Test
     public void 주문단건조회(){
-        Long id1 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
-        Long id2 = 상품등록요청(상품등록요청_생성()).body().jsonPath().getLong("id");
+
+        Long id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getId();
+        Long id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getId();
 
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
         long orderId = response.body().jsonPath().getLong("id");
