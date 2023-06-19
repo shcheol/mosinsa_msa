@@ -1,7 +1,7 @@
 package com.mosinsa.customer.web.controller;
 
 import com.mosinsa.customer.dto.CustomerDto;
-import com.mosinsa.customer.web.controller.response.ResponseCustomer;
+import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
 import com.mosinsa.customer.web.argumentresolver.Login;
 import com.mosinsa.customer.web.session.SessionConst;
 import com.mosinsa.customer.entity.Customer;
@@ -119,7 +119,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity<Long> createCustomer(@RequestBody Customer request){
+    public ResponseEntity<Long> createCustomer(@RequestBody RequestCreateCustomer request){
 
         Long customerId = customerService.join(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerId);

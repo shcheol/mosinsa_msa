@@ -4,7 +4,7 @@ import com.mosinsa.customer.dto.CustomerDto;
 import com.mosinsa.customer.entity.Customer;
 import com.mosinsa.customer.feignclient.OrderServiceClient;
 import com.mosinsa.customer.repository.CustomerRepository;
-import com.mosinsa.customer.web.controller.response.ResponseCustomer;
+import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
 import com.mosinsa.customer.web.controller.response.ResponseOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,8 +26,19 @@ public class CustomerServiceImpl implements CustomerService{
     private final OrderServiceClient orderServiceClient;
 
     @Transactional
-    public Long join(Customer customer){
-        if(validateDuplicateCustomer(customer)){
+    public Long join(RequestCreateCustomer requestCustomer){
+
+        if(validateDuplicateCustomer(requestCustomer.getLoginId())){
+            return null;
+        }
+        Customer customer = new Customer(requestCustomer.getLoginId(), requestCustomer.getName(), requestCustomer.getPassword(), requestCustomer.getEmail());
+        repository.save(customer);
+        return customer.getId();
+    }
+
+    @Override
+    public Long join(Customer customer) {
+        if(validateDuplicateCustomer(customer.getLoginId())){
             return null;
         }
         repository.save(customer);
@@ -39,11 +50,11 @@ public class CustomerServiceImpl implements CustomerService{
         return repository.findCustomerByLoginId(loginId).orElse(null);
     }
 
-    private boolean validateDuplicateCustomer(Customer customer) {
+    private boolean validateDuplicateCustomer(String loginId) {
 //        if(repository.findCustomerByLoginId(customer.getLoginId()).isPresent()){
 //            throw new IllegalStateException("이미 존재하는 Id입니다.");
 //        }
-        return repository.findCustomerByLoginId(customer.getLoginId()).isPresent();
+        return repository.findCustomerByLoginId(loginId).isPresent();
     }
 
     @Override

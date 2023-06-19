@@ -33,6 +33,13 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private CustomerGrade grade;
 
+    public Customer(String loginId, String name, String password, String email){
+        this.loginId = loginId;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
+
 //    @Embedded
 //    private Address address;
 
