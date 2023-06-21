@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ProductServiceClient {
 
     @GetMapping("/product-service/products/{productId}")
-    ResponseProduct getProduct(@PathVariable(value = "productId") Long productId);
+    ResponseProduct getProduct(@PathVariable(value = "productId") String productId);
 
     @PostMapping("/product-service/products")
     ResponseProduct addProduct(@RequestBody ProductAddRequest request);

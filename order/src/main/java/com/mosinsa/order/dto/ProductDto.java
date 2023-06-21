@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ProductDto {
 
-    private Long id;
+    private String productId;
 
     private String name;
 
@@ -24,7 +24,7 @@ public class ProductDto {
     private long likes;
 
     public ProductDto(ResponseProduct product) {
-        this.id = product.getId();
+        this.productId = product.getProductId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.stock = product.getStock();

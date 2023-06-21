@@ -65,8 +65,8 @@ class OrderControllerTest extends ApiTest {
 
     @Test
     void 주문하기() {
-        Long id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getId();
-        Long id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getId();
+        String id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getProductId();
+        String id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getProductId();
 
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
 
@@ -76,8 +76,8 @@ class OrderControllerTest extends ApiTest {
 
     @Test
     void 주문취소() {
-        Long id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getId();
-        Long id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getId();
+        String id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getProductId();
+        String id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getProductId();
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
 
         long orderId = response.body().jsonPath().getLong("id");
@@ -98,8 +98,8 @@ class OrderControllerTest extends ApiTest {
     @Test
     public void 주문단건조회(){
 
-        Long id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getId();
-        Long id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getId();
+        String id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getProductId();
+        String id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getProductId();
 
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
         long orderId = response.body().jsonPath().getLong("id");

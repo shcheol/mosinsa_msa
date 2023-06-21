@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString
 public class ResponseProduct {
 
-    private Long id;
+    private String productId;
 
     private String name;
 
@@ -22,8 +22,8 @@ public class ResponseProduct {
 
     private long likes;
 
-    public ResponseProduct(Long id, String name, int price, int stock, DiscountPolicy discountPolicy, int discountPrice, long likes) {
-        this.id = id;
+    public ResponseProduct(String productId, String name, int price, int stock, DiscountPolicy discountPolicy, int discountPrice, long likes) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.stock = stock;

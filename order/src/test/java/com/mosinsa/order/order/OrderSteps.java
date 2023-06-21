@@ -13,9 +13,9 @@ import java.util.Map;
 public class OrderSteps {
 
 
-    public static OrderCreateRequest 상품주문요청_생성(Long customerId, Long... ids) {
+    public static OrderCreateRequest 상품주문요청_생성(Long customerId, String... ids) {
 
-        Map<Long, Integer> orderProductMap = new HashMap<>();
+        Map<String, Integer> orderProductMap = new HashMap<>();
         orderProductMap.put(ids[0], 3);
         orderProductMap.put(ids[1], 5);
         return new OrderCreateRequest(customerId, orderProductMap);

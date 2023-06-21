@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OrderCreateRequest {
 
     private Long customerId;
-    private Map<Long, Integer> products = new ConcurrentHashMap<>();
+    private Map<String, Integer> products = new ConcurrentHashMap<>();
 
-    public OrderCreateRequest(Long customerId, Map<Long, Integer> products) {
+    public OrderCreateRequest(Long customerId, Map<String, Integer> products) {
         this.customerId = customerId;
         this.products = products;
     }

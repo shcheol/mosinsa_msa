@@ -6,15 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "order_product")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderProduct {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Column(name = "order_product_id")
-    private Long id;
+    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -22,7 +24,7 @@ public class OrderProduct {
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "product_id")
-    private Long productId;
+    private String productId;
 
     private int orderCount;
 
@@ -30,7 +32,7 @@ public class OrderProduct {
         this.order = order;
     }
 
-    public void setProductId(Long productId){
+    public void setProductId(String productId){
         this.productId = productId;
     }
 
@@ -38,11 +40,12 @@ public class OrderProduct {
         this.orderCount = orderCount;
     }
 
-    public static OrderProduct createOrderProduct(Long productId, int requestCount) {
+    public static OrderProduct createOrderProduct(String productId, int requestCount) {
 
         Assert.isTrue(requestCount>0,"상품은 1개 이상 구매해야 됩니다.");
 
         OrderProduct orderProduct = new OrderProduct();
+        orderProduct.id = UUID.randomUUID().toString();
         orderProduct.setProductId(productId);
         orderProduct.setOrderCount(requestCount);
 
