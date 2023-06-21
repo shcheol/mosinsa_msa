@@ -2,14 +2,18 @@ package com.mosinsa.product.dto;
 
 import com.mosinsa.product.entity.DiscountPolicy;
 import com.mosinsa.product.entity.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDto {
 
-    private Long id;
+    private String productId;
 
     private String name;
 
@@ -24,7 +28,7 @@ public class ProductDto {
     private long likes;
 
     public ProductDto(Product product) {
-        this.id = product.getId();
+        this.productId = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.stock = product.getStock();

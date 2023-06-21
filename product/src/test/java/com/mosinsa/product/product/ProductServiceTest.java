@@ -31,7 +31,7 @@ class ProductServiceTest {
     void 상품등록(){
         ProductDto saveProduct = productService.addProduct(상품등록요청_생성());
 
-        ProductDto product = productService.getProduct(saveProduct.getId());
+        ProductDto product = productService.getProduct(saveProduct.getProductId());
 
         assertThat(product.getName()).isEqualTo("상품1");
         assertThat(product.getPrice()).isEqualTo(1000);
@@ -63,7 +63,7 @@ class ProductServiceTest {
 
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("상품수정", 2000, 20, DiscountPolicy.TEN_PERCENTAGE, 0);
 
-        assertThatThrownBy(() -> productService.updateProduct(100L, productUpdateRequest)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> productService.updateProduct("productId1", productUpdateRequest)).isInstanceOf(IllegalArgumentException.class);
 
     }
 
@@ -71,7 +71,7 @@ class ProductServiceTest {
     void 상품조회_상세(){
         ProductDto saveProduct = productService.addProduct(상품등록요청_생성());
 
-        ProductDto product = productService.getProduct(saveProduct.getId());
+        ProductDto product = productService.getProduct(saveProduct.getProductId());
 
         assertThat(product.getName()).isEqualTo("상품1");
         assertThat(product.getPrice()).isEqualTo(1000);

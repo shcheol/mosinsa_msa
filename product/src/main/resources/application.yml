@@ -17,10 +17,12 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
+  kafka:
+    bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
 #  thymeleaf:
 #    prefix: classpath:/templates/
 #    suffix: .html
@@ -40,4 +42,5 @@ logging:
   level:
     org.hibernate.type: trace
     org.springframework.jdbc.core: trace
+
 

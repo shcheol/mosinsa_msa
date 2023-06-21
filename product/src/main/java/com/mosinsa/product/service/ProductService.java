@@ -26,12 +26,12 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(Long productId, ProductUpdateRequest productUpdateRequest) {
+    public void updateProduct(String productId, ProductUpdateRequest productUpdateRequest) {
         Product findProduct = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("수정할 상품이 없습니다."));
         findProduct.change(productUpdateRequest);
     }
 
-    public ProductDto getProduct(long productId) {
+    public ProductDto getProduct(String productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("조회한 상품이 없습니다."));
         return new ProductDto(product);
     }

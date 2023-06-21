@@ -38,7 +38,7 @@ public class ProductController {
 
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable Long productId){
+    public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
 
         ProductDto product = productService.getProduct(productId);
 
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequest request){
+    public ResponseEntity<Void> updateProduct(@PathVariable String productId, @RequestBody ProductUpdateRequest request){
 
         productService.updateProduct(productId, request);
 
