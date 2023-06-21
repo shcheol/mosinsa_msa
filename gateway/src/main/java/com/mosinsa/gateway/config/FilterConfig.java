@@ -21,6 +21,11 @@ public class FilterConfig {
 //                                .addResponseHeader("gateway","gateway"))
                         .uri("lb://PRODUCT-SERVICE")
                 )
+                .route(r -> r.path("/order-service/**")
+//                        .filters(f -> f.addRequestHeader("gateway","gateway")
+//                                .addResponseHeader("gateway","gateway"))
+                                .uri("lb://ORDER-SERVICE")
+                )
                 .build();
     }
 }
