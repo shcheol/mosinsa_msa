@@ -65,9 +65,7 @@ public class Order extends AuditingEntity {
     public void cancelOrder() {
 
         this.changeOrderStatus(OrderStatus.CANCEL);
-        for (OrderProduct orderProduct : orderProducts) {
-            orderProduct.cancelOrderProduct();
-        }
+
     }
 
 }

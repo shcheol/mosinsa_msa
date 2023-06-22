@@ -1,8 +1,6 @@
 package com.mosinsa.order.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.order.dto.OrderDto;
 import com.mosinsa.order.dto.OrderProductDto;
 import com.mosinsa.order.dto.ProductDto;
@@ -23,7 +21,6 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -42,8 +39,6 @@ public class OrderService {
     public OrderDto order(Long customerId, Map<String, Integer> productMap) {
         Assert.isTrue(productMap.size()>=1, "1개 이상의 상품을 주문해야 합니다.");
 
-//        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new IllegalArgumentException("누구세요"));
-
         List<OrderProduct> orderProductList = new ArrayList<>();
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
         for (String productId : productMap.keySet()) {
@@ -55,10 +50,7 @@ public class OrderService {
             OrderProductDto orderProductDto = new OrderProductDto(orderProduct.getId(), productMap.get(productId), productDto);
             orderProductDtos.add(orderProductDto);
 
-            //todo kafka
-            //product.removeStock(requestCount);
-
-            kafkaProducer.send("mosinsa-product-topic", orderProductDto);
+            kafkaProducer.send("mosinsa-product-order", orderProductDto);
         }
 
         Order order = Order.createOrder(customerId, orderProductList);
@@ -70,12 +62,20 @@ public class OrderService {
     @Transactional
     public void cancelOrder(Long customerId, Long orderId) {
         Order findOrder = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("취소 요청한 주문이 없습니다."));
+        OrderStatus status = findOrder.getStatus();
+        Assert.isTrue(!status.equals(OrderStatus.CANCEL),"이미 취소처리된 주문입니다.");
 
         Long orderCustomer = findOrder.getCustomerId();
         Assert.isTrue(orderCustomer.equals(customerId),"본인이 주문한 주문만 취소 할 수 있습니다.");
         Assert.isTrue(!findOrder.getStatus().equals(OrderStatus.COMPLETE), "배송 시작된 주문은 취소할수 없습니다.");
 
         findOrder.cancelOrder();
+        List<OrderProduct> orderProducts = findOrder.getOrderProducts();
+        for (OrderProduct orderProduct : orderProducts) {
+            ProductDto productDto = new ProductDto(productServiceClient.getProduct(orderProduct.getProductId()));
+            OrderProductDto orderProductDto = new OrderProductDto(orderProduct.getId(), orderProduct.getOrderCount(), productDto);
+            kafkaProducer.send("mosinsa-product-order-cancel", orderProductDto);
+        }
     }
 
     public List<OrderDto> getOrderCustomer(Long customerId) {
