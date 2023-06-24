@@ -1,6 +1,7 @@
 package com.mosinsa.product.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class OrderDto {
 
     private Long id;
@@ -22,7 +24,7 @@ public class OrderDto {
         this.totalPrice = totalPrice;
         this.status = orderStatus;
 
-        orderProducts.addAll(orderProducts);
+        this.orderProducts.addAll(orderProducts);
 
     }
 
