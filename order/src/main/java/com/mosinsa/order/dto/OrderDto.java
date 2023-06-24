@@ -1,9 +1,9 @@
 package com.mosinsa.order.dto;
 
 import com.mosinsa.order.entity.Order;
-import com.mosinsa.order.entity.OrderProduct;
 import com.mosinsa.order.entity.OrderStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.List;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class OrderDto {
 
     private Long id;
@@ -25,7 +26,7 @@ public class OrderDto {
         this.totalPrice = totalPrice;
         this.status = orderStatus;
 
-        orderProducts.addAll(orderProducts);
+        this.orderProducts.addAll(orderProducts);
 
     }
 

@@ -49,14 +49,20 @@ public class OrderService {
             orderProductList.add(orderProduct);
             OrderProductDto orderProductDto = new OrderProductDto(orderProduct.getId(), productMap.get(productId), productDto);
             orderProductDtos.add(orderProductDto);
-
-            kafkaProducer.send("mosinsa-product-order", orderProductDto);
         }
+
 
         Order order = Order.createOrder(customerId, orderProductList);
         orderRepository.save(order);
-
-        return new OrderDto(order.getId(), customerId, this.getTotalPrice(order.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
+        log.info("order {}", order.toString());
+        OrderDto orderDto = new OrderDto(order.getId(), customerId, this.getTotalPrice(order.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
+        log.info("orderDto {}", orderDto);
+        for (OrderProductDto orderProductDto : orderProductDtos) {
+            log.info("orderProductDto {}", orderProductDto);
+        }
+        log.info("size {}", orderProductDtos.size());
+        kafkaProducer.send("mosinsa-product-order", orderDto);
+        return orderDto;
     }
 
     @Transactional
@@ -71,11 +77,15 @@ public class OrderService {
 
         findOrder.cancelOrder();
         List<OrderProduct> orderProducts = findOrder.getOrderProducts();
+        List<OrderProductDto> orderProductDtos = new ArrayList<>();
         for (OrderProduct orderProduct : orderProducts) {
             ProductDto productDto = new ProductDto(productServiceClient.getProduct(orderProduct.getProductId()));
             OrderProductDto orderProductDto = new OrderProductDto(orderProduct.getId(), orderProduct.getOrderCount(), productDto);
-            kafkaProducer.send("mosinsa-product-order-cancel", orderProductDto);
+            orderProductDtos.add(orderProductDto);
         }
+        OrderDto orderDto = new OrderDto(findOrder.getId(), customerId, this.getTotalPrice(findOrder.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
+        kafkaProducer.send("mosinsa-product-order", orderDto);
+
     }
 
     public List<OrderDto> getOrderCustomer(Long customerId) {

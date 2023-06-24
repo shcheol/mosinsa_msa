@@ -3,10 +3,12 @@ package com.mosinsa.order.dto;
 import com.mosinsa.order.controller.response.ResponseProduct;
 import com.mosinsa.order.entity.DiscountPolicy;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class ProductDto {
 
     private String productId;
