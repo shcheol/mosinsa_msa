@@ -84,7 +84,7 @@ public class OrderService {
             orderProductDtos.add(orderProductDto);
         }
         OrderDto orderDto = new OrderDto(findOrder.getId(), customerId, this.getTotalPrice(findOrder.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
-        kafkaProducer.send("mosinsa-product-order", orderDto);
+        kafkaProducer.send("mosinsa-product-order-cancel", orderDto);
 
     }
 

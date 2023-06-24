@@ -3,7 +3,6 @@ package com.mosinsa.order.messagequeue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.dto.OrderProductDto;
 import com.mosinsa.order.entity.Order;
 import com.mosinsa.order.entity.OrderStatus;
 import com.mosinsa.order.repository.OrderRepository;
