@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void rollbackOrder(String topic, OrderDto orderDto){
-        ObjectMapper om = new ObjectMapper();
+    private final ObjectMapper om;
+    public void completeTransaction(String topic, OrderDto orderDto){
         String s="";
         try {
             s = om.writeValueAsString(orderDto);
@@ -25,4 +25,5 @@ public class KafkaProducer {
         kafkaTemplate.send(topic, s);
         log.info("send {}", s);
     }
+
 }

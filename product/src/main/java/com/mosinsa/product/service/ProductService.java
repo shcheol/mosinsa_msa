@@ -66,6 +66,7 @@ public class ProductService {
                 product.removeStock(orderCount);
                 tempOrderProductDtos.add(orderProductDto);
             }
+            kafkaProducer.completeTransaction("mosinsa-product-order-commit", orderDto);
         }catch (Exception e){
             for (OrderProductDto tempOrderProductDto : tempOrderProductDtos) {
                 int orderCount = tempOrderProductDto.getOrderCount();
@@ -75,7 +76,7 @@ public class ProductService {
 
             OrderDto rollbackOrder =
                     new OrderDto(orderDto.getId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
-            kafkaProducer.rollbackOrder("mosinsa-product-order-rollback", rollbackOrder);
+            kafkaProducer.completeTransaction("mosinsa-product-order-rollback", rollbackOrder);
         }
     }
 
