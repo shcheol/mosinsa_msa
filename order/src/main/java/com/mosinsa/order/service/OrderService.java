@@ -55,7 +55,7 @@ public class OrderService {
         Order order = Order.createOrder(customerId, orderProductList);
         orderRepository.save(order);
         log.info("order {}", order.toString());
-        OrderDto orderDto = new OrderDto(order.getId(), customerId, this.getTotalPrice(order.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
+        OrderDto orderDto = new OrderDto(order.getId(), customerId, this.getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
         log.info("orderDto {}", orderDto);
         for (OrderProductDto orderProductDto : orderProductDtos) {
             log.info("orderProductDto {}", orderProductDto);

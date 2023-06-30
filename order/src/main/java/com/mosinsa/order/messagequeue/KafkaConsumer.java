@@ -23,7 +23,7 @@ public class KafkaConsumer {
 
     @Transactional
     @KafkaListener(topics = "mosinsa-product-order-rollback")
-    public void orderProduct(String kafkaMessage){
+    public void orderProductRollback(String kafkaMessage){
         log.info("kafka message: {}", kafkaMessage);
 
         OrderDto orderDto = null;
@@ -40,4 +40,22 @@ public class KafkaConsumer {
 
     }
 
+    @Transactional
+    @KafkaListener(topics = "mosinsa-product-order-commit")
+    public void orderProductCommit(String kafkaMessage){
+        log.info("kafka message: {}", kafkaMessage);
+
+        OrderDto orderDto = null;
+        try{
+            orderDto = om.readValue(kafkaMessage, OrderDto.class);
+            log.info("{}",orderDto);
+
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+        }
+        Long id = orderDto.getId();
+        Order order = repository.findById(id).orElseThrow(() -> new IllegalStateException("조회한 주문이 없습니다."));
+        order.changeOrderStatus(OrderStatus.REQUEST_SUCCESS);
+
+    }
 }
