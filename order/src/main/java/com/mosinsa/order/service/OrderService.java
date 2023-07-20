@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -38,6 +35,8 @@ public class OrderService {
     @Transactional
     public OrderDto order(Long customerId, Map<String, Integer> productMap) {
         Assert.isTrue(productMap.size()>=1, "1개 이상의 상품을 주문해야 합니다.");
+
+		String idempotencyKey = UUID.randomUUID().toString();
 
         List<OrderProduct> orderProductList = new ArrayList<>();
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
@@ -61,7 +60,12 @@ public class OrderService {
             log.info("orderProductDto {}", orderProductDto);
         }
         log.info("size {}", orderProductDtos.size());
-        kafkaProducer.send("mosinsa-product-order", orderDto);
+		try {
+			kafkaProducer.send("mosinsa-product-order", orderDto, idempotencyKey);
+		}catch (Exception e){
+			log.error("kafaka producing error..., retry",e);
+			kafkaProducer.send("mosinsa-product-order", orderDto, idempotencyKey);
+		}
         return orderDto;
     }
 
