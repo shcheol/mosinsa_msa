@@ -24,7 +24,7 @@ public class KafkaConsumer {
     @Transactional
     @KafkaListener(topics = "mosinsa-product-order-rollback")
     public void orderProductRollback(String kafkaMessage){
-        log.info("kafka message: {}", kafkaMessage);
+        log.info("mosinsa-product-order-rollback: {}", kafkaMessage);
 
         OrderDto orderDto = null;
         try{
@@ -43,7 +43,7 @@ public class KafkaConsumer {
     @Transactional
     @KafkaListener(topics = "mosinsa-product-order-commit")
     public void orderProductCommit(String kafkaMessage){
-        log.info("kafka message: {}", kafkaMessage);
+        log.info("mosinsa-product-order-commit: {}", kafkaMessage);
 
         OrderDto orderDto = null;
         try{

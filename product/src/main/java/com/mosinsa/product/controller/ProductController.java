@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/product-service/products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;

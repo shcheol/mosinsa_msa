@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -31,7 +32,6 @@ public class OrderService {
 //    private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final ProductServiceClient productServiceClient;
-
     private final KafkaProducer kafkaProducer;
 
 
@@ -68,7 +68,9 @@ public class OrderService {
     @Transactional
     public void cancelOrder(Long customerId, Long orderId) {
         Order findOrder = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("취소 요청한 주문이 없습니다."));
-        OrderStatus status = findOrder.getStatus();
+		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), customerId), "주문한 고객과 동일한 고객이 취소해야합니다.");
+
+		OrderStatus status = findOrder.getStatus();
         Assert.isTrue(!status.equals(OrderStatus.CANCEL),"이미 취소처리된 주문입니다.");
 
         Long orderCustomer = findOrder.getCustomerId();

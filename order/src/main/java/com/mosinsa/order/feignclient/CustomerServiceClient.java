@@ -15,9 +15,9 @@ import java.util.List;
 @FeignClient(name = "customer-service")
 public interface CustomerServiceClient {
 
-    @GetMapping("/customer-service/customers/{customerId}")
+    @GetMapping("/customers/{customerId}")
     ResponseCustomer getCustomer(@PathVariable(value = "customerId") Long customerId);
 
-    @PostMapping("/customer-service/customer")
+    @PostMapping("/customer")
     ResponseCustomer createCustomer(@RequestBody RequestCreateCustomer request);
 }

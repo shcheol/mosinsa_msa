@@ -18,7 +18,7 @@ import java.util.List;
 
 @Transactional
 @RestController
-@RequestMapping("/order-service")
+@RequestMapping
 @RequiredArgsConstructor
 public class OrderController {
 

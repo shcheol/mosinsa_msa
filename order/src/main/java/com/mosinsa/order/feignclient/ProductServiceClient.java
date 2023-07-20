@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "product-service")
 public interface ProductServiceClient {
 
-    @GetMapping("/product-service/products/{productId}")
+    @GetMapping("/products/{productId}")
     ResponseProduct getProduct(@PathVariable(value = "productId") String productId);
 
-    @PostMapping("/product-service/products")
+    @PostMapping("/products")
     ResponseProduct addProduct(@RequestBody ProductAddRequest request);
 }

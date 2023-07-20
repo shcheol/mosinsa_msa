@@ -68,6 +68,7 @@ public class ProductService {
             }
             kafkaProducer.completeTransaction("mosinsa-product-order-commit", orderDto);
         }catch (Exception e){
+			log.error("order product fail",e);
             for (OrderProductDto tempOrderProductDto : tempOrderProductDtos) {
                 int orderCount = tempOrderProductDto.getOrderCount();
                 Product product = productRepository.findById(tempOrderProductDto.getProductDto().getProductId()).orElseThrow(() -> new IllegalArgumentException("조회한 상품이 없습니다."));
