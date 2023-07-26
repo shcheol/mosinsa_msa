@@ -3,6 +3,7 @@ package com.mosinsa.product.messegequeue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.product.dto.OrderDto;
+import com.mosinsa.product.repository.IdempotentComponent;
 import com.mosinsa.product.repository.ProductRepository;
 import com.mosinsa.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +29,16 @@ public class KafkaConsumer {
     private final ProductService service;
     private final ObjectMapper om;
 
+
     @KafkaListener(topics = "mosinsa-product-order")
     public void orderProduct(@Headers MessageHeaders headers, @Payload String kafkaMessage){
 
 		log.info("header : {}", headers);
-		byte[] idempotencyKey = (byte[]) headers.get("IdempotencyKey");
-		String s = new String(idempotencyKey, StandardCharsets.UTF_8);
-		log.info("idempotencyKey : {}", s);
+		String idempotencyKey = new String((byte[]) headers.get("IdempotencyKey"), StandardCharsets.UTF_8);
+		log.info("idempotencyKey : {}", idempotencyKey);
 
 		OrderDto orderDto = convertStringToOrderDto(kafkaMessage);
-        service.orderProduct(orderDto);
+        service.orderProduct(idempotencyKey, orderDto);
     }
 
     @KafkaListener(topics = "mosinsa-product-order-cancel")

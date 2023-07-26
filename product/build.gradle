@@ -31,6 +31,7 @@ dependencies {
     implementation 'io.rest-assured:rest-assured:5.3.0'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework:spring-tx'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
     runtimeOnly 'com.mysql:mysql-connector-j'

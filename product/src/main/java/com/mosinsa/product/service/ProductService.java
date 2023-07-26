@@ -1,5 +1,7 @@
 package com.mosinsa.product.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.product.controller.request.ProductAddRequest;
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
 import com.mosinsa.product.dto.OrderDto;
@@ -7,6 +9,7 @@ import com.mosinsa.product.dto.OrderProductDto;
 import com.mosinsa.product.dto.ProductDto;
 import com.mosinsa.product.entity.Product;
 import com.mosinsa.product.messegequeue.KafkaProducer;
+import com.mosinsa.product.repository.IdempotentComponent;
 import com.mosinsa.product.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,8 @@ public class ProductService {
 
     private final KafkaProducer kafkaProducer;
     private final ProductRepository productRepository;
+
+	private final IdempotentComponent idempotentComponent;
 
     @Transactional
     public ProductDto addProduct(ProductAddRequest productAddRequest) {
@@ -51,7 +56,22 @@ public class ProductService {
     }
 
     @Transactional
-    public void orderProduct(OrderDto orderDto) {
+    public void orderProduct(String idempotencyKey, OrderDto orderDto){
+		if (!idempotencyKey.isBlank()){
+			String s = idempotentComponent.get(idempotencyKey);
+			if (s != null && !s.isBlank()){
+				ObjectMapper objectMapper = new ObjectMapper();
+				OrderDto orderDto1 = null;
+				try {
+					orderDto1 = objectMapper.readValue(s, OrderDto.class);
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException(e);
+				}
+				kafkaProducer.completeTransaction("mosinsa-product-order-commit", idempotencyKey, orderDto1);
+				return;
+			}
+		}
+
 
         List<OrderProductDto> tempOrderProductDtos = new ArrayList<>();
         try {
@@ -66,7 +86,7 @@ public class ProductService {
                 product.removeStock(orderCount);
                 tempOrderProductDtos.add(orderProductDto);
             }
-            kafkaProducer.completeTransaction("mosinsa-product-order-commit", orderDto);
+            kafkaProducer.completeTransaction("mosinsa-product-order-commit", idempotencyKey, orderDto);
         }catch (Exception e){
 			log.error("order product fail",e);
             for (OrderProductDto tempOrderProductDto : tempOrderProductDtos) {
@@ -77,7 +97,7 @@ public class ProductService {
 
             OrderDto rollbackOrder =
                     new OrderDto(orderDto.getId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
-            kafkaProducer.completeTransaction("mosinsa-product-order-rollback", rollbackOrder);
+            kafkaProducer.completeTransaction("mosinsa-product-order-rollback", idempotencyKey, rollbackOrder);
         }
     }
 
