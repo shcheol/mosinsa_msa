@@ -6,6 +6,7 @@ import com.mosinsa.product.controller.request.ProductUpdateRequest;
 import com.mosinsa.product.db.dto.ProductDto;
 import com.mosinsa.product.service.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -42,7 +44,7 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
-
+        log.info("getProduct {}", productId);
         ProductDto product = productServiceImpl.findProductById(productId);
 
         return ResponseEntity.ok().body(product);

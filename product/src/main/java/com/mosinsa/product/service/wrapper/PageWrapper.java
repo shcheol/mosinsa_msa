@@ -1,4 +1,4 @@
-package com.mosinsa.product.service;
+package com.mosinsa.product.service.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

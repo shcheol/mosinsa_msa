@@ -8,8 +8,9 @@ import com.mosinsa.product.db.dto.OrderDto;
 import com.mosinsa.product.db.dto.OrderProductDto;
 import com.mosinsa.product.db.dto.ProductDto;
 import com.mosinsa.product.db.entity.Product;
-import com.mosinsa.product.service.messegequeue.KafkaProducer;
 import com.mosinsa.product.db.repository.ProductRepository;
+import com.mosinsa.product.service.kafka.KafkaProducer;
+import com.mosinsa.product.service.wrapper.PageWrapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,65 +27,61 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @AllArgsConstructor
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     private final KafkaProducer kafkaProducer;
     private final ProductRepository productRepository;
 
-	@Override
+    @Override
     @Transactional
     public ProductDto addProduct(ProductAddRequest productAddRequest) {
 
-		return new ProductDto(productRepository.save(new Product(productAddRequest)));
+        return new ProductDto(productRepository.save(new Product(productAddRequest)));
     }
 
-	@Override
-	@CacheEvict(value = "product", key="#productId")
+    @Override
+    @CacheEvict(value = "product", key = "#productId")
     @Transactional
     public void updateProduct(String productId, ProductUpdateRequest productUpdateRequest) {
         Product findProduct = productRepository.findById(productId).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
         findProduct.change(productUpdateRequest);
     }
 
-	@Override
-	@Cacheable(value = "product")
+    @Override
+    @Cacheable(value = "product")
     public ProductDto findProductById(String productId) {
-		log.info("findProductById");
+        log.info("findProductById");
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
         return new ProductDto(product);
     }
 
-	@Override
-	@Cacheable(value = "products", key = "#pageable.pageSize +'-' + #pageable.pageNumber")
+    @Override
+    @Cacheable(value = "products", key = "#pageable.pageSize +'-' + #pageable.pageNumber")
     public Page<ProductDto> findAllProducts(Pageable pageable) {
 
         return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
     }
 
     @Transactional
-    public void orderProduct(OrderDto orderDto){
+    public void orderProduct(OrderDto orderDto) {
 
         List<OrderProductDto> tempOrderProductDtos = new ArrayList<>();
-        try {
-            assert orderDto != null;
-            List<OrderProductDto> orderProductDtos = orderDto.getOrderProducts();
-            for (OrderProductDto orderProductDto : orderProductDtos) {
-                log.info("orderProductDto {}",orderProductDto);
-                int orderCount = orderProductDto.getOrderCount();
-
-                log.info("orderCount = {}", orderCount);
-                Product product = productRepository.findById(orderProductDto.getProductDto().getProductId()).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
-                product.removeStock(orderCount);
-                tempOrderProductDtos.add(orderProductDto);
-            }
+        try{
+            orderDto.getOrderProducts().forEach(op -> {
+                log.info("orderProductDto {}", op);
+                productRepository.findById(op.getProductDto().getProductId())
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                        .removeStock(op.getOrderCount());
+                tempOrderProductDtos.add(op);
+            });
             kafkaProducer.completeTransaction("mosinsa-product-order-commit", orderDto);
         }catch (Exception e){
-			log.error("order product fail",e);
-            for (OrderProductDto tempOrderProductDto : tempOrderProductDtos) {
-                int orderCount = tempOrderProductDto.getOrderCount();
-                Product product = productRepository.findById(tempOrderProductDto.getProductDto().getProductId()).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
-                product.addStock(orderCount);
-            }
+            log.error("order product fail", e);
+            tempOrderProductDtos.forEach(op -> {
+                productRepository.findById(op.getProductDto().getProductId())
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                        .addStock(op.getOrderCount());
+            });
 
             OrderDto rollbackOrder =
                     new OrderDto(orderDto.getId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
@@ -94,15 +91,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Transactional
     public void cancelOrder(OrderDto orderDto) {
-        assert orderDto != null;
-        List<OrderProductDto> orderProducts = orderDto.getOrderProducts();
-        for (OrderProductDto orderProductDto : orderProducts) {
-            int orderCount = orderProductDto.getOrderCount();
-
-            log.info("orderCount = {}", orderCount);
-            Product product = productRepository.findById(orderProductDto.getProductDto().getProductId()).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
-
-            product.addStock(orderCount);
-        }
+        log.info("cancelOrder: {}", orderDto);
+        orderDto.getOrderProducts().forEach(op ->
+                productRepository.findById(op.getProductDto().getProductId())
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                        .addStock(op.getOrderCount()));
     }
 }
