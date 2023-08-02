@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.product.db.dto.OrderDto;
 import com.mosinsa.product.db.repository.ProductRepository;
-import com.mosinsa.product.service.ProductService;
+import com.mosinsa.product.service.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -13,18 +13,13 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
     private final ProductRepository repository;
-
-//	private final IdempotencyRepository repository;
-
-    private final ProductService service;
+    private final ProductServiceImpl service;
     private final ObjectMapper om;
 
 
@@ -32,11 +27,9 @@ public class KafkaConsumer {
     public void orderProduct(@Headers MessageHeaders headers, @Payload String kafkaMessage){
 
 		log.info("header : {}", headers);
-		String idempotencyKey = new String((byte[]) headers.get("IdempotencyKey"), StandardCharsets.UTF_8);
-		log.info("idempotencyKey : {}", idempotencyKey);
 
 		OrderDto orderDto = convertStringToOrderDto(kafkaMessage);
-        service.orderProduct(idempotencyKey, orderDto);
+        service.orderProduct( orderDto);
     }
 
     @KafkaListener(topics = "mosinsa-product-order-cancel")

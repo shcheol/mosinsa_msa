@@ -2,14 +2,11 @@ package com.mosinsa.product.db.dto;
 
 import com.mosinsa.product.db.entity.DiscountPolicy;
 import com.mosinsa.product.db.entity.Product;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ProductDto {
 

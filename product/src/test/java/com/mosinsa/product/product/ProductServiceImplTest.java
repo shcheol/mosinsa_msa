@@ -6,7 +6,7 @@ import com.mosinsa.product.db.dto.ProductDto;
 import com.mosinsa.product.db.entity.DiscountPolicy;
 import com.mosinsa.product.db.entity.Product;
 import com.mosinsa.product.db.repository.ProductRepository;
-import com.mosinsa.product.service.ProductService;
+import com.mosinsa.product.service.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,18 +21,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
-class ProductServiceTest {
+class ProductServiceImplTest {
 
     @Autowired
-    ProductService productService;
+	ProductServiceImpl productServiceImpl;
     @Autowired
     ProductRepository productRepository;
 
     @Test
     void 상품등록(){
-        ProductDto saveProduct = productService.addProduct(상품등록요청_생성());
+        ProductDto saveProduct = productServiceImpl.addProduct(상품등록요청_생성());
 
-        ProductDto product = productService.getProduct(saveProduct.getProductId());
+        ProductDto product = productServiceImpl.findProductById(saveProduct.getProductId());
 
         assertThat(product.getName()).isEqualTo("상품1");
         assertThat(product.getPrice()).isEqualTo(1000);
@@ -49,7 +49,7 @@ class ProductServiceTest {
         Product findProduct = productRepository.findById(product.getId()).get();
 
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("상품수정", 2000, 20, DiscountPolicy.TEN_PERCENTAGE, 0);
-        productService.updateProduct(findProduct.getId(), productUpdateRequest);
+        productServiceImpl.updateProduct(findProduct.getId(), productUpdateRequest);
 
         Product updateProduct = productRepository.findById(findProduct.getId()).get();
 
@@ -64,15 +64,15 @@ class ProductServiceTest {
 
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("상품수정", 2000, 20, DiscountPolicy.TEN_PERCENTAGE, 0);
 
-        assertThatThrownBy(() -> productService.updateProduct("productId1", productUpdateRequest)).isInstanceOf(ProductException.class);
+        assertThatThrownBy(() -> productServiceImpl.updateProduct("productId1", productUpdateRequest)).isInstanceOf(ProductException.class);
 
     }
 
     @Test
     void 상품조회_상세(){
-        ProductDto saveProduct = productService.addProduct(상품등록요청_생성());
+        ProductDto saveProduct = productServiceImpl.addProduct(상품등록요청_생성());
 
-        ProductDto product = productService.getProduct(saveProduct.getProductId());
+        ProductDto product = productServiceImpl.findProductById(saveProduct.getProductId());
 
         assertThat(product.getName()).isEqualTo("상품1");
         assertThat(product.getPrice()).isEqualTo(1000);
@@ -90,7 +90,7 @@ class ProductServiceTest {
         }
 
         PageRequest of = PageRequest.of(1, 3);
-        Page<ProductDto> products = productService.findAllProducts(of);
+        Page<ProductDto> products = productServiceImpl.findAllProducts(of);
 
         assertThat(products.getSize()).isEqualTo(3);
 
