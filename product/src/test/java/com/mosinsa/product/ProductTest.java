@@ -1,16 +1,19 @@
 package com.mosinsa.product;
 
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
-import com.mosinsa.product.entity.DiscountPolicy;
-import com.mosinsa.product.entity.Product;
-import com.mosinsa.product.repository.ProductRepository;
+import com.mosinsa.product.db.entity.DiscountPolicy;
+import com.mosinsa.product.db.entity.Product;
+import com.mosinsa.product.db.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,7 +44,9 @@ class ProductTest {
         Product productA = new Product("productA", 1000, 10, DiscountPolicy.NONE);
         Product savedProduct = productRepository.save(productA);
 
-        assertThat(productA).isEqualTo(savedProduct);
+		Product findProduct = productRepository.findById(productA.getId()).get();
+
+		assertThat(findProduct).isEqualTo(savedProduct);
     }
 
 

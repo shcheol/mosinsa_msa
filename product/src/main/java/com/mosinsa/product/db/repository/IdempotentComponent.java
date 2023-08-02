@@ -1,4 +1,4 @@
-package com.mosinsa.product.repository;
+package com.mosinsa.product.db.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;

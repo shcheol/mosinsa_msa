@@ -1,10 +1,9 @@
-package com.mosinsa.product.messegequeue;
+package com.mosinsa.product.service.messegequeue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.product.dto.OrderDto;
-import com.mosinsa.product.repository.IdempotentComponent;
-import com.mosinsa.product.repository.ProductRepository;
+import com.mosinsa.product.db.dto.OrderDto;
+import com.mosinsa.product.db.repository.ProductRepository;
 import com.mosinsa.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 @Slf4j
 @Service

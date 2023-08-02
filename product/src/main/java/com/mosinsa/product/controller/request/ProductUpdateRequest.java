@@ -1,6 +1,6 @@
 package com.mosinsa.product.controller.request;
 
-import com.mosinsa.product.entity.DiscountPolicy;
+import com.mosinsa.product.db.entity.DiscountPolicy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +11,9 @@ import lombok.NoArgsConstructor;
 public class ProductUpdateRequest {
 
     private String name;
-
     private int price;
-
     private int stock;
-
     private DiscountPolicy discountPolicy;
-
-    private long likes;
-
-
+    private long likes=0;
 
 }

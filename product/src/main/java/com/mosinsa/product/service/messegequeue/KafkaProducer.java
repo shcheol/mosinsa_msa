@@ -1,9 +1,9 @@
-package com.mosinsa.product.messegequeue;
+package com.mosinsa.product.service.messegequeue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.product.dto.OrderDto;
-import com.mosinsa.product.repository.IdempotentComponent;
+import com.mosinsa.product.db.dto.OrderDto;
+import com.mosinsa.product.db.repository.IdempotentComponent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

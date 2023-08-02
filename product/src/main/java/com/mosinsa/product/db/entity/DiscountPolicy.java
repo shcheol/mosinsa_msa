@@ -1,4 +1,4 @@
-package com.mosinsa.product.entity;
+package com.mosinsa.product.db.entity;
 
 public enum DiscountPolicy {
 

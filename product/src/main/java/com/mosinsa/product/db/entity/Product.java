@@ -1,5 +1,7 @@
-package com.mosinsa.product.entity;
+package com.mosinsa.product.db.entity;
 
+import com.mosinsa.product.common.ex.ProductError;
+import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.controller.request.ProductAddRequest;
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
 import jakarta.persistence.*;
@@ -49,10 +51,6 @@ public class Product {
 
     public Product(ProductAddRequest request) {
 
-        Assert.hasText(request.getName(), "상품명은 필수입니다.");
-        Assert.isTrue(request.getPrice() > 0, "상품 가격은 0보다 커야합니다.");
-        Assert.isTrue(request.getStock() > 0, "상품 재고는 0보다 커야합니다.");
-        Assert.hasText(request.getDiscountPolicy().name(), "할인 정책은 필수입니다.");
         this.id = UUID.randomUUID().toString();
         this.name = request.getName();
         this.price = request.getPrice();
@@ -63,12 +61,6 @@ public class Product {
 
     public void change(ProductUpdateRequest request) {
 
-        Assert.hasText(request.getName(), "상품명은 필수입니다.");
-        Assert.isTrue(request.getPrice() > 0, "상품 가격은 0보다 커야합니다.");
-        Assert.isTrue(request.getStock() > 0, "상품 재고는 0보다 커야합니다.");
-        Assert.hasText(request.getDiscountPolicy().name(), "할인 정책은 필수입니다.");
-        Assert.isTrue(request.getLikes() >= 0, "좋아요 수는 0보다 작을 수 없습니다.");
-
         this.name = request.getName();
         this.price = request.getPrice();
         this.stock = request.getStock();
@@ -77,15 +69,19 @@ public class Product {
     }
 
     public void addStock(int stock) {
-        Assert.isTrue(stock > 0, "수량은 양수 값이어야 합니다.");
+		if (stock <= 0){
+			throw new ProductException(ProductError.VALIDATION_ERROR, "수량은 0보다 커야합니다.");
+		}
         this.stock += stock;
     }
 
     public void removeStock(int stock) {
-        Assert.isTrue(stock > 0, "수량은 양수 값이어야 합니다.");
+		if (stock <= 0){
+			throw new ProductException(ProductError.VALIDATION_ERROR, "수량은 0보다 커야합니다.");
+		}
         int remain = this.stock - stock;
         if(remain < 0){
-            throw new IllegalArgumentException(this.name +" 수량이 부족합니다.");
+            throw new ProductException(ProductError.NOT_ENOUGH_PRODUCT_STOCK);
         }
 
         this.stock = remain;

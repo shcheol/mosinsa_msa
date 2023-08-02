@@ -2,15 +2,17 @@ package com.mosinsa.product.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.product.common.ex.ProductError;
+import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.controller.request.ProductAddRequest;
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
-import com.mosinsa.product.dto.OrderDto;
-import com.mosinsa.product.dto.OrderProductDto;
-import com.mosinsa.product.dto.ProductDto;
-import com.mosinsa.product.entity.Product;
-import com.mosinsa.product.messegequeue.KafkaProducer;
-import com.mosinsa.product.repository.IdempotentComponent;
-import com.mosinsa.product.repository.ProductRepository;
+import com.mosinsa.product.db.dto.OrderDto;
+import com.mosinsa.product.db.dto.OrderProductDto;
+import com.mosinsa.product.db.dto.ProductDto;
+import com.mosinsa.product.db.entity.Product;
+import com.mosinsa.product.service.messegequeue.KafkaProducer;
+import com.mosinsa.product.db.repository.IdempotentComponent;
+import com.mosinsa.product.db.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,7 +31,6 @@ public class ProductService {
 
     private final KafkaProducer kafkaProducer;
     private final ProductRepository productRepository;
-
 	private final IdempotentComponent idempotentComponent;
 
     @Transactional
@@ -41,16 +42,17 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(String productId, ProductUpdateRequest productUpdateRequest) {
-        Product findProduct = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("수정할 상품이 없습니다."));
+        Product findProduct = productRepository.findById(productId).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
         findProduct.change(productUpdateRequest);
     }
 
     public ProductDto getProduct(String productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("조회한 상품이 없습니다."));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
         return new ProductDto(product);
     }
 
-    public Page<ProductDto> getProducts(Pageable pageable) {
+
+    public Page<ProductDto> findAllProducts(Pageable pageable) {
 
         return productRepository.findAll(pageable).map(ProductDto::new);
     }
@@ -72,7 +74,6 @@ public class ProductService {
 			}
 		}
 
-
         List<OrderProductDto> tempOrderProductDtos = new ArrayList<>();
         try {
             assert orderDto != null;
@@ -82,7 +83,7 @@ public class ProductService {
                 int orderCount = orderProductDto.getOrderCount();
 
                 log.info("orderCount = {}", orderCount);
-                Product product = productRepository.findById(orderProductDto.getProductDto().getProductId()).orElseThrow(() -> new IllegalArgumentException("조회한 상품이 없습니다."));
+                Product product = productRepository.findById(orderProductDto.getProductDto().getProductId()).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
                 product.removeStock(orderCount);
                 tempOrderProductDtos.add(orderProductDto);
             }
@@ -91,7 +92,7 @@ public class ProductService {
 			log.error("order product fail",e);
             for (OrderProductDto tempOrderProductDto : tempOrderProductDtos) {
                 int orderCount = tempOrderProductDto.getOrderCount();
-                Product product = productRepository.findById(tempOrderProductDto.getProductDto().getProductId()).orElseThrow(() -> new IllegalArgumentException("조회한 상품이 없습니다."));
+                Product product = productRepository.findById(tempOrderProductDto.getProductDto().getProductId()).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
                 product.addStock(orderCount);
             }
 
@@ -109,7 +110,7 @@ public class ProductService {
             int orderCount = orderProductDto.getOrderCount();
 
             log.info("orderCount = {}", orderCount);
-            Product product = productRepository.findById(orderProductDto.getProductDto().getProductId()).orElseThrow(() -> new IllegalArgumentException("조회한 상품이 없습니다."));
+            Product product = productRepository.findById(orderProductDto.getProductDto().getProductId()).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
 
             product.addStock(orderCount);
         }

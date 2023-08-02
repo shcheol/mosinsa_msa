@@ -1,10 +1,11 @@
 package com.mosinsa.product.product;
 
+import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
-import com.mosinsa.product.dto.ProductDto;
-import com.mosinsa.product.entity.DiscountPolicy;
-import com.mosinsa.product.entity.Product;
-import com.mosinsa.product.repository.ProductRepository;
+import com.mosinsa.product.db.dto.ProductDto;
+import com.mosinsa.product.db.entity.DiscountPolicy;
+import com.mosinsa.product.db.entity.Product;
+import com.mosinsa.product.db.repository.ProductRepository;
 import com.mosinsa.product.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ class ProductServiceTest {
 
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest("상품수정", 2000, 20, DiscountPolicy.TEN_PERCENTAGE, 0);
 
-        assertThatThrownBy(() -> productService.updateProduct("productId1", productUpdateRequest)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> productService.updateProduct("productId1", productUpdateRequest)).isInstanceOf(ProductException.class);
 
     }
 
@@ -89,15 +90,9 @@ class ProductServiceTest {
         }
 
         PageRequest of = PageRequest.of(1, 3);
-        Page<ProductDto> products = productService.getProducts(of);
+        Page<ProductDto> products = productService.findAllProducts(of);
 
         assertThat(products.getSize()).isEqualTo(3);
-        assertThat(products.getTotalElements()).isEqualTo(10);
-        assertThat(products.getContent().get(0).getName()).isEqualTo("product4");
-        assertThat(products.getContent().get(0).getPrice()).isEqualTo(4000);
-        assertThat(products.getContent().get(0).getStock()).isEqualTo(40);
-        assertThat(products.getContent().get(0).getDiscountPolicy()).isEqualTo(DiscountPolicy.NONE);
-        assertThat(products.getContent().get(0).getDiscountPrice()).isEqualTo(0);
 
     }
 

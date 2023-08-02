@@ -1,7 +1,7 @@
-package com.mosinsa.product.dto;
+package com.mosinsa.product.db.dto;
 
-import com.mosinsa.product.entity.DiscountPolicy;
-import com.mosinsa.product.entity.Product;
+import com.mosinsa.product.db.entity.DiscountPolicy;
+import com.mosinsa.product.db.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
