@@ -1,4 +1,4 @@
-package com.mosinsa.order.feignclient;
+package com.mosinsa.order.service.feignclient;
 
 import com.mosinsa.order.controller.request.RequestCreateCustomer;
 import com.mosinsa.order.controller.response.ResponseCustomer;

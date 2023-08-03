@@ -1,7 +1,7 @@
-package com.mosinsa.order.dto;
+package com.mosinsa.order.db.dto;
 
-import com.mosinsa.order.entity.Order;
-import com.mosinsa.order.entity.OrderStatus;
+import com.mosinsa.order.db.entity.Order;
+import com.mosinsa.order.db.entity.OrderStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

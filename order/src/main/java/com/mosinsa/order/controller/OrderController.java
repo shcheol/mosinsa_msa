@@ -2,7 +2,7 @@ package com.mosinsa.order.controller;
 
 import com.mosinsa.order.controller.request.OrderCancelRequest;
 import com.mosinsa.order.controller.request.OrderCreateRequest;
-import com.mosinsa.order.dto.OrderDto;
+import com.mosinsa.order.db.dto.OrderDto;
 import com.mosinsa.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,7 +41,7 @@ public class OrderController {
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<OrderDto> getOrder(@PathVariable Long orderId){
 
-        OrderDto orderDto = orderService.getOrder(orderId);
+        OrderDto orderDto = orderService.findOrderById(orderId);
 
         return ResponseEntity.ok().body(orderDto);
     }

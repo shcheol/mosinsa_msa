@@ -1,6 +1,6 @@
-package com.mosinsa.order.repository;
+package com.mosinsa.order.db.repository;
 
-import com.mosinsa.order.entity.Order;
+import com.mosinsa.order.db.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

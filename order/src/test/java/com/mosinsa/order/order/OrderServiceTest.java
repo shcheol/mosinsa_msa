@@ -4,13 +4,13 @@ import com.mosinsa.order.controller.request.OrderCreateRequest;
 import com.mosinsa.order.controller.request.ProductAddRequest;
 import com.mosinsa.order.controller.response.ResponseCustomer;
 import com.mosinsa.order.controller.response.ResponseProduct;
-import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.entity.DiscountPolicy;
-import com.mosinsa.order.entity.Order;
-import com.mosinsa.order.entity.OrderStatus;
-import com.mosinsa.order.feignclient.CustomerServiceClient;
-import com.mosinsa.order.feignclient.ProductServiceClient;
-import com.mosinsa.order.repository.OrderRepository;
+import com.mosinsa.order.db.dto.OrderDto;
+import com.mosinsa.order.db.entity.DiscountPolicy;
+import com.mosinsa.order.db.entity.Order;
+import com.mosinsa.order.db.entity.OrderStatus;
+import com.mosinsa.order.service.feignclient.CustomerServiceClient;
+import com.mosinsa.order.service.feignclient.ProductServiceClient;
+import com.mosinsa.order.db.repository.OrderRepository;
 import com.mosinsa.order.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +49,7 @@ class OrderServiceTest {
 
     CustomerServiceClient customerServiceClient;
     ProductServiceClient productServiceClient;
+
     @BeforeEach
     void setUp(){
         productA = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE));
@@ -61,7 +62,7 @@ class OrderServiceTest {
     @Test
     void 상품주문(){
 
-        OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
+        OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
 
         OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts());
 
@@ -77,7 +78,7 @@ class OrderServiceTest {
 
     @Test
     void 주문취소(){
-        OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
+        OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
 
         OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts());
 
@@ -93,9 +94,9 @@ class OrderServiceTest {
     @Test
     void 주문목록조회_회원(){
 
-        OrderCreateRequest orderCreateRequest1 = 상품주문요청_생성(customerA.getId(),productA.getId(), productB.getId());
+        OrderCreateRequest orderCreateRequest1 = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
         orderService.order(orderCreateRequest1.getCustomerId(), orderCreateRequest1.getProducts());
-        OrderCreateRequest orderCreateRequest2 = 상품주문요청_생성(customerB.getId(),productA.getId(), productB.getId());
+        OrderCreateRequest orderCreateRequest2 = 상품주문요청_생성(customerB.getId(),productA.getProductId(), productB.getProductId());
         orderService.order(orderCreateRequest2.getCustomerId(), orderCreateRequest2.getProducts());
 
         List<OrderDto> orderCustomer = orderService.getOrderCustomer(orderCreateRequest2.getCustomerId());

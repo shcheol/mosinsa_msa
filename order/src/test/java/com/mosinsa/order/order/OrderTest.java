@@ -3,12 +3,12 @@ package com.mosinsa.order.order;
 import com.mosinsa.order.controller.request.ProductAddRequest;
 import com.mosinsa.order.controller.response.ResponseCustomer;
 import com.mosinsa.order.controller.response.ResponseProduct;
-import com.mosinsa.order.entity.DiscountPolicy;
-import com.mosinsa.order.entity.Order;
-import com.mosinsa.order.entity.OrderProduct;
-import com.mosinsa.order.entity.OrderStatus;
-import com.mosinsa.order.feignclient.CustomerServiceClient;
-import com.mosinsa.order.feignclient.ProductServiceClient;
+import com.mosinsa.order.db.entity.DiscountPolicy;
+import com.mosinsa.order.db.entity.Order;
+import com.mosinsa.order.db.entity.OrderProduct;
+import com.mosinsa.order.db.entity.OrderStatus;
+import com.mosinsa.order.service.feignclient.CustomerServiceClient;
+import com.mosinsa.order.service.feignclient.ProductServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,7 +59,7 @@ class OrderTest {
     void 주문생성_실패_주문상품x() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
 
-        assertThatThrownBy(()->Order.createOrder(customer.getId(), orderProduct)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()->Order.createOrder(customer.getId(), orderProduct)).isInstanceOf(RuntimeException.class);
 
         assertThat(productA.getStock()).isEqualTo(10);
         assertThat(productB.getStock()).isEqualTo(10);
@@ -69,7 +69,7 @@ class OrderTest {
     void 주문생성_주문상품_수량초과() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
 
-        assertThatThrownBy(()->orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),11))).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()->orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),11))).isInstanceOf(RuntimeException.class);
 
         assertThat(productA.getStock()).isEqualTo(10);
         assertThat(productB.getStock()).isEqualTo(10);

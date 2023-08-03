@@ -1,4 +1,4 @@
-package com.mosinsa.order.dto;
+package com.mosinsa.order.db.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.mosinsa.order.entity;
+package com.mosinsa.order.db.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
