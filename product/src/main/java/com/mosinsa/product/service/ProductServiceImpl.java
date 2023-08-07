@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
             });
 
             OrderDto rollbackOrder =
-                    new OrderDto(orderDto.getId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
+                    new OrderDto(orderDto.getOrderId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
             kafkaProducer.completeTransaction("mosinsa-product-order-rollback", rollbackOrder);
         }
     }

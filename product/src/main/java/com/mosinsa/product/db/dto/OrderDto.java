@@ -12,14 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDto {
 
-    private Long id;
+    private Long orderId;
     private Long customerId;
     private int totalPrice;
     private String status;
     private final List<OrderProductDto> orderProducts = new ArrayList<>();
 
-    public OrderDto(Long id, Long customerId, int totalPrice, String orderStatus,List<OrderProductDto> orderProducts) {
-        this.id = id;
+    public OrderDto(Long orderId, Long customerId, int totalPrice, String orderStatus, List<OrderProductDto> orderProducts) {
+        this.orderId = orderId;
         this.customerId = customerId;
         this.totalPrice = totalPrice;
         this.status = orderStatus;

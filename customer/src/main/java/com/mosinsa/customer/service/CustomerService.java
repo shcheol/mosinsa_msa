@@ -12,4 +12,6 @@ public interface CustomerService {
     Customer findByLoginId(String loginId);
 
     Customer login(String loginId, String password);
+
+	void delete(Long customerId);
 }

@@ -65,7 +65,12 @@ public class CustomerServiceImpl implements CustomerService{
 
     }
 
-    public Customer findById(Long customerId){
+	@Override
+	public void delete(Long customerId) {
+		repository.deleteById(customerId);
+	}
+
+	public Customer findById(Long customerId){
         return repository.findById(customerId).orElse(null);
     }
 
@@ -76,8 +81,8 @@ public class CustomerServiceImpl implements CustomerService{
         }
 
 //        List<ResponseOrder> orders = getOrdersByRestTemplate(customerId);
-        List<ResponseOrder> orders = getOrdersByFeignClient(customerId);
-        return new CustomerDto(customer.getId(), customer.getName(), orders);
+//        List<ResponseOrder> orders = getOrdersByFeignClient(customerId);
+        return new CustomerDto(customer.getId(), customer.getName());
     }
 
     private List<ResponseOrder> getOrdersByFeignClient(Long customerId) {

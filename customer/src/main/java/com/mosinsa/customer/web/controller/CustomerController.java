@@ -132,6 +132,14 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDetails);
     }
 
+	@DeleteMapping("/customer/{customerId}")
+	public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId){
+
+		customerService.delete(customerId);
+
+		return ResponseEntity.ok().build();
+	}
+
 //    @PostMapping
 //    public ResponseEntity<Customer> orders(@RequestBody Customer request){
 //
