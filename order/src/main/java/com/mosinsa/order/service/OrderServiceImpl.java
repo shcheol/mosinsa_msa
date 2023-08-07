@@ -3,6 +3,8 @@ package com.mosinsa.order.service;
 
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.controller.request.SearchCondition;
+import com.mosinsa.order.controller.response.ResponseCustomer;
 import com.mosinsa.order.db.dto.OrderDto;
 import com.mosinsa.order.db.dto.OrderProductDto;
 import com.mosinsa.order.db.dto.ProductDto;
@@ -10,6 +12,7 @@ import com.mosinsa.order.db.entity.Order;
 import com.mosinsa.order.db.entity.OrderProduct;
 import com.mosinsa.order.db.entity.OrderStatus;
 import com.mosinsa.order.db.repository.OrderRepository;
+import com.mosinsa.order.service.feignclient.CustomerServiceClient;
 import com.mosinsa.order.service.feignclient.ProductServiceClient;
 import com.mosinsa.order.service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,8 @@ public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
     private final ProductServiceClient productServiceClient;
+
+	private final CustomerServiceClient customerServiceClient;
     private final KafkaProducer kafkaProducer;
 
 
@@ -38,7 +43,9 @@ public class OrderServiceImpl implements OrderService{
     public OrderDto order(Long customerId, Map<String, Integer> productMap) {
         Assert.isTrue(productMap.size()>=1, "1개 이상의 상품을 주문해야 합니다.");
 
-        List<OrderProduct> orderProductList = new ArrayList<>();
+		ResponseCustomer customer =customerServiceClient.getCustomer(customerId);
+
+		List<OrderProduct> orderProductList = new ArrayList<>();
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
 		productMap.keySet().forEach(productId ->{
@@ -49,9 +56,8 @@ public class OrderServiceImpl implements OrderService{
 							productMap.get(productId), new ProductDto(productServiceClient.getProduct(productId))));
 		});
 
-
-		Order order = orderRepository.save(Order.createOrder(customerId, orderProductList));
-		OrderDto orderDto = new OrderDto(order.getId(), customerId, getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
+		Order order = orderRepository.save(Order.createOrder(customer.getId(), orderProductList));
+		OrderDto orderDto = new OrderDto(order.getId(), customer.getId(), getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
 		kafkaProducer.send("mosinsa-product-order", orderDto);
 
 		return orderDto;
@@ -91,8 +97,8 @@ public class OrderServiceImpl implements OrderService{
     }
 
 	@Override
-    public Page<OrderDto> getOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable).map(OrderDto::new);
+    public Page<OrderDto> findOrdersByCondition(SearchCondition condition, Pageable pageable) {
+        return orderRepository.findOrdersByCondition(condition, pageable).map(OrderDto::new);
     }
 
 	@Override

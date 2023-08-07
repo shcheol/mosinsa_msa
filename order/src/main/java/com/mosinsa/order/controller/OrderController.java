@@ -2,9 +2,11 @@ package com.mosinsa.order.controller;
 
 import com.mosinsa.order.controller.request.OrderCancelRequest;
 import com.mosinsa.order.controller.request.OrderCreateRequest;
+import com.mosinsa.order.controller.request.SearchCondition;
 import com.mosinsa.order.db.dto.OrderDto;
 import com.mosinsa.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Transactional
 @RestController
 @RequestMapping
@@ -33,8 +36,9 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<Page<OrderDto>> getOrders(@PageableDefault Pageable pageable){
-        Page<OrderDto> orderCustomer = orderService.getOrders(pageable);
+    public ResponseEntity<Page<OrderDto>> findOrders(SearchCondition condition, @PageableDefault Pageable pageable){
+		log.info("condition {}", condition);
+        Page<OrderDto> orderCustomer = orderService.findOrdersByCondition(condition, pageable);
         return ResponseEntity.ok().body(orderCustomer);
     }
 

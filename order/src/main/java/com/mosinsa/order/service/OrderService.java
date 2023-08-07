@@ -1,6 +1,7 @@
 package com.mosinsa.order.service;
 
 
+import com.mosinsa.order.controller.request.SearchCondition;
 import com.mosinsa.order.db.dto.OrderDto;
 import com.mosinsa.order.db.entity.OrderStatus;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,7 @@ public interface OrderService {
     OrderDto order(Long customerId, Map<String, Integer> productMap);
     void cancelOrder(Long customerId, Long orderId);
 	List<OrderDto> getOrderCustomer(Long customerId);
-    Page<OrderDto> getOrders(Pageable pageable);
+    Page<OrderDto> findOrdersByCondition(SearchCondition condition, Pageable pageable);
 
     OrderDto findOrderById(Long orderId);
 

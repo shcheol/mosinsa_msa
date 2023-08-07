@@ -60,10 +60,8 @@ class OrderServiceTest {
         productA = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE));
         productB = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE));
 
-		Long customerId = customerServiceClient.createCustomer(
-				new RequestCreateCustomer("9996", "1", "1", "aa@aa.com"));
-		System.out.println("customerId = " + customerId);
-		customerA = customerServiceClient.getCustomer(customerId);
+		customerA = customerServiceClient.getCustomer(customerServiceClient.createCustomer(
+				new RequestCreateCustomer("9996", "1", "1", "aa@aa.com")));
         customerB = customerServiceClient.getCustomer(customerServiceClient.createCustomer(
 				new RequestCreateCustomer("9998","2","2","aa@aa.com")));
     }

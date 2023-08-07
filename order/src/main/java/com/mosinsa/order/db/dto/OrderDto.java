@@ -25,16 +25,13 @@ public class OrderDto {
         this.customerId = customerId;
         this.totalPrice = totalPrice;
         this.status = orderStatus;
-
         this.orderProducts.addAll(orderProducts);
-
     }
 
     public OrderDto(Order order) {
         this.orderId = order.getId();
         this.customerId = order.getCustomerId();
         this.status = order.getStatus();
-
     }
 
 }

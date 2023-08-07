@@ -2,15 +2,12 @@ package com.mosinsa.order.order;
 
 
 import com.mosinsa.order.ApiTest;
-import com.mosinsa.order.controller.request.LoginForm;
 import com.mosinsa.order.controller.request.ProductAddRequest;
 import com.mosinsa.order.controller.request.RequestCreateCustomer;
-import com.mosinsa.order.controller.response.ResponseCustomer;
 import com.mosinsa.order.db.entity.DiscountPolicy;
 import com.mosinsa.order.db.entity.OrderStatus;
 import com.mosinsa.order.service.feignclient.CustomerServiceClient;
 import com.mosinsa.order.service.feignclient.ProductServiceClient;
-import com.netflix.discovery.converters.Auto;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

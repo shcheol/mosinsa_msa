@@ -6,12 +6,14 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Component
 @FeignClient(name = "customer-service", url = "localhost:8000/customer-service")
 public interface CustomerServiceClient {
 
     @GetMapping("/customer/{customerId}")
-    ResponseCustomer getCustomer(@PathVariable(value = "customerId") Long customerId);
+	ResponseCustomer getCustomer(@PathVariable(value = "customerId") Long customerId);
 
     @PostMapping("/customer")
     Long createCustomer(@RequestBody RequestCreateCustomer request);
