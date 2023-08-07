@@ -50,14 +50,11 @@ public class OrderServiceImpl implements OrderService{
 		});
 
 
-
-        Order order = Order.createOrder(customerId, orderProductList);
-        OrderDto orderDto = new OrderDto(order.getId(), customerId, this.getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
-
+		Order order = orderRepository.save(Order.createOrder(customerId, orderProductList));
+		OrderDto orderDto = new OrderDto(order.getId(), customerId, getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
 		kafkaProducer.send("mosinsa-product-order", orderDto);
-		orderRepository.save(order);
 
-        return orderDto;
+		return orderDto;
     }
 
 	@Override

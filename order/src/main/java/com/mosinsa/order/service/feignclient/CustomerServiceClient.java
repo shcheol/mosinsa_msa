@@ -4,20 +4,18 @@ import com.mosinsa.order.controller.request.RequestCreateCustomer;
 import com.mosinsa.order.controller.response.ResponseCustomer;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Component
-@FeignClient(name = "customer-service")
+@FeignClient(name = "customer-service", url = "localhost:8000/customer-service")
 public interface CustomerServiceClient {
 
-    @GetMapping("/customers/{customerId}")
+    @GetMapping("/customer/{customerId}")
     ResponseCustomer getCustomer(@PathVariable(value = "customerId") Long customerId);
 
     @PostMapping("/customer")
-    ResponseCustomer createCustomer(@RequestBody RequestCreateCustomer request);
+    Long createCustomer(@RequestBody RequestCreateCustomer request);
+
+	@DeleteMapping("/customer/{customerId}")
+	void deleteCustomer(@PathVariable(value = "customerId") Long customerId);
 }

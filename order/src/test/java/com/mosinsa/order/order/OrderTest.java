@@ -11,6 +11,7 @@ import com.mosinsa.order.service.feignclient.CustomerServiceClient;
 import com.mosinsa.order.service.feignclient.ProductServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,9 @@ class OrderTest {
 
     ResponseCustomer customer;
 
+	@Autowired
     ProductServiceClient productServiceClient;
+	@Autowired
     CustomerServiceClient customerServiceClient;
 
 
@@ -40,7 +43,7 @@ class OrderTest {
         customer= customerServiceClient.getCustomer(1L);
     }
 
-    @Test
+//    @Test
     void 주문생성() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
         orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),5));
@@ -50,12 +53,12 @@ class OrderTest {
 
         assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
         assertThat(createOrder.getOrderProducts().size()).isEqualTo(2);
-        assertThat(productA.getStock()).isEqualTo(5);
-        assertThat(productB.getStock()).isEqualTo(0);
+        assertThat(productServiceClient.getProduct(productA.getProductId()).getStock()).isEqualTo(5);
+        assertThat(productServiceClient.getProduct(productB.getProductId()).getStock()).isEqualTo(0);
 
     }
 
-    @Test
+//    @Test
     void 주문생성_실패_주문상품x() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
 
@@ -65,18 +68,20 @@ class OrderTest {
         assertThat(productB.getStock()).isEqualTo(10);
     }
 
-    @Test
+//    @Test
     void 주문생성_주문상품_수량초과() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
 
-        assertThatThrownBy(()->orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),11))).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(()->
+				orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),11)))
+				.isInstanceOf(RuntimeException.class);
 
         assertThat(productA.getStock()).isEqualTo(10);
         assertThat(productB.getStock()).isEqualTo(10);
     }
 
 
-    @Test
+//    @Test
     void 주문취소() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
         orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),5));

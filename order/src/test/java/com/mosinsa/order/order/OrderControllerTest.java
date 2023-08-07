@@ -2,16 +2,21 @@ package com.mosinsa.order.order;
 
 
 import com.mosinsa.order.ApiTest;
+import com.mosinsa.order.controller.request.LoginForm;
 import com.mosinsa.order.controller.request.ProductAddRequest;
 import com.mosinsa.order.controller.request.RequestCreateCustomer;
+import com.mosinsa.order.controller.response.ResponseCustomer;
 import com.mosinsa.order.db.entity.DiscountPolicy;
 import com.mosinsa.order.db.entity.OrderStatus;
+import com.mosinsa.order.service.feignclient.CustomerServiceClient;
 import com.mosinsa.order.service.feignclient.ProductServiceClient;
+import com.netflix.discovery.converters.Auto;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -21,20 +26,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OrderControllerTest extends ApiTest {
 
     private Long customerId;
-
+	@Autowired
     ProductServiceClient productServiceClient;
+
+	@Autowired
+	CustomerServiceClient customerServiceClient;
+
     @BeforeEach
     public void init() {
-        RequestCreateCustomer customer = new RequestCreateCustomer("1","1","1","aa@aa.com");
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(customer)
-                .when()
-                .post("/customer")
-                .then().log().all().extract();
-        customerId = response.body().jsonPath().getLong("id");
-
-    }
+		customerId = customerServiceClient.createCustomer(
+				new RequestCreateCustomer("9997","1","1","aa@aa.com"));
+	}
 
 //    @Test
     void 회원주문목록() {
@@ -77,7 +79,7 @@ class OrderControllerTest extends ApiTest {
         String id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getProductId();
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
 
-        long orderId = response.body().jsonPath().getLong("id");
+        long orderId = response.body().jsonPath().getLong("orderId");
 
 
         ExtractableResponse<Response> cancelResponse = 주문취소요청(주문취소요청_생성(customerId, orderId));
@@ -99,11 +101,11 @@ class OrderControllerTest extends ApiTest {
         String id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getProductId();
 
         ExtractableResponse<Response> response = 상품주문(상품주문요청_생성(customerId, id1, id2));
-        long orderId = response.body().jsonPath().getLong("id");
+        long orderId = response.body().jsonPath().getLong("orderId");
 
         ExtractableResponse<Response> orderResponse = 주문조회요청(orderId);
         assertThat(orderResponse.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(orderResponse.body().jsonPath().getString("status")).isEqualTo(OrderStatus.CREATE.toString());
+        assertThat(orderResponse.body().jsonPath().getString("status")).isEqualTo(OrderStatus.REQUEST_SUCCESS.toString());
 
 
     }

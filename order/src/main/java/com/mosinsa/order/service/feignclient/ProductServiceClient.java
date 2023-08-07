@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
-@FeignClient(name = "product-service")
+@FeignClient(name = "product-service", url = "localhost:8000/product-service")
 public interface ProductServiceClient {
 
     @GetMapping("/products/{productId}")

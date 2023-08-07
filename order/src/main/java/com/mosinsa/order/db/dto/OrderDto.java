@@ -14,14 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDto {
 
-    private Long id;
+    private Long orderId;
     private Long customerId;
     private int totalPrice;
     private OrderStatus status;
     private final List<OrderProductDto> orderProducts = new ArrayList<>();
 
-    public OrderDto(Long id, Long customerId, int totalPrice, OrderStatus orderStatus,List<OrderProductDto> orderProducts) {
-        this.id = id;
+    public OrderDto(Long orderId, Long customerId, int totalPrice, OrderStatus orderStatus, List<OrderProductDto> orderProducts) {
+        this.orderId = orderId;
         this.customerId = customerId;
         this.totalPrice = totalPrice;
         this.status = orderStatus;
@@ -31,7 +31,7 @@ public class OrderDto {
     }
 
     public OrderDto(Order order) {
-        this.id = order.getId();
+        this.orderId = order.getId();
         this.customerId = order.getCustomerId();
         this.status = order.getStatus();
 
