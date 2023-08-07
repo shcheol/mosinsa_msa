@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @ControllerAdvice
-public class ExceptionControllerAdvice {
+public class ProductControllerAdvice {
 
 	@ExceptionHandler(ProductException.class)
 	@ResponseBody
-	public static ResponseEntity<?> dbprExceptionHandler(ProductException exception) {
+	public static ResponseEntity<?> productExceptionHandler(ProductException exception) {
 		log.error("response error message : {}", exception.getError().getMessage(), exception);
 		return GlobalResponseEntity.Error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
