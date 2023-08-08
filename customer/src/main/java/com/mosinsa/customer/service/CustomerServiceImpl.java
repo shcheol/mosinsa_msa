@@ -1,12 +1,15 @@
 package com.mosinsa.customer.service;
 
-import com.mosinsa.customer.dto.CustomerDto;
-import com.mosinsa.customer.entity.Customer;
-import com.mosinsa.customer.feignclient.OrderServiceClient;
-import com.mosinsa.customer.repository.CustomerRepository;
+import com.mosinsa.customer.common.ex.CustomerError;
+import com.mosinsa.customer.common.ex.CustomerException;
+import com.mosinsa.customer.db.dto.CustomerDto;
+import com.mosinsa.customer.db.entity.Customer;
+import com.mosinsa.customer.service.feignclient.OrderServiceClient;
+import com.mosinsa.customer.db.repository.CustomerRepository;
 import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
 import com.mosinsa.customer.web.controller.response.ResponseOrder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -51,9 +55,9 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     private boolean validateDuplicateCustomer(String loginId) {
-//        if(repository.findCustomerByLoginId(customer.getLoginId()).isPresent()){
-//            throw new IllegalStateException("이미 존재하는 Id입니다.");
-//        }
+        if(repository.findCustomerByLoginId(loginId).isPresent()){
+            throw new CustomerException(CustomerError.DUPLICATED_LOGINID);
+        }
         return repository.findCustomerByLoginId(loginId).isPresent();
     }
 
@@ -75,13 +79,7 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     public CustomerDto getCustomerDetailsByCustomerId(Long customerId) {
-        Customer customer = repository.findById(customerId).orElse(null);
-        if (customer == null){
-            throw new IllegalStateException("User not found");
-        }
-
-//        List<ResponseOrder> orders = getOrdersByRestTemplate(customerId);
-//        List<ResponseOrder> orders = getOrdersByFeignClient(customerId);
+        Customer customer = repository.findById(customerId).orElseThrow(() -> new CustomerException(CustomerError.CUSTOMER_NOT_FOUND));
         return new CustomerDto(customer.getId(), customer.getName());
     }
 

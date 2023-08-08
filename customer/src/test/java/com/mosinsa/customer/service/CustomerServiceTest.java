@@ -1,16 +1,11 @@
 package com.mosinsa.customer.service;
 
-import com.mosinsa.customer.entity.Address;
-import com.mosinsa.customer.entity.Customer;
-import com.mosinsa.customer.entity.CustomerGrade;
-import com.mosinsa.customer.repository.CustomerRepository;
-import org.junit.jupiter.api.Assertions;
+import com.mosinsa.customer.db.entity.Customer;
+import com.mosinsa.customer.db.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;

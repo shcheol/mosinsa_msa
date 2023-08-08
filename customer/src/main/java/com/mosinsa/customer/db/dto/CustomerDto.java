@@ -1,4 +1,4 @@
-package com.mosinsa.customer.dto;
+package com.mosinsa.customer.db.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,11 +1,13 @@
 package com.mosinsa.customer.web.controller;
 
-import com.mosinsa.customer.dto.CustomerDto;
-import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
+import com.mosinsa.customer.common.ex.CustomerError;
+import com.mosinsa.customer.db.dto.CustomerDto;
+import com.mosinsa.customer.db.entity.Customer;
+import com.mosinsa.customer.service.CustomerService;
 import com.mosinsa.customer.web.argumentresolver.Login;
+import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
+import com.mosinsa.customer.web.controller.response.GlobalResponse;
 import com.mosinsa.customer.web.session.SessionConst;
-import com.mosinsa.customer.entity.Customer;
-import com.mosinsa.customer.service.CustomerServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -27,25 +29,10 @@ import java.sql.Timestamp;
 @Controller
 @RequiredArgsConstructor
 public class CustomerController {
-    private final CustomerServiceImpl customerService;
+    private final CustomerService customerService;
 
-//    @GetMapping("/")
-//    public String home(@SessionAttribute(name = SessionConst.LOGIN_CUSTOMER, required = false) Long customerId, Model model){
-//
-//        if(customerId == null){
-//            return "home";
-//        }
-//        Customer loginCustomer = customerService.findById(customerId);
-//        if(loginCustomer == null){
-//            return "home";
-//        }
-//        model.addAttribute("customer", loginCustomer);
-//
-//        return "loginHome";
-//    }
-
-    @GetMapping
-    public String home(@Login Long customerId, Model model){
+/*    @GetMapping("/")
+    public String home(@SessionAttribute(name = SessionConst.LOGIN_CUSTOMER, required = false) Long customerId, Model model){
 
         if(customerId == null){
             return "home";
@@ -57,7 +44,22 @@ public class CustomerController {
         model.addAttribute("customer", loginCustomer);
 
         return "loginHome";
+    }*/
+
+    @GetMapping
+    public String home(@Login Long customerId, Model model){
+
+        if(customerId == null){
+            return "home";
+        }
+		if(customerService.findById(customerId) == null){
+            return "home";
+        }
+        model.addAttribute("customer", customerService.findById(customerId));
+
+        return "loginHome";
     }
+
     @GetMapping("/health")
     @ResponseBody
     public String health(){
@@ -77,7 +79,7 @@ public class CustomerController {
         }
 
         if(customerService.join(customer) == null){
-            bindingResult.addError(new FieldError("customer","loginId","이미 존재하는 ID입니다."));
+            bindingResult.addError(new FieldError("customer","loginId",CustomerError.DUPLICATED_LOGINID.getMessage()));
             return "customers/joinCustomerForm";
         }
         return "redirect:/";
@@ -96,7 +98,7 @@ public class CustomerController {
 
         Customer loginCustomer = customerService.login(loginForm.getLoginId(), loginForm.getPassword());
         if (loginCustomer == null){
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 틀렸습니다.");
+            bindingResult.reject("loginFail", CustomerError.WRONG_ID_OR_PASSWORD.getMessage());
             return "login/loginForm";
         }
 
@@ -139,12 +141,5 @@ public class CustomerController {
 
 		return ResponseEntity.ok().build();
 	}
-
-//    @PostMapping
-//    public ResponseEntity<Customer> orders(@RequestBody Customer request){
-//
-//        Customer save = customerRepository.save(request);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(save);
-//    }
 
 }

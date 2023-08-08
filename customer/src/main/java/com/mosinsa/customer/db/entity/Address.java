@@ -1,4 +1,4 @@
-package com.mosinsa.customer.entity;
+package com.mosinsa.customer.db.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

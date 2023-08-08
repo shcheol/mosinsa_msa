@@ -1,6 +1,6 @@
-package com.mosinsa.customer.repository;
+package com.mosinsa.customer.db.repository;
 
-import com.mosinsa.customer.entity.Customer;
+import com.mosinsa.customer.db.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
