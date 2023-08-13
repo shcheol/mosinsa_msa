@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.7'
     id 'io.spring.dependency-management' version '1.1.0'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    //id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.mosinsa'
@@ -32,6 +32,8 @@ dependencies {
     implementation 'io.rest-assured:rest-assured:5.3.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
     implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
@@ -53,21 +55,21 @@ dependencyManagement {
     }
 }
 
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets {
-    main.java.srcDir querydslDir
-}
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
-}
+//def querydslDir = "$buildDir/generated/querydsl"
+//
+//querydsl {
+//    jpa = true
+//    querydslSourcesDir = querydslDir
+//}
+//sourceSets {
+//    main.java.srcDir querydslDir
+//}
+//configurations {
+//    querydsl.extendsFrom compileClasspath
+//}
+//compileQuerydsl {
+//    options.annotationProcessorPath = configurations.querydsl
+//}
 
 tasks.named('test') {
     useJUnitPlatform()

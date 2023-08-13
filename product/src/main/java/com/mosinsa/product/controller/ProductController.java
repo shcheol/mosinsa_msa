@@ -4,7 +4,7 @@ package com.mosinsa.product.controller;
 import com.mosinsa.product.controller.request.ProductAddRequest;
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
 import com.mosinsa.product.db.dto.ProductDto;
-import com.mosinsa.product.service.ProductServiceImpl;
+import com.mosinsa.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductServiceImpl productServiceImpl;
+    private final ProductService productService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder webDataBinder){
@@ -30,13 +30,13 @@ public class ProductController {
     @GetMapping
     public Page<ProductDto> findAllProducts(Pageable pageable){
 
-		return productServiceImpl.findAllProducts(pageable);
+		return productService.findAllProducts(pageable);
     }
 
     @PostMapping
     public ResponseEntity<ProductDto> addProduct(@RequestBody ProductAddRequest request){
 
-        ProductDto productDto = productServiceImpl.addProduct(request);
+        ProductDto productDto = productService.addProduct(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
     }
@@ -45,7 +45,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
         log.info("getProduct {}", productId);
-        ProductDto product = productServiceImpl.findProductById(productId);
+        ProductDto product = productService.findProductById(productId);
 
         return ResponseEntity.ok().body(product);
     }
@@ -53,7 +53,7 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<Void> updateProduct(@PathVariable String productId, @RequestBody ProductUpdateRequest request){
 
-        productServiceImpl.updateProduct(productId, request);
+        productService.updateProduct(productId, request);
 
         return ResponseEntity.ok().build();
     }

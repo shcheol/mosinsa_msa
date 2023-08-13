@@ -17,16 +17,16 @@ public class KafkaConsumer {
 	private final OrderService service;
 
     @Transactional
-    @KafkaListener(topics = "mosinsa-product-order-rollback")
+    @KafkaListener(topics = "${mosinsa.topic.order.rollback}")
     public void orderProductRollback(String kafkaMessage){
-        log.info("mosinsa-product-order-rollback: {}", kafkaMessage);
+        log.info("mosinsa-order-rollback: {}", kafkaMessage);
 		service.changeOrderStatus(readValueToOrderDto(kafkaMessage).getOrderId(), OrderStatus.CANCEL);
     }
 
     @Transactional
-    @KafkaListener(topics = "mosinsa-product-order-commit")
+    @KafkaListener(topics = "${mosinsa.topic.order.commit}")
     public void orderProductCommit(String kafkaMessage){
-        log.info("mosinsa-product-order-commit: {}", kafkaMessage);
+        log.info("mosinsa-order-commit: {}", kafkaMessage);
 		service.changeOrderStatus(readValueToOrderDto(kafkaMessage).getOrderId(), OrderStatus.REQUEST_SUCCESS);
     }
 }

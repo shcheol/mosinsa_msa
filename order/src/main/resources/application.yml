@@ -8,6 +8,10 @@ server:
 spring:
   application:
     name: order-service
+  profiles:
+    active: dev
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
     url: ENC(djOzr0kNAAemNow17fcj9waDqB70v/ypMijPlI4INIpK+UmXRv5TLSZHRCH8FxH80gBsQ10utlk=)
     username: ENC(hU8887xxjH52qa4MSQzANw==)
@@ -24,24 +28,13 @@ spring:
   kafka:
     bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
 #  thymeleaf:
 #    prefix: classpath:/templates/
 #    suffix: .html
-
-
-eureka:
-  instance:
-    hostname: localhost
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-
-# log level Setting
-logging:
-  level:
-    org.hibernate.type: trace
-    org.springframework.jdbc.core: trace
 

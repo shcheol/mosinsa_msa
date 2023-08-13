@@ -8,6 +8,10 @@ server:
 spring:
   application:
     name: product-service
+  profiles:
+    active: dev
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
     url: ENC(pHMxxASZrAc4eZiOR4l3a9bMuqxQW+jp6KBFQmYBM50/pW+ZKwU6fPeCJBueUHS/Q2J7D+1jenE=)
     username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
@@ -31,20 +35,8 @@ spring:
       port: 6666
       host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
 
-eureka:
-  instance:
-    hostname: localhost
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-
-# log level Setting
-logging:
-  level:
-    org.hibernate.type: trace
-    org.springframework.jdbc.core: trace
-
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans

@@ -12,7 +12,9 @@ import com.mosinsa.product.db.repository.ProductRepository;
 import com.mosinsa.product.service.kafka.KafkaProducer;
 import com.mosinsa.product.service.wrapper.PageWrapper;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -26,11 +28,17 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final KafkaProducer kafkaProducer;
     private final ProductRepository productRepository;
+
+    @Value("${mosinsa.topic.order.rollback}")
+    private String rollbackTopic;
+
+    @Value("${mosinsa.topic.order.commit}")
+    private String commitTopic;
 
     @Override
     @Transactional
@@ -74,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
                         .removeStock(op.getOrderCount());
                 tempOrderProductDtos.add(op);
             });
-            kafkaProducer.completeTransaction("mosinsa-product-order-commit", orderDto);
+            kafkaProducer.completeTransaction(commitTopic, orderDto);
         }catch (Exception e){
             log.error("order product fail", e);
             tempOrderProductDtos.forEach(op -> {
@@ -85,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
 
             OrderDto rollbackOrder =
                     new OrderDto(orderDto.getOrderId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
-            kafkaProducer.completeTransaction("mosinsa-product-order-rollback", rollbackOrder);
+            kafkaProducer.completeTransaction(rollbackTopic, rollbackOrder);
         }
     }
 

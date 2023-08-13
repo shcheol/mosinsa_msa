@@ -1,17 +1,13 @@
 server:
   port: 8000
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
 
 spring:
   application:
     name: apigateway-service
+  profiles:
+    active: dev
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888/"
 #  cloud:
 #    gateway:
 #      routes:
@@ -20,3 +16,8 @@ spring:
 #          predicates:
 #            - Path=/customer-service/**
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans

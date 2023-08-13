@@ -17,6 +17,7 @@ import com.mosinsa.order.service.feignclient.ProductServiceClient;
 import com.mosinsa.order.service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,12 @@ public class OrderServiceImpl implements OrderService{
 
 	private final CustomerServiceClient customerServiceClient;
     private final KafkaProducer kafkaProducer;
+
+	@Value("${mosinsa.topic.order.request}")
+	private String orderTopic;
+
+	@Value("${mosinsa.topic.order.cancel}")
+	private String cancelTopic;
 
 
 	@Override
@@ -58,7 +65,7 @@ public class OrderServiceImpl implements OrderService{
 
 		Order order = orderRepository.save(Order.createOrder(customer.getId(), orderProductList));
 		OrderDto orderDto = new OrderDto(order.getId(), customer.getId(), getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
-		kafkaProducer.send("mosinsa-product-order", orderDto);
+		kafkaProducer.send(orderTopic, orderDto);
 
 		return orderDto;
     }
@@ -85,7 +92,7 @@ public class OrderServiceImpl implements OrderService{
 		});
 
         OrderDto orderDto = new OrderDto(findOrder.getId(), customerId, this.getTotalPrice(findOrder.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
-        kafkaProducer.send("mosinsa-product-order-cancel", orderDto);
+        kafkaProducer.send(cancelTopic, orderDto);
 
     }
 

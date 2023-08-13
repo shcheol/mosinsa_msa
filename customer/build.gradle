@@ -32,6 +32,8 @@ dependencies {
     implementation 'io.rest-assured:rest-assured:5.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
     runtimeOnly 'com.mysql:mysql-connector-j'

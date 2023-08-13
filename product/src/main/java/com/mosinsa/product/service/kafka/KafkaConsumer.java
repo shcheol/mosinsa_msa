@@ -14,12 +14,12 @@ import static com.mosinsa.product.service.converter.JsonConverter.readValueToOrd
 public class KafkaConsumer {
     private final ProductServiceImpl service;
 
-    @KafkaListener(topics = "mosinsa-product-order")
+    @KafkaListener(topics = "${mosinsa.topic.order.request}")
     public void orderProduct(String kafkaMessage){
         service.orderProduct(readValueToOrderDto(kafkaMessage));
     }
 
-    @KafkaListener(topics = "mosinsa-product-order-cancel")
+    @KafkaListener(topics = "${mosinsa.topic.order.cancel}")
     public void cancelOrder(String kafkaMessage){
         service.cancelOrder(readValueToOrderDto(kafkaMessage));
     }
