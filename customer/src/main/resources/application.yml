@@ -34,4 +34,7 @@ management:
       exposure:
         include: refresh, health, beans
 
+token:
+  expiration_time:
+
 
