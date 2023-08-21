@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class CustomerDto {
 
-    private Long id;
+    private String id;
 
     private String name;
 

@@ -35,6 +35,8 @@ management:
         include: refresh, health, beans
 
 token:
-  expiration_time:
+  secret: mySecret
+  expiration: 3600000
+
 
 

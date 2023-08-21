@@ -1,4 +1,4 @@
-package com.mosinsa.customer.web.controller;
+package com.mosinsa.customer.web.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginForm {
+public class RequestLogin {
     @NotBlank
     private String loginId;
 

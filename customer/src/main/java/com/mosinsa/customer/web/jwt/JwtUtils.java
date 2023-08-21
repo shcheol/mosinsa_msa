@@ -3,18 +3,22 @@ package com.mosinsa.customer.web.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
 public class JwtUtils {
-	private static final String secret="mySecretKey";
-	private static final long tokenExpirationDuration = 60 * 60 *1000L;
 
-	public static boolean isValid(String token){
+	@Value("${token.secret}")
+	private String secret;
+
+	@Value("${token.expiration}")
+	private long tokenExpirationDuration;
+
+	public boolean isValid(String token){
 		try {
 			JwtParser jwtParser = Jwts.parser().setSigningKey("mySecretKey".getBytes(StandardCharsets.UTF_8));
 			Jws<Claims> jws = jwtParser.parseClaimsJws(token);
@@ -24,11 +28,11 @@ public class JwtUtils {
 		}
 	}
 
-	public static String getToken(String header){
+	public String getToken(String header){
 		return header.substring(header.indexOf(" ")+1);
 	}
 
-	public static String getCustomerId(String token){
+	public String getCustomerId(String token){
 		try {
 			JwtParser jwtParser = Jwts.parser().setSigningKey("mySecretKey".getBytes(StandardCharsets.UTF_8));
 			Jws<Claims> jws = jwtParser.parseClaimsJws(token);
@@ -38,7 +42,7 @@ public class JwtUtils {
 		}
 	}
 
-	public static String createToken(String customerId) {
+	public String createToken(String customerId) {
 		Claims claims = Jwts.claims().setSubject(customerId);
 
 		Date now = new Date();

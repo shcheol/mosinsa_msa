@@ -22,6 +22,6 @@ management:
       exposure:
         include: refresh, health, beans
 
-jwt:
-  token:
-    key: mySecretKey
+token:
+  secret: mySecret
+  expiration: 3600000

@@ -28,7 +28,7 @@ class CustomerServiceTest {
         customer.setPassword("password");
         customer.setEmail("test@test.com");
 
-        Long join = customerService.join(customer);
+		String join = customerService.join(customer);
 
         assertEquals(customer,customerRepository.findById(join).get());
     }

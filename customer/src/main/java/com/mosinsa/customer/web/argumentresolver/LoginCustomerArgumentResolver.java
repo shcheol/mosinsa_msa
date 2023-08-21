@@ -19,9 +19,9 @@ public class LoginCustomerArgumentResolver implements HandlerMethodArgumentResol
         boolean hasParameterAnnotation = parameter.hasParameterAnnotation(Login.class);
 
         //타입이 맞는지
-        boolean hasLongType = Long.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasStringType = String.class.isAssignableFrom(parameter.getParameterType());
 
-        return hasParameterAnnotation && hasLongType;
+        return hasParameterAnnotation && hasStringType;
     }
 
     @Override

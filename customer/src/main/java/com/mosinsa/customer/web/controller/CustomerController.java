@@ -5,8 +5,8 @@ import com.mosinsa.customer.db.dto.CustomerDto;
 import com.mosinsa.customer.db.entity.Customer;
 import com.mosinsa.customer.service.CustomerService;
 import com.mosinsa.customer.web.argumentresolver.Login;
+import com.mosinsa.customer.web.controller.request.RequestLogin;
 import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
-import com.mosinsa.customer.web.controller.response.GlobalResponse;
 import com.mosinsa.customer.web.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -47,7 +47,7 @@ public class CustomerController {
     }*/
 
     @GetMapping
-    public String home(@Login Long customerId, Model model){
+    public String home(@Login String customerId, Model model){
 
         if(customerId == null){
             return "home";
@@ -86,26 +86,26 @@ public class CustomerController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute LoginForm loginForm){
+    public String loginForm(@ModelAttribute RequestLogin loginForm){
         return "login/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request){
-        if(bindingResult.hasErrors()){
-            return "login/loginForm";
-        }
+    public ResponseEntity<CustomerDto> login(@Valid @ModelAttribute RequestLogin requestLogin, BindingResult bindingResult, HttpServletRequest request){
+//        if(bindingResult.hasErrors()){
+//            return "login/loginForm";
+//        }
 
-        Customer loginCustomer = customerService.login(loginForm.getLoginId(), loginForm.getPassword());
-        if (loginCustomer == null){
-            bindingResult.reject("loginFail", CustomerError.WRONG_ID_OR_PASSWORD.getMessage());
-            return "login/loginForm";
-        }
+        Customer customer = customerService.login(requestLogin.getLoginId(), requestLogin.getPassword());
+//        if (loginCustomer == null){
+//            bindingResult.reject("loginFail", CustomerError.WRONG_ID_OR_PASSWORD.getMessage());
+//            return "login/loginForm";
+//        }
+//
+//        HttpSession session = request.getSession();
+//        session.setAttribute(SessionConst.LOGIN_CUSTOMER, loginCustomer.getId());
 
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_CUSTOMER, loginCustomer.getId());
-
-        return "redirect:/";
+        return ResponseEntity.ok(new CustomerDto(customer.getId(), customer.getName()));
     }
 
     @PostMapping("/logout")
@@ -120,14 +120,14 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity<Long> createCustomer(@RequestBody RequestCreateCustomer request){
+    public ResponseEntity<String> createCustomer(@RequestBody RequestCreateCustomer request){
 
-        Long customerId = customerService.join(request);
+		String customerId = customerService.join(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable Long customerId){
+    public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable String customerId){
 
         CustomerDto customerDetails = customerService.getCustomerDetailsByCustomerId(customerId);
 
@@ -135,7 +135,7 @@ public class CustomerController {
     }
 
 	@DeleteMapping("/customer/{customerId}")
-	public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId){
+	public ResponseEntity<Void> deleteCustomer(@PathVariable String customerId){
 
 		customerService.delete(customerId);
 

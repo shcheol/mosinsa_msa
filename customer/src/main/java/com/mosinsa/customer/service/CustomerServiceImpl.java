@@ -13,10 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -29,19 +34,25 @@ public class CustomerServiceImpl implements CustomerService{
 
     private final OrderServiceClient orderServiceClient;
 
+	private final BCryptPasswordEncoder passwordEncoder;
+
     @Transactional
-    public Long join(RequestCreateCustomer requestCustomer){
+    public String join(RequestCreateCustomer requestCustomer){
 
         if(validateDuplicateCustomer(requestCustomer.getLoginId())){
             return null;
         }
-        Customer customer = new Customer(requestCustomer.getLoginId(), requestCustomer.getName(), requestCustomer.getPassword(), requestCustomer.getEmail());
+        Customer customer = new Customer(
+				requestCustomer.getLoginId(),
+				requestCustomer.getName(),
+				passwordEncoder.encode(requestCustomer.getPassword()),
+				requestCustomer.getEmail());
         repository.save(customer);
         return customer.getId();
     }
 
     @Override
-    public Long join(Customer customer) {
+    public String join(Customer customer) {
         if(validateDuplicateCustomer(customer.getLoginId())){
             return null;
         }
@@ -70,24 +81,24 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
 	@Override
-	public void delete(Long customerId) {
+	public void delete(String customerId) {
 		repository.deleteById(customerId);
 	}
 
-	public Customer findById(Long customerId){
+	public Customer findById(String customerId){
         return repository.findById(customerId).orElse(null);
     }
 
-    public CustomerDto getCustomerDetailsByCustomerId(Long customerId) {
+    public CustomerDto getCustomerDetailsByCustomerId(String customerId) {
         Customer customer = repository.findById(customerId).orElseThrow(() -> new CustomerException(CustomerError.CUSTOMER_NOT_FOUND));
         return new CustomerDto(customer.getId(), customer.getName());
     }
 
-    private List<ResponseOrder> getOrdersByFeignClient(Long customerId) {
+    private List<ResponseOrder> getOrdersByFeignClient(String customerId) {
         return orderServiceClient.getOrders(customerId);
     }
 
-    private List<ResponseOrder> getOrdersByRestTemplate(Long customerId) {
+    private List<ResponseOrder> getOrdersByRestTemplate(String customerId) {
         String orderUrl = "http://localhost:8000/order-service/%s/orders";
         ResponseEntity<List<ResponseOrder>> response = new RestTemplate().exchange(orderUrl, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<ResponseOrder>>() {
@@ -97,4 +108,13 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
 
+	@Override
+	public UserDetails loadUserByUsername(String username) {
+		Customer customer = repository.findCustomerByLoginId(username)
+				.orElseThrow(() -> new CustomerException(CustomerError.CUSTOMER_NOT_FOUND));
+
+
+		return new User(customer.getLoginId(), customer.getPassword(),
+				true, true, true, true, new ArrayList<>());
+	}
 }

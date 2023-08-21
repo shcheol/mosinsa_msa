@@ -7,15 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Customer {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Column(name = "customer_id")
-    private Long id;
+    private String id;
 
     @NotBlank
     private String loginId;
@@ -34,6 +36,7 @@ public class Customer {
     private CustomerGrade grade;
 
     public Customer(String loginId, String name, String password, String email){
+		this.id = UUID.randomUUID().toString();
         this.loginId = loginId;
         this.name = name;
         this.password = password;
