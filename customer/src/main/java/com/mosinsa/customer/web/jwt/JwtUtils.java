@@ -26,15 +26,6 @@ public class JwtUtils {
 
 	private final TokenRepository repository;
 
-	public boolean isValid(String token){
-		try {
-			JwtParser jwtParser = Jwts.parser().setSigningKey(accessSecret.getBytes(StandardCharsets.UTF_8));
-			Jws<Claims> jws = jwtParser.parseClaimsJws(token);
-			return jws.getBody().getExpiration().after(new Date());
-		}catch (Exception e){
-			return false;
-		}
-	}
 	public String createAccessToken(String customerId) {
 		Date now = new Date();
 		Date expiration = new Date(now.getTime() + accessTokenExpiration);

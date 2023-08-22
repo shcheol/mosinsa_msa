@@ -42,8 +42,8 @@ management:
 token:
   access:
     secret: access_secret
-#    expiration: 3600000
-    expiration: 10000
+    expiration: 3600000
+#    expiration: 10000
   refresh:
     secret: refresh_secret
     expiration: 1209600000

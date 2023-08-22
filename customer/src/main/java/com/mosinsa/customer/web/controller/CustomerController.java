@@ -5,9 +5,8 @@ import com.mosinsa.customer.db.dto.CustomerDto;
 import com.mosinsa.customer.db.entity.Customer;
 import com.mosinsa.customer.service.CustomerService;
 import com.mosinsa.customer.web.argumentresolver.Login;
-import com.mosinsa.customer.web.controller.request.RequestLogin;
 import com.mosinsa.customer.web.controller.request.RequestCreateCustomer;
-import com.mosinsa.customer.web.session.SessionConst;
+import com.mosinsa.customer.web.controller.request.RequestLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +24,7 @@ import java.sql.Timestamp;
 
 @Slf4j
 @Transactional
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
@@ -46,19 +44,19 @@ public class CustomerController {
         return "loginHome";
     }*/
 
-    @GetMapping
-    public String home(@Login String customerId, Model model){
-
-        if(customerId == null){
-            return "home";
-        }
-		if(customerService.findById(customerId) == null){
-            return "home";
-        }
-        model.addAttribute("customer", customerService.findById(customerId));
-
-        return "loginHome";
-    }
+//    @GetMapping
+//    public String home(@Login String customerId, Model model){
+//
+//        if(customerId == null){
+//            return "home";
+//        }
+//		if(customerService.findById(customerId) == null){
+//            return "home";
+//        }
+//        model.addAttribute("customer", customerService.findById(customerId));
+//
+//        return "loginHome";
+//    }
 
     @GetMapping("/health")
     @ResponseBody
@@ -67,46 +65,46 @@ public class CustomerController {
         return "health-check";
     }
 
-    @GetMapping("/join")
-    public String joinForm(@ModelAttribute Customer customer){
-        return "customers/joinCustomerForm";
-    }
+//    @GetMapping("/join")
+//    public String joinForm(@ModelAttribute Customer customer){
+//        return "customers/joinCustomerForm";
+//    }
 
-    @PostMapping("/join")
-    public String save(@Valid @ModelAttribute Customer customer, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            return "customers/joinCustomerForm";
-        }
-
-        if(customerService.join(customer) == null){
-            bindingResult.addError(new FieldError("customer","loginId",CustomerError.DUPLICATED_LOGINID.getMessage()));
-            return "customers/joinCustomerForm";
-        }
-        return "redirect:/";
-    }
-
-    @GetMapping("/login")
-    public String loginForm(@ModelAttribute RequestLogin loginForm){
-        return "login/loginForm";
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<CustomerDto> login(@Valid @ModelAttribute RequestLogin requestLogin, BindingResult bindingResult, HttpServletRequest request){
+//    @PostMapping("/join")
+//    public String save(@Valid @ModelAttribute Customer customer, BindingResult bindingResult){
 //        if(bindingResult.hasErrors()){
-//            return "login/loginForm";
-//        }
-
-        Customer customer = customerService.login(requestLogin.getLoginId(), requestLogin.getPassword());
-//        if (loginCustomer == null){
-//            bindingResult.reject("loginFail", CustomerError.WRONG_ID_OR_PASSWORD.getMessage());
-//            return "login/loginForm";
+//            return "customers/joinCustomerForm";
 //        }
 //
-//        HttpSession session = request.getSession();
-//        session.setAttribute(SessionConst.LOGIN_CUSTOMER, loginCustomer.getId());
+//        if(customerService.join(customer) == null){
+//            bindingResult.addError(new FieldError("customer","loginId",CustomerError.DUPLICATED_LOGINID.getMessage()));
+//            return "customers/joinCustomerForm";
+//        }
+//        return "redirect:/";
+//    }
 
-        return ResponseEntity.ok(new CustomerDto(customer.getId(), customer.getName()));
-    }
+//    @GetMapping("/login")
+//    public String loginForm(@ModelAttribute RequestLogin loginForm){
+//        return "login/loginForm";
+//    }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<CustomerDto> login(@Valid @ModelAttribute RequestLogin requestLogin, BindingResult bindingResult, HttpServletRequest request){
+////        if(bindingResult.hasErrors()){
+////            return "login/loginForm";
+////        }
+//
+//        Customer customer = customerService.login(requestLogin.getLoginId(), requestLogin.getPassword());
+////        if (loginCustomer == null){
+////            bindingResult.reject("loginFail", CustomerError.WRONG_ID_OR_PASSWORD.getMessage());
+////            return "login/loginForm";
+////        }
+////
+////        HttpSession session = request.getSession();
+////        session.setAttribute(SessionConst.LOGIN_CUSTOMER, loginCustomer.getId());
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(new CustomerDto(customer.getId(), customer.getName()));
+//    }
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request){
@@ -119,14 +117,14 @@ public class CustomerController {
         return "redirect:/";
     }
 
-    @PostMapping("/customer")
+    @PostMapping("/customers")
     public ResponseEntity<String> createCustomer(@RequestBody RequestCreateCustomer request){
 
 		String customerId = customerService.join(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
     }
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/customers/{customerId}")
     public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable String customerId){
 
         CustomerDto customerDetails = customerService.getCustomerDetailsByCustomerId(customerId);
@@ -134,7 +132,7 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customerDetails);
     }
 
-	@DeleteMapping("/customer/{customerId}")
+	@DeleteMapping("/customers/{customerId}")
 	public ResponseEntity<Void> deleteCustomer(@PathVariable String customerId){
 
 		customerService.delete(customerId);

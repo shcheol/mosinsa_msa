@@ -4,6 +4,7 @@ package com.mosinsa.gateway.jwt;
 import com.mosinsa.gateway.repository.TokenRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -11,6 +12,7 @@ import org.springframework.util.StringUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtUtils {
@@ -27,8 +29,7 @@ public class JwtUtils {
 	private final TokenRepository repository;
 	public boolean isAccessTokenValid(String accessToken){
 		try {
-			Claims claims = Jwts.parser().setSigningKey(accessSecret.getBytes(StandardCharsets.UTF_8))
-					.parseClaimsJws(accessToken).getBody();
+			Claims claims = getClaims(accessToken, accessSecret);
 
 			if(!StringUtils.hasText(claims.getSubject())){
 				return false;
@@ -41,42 +42,50 @@ public class JwtUtils {
 		}
 	}
 
-	public String getSubject(String token){
+	public boolean isRefreshTokenValid(String refreshToken){
 		try {
 
+			Claims claims = getClaims(refreshToken, refreshSecret);
+
+			String customerId = getSubject(refreshToken);
+			if(!StringUtils.hasText(customerId)){
+				return false;
+			}
+
+			String storedToken = repository.get(customerId);
+			if(!StringUtils.hasText(storedToken)){
+				return false;
+			}
+
+			if (!refreshToken.equals(storedToken)){
+				return false;
+			}
+
+			return claims.getExpiration().after(new Date());
+
+		}catch (Exception e){
+			return false;
+		}
+	}
+
+	public String getSubject(String token){
+		try {
 			return Jwts.parser().setSigningKey(refreshSecret.getBytes(StandardCharsets.UTF_8))
 					.parseClaimsJws(token).getBody().getSubject();
 
 		}catch (Exception e){
+			log.debug("jwt parse fail", e);
 			throw new IllegalArgumentException(e);
 		}
 	}
 
-	public boolean isRefreshTokenValid(String refreshToken){
-		try {
-			// io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-08-22T17:24:51Z. Current time: 2023-08-22T17:26:46Z, a difference of 115085 milliseconds.  Allowed clock skew: 0 milliseconds.
-//			Claims claims = Jwts.parser().setSigningKey(accessSecret.getBytes(StandardCharsets.UTF_8))
-//					.parseClaimsJws(accessToken).getBody();
-//
-//			if(!StringUtils.hasText(claims.getSubject())){
-//				return false;
-//			}
-
-			Claims refreshClaims = Jwts.parser().setSigningKey(refreshSecret.getBytes(StandardCharsets.UTF_8))
-					.parseClaimsJws(refreshToken).getBody();
-
-			if(!StringUtils.hasText(refreshClaims.getSubject())){
-				return false;
-			}
-
-//			if (claims.getSubject() != refreshClaims.getSubject()){
-//				return false;
-//			}
-
-			return refreshClaims.getExpiration().after(new Date());
-
+	private Claims getClaims(String token, String secret){
+		try{
+			return Jwts.parser().setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
+					.parseClaimsJws(token).getBody();
 		}catch (Exception e){
-			return false;
+			log.debug("jwt parse fail", e);
+			throw new IllegalArgumentException(e);
 		}
 	}
 

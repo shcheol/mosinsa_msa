@@ -48,8 +48,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 											Authentication authResult) {
 		String id = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername()).getId();
 
-		response.addHeader("customerId", id);
-		response.addHeader("accessToken", jwtUtils.createAccessToken(id));
-		response.addHeader("refreshToken", jwtUtils.createRefreshToken(id));
+		response.addHeader(HeaderConst.CUSTOMER_ID.getName(), id);
+		response.addHeader(HeaderConst.ACCESS_TOKEN.getName(), jwtUtils.createAccessToken(id));
+		response.addHeader(HeaderConst.REFRESH_TOKEN.getName(), jwtUtils.createRefreshToken(id));
 	}
 }

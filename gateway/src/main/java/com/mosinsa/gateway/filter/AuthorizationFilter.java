@@ -22,10 +22,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AuthorizationFilter extends AbstractGatewayFilterFactory<AuthorizationFilter.Config> {
 	private final JwtUtils utils;
-
 	private final Set<String> whiteList = new HashSet<>();
 	private static final String[] AUTH_WHITELIST = {
-			"/customer", "/login"
+			"/customers", "/login"
 	};
 
 	@PostConstruct
@@ -58,18 +57,18 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 			String accessToken = token.get().replace("Bearer", "");
 
 			if(!utils.isAccessTokenValid(accessToken)){
-				List<String> refreshTokenHeader = headers.get("Refresh-Token");
+				List<String> refreshTokenHeader = headers.get(HeaderConst.REFRESH_TOKEN.getName());
 				if(refreshTokenHeader == null || refreshTokenHeader.isEmpty()){
 					return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
 				}
-				String refreshToken = headers.get("Refresh-Token").get(0);
+				String refreshToken = headers.get(HeaderConst.REFRESH_TOKEN.getName()).get(0);
 
 				if (!utils.isRefreshTokenValid(refreshToken)){
 					return onError(exchange, AuthorizationError.JWT_VALID_ERROR);
 				}
 
 				String newAccessToken = utils.createAccessToken(utils.getSubject(refreshToken));
-				exchange.getResponse().getHeaders().add("accessToken", newAccessToken);
+				exchange.getResponse().getHeaders().add(HeaderConst.ACCESS_TOKEN.getName(), newAccessToken);
 			}
 
 			return chain.filter(exchange);

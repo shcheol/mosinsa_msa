@@ -76,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService{
     public Customer login(String loginId, String password) {
 
         return repository.findCustomerByLoginId(loginId)
-                .filter(customer -> customer.getPassword().equals(password)).orElse(null);
+                .filter(customer -> customer.getPassword().equals(password)).orElseThrow(() -> new CustomerException(CustomerError.WRONG_ID_OR_PASSWORD));
 
     }
 
