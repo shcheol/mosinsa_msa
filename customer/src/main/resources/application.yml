@@ -28,6 +28,11 @@ spring:
 #  thymeleaf:
 #    prefix: classpath:/templates/
 #    suffix: .html
+  data:
+    redis:
+      port: 6666
+      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+
 management:
   endpoints:
     web:
@@ -35,8 +40,12 @@ management:
         include: refresh, health, beans
 
 token:
-  secret: mySecret
-  expiration: 3600000
-
+  access:
+    secret: access_secret
+#    expiration: 3600000
+    expiration: 10000
+  refresh:
+    secret: refresh_secret
+    expiration: 1209600000
 
 

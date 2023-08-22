@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
     @Transactional
-    public OrderDto order(Long customerId, Map<String, Integer> productMap) {
+    public OrderDto order(String customerId, Map<String, Integer> productMap) {
         Assert.isTrue(productMap.size()>=1, "1개 이상의 상품을 주문해야 합니다.");
 
 		ResponseCustomer customer =customerServiceClient.getCustomer(customerId);
@@ -72,14 +72,14 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
     @Transactional
-    public void cancelOrder(Long customerId, Long orderId) {
+    public void cancelOrder(String customerId, Long orderId) {
         Order findOrder = orderRepository.findById(orderId).orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
 		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), customerId), "주문한 고객과 동일한 고객이 취소해야합니다.");
 
 		OrderStatus status = findOrder.getStatus();
         Assert.isTrue(!status.equals(OrderStatus.CANCEL),"이미 취소처리된 주문입니다.");
 
-        Long orderCustomer = findOrder.getCustomerId();
+		String orderCustomer = findOrder.getCustomerId();
         Assert.isTrue(orderCustomer.equals(customerId),"본인이 주문한 주문만 취소 할 수 있습니다.");
         Assert.isTrue(!findOrder.getStatus().equals(OrderStatus.COMPLETE), "배송 시작된 주문은 취소할수 없습니다.");
 
@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
 	@Override
-    public List<OrderDto> getOrderCustomer(Long customerId) {
+    public List<OrderDto> getOrderCustomer(String customerId) {
 
 		return orderRepository.findOrderByCustomerIdOrderByCreatedDateDesc(customerId)
 				.stream().map(OrderDto::new).toList();

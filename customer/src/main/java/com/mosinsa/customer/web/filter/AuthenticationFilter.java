@@ -1,18 +1,14 @@
 package com.mosinsa.customer.web.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.customer.db.entity.Customer;
 import com.mosinsa.customer.service.CustomerService;
 import com.mosinsa.customer.web.controller.request.RequestLogin;
 import com.mosinsa.customer.web.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,12 +23,9 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private static final ObjectMapper om = new ObjectMapper();
-
 	private final CustomerService customerService;
-
 	private final JwtUtils jwtUtils;
 
-	private final Environment env;
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request,
@@ -56,6 +49,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		String id = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername()).getId();
 
 		response.addHeader("customerId", id);
-		response.addHeader("accessToken", jwtUtils.createToken(id));
+		response.addHeader("accessToken", jwtUtils.createAccessToken(id));
+		response.addHeader("refreshToken", jwtUtils.createRefreshToken(id));
 	}
 }

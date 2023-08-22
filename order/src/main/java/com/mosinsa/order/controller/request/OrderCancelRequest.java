@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderCancelRequest {
 
-    private Long customerId;
+    private String customerId;
     private Long orderId;
 
-    public OrderCancelRequest(Long customerId, Long orderId) {
+    public OrderCancelRequest(String customerId, Long orderId) {
         this.customerId = customerId;
         this.orderId = orderId;
     }

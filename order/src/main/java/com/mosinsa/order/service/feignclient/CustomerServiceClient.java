@@ -13,11 +13,11 @@ import java.util.Optional;
 public interface CustomerServiceClient {
 
     @GetMapping("/customer/{customerId}")
-	ResponseCustomer getCustomer(@PathVariable(value = "customerId") Long customerId);
+	ResponseCustomer getCustomer(@PathVariable(value = "customerId") String customerId);
 
     @PostMapping("/customer")
-    Long createCustomer(@RequestBody RequestCreateCustomer request);
+	String createCustomer(@RequestBody RequestCreateCustomer request);
 
 	@DeleteMapping("/customer/{customerId}")
-	void deleteCustomer(@PathVariable(value = "customerId") Long customerId);
+	void deleteCustomer(@PathVariable(value = "customerId") String customerId);
 }

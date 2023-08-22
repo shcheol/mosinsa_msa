@@ -8,13 +8,10 @@ spring:
     active: dev
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: customer-service
-#          uri: lb://CUSTOMER-SERVICE
-#          predicates:
-#            - Path=/customer-service/**
+  data:
+    redis:
+      port: 6666
+      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
 
 management:
   endpoints:
@@ -23,5 +20,9 @@ management:
         include: refresh, health, beans
 
 token:
-  secret: mySecret
-  expiration: 3600000
+  access:
+    secret: access_secret
+    expiration: 3600000
+  refresh:
+    secret: refresh_secret
+    expiration: 1209600000

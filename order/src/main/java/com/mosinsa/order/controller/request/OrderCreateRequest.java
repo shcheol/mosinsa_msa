@@ -10,10 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor
 public class OrderCreateRequest {
 
-    private Long customerId;
+    private String customerId;
     private Map<String, Integer> products = new ConcurrentHashMap<>();
 
-    public OrderCreateRequest(Long customerId, Map<String, Integer> products) {
+    public OrderCreateRequest(String customerId, Map<String, Integer> products) {
         this.customerId = customerId;
         this.products = products;
     }

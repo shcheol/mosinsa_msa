@@ -23,7 +23,7 @@ public class Order extends AuditingEntity {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "customer_id")
 //    private Customer customer;
-    private Long customerId;
+    private String customerId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private final List<OrderProduct> orderProducts = new ArrayList<>();
@@ -31,7 +31,7 @@ public class Order extends AuditingEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
 //        customer.getOrders().add(this);
     }
@@ -45,7 +45,7 @@ public class Order extends AuditingEntity {
         orderProduct.setOrder(this);
     }
 
-    public static Order createOrder(Long customerId, List<OrderProduct> orderProducts) {
+    public static Order createOrder(String customerId, List<OrderProduct> orderProducts) {
 
         Assert.isTrue(orderProducts.size() >= 1,"주문 상품은 1개 이상 필요합니다.");
 

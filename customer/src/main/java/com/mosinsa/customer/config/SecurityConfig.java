@@ -6,15 +6,12 @@ import com.mosinsa.customer.web.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
@@ -24,8 +21,6 @@ public class SecurityConfig {
 
 	private final CustomerService customerService;
 	private final JwtUtils jwtUtils;
-	private final Environment env;
-
 
     private static final String[] AUTH_WHITELIST = {
             "/**", "/h2-console/**", "/error"
@@ -59,7 +54,7 @@ public class SecurityConfig {
 
 	@Bean
 	public AuthenticationFilter getAuthenticationFilter(AuthenticationManager manager) {
-		AuthenticationFilter authenticationFilter = new AuthenticationFilter(customerService, jwtUtils, env);
+		AuthenticationFilter authenticationFilter = new AuthenticationFilter(customerService, jwtUtils);
 		authenticationFilter.setAuthenticationManager(manager);
 		return authenticationFilter;
 	}

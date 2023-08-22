@@ -49,7 +49,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
 		return order.createdDate.between(startDate, endDate);
 	}
 
-	private BooleanExpression customer(Long customerId){
+	private BooleanExpression customer(String customerId){
 		if(customerId == null){
 			return null;
 		}

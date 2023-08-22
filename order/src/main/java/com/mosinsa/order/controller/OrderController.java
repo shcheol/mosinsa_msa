@@ -28,7 +28,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/{customerId}/orders")
-    public ResponseEntity<List<OrderDto>> getOrderByCustomer(@PathVariable Long customerId){
+    public ResponseEntity<List<OrderDto>> getOrderByCustomer(@PathVariable String customerId){
 
         List<OrderDto> orderCustomer = orderService.getOrderCustomer(customerId);
 
@@ -62,7 +62,7 @@ public class OrderController {
     public ResponseEntity<Long> cancelOrders(@RequestBody OrderCancelRequest request){
 
 
-        Assert.isTrue(request.getCustomerId()!= null && request.getCustomerId()>0,"고객 id가 없습니다.");
+        Assert.isTrue(request.getCustomerId()!= null && !request.getCustomerId().isBlank(),"고객 id가 없습니다.");
         Assert.isTrue(request.getOrderId()!= null && request.getOrderId()>0,"주문 id가 없습니다.");
 
         orderService.cancelOrder(request.getCustomerId(), request.getOrderId());

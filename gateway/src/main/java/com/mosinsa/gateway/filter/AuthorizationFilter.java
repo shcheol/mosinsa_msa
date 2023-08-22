@@ -1,47 +1,75 @@
 package com.mosinsa.gateway.filter;
 
 import com.mosinsa.gateway.jwt.JwtUtils;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthorizationFilter extends AbstractGatewayFilterFactory<AuthorizationFilter.Config> {
-
-	private final Environment env;
 	private final JwtUtils utils;
+
+	private final Set<String> whiteList = new HashSet<>();
+	private static final String[] AUTH_WHITELIST = {
+			"/customer", "/login"
+	};
+
+	@PostConstruct
+	void init(){
+		whiteList.addAll(Arrays.stream(AUTH_WHITELIST).toList());
+	}
 
 	@Override
 	public GatewayFilter apply(AuthorizationFilter.Config config) {
 
-
 		return ((exchange, chain) -> {
 			ServerHttpRequest request = exchange.getRequest();
-			HttpHeaders headers = request.getHeaders();
+			log.info("request path [{}]", request.getPath());
 
-			if (!headers.containsKey(HttpHeaders.AUTHORIZATION)){
-				return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED);
+			if (whiteList.contains(request.getPath().toString()) && request.getMethod() == HttpMethod.POST){
+				return chain.filter(exchange);
 			}
 
-			String authorizationHeader = headers.get(HttpHeaders.AUTHORIZATION).get(0);
-			String jwt = authorizationHeader.replace("Bearer", "");
+			HttpHeaders headers = request.getHeaders();
+			if (!headers.containsKey(HttpHeaders.AUTHORIZATION)){
+				return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
+			}
 
-			if(!utils.isValid(jwt)){
-				return onError(exchange, "jwt token is not valid", HttpStatus.UNAUTHORIZED);
+			Optional<String> token = Objects.requireNonNull(headers.get(HttpHeaders.AUTHORIZATION)).stream()
+					.filter(f -> f.startsWith("Bearer")).findFirst();
+			if (token.isEmpty()){
+				return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
+			}
+
+			String accessToken = token.get().replace("Bearer", "");
+
+			if(!utils.isAccessTokenValid(accessToken)){
+				List<String> refreshTokenHeader = headers.get("Refresh-Token");
+				if(refreshTokenHeader == null || refreshTokenHeader.isEmpty()){
+					return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
+				}
+				String refreshToken = headers.get("Refresh-Token").get(0);
+
+				if (!utils.isRefreshTokenValid(refreshToken)){
+					return onError(exchange, AuthorizationError.JWT_VALID_ERROR);
+				}
+
+				String newAccessToken = utils.createAccessToken(utils.getSubject(refreshToken));
+				exchange.getResponse().getHeaders().add("accessToken", newAccessToken);
 			}
 
 			return chain.filter(exchange);
@@ -52,12 +80,11 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 	public static class Config {
 	}
 
-	private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus status){
-		log.error(message);
+	private Mono<Void> onError(ServerWebExchange exchange, AuthorizationError error){
+		log.error(error.getMessage());
 
 		ServerHttpResponse response = exchange.getResponse();
-		response.setStatusCode(status);
-
+		response.setStatusCode(error.getStatus());
 		return response.setComplete();
 	}
 }

@@ -15,12 +15,12 @@ import java.util.List;
 public class OrderDto {
 
     private Long orderId;
-    private Long customerId;
+    private String customerId;
     private int totalPrice;
     private OrderStatus status;
     private final List<OrderProductDto> orderProducts = new ArrayList<>();
 
-    public OrderDto(Long orderId, Long customerId, int totalPrice, OrderStatus orderStatus, List<OrderProductDto> orderProducts) {
+    public OrderDto(Long orderId, String customerId, int totalPrice, OrderStatus orderStatus, List<OrderProductDto> orderProducts) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.totalPrice = totalPrice;

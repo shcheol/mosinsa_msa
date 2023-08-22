@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderControllerTest extends ApiTest {
 
-    private Long customerId;
+    private String customerId;
 	@Autowired
     ProductServiceClient productServiceClient;
 

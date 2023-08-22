@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class SearchCondition {
 
-	private Long customerId;
+	private String customerId;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 	private OrderStatus status;
@@ -25,7 +25,7 @@ public class SearchCondition {
 		this.endDate = LocalDate.parse(endDate,DateTimeFormatter.ofPattern("yyyyMMdd")).atTime(23,59,59);
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

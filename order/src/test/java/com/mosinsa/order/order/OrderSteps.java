@@ -13,7 +13,7 @@ import java.util.Map;
 public class OrderSteps {
 
 
-    public static OrderCreateRequest 상품주문요청_생성(Long customerId, String... ids) {
+    public static OrderCreateRequest 상품주문요청_생성(String customerId, String... ids) {
 
         Map<String, Integer> orderProductMap = new HashMap<>();
         orderProductMap.put(ids[0], 3);
@@ -39,7 +39,7 @@ public class OrderSteps {
                 .then().log().all().extract();
     }
 
-    public static OrderCancelRequest 주문취소요청_생성(Long customerId, Long orderId) {
+    public static OrderCancelRequest 주문취소요청_생성(String customerId, Long orderId) {
         return new OrderCancelRequest(customerId, orderId);
     }
 
