@@ -25,4 +25,8 @@ public class TokenRepository {
 	public String get(String key){
 		return map.get(key);
 	}
+
+	public void remove(String key){
+		map.getAndDelete(key);
+	}
 }

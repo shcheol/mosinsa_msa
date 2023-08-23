@@ -39,15 +39,18 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 			ServerHttpRequest request = exchange.getRequest();
 			log.info("request path [{}]", request.getPath());
 
-			if (whiteList.contains(request.getPath().toString()) && request.getMethod() == HttpMethod.POST){
+			if (whiteList.contains(request.getPath().toString())/* && request.getMethod() == HttpMethod.POST*/){
 				return chain.filter(exchange);
 			}
 
 			HttpHeaders headers = request.getHeaders();
+			for (String h : headers.keySet()) {
+				System.out.println("h = " + h);
+				System.out.println("headers.get(h) = " + headers.get(h));
+			}
 			if (!headers.containsKey(HttpHeaders.AUTHORIZATION)){
 				return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
 			}
-
 			Optional<String> token = Objects.requireNonNull(headers.get(HttpHeaders.AUTHORIZATION)).stream()
 					.filter(f -> f.startsWith("Bearer")).findFirst();
 			if (token.isEmpty()){
@@ -55,6 +58,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 			}
 
 			String accessToken = token.get().replace("Bearer", "");
+			log.info("access token: {}", accessToken);
 
 			if(!utils.isAccessTokenValid(accessToken)){
 				List<String> refreshTokenHeader = headers.get(HeaderConst.REFRESH_TOKEN.getName());

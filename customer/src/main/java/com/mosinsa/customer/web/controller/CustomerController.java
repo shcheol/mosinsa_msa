@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.Enumeration;
 
 @Slf4j
 @Transactional
@@ -108,6 +110,7 @@ public class CustomerController {
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request){
+		log.info("loooooooooooogout");
         HttpSession session = request.getSession(false);
 
         if(session != null){
@@ -125,9 +128,12 @@ public class CustomerController {
     }
 
     @GetMapping("/customers/{customerId}")
-    public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable String customerId){
+    public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable String customerId, HttpServletRequest request){
 
-        CustomerDto customerDetails = customerService.getCustomerDetailsByCustomerId(customerId);
+		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+		System.out.println("header = " + header);
+
+		CustomerDto customerDetails = customerService.getCustomerDetailsByCustomerId(customerId);
 
         return ResponseEntity.status(HttpStatus.OK).body(customerDetails);
     }

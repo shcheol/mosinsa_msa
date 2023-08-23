@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,7 +41,7 @@ class OrderTest {
         productA = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE));
         productB = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE));
 
-        customer= customerServiceClient.getCustomer(1L);
+        customer= customerServiceClient.getCustomer(new HashMap<>(),"1");
     }
 
 //    @Test
@@ -53,8 +54,8 @@ class OrderTest {
 
         assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
         assertThat(createOrder.getOrderProducts().size()).isEqualTo(2);
-        assertThat(productServiceClient.getProduct(productA.getProductId()).getStock()).isEqualTo(5);
-        assertThat(productServiceClient.getProduct(productB.getProductId()).getStock()).isEqualTo(0);
+        assertThat(productServiceClient.getProduct(new HashMap<>(), productA.getProductId()).getStock()).isEqualTo(5);
+        assertThat(productServiceClient.getProduct(new HashMap<>(), productB.getProductId()).getStock()).isEqualTo(0);
 
     }
 

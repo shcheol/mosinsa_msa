@@ -34,8 +34,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			RequestLogin credentials = om.readValue(request.getInputStream(), RequestLogin.class);
 
+			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(credentials.getLoginId(), credentials.getPassword(), new ArrayList<>());
 			return getAuthenticationManager().authenticate(
-					new UsernamePasswordAuthenticationToken(credentials.getLoginId(), credentials.getPassword(), new ArrayList<>()));
+					authentication);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

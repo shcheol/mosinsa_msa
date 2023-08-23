@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -34,7 +35,6 @@ public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
     private final ProductServiceClient productServiceClient;
-
 	private final CustomerServiceClient customerServiceClient;
     private final KafkaProducer kafkaProducer;
 
@@ -47,10 +47,11 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
     @Transactional
-    public OrderDto order(String customerId, Map<String, Integer> productMap) {
+    public OrderDto order(String customerId, Map<String, Integer> productMap, Map<String, Collection<String>> authMap) {
         Assert.isTrue(productMap.size()>=1, "1개 이상의 상품을 주문해야 합니다.");
 
-		ResponseCustomer customer =customerServiceClient.getCustomer(customerId);
+		log.info("header map {}", authMap);
+		ResponseCustomer customer =customerServiceClient.getCustomer(authMap, customerId);
 
 		List<OrderProduct> orderProductList = new ArrayList<>();
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
@@ -60,11 +61,11 @@ public class OrderServiceImpl implements OrderService{
 			orderProductDtos.add(
 					new OrderProductDto(
 							OrderProduct.createOrderProduct(productId, productMap.get(productId)).getId(),
-							productMap.get(productId), new ProductDto(productServiceClient.getProduct(productId))));
+							productMap.get(productId), new ProductDto(productServiceClient.getProduct(authMap, productId))));
 		});
 
 		Order order = orderRepository.save(Order.createOrder(customer.getId(), orderProductList));
-		OrderDto orderDto = new OrderDto(order.getId(), customer.getId(), getTotalPrice(order.getId()), OrderStatus.CREATE, orderProductDtos);
+		OrderDto orderDto = new OrderDto(order.getId(), customer.getId(), getTotalPrice(order.getId(), authMap), OrderStatus.CREATE, orderProductDtos);
 		kafkaProducer.send(orderTopic, orderDto);
 
 		return orderDto;
@@ -72,7 +73,7 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
     @Transactional
-    public void cancelOrder(String customerId, Long orderId) {
+    public void cancelOrder(String customerId, Long orderId, Map<String, Collection<String>> authMap) {
         Order findOrder = orderRepository.findById(orderId).orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
 		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), customerId), "주문한 고객과 동일한 고객이 취소해야합니다.");
 
@@ -88,10 +89,10 @@ public class OrderServiceImpl implements OrderService{
 		List<OrderProductDto> orderProductDtos = new ArrayList<>();
 		findOrder.getOrderProducts().forEach(op -> {
 			orderProductDtos.add(new OrderProductDto(op.getId(), op.getOrderCount(),
-					new ProductDto(productServiceClient.getProduct(op.getProductId()))));
+					new ProductDto(productServiceClient.getProduct(authMap, op.getProductId()))));
 		});
 
-        OrderDto orderDto = new OrderDto(findOrder.getId(), customerId, this.getTotalPrice(findOrder.getId()), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
+        OrderDto orderDto = new OrderDto(findOrder.getId(), customerId, this.getTotalPrice(findOrder.getId(),authMap), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
         kafkaProducer.send(cancelTopic, orderDto);
 
     }
@@ -121,13 +122,13 @@ public class OrderServiceImpl implements OrderService{
 				.changeOrderStatus(status);
 	}
 
-	@Override
-    public int getTotalPrice(Long orderId){
+//	@Override
+    private int getTotalPrice(Long orderId, Map<String, Collection<String>> authMap){
 		AtomicInteger totalPrice= new AtomicInteger();
 		orderRepository.findById(orderId)
 				.orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND))
 				.getOrderProducts().forEach(op -> {
-			int price = new ProductDto(productServiceClient.getProduct(op.getProductId())).getPrice();
+			int price = new ProductDto(productServiceClient.getProduct(authMap, op.getProductId())).getPrice();
 			int orderCount = op.getOrderCount();
 
 			totalPrice.addAndGet((price * orderCount));

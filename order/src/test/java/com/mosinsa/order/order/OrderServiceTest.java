@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.mosinsa.order.order.OrderSteps.상품주문요청_생성;
@@ -60,9 +61,9 @@ class OrderServiceTest {
         productA = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE));
         productB = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE));
 
-		customerA = customerServiceClient.getCustomer(customerServiceClient.createCustomer(
+		customerA = customerServiceClient.getCustomer(new HashMap<>(), customerServiceClient.createCustomer(
 				new RequestCreateCustomer("9996", "1", "1", "aa@aa.com")));
-        customerB = customerServiceClient.getCustomer(customerServiceClient.createCustomer(
+        customerB = customerServiceClient.getCustomer(new HashMap<>(), customerServiceClient.createCustomer(
 				new RequestCreateCustomer("9998","2","2","aa@aa.com")));
     }
 
@@ -79,7 +80,7 @@ class OrderServiceTest {
 
         OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
 
-        OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts());
+        OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts(), new HashMap<>());
 
         Order createOrder = orderRepository.findById(orderDto.getOrderId()).get();
 
@@ -95,9 +96,9 @@ class OrderServiceTest {
     void 주문취소(){
         OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
 
-        OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts());
+        OrderDto orderDto = orderService.order(orderCreateRequest.getCustomerId(), orderCreateRequest.getProducts(), new HashMap<>());
 
-        orderService.cancelOrder(orderDto.getCustomerId(), orderDto.getOrderId());
+        orderService.cancelOrder(orderDto.getCustomerId(), orderDto.getOrderId(), new HashMap<>());
 
         Order cancelOrder = orderRepository.findById(orderDto.getOrderId()).get();
 
@@ -110,9 +111,9 @@ class OrderServiceTest {
     void 주문목록조회_회원(){
 
         OrderCreateRequest orderCreateRequest1 = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
-        orderService.order(orderCreateRequest1.getCustomerId(), orderCreateRequest1.getProducts());
+        orderService.order(orderCreateRequest1.getCustomerId(), orderCreateRequest1.getProducts(), new HashMap<>());
         OrderCreateRequest orderCreateRequest2 = 상품주문요청_생성(customerB.getId(),productA.getProductId(), productB.getProductId());
-        orderService.order(orderCreateRequest2.getCustomerId(), orderCreateRequest2.getProducts());
+        orderService.order(orderCreateRequest2.getCustomerId(), orderCreateRequest2.getProducts(), new HashMap<>());
 
         List<OrderDto> orderCustomer = orderService.getOrderCustomer(orderCreateRequest2.getCustomerId());
 
