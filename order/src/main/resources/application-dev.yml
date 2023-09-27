@@ -1,0 +1,38 @@
+server:
+  ## random port
+  port: 0
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: order-service
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888/"
+  datasource:
+    url: ENC(djOzr0kNAAemNow17fcj9waDqB70v/ypMijPlI4INIpK+UmXRv5TLSZHRCH8FxH80gBsQ10utlk=)
+    username: ENC(hU8887xxjH52qa4MSQzANw==)
+    password: ENC(r9myhe9/aQ1shGTIdFtg8AWZj289Fgpg)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+

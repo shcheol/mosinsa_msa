@@ -1,0 +1,44 @@
+server:
+  ## random port
+  port: 0
+  error:
+    whitelabel:
+      enabled: false
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+spring:
+  application:
+    name: product-service
+  config:
+    import: "optional:configserver:http://152.67.205.195:8888/"
+  datasource:
+    url: ENC(pHMxxASZrAc4eZiOR4l3a9bMuqxQW+jp6KBFQmYBM50/pW+ZKwU6fPeCJBueUHS/Q2J7D+1jenE=)
+    username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
+    password: ENC(8AvrvIm/Ria2OTgXu6tsqhToqOb0mI/I)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+  data:
+    redis:
+      port: 6666
+      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
