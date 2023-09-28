@@ -4,6 +4,9 @@ server:
   error:
     whitelabel:
       enabled: false
+  tomcat:
+    mbeanregistry:
+      enabled: true
 
 spring:
   application:
@@ -30,7 +33,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
+        include: "*"
 
 #  thymeleaf:
 #    prefix: classpath:/templates/
