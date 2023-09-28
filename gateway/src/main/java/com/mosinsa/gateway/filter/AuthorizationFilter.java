@@ -24,7 +24,10 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 	private final JwtUtils utils;
 	private final Set<String> whiteList = new HashSet<>();
 	private static final String[] AUTH_WHITELIST = {
-			"/customers", "/login"
+			"/customers", "/login",
+			"/customer-service/actuator/prometheus",
+			"/order-service/actuator/prometheus",
+			"/product-service/actuator/prometheus"
 	};
 
 	@PostConstruct
