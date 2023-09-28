@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Component
-@FeignClient(name = "customer-service", url = "localhost:8000/customer-service")
+@FeignClient(name = "customer-service", url = "${feignclient.url.customer}")
 public interface CustomerServiceClient {
 
     @GetMapping("/customers/{customerId}")

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Component
-@FeignClient(name = "product-service", url = "localhost:8000/product-service")
+@FeignClient(name = "product-service", url = "${feignclient.url.product}")
 public interface ProductServiceClient {
 
     @GetMapping("/products/{productId}")
