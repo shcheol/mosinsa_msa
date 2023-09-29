@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CustomerException extends RuntimeException{
 
-	private CustomerError error;
+	private final CustomerError error;
 
 	public CustomerException(CustomerError error) {
 		super(error.getMessage());

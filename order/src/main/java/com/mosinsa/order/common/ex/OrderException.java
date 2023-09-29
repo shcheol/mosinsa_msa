@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class OrderException extends RuntimeException{
 
-	private OrderError error;
+	private final OrderError error;
 
 	public OrderException(OrderError error) {
 		super(error.getMessage());

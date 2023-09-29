@@ -87,10 +87,8 @@ public class OrderServiceImpl implements OrderService{
         findOrder.cancelOrder();
 
 		List<OrderProductDto> orderProductDtos = new ArrayList<>();
-		findOrder.getOrderProducts().forEach(op -> {
-			orderProductDtos.add(new OrderProductDto(op.getId(), op.getOrderCount(),
-					new ProductDto(productServiceClient.getProduct(authMap, op.getProductId()))));
-		});
+		findOrder.getOrderProducts().forEach(op -> orderProductDtos.add(new OrderProductDto(op.getId(), op.getOrderCount(),
+				new ProductDto(productServiceClient.getProduct(authMap, op.getProductId())))));
 
         OrderDto orderDto = new OrderDto(findOrder.getId(), customerId, this.getTotalPrice(findOrder.getId(),authMap), OrderStatus.REQUEST_SUCCESS, orderProductDtos);
         kafkaProducer.send(cancelTopic, orderDto);

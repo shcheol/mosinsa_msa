@@ -85,11 +85,9 @@ public class ProductServiceImpl implements ProductService {
             kafkaProducer.completeTransaction(commitTopic, orderDto);
         }catch (Exception e){
             log.error("order product fail", e);
-            tempOrderProductDtos.forEach(op -> {
-                productRepository.findById(op.getProductDto().getProductId())
-                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-                        .addStock(op.getOrderCount());
-            });
+            tempOrderProductDtos.forEach(op -> productRepository.findById(op.getProductDto().getProductId())
+                    .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                    .addStock(op.getOrderCount()));
 
             OrderDto rollbackOrder =
                     new OrderDto(orderDto.getOrderId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);

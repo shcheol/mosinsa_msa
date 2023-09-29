@@ -4,7 +4,6 @@ import com.mosinsa.product.db.entity.DiscountPolicy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 @Getter
 @AllArgsConstructor

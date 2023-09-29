@@ -22,8 +22,6 @@ public class OrderProduct {
     @JoinColumn(name = "order_id")
     private Order order;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "product_id")
     private String productId;
 
     private int orderCount;

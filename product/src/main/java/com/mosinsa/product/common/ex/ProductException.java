@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ProductException extends RuntimeException{
 
-	private ProductError error;
+	private final ProductError error;
 
 	public ProductException(ProductError error) {
 		super(error.getMessage());

@@ -94,20 +94,6 @@ public class CustomerServiceImpl implements CustomerService{
         return new CustomerDto(customer.getId(), customer.getName());
     }
 
-    private List<ResponseOrder> getOrdersByFeignClient(String customerId) {
-        return orderServiceClient.getOrders(customerId);
-    }
-
-    private List<ResponseOrder> getOrdersByRestTemplate(String customerId) {
-        String orderUrl = "http://localhost:8000/order-service/%s/orders";
-        ResponseEntity<List<ResponseOrder>> response = new RestTemplate().exchange(orderUrl, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<ResponseOrder>>() {
-        });
-
-        return response.getBody();
-    }
-
-
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		Customer customer = repository.findCustomerByLoginId(username)

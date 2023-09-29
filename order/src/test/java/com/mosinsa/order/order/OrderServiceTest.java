@@ -33,15 +33,6 @@ class OrderServiceTest {
 
     @Autowired
     OrderService orderService;
-//    @Autowired
-//    ProductService productService;
-//
-//    @Autowired
-//    CustomerRepository customerRepository;
-//
-//    @Autowired
-//    ProductRepository productRepository;
-
     @Autowired
     OrderRepository orderRepository;
 
@@ -85,10 +76,7 @@ class OrderServiceTest {
         Order createOrder = orderRepository.findById(orderDto.getOrderId()).get();
 
         assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
-        assertThat(createOrder.getOrderProducts().size()).isEqualTo(2);
-//        assertThat(productService.getProduct(productA.getId()).getStock()).isEqualTo(7);
-//        assertThat(productService.getProduct(productB.getId()).getStock()).isEqualTo(5);
-
+        assertThat(createOrder.getOrderProducts()).hasSize(2);
     }
 
 
@@ -118,7 +106,7 @@ class OrderServiceTest {
         List<OrderDto> orderCustomer = orderService.getOrderCustomer(orderCreateRequest2.getCustomerId());
 
         assertThat(orderCustomer.get(0).getCustomerId()).isEqualTo(customerB.getId());
-        assertThat(orderCustomer.get(0).getOrderProducts().size()).isEqualTo(2);
+        assertThat(orderCustomer.get(0).getOrderProducts()).hasSize(2);
     }
 
 }

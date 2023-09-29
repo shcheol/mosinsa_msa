@@ -20,9 +20,6 @@ public class Order extends AuditingEntity {
     @Column(name = "order_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "customer_id")
-//    private Customer customer;
     private String customerId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -33,7 +30,6 @@ public class Order extends AuditingEntity {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
-//        customer.getOrders().add(this);
     }
 
     public void changeOrderStatus(OrderStatus status) {

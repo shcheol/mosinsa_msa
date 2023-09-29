@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProductControllerTest extends ApiTest {
 
     @Test
-    public void 상품등록(){
+    void 상품등록(){
         ExtractableResponse<Response> response = 상품등록요청(상품등록요청_생성());
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
-    public void 상품수정(){
+    void 상품수정(){
 		ExtractableResponse<Response> product = 상품등록요청(상품등록요청_생성());
 		String productId = product.body().jsonPath().getString("productId");
 
@@ -31,7 +31,7 @@ class ProductControllerTest extends ApiTest {
     }
 
     @Test
-    public void 상품목록(){
+    void 상품목록(){
         for (int i=0;i<5;i++) {
             상품등록요청(상품등록요청_생성());
         }
@@ -44,7 +44,7 @@ class ProductControllerTest extends ApiTest {
 
 
     @Test
-    public void 상품상세(){
+    void 상품상세(){
         ExtractableResponse<Response> addResponse = 상품등록요청(상품등록요청_생성());
 
         String id = addResponse.jsonPath().getString("productId");

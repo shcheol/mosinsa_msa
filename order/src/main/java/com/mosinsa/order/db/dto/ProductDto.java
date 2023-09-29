@@ -34,14 +34,4 @@ public class ProductDto {
         this.discountPrice = product.getDiscountPrice();
         this.likes = product.getLikes();
     }
-
-    //    public ProductDto(Product product) {
-//        this.id = product.getId();
-//        this.name = product.getName();
-//        this.price = product.getPrice();
-//        this.stock = product.getStock();
-//        this.discountPolicy = product.getDiscountPolicy();
-//        this.discountPrice = product.getDiscountPrice();
-//        this.likes = product.getLikes();
-//    }
 }

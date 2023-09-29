@@ -2,6 +2,8 @@ package com.mosinsa.product.controller;
 
 import com.mosinsa.product.controller.response.GlobalResponseEntity;
 import com.mosinsa.product.common.ex.ProductException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @ControllerAdvice
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductControllerAdvice {
 
 	@ExceptionHandler(ProductException.class)

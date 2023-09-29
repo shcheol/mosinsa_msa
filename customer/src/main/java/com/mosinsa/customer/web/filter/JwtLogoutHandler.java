@@ -4,7 +4,6 @@ import com.mosinsa.customer.db.repository.TokenRepository;
 import com.mosinsa.customer.web.jwt.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -40,8 +39,6 @@ public class JwtLogoutHandler implements LogoutHandler {
 			log.info("Jwt isRefreshTokenValid");
 			String customerId = jwtUtils.getSubjectFromRefreshToken(refreshToken);
 			repository.remove(customerId);
-			return;
 		}
-
 	}
 }

@@ -23,5 +23,4 @@ public interface OrderService {
 
 	void changeOrderStatus(Long orderId, OrderStatus status);
 
-//    int getTotalPrice(Long orderId);
 }

@@ -1,6 +1,8 @@
 package com.mosinsa.customer.web.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.customer.common.ex.CustomerError;
+import com.mosinsa.customer.common.ex.CustomerException;
 import com.mosinsa.customer.service.CustomerService;
 import com.mosinsa.customer.web.controller.request.RequestLogin;
 import com.mosinsa.customer.web.jwt.JwtUtils;
@@ -34,11 +36,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			RequestLogin credentials = om.readValue(request.getInputStream(), RequestLogin.class);
 
-			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(credentials.getLoginId(), credentials.getPassword(), new ArrayList<>());
+			UsernamePasswordAuthenticationToken authentication
+					= new UsernamePasswordAuthenticationToken(credentials.getLoginId(), credentials.getPassword(), new ArrayList<>());
 			return getAuthenticationManager().authenticate(
 					authentication);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new CustomerException(CustomerError.WRONG_ID_OR_PASSWORD, e);
 		}
 	}
 

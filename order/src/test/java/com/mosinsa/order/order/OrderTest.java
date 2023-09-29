@@ -53,17 +53,17 @@ class OrderTest {
         Order createOrder = Order.createOrder(customer.getId(), orderProduct);
 
         assertThat(createOrder.getStatus()).isEqualTo(OrderStatus.CREATE);
-        assertThat(createOrder.getOrderProducts().size()).isEqualTo(2);
+        assertThat(createOrder.getOrderProducts()).hasSize(2);
         assertThat(productServiceClient.getProduct(new HashMap<>(), productA.getProductId()).getStock()).isEqualTo(5);
-        assertThat(productServiceClient.getProduct(new HashMap<>(), productB.getProductId()).getStock()).isEqualTo(0);
+        assertThat(productServiceClient.getProduct(new HashMap<>(), productB.getProductId()).getStock()).isZero();
 
     }
 
 //    @Test
     void 주문생성_실패_주문상품x() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
-
-        assertThatThrownBy(()->Order.createOrder(customer.getId(), orderProduct)).isInstanceOf(RuntimeException.class);
+        String id = customer.getId();
+        assertThatThrownBy(()->Order.createOrder(id, orderProduct)).isInstanceOf(RuntimeException.class);
 
         assertThat(productA.getStock()).isEqualTo(10);
         assertThat(productB.getStock()).isEqualTo(10);
@@ -72,9 +72,9 @@ class OrderTest {
 //    @Test
     void 주문생성_주문상품_수량초과() {
         ArrayList<OrderProduct> orderProduct = new ArrayList<>();
-
+        String productId = productA.getProductId();
         assertThatThrownBy(()->
-				orderProduct.add(OrderProduct.createOrderProduct(productA.getProductId(),11)))
+				orderProduct.add(OrderProduct.createOrderProduct(productId,11)))
 				.isInstanceOf(RuntimeException.class);
 
         assertThat(productA.getStock()).isEqualTo(10);

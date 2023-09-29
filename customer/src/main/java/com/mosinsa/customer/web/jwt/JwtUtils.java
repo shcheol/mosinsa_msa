@@ -18,111 +18,87 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtils {
 
-	@Value("${token.access.secret}")
-	private String accessSecret;
-	@Value("${token.access.expiration}")
-	private long accessTokenExpiration;
-	@Value("${token.refresh.secret}")
-	private String refreshSecret;
-	@Value("${token.refresh.expiration}")
-	private long refreshTokenExpiration;
+    @Value("${token.access.secret}")
+    private String accessSecret;
+    @Value("${token.access.expiration}")
+    private long accessTokenExpiration;
+    @Value("${token.refresh.secret}")
+    private String refreshSecret;
+    @Value("${token.refresh.expiration}")
+    private long refreshTokenExpiration;
+    private final TokenRepository repository;
 
-	private final TokenRepository repository;
-	public boolean isAccessTokenValid(String accessToken){
-		try {
-			Claims claims = getClaims(accessToken, accessSecret);
+    public String createAccessToken(String customerId) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + accessTokenExpiration);
+        return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .setSubject(customerId)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS256, accessSecret.getBytes(StandardCharsets.UTF_8)).compact();
+    }
 
-			if(!StringUtils.hasText(claims.getSubject())){
-				return false;
-			}
+    @Transactional
+    public String createRefreshToken(String customerId) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + refreshTokenExpiration);
+        String refreshToken = Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .setSubject(customerId)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS256, refreshSecret.getBytes(StandardCharsets.UTF_8)).compact();
+        repository.put(customerId, refreshToken, expiration.getTime());
+        return refreshToken;
+    }
+    public boolean isAccessTokenValid(String accessToken) {
+        try {
+            return getClaims(accessToken, accessSecret).getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-			return claims.getExpiration().after(new Date());
+    public boolean isRefreshTokenValid(String refreshToken) {
+        try {
+            Claims claims = getClaims(refreshToken, refreshSecret);
+            validStoredToken(repository.get(claims.getSubject()), refreshToken);
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-		}catch (Exception e){
-			return false;
-		}
-	}
+    public String getSubjectFromAccessToken(String token) {
+        return getClaims(token, accessSecret).getSubject();
+    }
 
-	public boolean isRefreshTokenValid(String refreshToken){
-		try {
+    public String getSubjectFromRefreshToken(String token) {
+        return getClaims(token, refreshSecret).getSubject();
+    }
+    private void validStoredToken(String storedToken, String refreshToken){
+        if (!StringUtils.hasText(storedToken)) {
+            throw new IllegalArgumentException("token is empty");
+        }
 
-			Claims claims = getClaims(refreshToken, refreshSecret);
+        if (!refreshToken.equals(storedToken)) {
+            throw new IllegalArgumentException("token match fail");
+        }
+    }
 
-			String customerId = getSubjectFromRefreshToken(refreshToken);
-			if(!StringUtils.hasText(customerId)){
-				return false;
-			}
 
-			String storedToken = repository.get(customerId);
-			if(!StringUtils.hasText(storedToken)){
-				return false;
-			}
+    private Claims getClaims(String token, String secret) {
+        try {
+            Claims claims = Jwts.parser().setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
+                    .parseClaimsJws(token).getBody();
+            if (!StringUtils.hasText(claims.getSubject())) throw new IllegalArgumentException("subject is empty");
+            return claims;
+        } catch (Exception e) {
+            log.debug("jwt parse fail", e);
+            throw new IllegalArgumentException(e);
+        }
+    }
 
-			if (!refreshToken.equals(storedToken)){
-				return false;
-			}
 
-			return claims.getExpiration().after(new Date());
-
-		}catch (Exception e){
-			return false;
-		}
-	}
-
-	public String getSubjectFromAccessToken(String token){
-		try {
-			return Jwts.parser().setSigningKey(accessSecret.getBytes(StandardCharsets.UTF_8))
-					.parseClaimsJws(token).getBody().getSubject();
-
-		}catch (Exception e){
-			log.debug("jwt parse fail", e);
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	public String getSubjectFromRefreshToken(String token){
-		try {
-			return Jwts.parser().setSigningKey(refreshSecret.getBytes(StandardCharsets.UTF_8))
-					.parseClaimsJws(token).getBody().getSubject();
-
-		}catch (Exception e){
-			log.debug("jwt parse fail", e);
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	private Claims getClaims(String token, String secret){
-		try{
-			return Jwts.parser().setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
-					.parseClaimsJws(token).getBody();
-		}catch (Exception e){
-			log.debug("jwt parse fail", e);
-			throw new IllegalArgumentException(e);
-		}
-	}
-
-	public String createAccessToken(String customerId) {
-		Date now = new Date();
-		Date expiration = new Date(now.getTime() + accessTokenExpiration);
-		return Jwts.builder()
-				.setHeaderParam("typ","JWT")
-				.setSubject(customerId)
-				.setIssuedAt(now)
-				.setExpiration(expiration)
-				.signWith(SignatureAlgorithm.HS256, accessSecret.getBytes(StandardCharsets.UTF_8)).compact();
-	}
-
-	@Transactional
-	public String createRefreshToken(String customerId) {
-		Date now = new Date();
-		Date expiration = new Date(now.getTime() + refreshTokenExpiration);
-		String refreshToken = Jwts.builder()
-				.setHeaderParam("typ", "JWT")
-				.setSubject(customerId)
-				.setIssuedAt(now)
-				.setExpiration(expiration)
-				.signWith(SignatureAlgorithm.HS256, refreshSecret.getBytes(StandardCharsets.UTF_8)).compact();
-		repository.put(customerId, refreshToken, expiration.getTime());
-		return refreshToken;
-	}
 }

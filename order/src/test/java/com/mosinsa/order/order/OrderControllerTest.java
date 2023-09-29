@@ -92,7 +92,7 @@ class OrderControllerTest extends ApiTest {
     }
 
     @Test
-    public void 주문단건조회(){
+    void 주문단건조회(){
 
         String id1 = productServiceClient.addProduct(new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE)).getProductId();
         String id2 = productServiceClient.addProduct(new ProductAddRequest("상품2", 2000, 10, DiscountPolicy.TEN_PERCENTAGE)).getProductId();

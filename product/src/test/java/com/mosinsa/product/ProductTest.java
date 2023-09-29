@@ -85,7 +85,7 @@ class ProductTest {
         Product product = new Product("product", 1000, 10, DiscountPolicy.NONE);
         Product save = productRepository.save(product);
 
-        assertThat(save.getDiscountPrice()).isEqualTo(0);
+        assertThat(save.getDiscountPrice()).isZero();
     }
 
     @Test

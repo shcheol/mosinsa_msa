@@ -2,7 +2,6 @@ package com.mosinsa.order.service.feignclient;
 
 import com.mosinsa.order.controller.request.RequestCreateCustomer;
 import com.mosinsa.order.controller.response.ResponseCustomer;
-import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;

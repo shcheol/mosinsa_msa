@@ -23,6 +23,7 @@ public class JwtUtils {
 	private long accessTokenExpiration;
 	@Value("${token.refresh.secret}")
 	private String refreshSecret;
+
 	@Value("${token.refresh.expiration}")
 	private long refreshTokenExpiration;
 

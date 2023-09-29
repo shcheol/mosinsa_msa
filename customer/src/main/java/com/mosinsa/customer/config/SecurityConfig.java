@@ -56,12 +56,9 @@ public class SecurityConfig {
                                         .and()
 										.logout()
 										.addLogoutHandler(jwtLogoutHandler())
-										.logoutSuccessHandler(new LogoutSuccessHandler() {
-											@Override
-											public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-												response.getWriter().print("logout success");
-												response.getWriter().close();
-											}
+										.logoutSuccessHandler((request, response, authentication) -> {
+											response.getWriter().print("logout success");
+											response.getWriter().close();
 										})
 										.and()
 										.addFilter(getAuthenticationFilter(authenticationManager));

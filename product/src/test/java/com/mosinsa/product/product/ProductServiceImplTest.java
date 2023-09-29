@@ -38,7 +38,7 @@ class ProductServiceImplTest {
         assertThat(product.getPrice()).isEqualTo(1000);
         assertThat(product.getStock()).isEqualTo(10);
         assertThat(product.getDiscountPolicy()).isEqualTo(DiscountPolicy.NONE);
-        assertThat(product.getDiscountPrice()).isEqualTo(0);
+        assertThat(product.getDiscountPrice()).isZero();
 
     }
 
@@ -78,7 +78,7 @@ class ProductServiceImplTest {
         assertThat(product.getPrice()).isEqualTo(1000);
         assertThat(product.getStock()).isEqualTo(10);
         assertThat(product.getDiscountPolicy()).isEqualTo(DiscountPolicy.NONE);
-        assertThat(product.getDiscountPrice()).isEqualTo(0);
+        assertThat(product.getDiscountPrice()).isZero();
     }
 
     @Test

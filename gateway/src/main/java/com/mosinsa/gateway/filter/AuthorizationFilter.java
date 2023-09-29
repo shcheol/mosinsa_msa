@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -45,10 +44,6 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 			}
 
 			HttpHeaders headers = request.getHeaders();
-			for (String h : headers.keySet()) {
-				System.out.println("h = " + h);
-				System.out.println("headers.get(h) = " + headers.get(h));
-			}
 			if (!headers.containsKey(HttpHeaders.AUTHORIZATION)){
 				return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
 			}

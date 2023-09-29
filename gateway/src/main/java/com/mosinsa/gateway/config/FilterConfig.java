@@ -23,6 +23,7 @@ public class FilterConfig {
 
 	private final AuthorizationFilter authorizationFilter;
 
+	private final String REPLACEMENT = "/$\\{segment}";
 	@Bean
 	public GlobalFilter globalLogFilter() {
 
@@ -43,17 +44,17 @@ public class FilterConfig {
 
 		return builder.routes()
 				.route(r -> r.path("/customer-service/**")
-						.filters(f -> f.rewritePath("/customer-service/(?<segment>.*)", "/$\\{segment}")
+						.filters(f -> f.rewritePath("/customer-service/(?<segment>.*)", REPLACEMENT)
 								.filters(apply))
 						.uri("lb://CUSTOMER-SERVICE")
 				)
 				.route(r -> r.path("/product-service/**")
-						.filters(f -> f.rewritePath("/product-service/(?<segment>.*)", "/$\\{segment}")
+						.filters(f -> f.rewritePath("/product-service/(?<segment>.*)", REPLACEMENT)
 								.filter(apply))
 						.uri("lb://PRODUCT-SERVICE")
 				)
 				.route(r -> r.path("/order-service/**")
-						.filters(f -> f.rewritePath("/order-service/(?<segment>.*)", "/$\\{segment}")
+						.filters(f -> f.rewritePath("/order-service/(?<segment>.*)", REPLACEMENT)
 								.filters(apply))
 						.uri("lb://ORDER-SERVICE")
 				)
