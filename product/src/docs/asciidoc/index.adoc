@@ -1,0 +1,15 @@
+= Product Rest Docs
+mosinsa - product
+:doctype: product
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[product-API]]
+== product API
+
+[[product-단일-조회]]
+=== product 단일 조회
+operation::get-single-product[snippets='http-request,path-parameters,http-response,response-fields']

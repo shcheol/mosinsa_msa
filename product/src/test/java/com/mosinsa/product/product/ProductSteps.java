@@ -3,18 +3,16 @@ package com.mosinsa.product.product;
 import com.mosinsa.product.controller.request.ProductAddRequest;
 import com.mosinsa.product.controller.request.ProductUpdateRequest;
 import com.mosinsa.product.db.entity.DiscountPolicy;
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import org.springframework.http.MediaType;
 
 public class ProductSteps {
 
     public static ProductAddRequest 상품등록요청_생성(){
         return new ProductAddRequest("상품1", 1000, 10, DiscountPolicy.NONE);
     }
-
-    public static ExtractableResponse<Response> 상품등록요청(ProductAddRequest request) {
+    public static ProductUpdateRequest 상품수정요청_생성() {
+        return new ProductUpdateRequest("상품수정", 2000, 20, DiscountPolicy.TEN_PERCENTAGE, 1);
+    }
+/*    public static ExtractableResponse<Response> 상품등록요청(ProductAddRequest request) {
         return RestAssured
                 .given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -25,9 +23,7 @@ public class ProductSteps {
                 .log().all().extract();
     }
 
-    public static ProductUpdateRequest 상품수정요청_생성() {
-        return new ProductUpdateRequest("상품수정", 2000, 20, DiscountPolicy.TEN_PERCENTAGE, 1);
-    }
+
 
     public static ExtractableResponse<Response> 상품수정요청(String productId, ProductUpdateRequest request) {
         return RestAssured.given().log().all()
@@ -54,6 +50,6 @@ public class ProductSteps {
                 .get("/products")
                 .then()
                 .log().all().extract();
-    }
+    }*/
 
 }

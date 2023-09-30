@@ -1,0 +1,62 @@
+server:
+  ## random port
+  port: 0
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: customer-service
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888/"
+  datasource:
+    url: ENC(S7oD+0XH91BYG/RHyVPrSJeqEOxtHpIEbRmiNIgCyylJJXFvucSI9zoNLNfQ6exjxUV7Dtwaedg=)
+    username: ENC(O7X+XjZySqGansb61khTfg0h+VYWzeka)
+    password: ENC(fTghhInL2PJjPioJiTHpXAhaPmhERI88)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  #  thymeleaf:
+  #    prefix: classpath:/templates/
+  #    suffix: .html
+  data:
+    redis:
+      port: 6666
+      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
+feignclient:
+  url:
+    customer: 152.67.205.195:8000/customer-service
+    order: 152.67.205.195:8000/order-service
+    product: 152.67.205.195:8000/product-service
+
+mosinsa:
+  topic:
+    order:
+      request: mosinsa-order
+      cancel: mosinsa-order-cancel
+      commit: mosinsa-order-commit
+      rollback: mosinsa-order-rollback
+
+
+token:
+  access:
+    secret: access_secret
+    expiration: 3600000
+  #    expiration: 10000
+  refresh:
+    secret: refresh_secret
+    expiration: 1209600000
