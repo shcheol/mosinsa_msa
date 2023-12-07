@@ -1,0 +1,3 @@
+rootProject.name = 'mosinsa_msa'
+
+include 'config','customer', 'discovery', 'gateway', 'order', 'product'

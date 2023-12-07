@@ -1,37 +1,15 @@
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.0.7'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id "org.sonarqube" version "4.4.0.3356"
-    id "org.asciidoctor.jvm.convert" version "3.3.2"
-}
 
-group = 'com.mosinsa'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    asciidoctorExt
-}
-
-repositories {
-    mavenCentral()
-    maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
-}
-
-ext {
-    set('springCloudVersion', "2022.0.3")
-    snippetsDir = file('build/generated-snippets')
-}
+//configurations {
+//    asciidoctorExt
+//}
+//
+//ext {
+//    set('springCloudVersion', "2022.0.3")
+//    snippetsDir = file('build/generated-snippets')
+//}
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-//    implementation 'io.rest-assured:rest-assured:5.3.0'
+
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework:spring-tx'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -40,57 +18,44 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+//    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-asciidoctor {
-    inputs.dir snippetsDir
-    configurations 'asciidoctorExt'
-    baseDirFollowsSourceFile()
-    dependsOn test
-}
-asciidoctor.doFirst{
-    delete file('src/main/resources/static/docs')
-}
-task createDocument(type: Copy){
-    dependsOn asciidoctor
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static")
-}
-bootJar {
-    dependsOn createDocument
-    from ("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
-}
-sonar {
-    properties {
-        property 'sonar.host.url', 'http://150.230.252.178:9000'
-        property "sonar.token", "squ_a6bae554fae971d2154448dbabde5c4f69e0ed51"
-        property "sonar.projectKey", "project:product"
-        property 'sonar.projectName', 'product'
-        property 'sonar.java.source', 17
-        //property 'sonar.junit.reportPaths', 'build/reports'
-        property 'encoding', 'UTF-8'
-        property 'charSet', 'UTF-8'
-        //property "sonar.coverage.jacoco.xmlReportPaths", "path.xml"
-    }
-}
-tasks.named('test') {
-    outputs.dir snippetsDir
-    useJUnitPlatform()
-}
+//asciidoctor {
+//    inputs.dir snippetsDir
+//    configurations 'asciidoctorExt'
+//    baseDirFollowsSourceFile()
+//    dependsOn test
+//}
+//asciidoctor.doFirst{
+//    delete file('src/main/resources/static/docs')
+//}
+//task createDocument(type: Copy){
+//    dependsOn asciidoctor
+//    from file("build/docs/asciidoc")
+//    into file("src/main/resources/static")
+//}
+//bootJar {
+//    dependsOn createDocument
+//    from ("${asciidoctor.outputDir}/html5") {
+//        into 'static/docs'
+//    }
+//}
+//sonar {
+//    properties {
+//        property 'sonar.host.url', 'http://150.230.252.178:9000'
+//        property "sonar.token", "squ_a6bae554fae971d2154448dbabde5c4f69e0ed51"
+//        property "sonar.projectKey", "project:product"
+//        property 'sonar.projectName', 'product'
+//        property 'sonar.java.source', 17
+//        //property 'sonar.junit.reportPaths', 'build/reports'
+//        property 'encoding', 'UTF-8'
+//        property 'charSet', 'UTF-8'
+//        //property "sonar.coverage.jacoco.xmlReportPaths", "path.xml"
+//    }
+//}
+//tasks.named('test') {
+//    outputs.dir snippetsDir
+//}
