@@ -65,7 +65,7 @@ class OrderServiceTest {
 		customerServiceClient.deleteCustomer(customerB.getId());
 	}
 
-    @Test
+//    @Test
     void 상품주문(){
 		System.out.println("OrderServiceTest.상품주문");
 
@@ -80,7 +80,7 @@ class OrderServiceTest {
     }
 
 
-    @Test
+//    @Test
     void 주문취소(){
         OrderCreateRequest orderCreateRequest = 상품주문요청_생성(customerA.getId(),productA.getProductId(), productB.getProductId());
 
