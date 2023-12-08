@@ -10,24 +10,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
-import java.util.UUID;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
-    @Id
+    @EmbeddedId
     @Column(name = "product_id")
-    private String id;
+    private ProductId id;
 
     private String name;
 
-    private int price;
+	@Embedded
+    private Money price;
 
-    private int stock;
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Stock stock;
 
-    private long likes;
+	@Embedded
+    private Likes likes;
 
     public Product(String name, int price, int stock) {
 
@@ -35,19 +36,19 @@ public class Product {
         Assert.isTrue(price > 0, "상품 가격은 0보다 커야합니다.");
         Assert.isTrue(stock > 0, "상품 재고는 0보다 커야합니다.");
 
-        this.id = UUID.randomUUID().toString();
+        this.id = ProductId.newId();
         this.name = name;
-        this.price = price;
-        this.stock = stock;
+        this.price = Money.of(price);
+        this.stock = Stock.of(stock);
         this.likes = 0;
     }
 
     public Product(ProductAddRequest request) {
 
-        this.id = UUID.randomUUID().toString();
+		this.id = ProductId.newId();
         this.name = request.getName();
         this.price = request.getPrice();
-        this.stock = request.getStock();
+        this.stock = Stock.of(request.getStock());
         this.likes = 0;
     }
 
@@ -55,7 +56,7 @@ public class Product {
 
         this.name = request.getName();
         this.price = request.getPrice();
-        this.stock = request.getStock();
+		this.stock = Stock.of(request.getStock());
         this.likes = request.getLikes();
     }
 
