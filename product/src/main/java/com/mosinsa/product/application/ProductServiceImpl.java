@@ -2,12 +2,13 @@ package com.mosinsa.product.application;
 
 import com.mosinsa.product.common.ex.ProductError;
 import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.product.domain.product.ProductId;
 import com.mosinsa.product.ui.request.ProductAddRequest;
 import com.mosinsa.product.ui.request.ProductUpdateRequest;
 import com.mosinsa.product.dto.OrderDto;
 import com.mosinsa.product.dto.OrderProductDto;
 import com.mosinsa.product.dto.ProductDto;
-import com.mosinsa.product.domain.Product;
+import com.mosinsa.product.domain.product.Product;
 import com.mosinsa.product.infra.repository.ProductRepository;
 import com.mosinsa.product.infra.kafka.KafkaProducer;
 import com.mosinsa.product.common.wrapper.PageWrapper;
@@ -50,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     @CacheEvict(value = "product", key = "#productId")
     @Transactional
     public void updateProduct(String productId, ProductUpdateRequest productUpdateRequest) {
-        Product findProduct = productRepository.findById(productId).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
+        Product findProduct = productRepository.findById(ProductId.of(productId)).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
         findProduct.change(productUpdateRequest);
     }
 
@@ -58,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Cacheable(value = "product")
     public ProductDto findProductById(String productId) {
         log.info("findProductById");
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
+        Product product = productRepository.findById(ProductId.of(productId)).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
         return new ProductDto(product);
     }
 
@@ -76,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
         try{
             orderDto.getOrderProducts().forEach(op -> {
                 log.info("orderProductDto {}", op);
-                productRepository.findById(op.getProductDto().getProductId())
+                productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
                         .removeStock(op.getOrderCount());
                 tempOrderProductDtos.add(op);
@@ -84,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
             kafkaProducer.completeTransaction(commitTopic, orderDto);
         }catch (Exception e){
             log.error("order product fail", e);
-            tempOrderProductDtos.forEach(op -> productRepository.findById(op.getProductDto().getProductId())
+            tempOrderProductDtos.forEach(op -> productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
                     .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
                     .addStock(op.getOrderCount()));
 
@@ -98,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
     public void cancelOrder(OrderDto orderDto) {
         log.info("cancelOrder: {}", orderDto);
         orderDto.getOrderProducts().forEach(op ->
-                productRepository.findById(op.getProductDto().getProductId())
+                productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
                         .addStock(op.getOrderCount()));
     }

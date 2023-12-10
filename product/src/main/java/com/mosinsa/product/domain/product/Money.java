@@ -1,4 +1,4 @@
-package com.mosinsa.product.domain;
+package com.mosinsa.product.domain.product;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Money {
 
-	private int value;
+	private int price;
 
 	public static Money of(int value) {
 		inputValidCheck(value);
@@ -21,11 +21,11 @@ public class Money {
 	}
 
 	private Money(int value){
-		this.value = value;
+		this.price = value;
 	}
 
 	public Money multiply(int multiplier) {
-		return new Money(value * multiplier);
+		return new Money(price * multiplier);
 	}
 
 	private static void inputValidCheck(int value) {
@@ -39,11 +39,11 @@ public class Money {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Money money = (Money) o;
-		return value == money.value;
+		return price == money.price;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return Objects.hash(price);
 	}
 }

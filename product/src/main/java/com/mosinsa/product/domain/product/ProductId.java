@@ -1,4 +1,4 @@
-package com.mosinsa.product.domain;
+package com.mosinsa.product.domain.product;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
