@@ -1,5 +1,6 @@
 package com.mosinsa.product.application.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import java.util.List;
 @Getter
 @ToString
 @NoArgsConstructor
+@EqualsAndHashCode
 public class OrderDto {
 
     private Long orderId;

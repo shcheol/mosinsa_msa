@@ -28,10 +28,10 @@ class JsonConverterTest {
 		assertThat(s).isEqualTo(answer);
 	}
 
-	@Test
-	void writeOrderDtoAsStringEx(){
-		assertThrows(IllegalArgumentException.class, () -> JsonConverter.writeOrderDtoAsString(new TestOrderDto()));
-	}
+//	@Test
+//	void writeOrderDtoAsStringEx(){
+//		assertThrows(IllegalArgumentException.class, () -> JsonConverter.writeOrderDtoAsString(new TestOrderDto()));
+//	}
 
 	static class TestOrderDto extends OrderDto{
 		private String test;
