@@ -13,10 +13,10 @@ public class GlobalResponseEntity {
 	}
 
 	public static ResponseEntity<?> Ok(HttpStatus httpStatus, Object data){
-		return new ResponseEntity<>(new GlobalResponse<Object>("success", data, null), httpStatus);
+		return new ResponseEntity<>(new GlobalResponse<>("success", data, null), httpStatus);
 	}
 
 	public static ResponseEntity<?> Error(HttpStatus httpStatus, String message){
-		return new ResponseEntity<>(new GlobalResponse<Object>("error", null, message), httpStatus);
+		return new ResponseEntity<>(new GlobalResponse<>("error", null, message), httpStatus);
 	}
 }

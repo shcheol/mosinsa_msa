@@ -13,11 +13,11 @@ public class JsonConverter {
 
     private static final ObjectMapper om = new ObjectMapper();
 
-    public static OrderDto readValueToOrderDto(String kafkaMessage) {
-        log.info("convertStringToOrderDto: {}", kafkaMessage);
+    public static OrderDto readValueToOrderDto(String message) {
+        log.info("convertStringToOrderDto: {}", message);
 
         try{
-            return om.readValue(kafkaMessage, OrderDto.class);
+            return om.readValue(message, OrderDto.class);
         }catch (JsonProcessingException e){
             throw new IllegalArgumentException(e);
         }

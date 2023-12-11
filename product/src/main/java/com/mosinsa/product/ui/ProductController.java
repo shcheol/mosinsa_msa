@@ -26,6 +26,14 @@ public class ProductController {
 		webDataBinder.setValidator(new ProductValidator());
 	}
 
+	@GetMapping("/{productId}")
+	public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
+		log.info("getProduct {}", productId);
+		ProductDto product = productService.getProductById(productId);
+
+		return ResponseEntity.ok().body(product);
+	}
+
     @GetMapping
     public Page<ProductDto> findAllProducts(Pageable pageable){
 
@@ -39,15 +47,5 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
     }
-
-
-    @GetMapping("/{productId}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
-        log.info("getProduct {}", productId);
-        ProductDto product = productService.getProductById(productId);
-
-        return ResponseEntity.ok().body(product);
-    }
-
 
 }
