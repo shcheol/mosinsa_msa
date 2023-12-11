@@ -1,8 +1,6 @@
 package com.mosinsa.product.domain.product;
 
 import com.mosinsa.product.domain.category.Category;
-import com.mosinsa.product.ui.request.ProductAddRequest;
-import com.mosinsa.product.ui.request.ProductUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,31 +39,15 @@ public class Product {
     private final Set<Likes> likes = new HashSet<>();
 
 
-    public static Product create(String name, Integer price, String category, long stock){
+    public static Product create(String name, Integer price, Category category, long stock){
         Product product = new Product();
         product.id = ProductId.newId();
         product.name = name;
         product.price = Money.of(price);
-        product.category = Category.of(category);
+        product.category = category;
         product.stock = Stock.of(stock);
         return product;
     }
-
-    public Product(ProductAddRequest request) {
-
-        this.id = ProductId.newId();
-        this.name = request.getName();
-        this.price = Money.of(request.getPrice());
-        this.stock = Stock.of(request.getStock());
-    }
-
-    public void change(ProductUpdateRequest request) {
-
-        this.name = request.getName();
-        this.price = Money.of(request.getPrice());
-        this.stock = Stock.of(request.getStock());
-    }
-
     public long totalLikes() {
         return this.likes.size();
     }
@@ -79,11 +61,11 @@ public class Product {
         }
     }
 
-    public void addStock(int stock) {
+    public void increaseStock(long stock) {
         this.stock.increase(stock);
     }
 
-    public void removeStock(int stock) {
+    public void decreaseStock(long stock) {
         this.stock.decrease(stock);
     }
 

@@ -1,7 +1,6 @@
 package com.mosinsa.product.ui;
 
-import com.mosinsa.product.ui.request.ProductAddRequest;
-import com.mosinsa.product.ui.request.ProductUpdateRequest;
+import com.mosinsa.product.ui.request.CreateProductRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
@@ -13,20 +12,20 @@ public class ProductValidator implements Validator {
 	@Override
 	public boolean supports(Class<?> clazz) {
 		log.info("is {} clazz supports", clazz);
-		return ProductAddRequest.class.isAssignableFrom(clazz) || ProductUpdateRequest.class.isAssignableFrom(clazz);
+		return CreateProductRequest.class.isAssignableFrom(clazz);
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		ProductAddRequest request = (ProductAddRequest) target;
+		CreateProductRequest request = (CreateProductRequest) target;
 
-		String name = request.getName();
+		String name = request.name();
 		Assert.hasText(name, "상품명은 필수입니다.");
 
-		int price = request.getPrice();
+		int price = request.price();
 		Assert.isTrue(price > 0, "상품 가격은 0보다 커야합니다.");
 
-		int stock = request.getStock();
+		int stock = request.stock();
 		Assert.isTrue(stock > 0, "상품 수량은 0보다 커야합니다.");
 
 	}

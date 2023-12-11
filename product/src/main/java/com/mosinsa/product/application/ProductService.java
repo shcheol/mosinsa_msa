@@ -1,18 +1,25 @@
 package com.mosinsa.product.application;
 
-import com.mosinsa.product.ui.request.ProductAddRequest;
-import com.mosinsa.product.ui.request.ProductUpdateRequest;
-import com.mosinsa.product.dto.ProductDto;
+import com.mosinsa.product.ui.request.CreateProductRequest;
+import com.mosinsa.product.application.dto.ProductDto;
+import com.mosinsa.product.ui.request.DecreaseStockRequest;
+import com.mosinsa.product.ui.request.IncreaseStockRequest;
+import com.mosinsa.product.ui.request.LikesProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-	ProductDto addProduct(ProductAddRequest productAddRequest);
+	ProductDto createProduct(CreateProductRequest createProductRequest);
 
-	void updateProduct(String productId, ProductUpdateRequest productUpdateRequest);
+	ProductDto getProductById(String productId);
 
-	ProductDto findProductById(String productId);
+	Page<ProductDto> getAllProducts(Pageable pageable);
 
-	Page<ProductDto> findAllProducts(Pageable pageable);
+	void likes(LikesProductRequest request);
+
+	void increaseStock(IncreaseStockRequest stock);
+
+	void decreaseStock(DecreaseStockRequest stock);
+
 }

@@ -2,7 +2,7 @@ package com.mosinsa.product.common.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.product.dto.OrderDto;
+import com.mosinsa.product.application.dto.OrderDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

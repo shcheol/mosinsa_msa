@@ -1,22 +1,23 @@
 package com.mosinsa.product.application;
 
+import com.mosinsa.product.application.dto.OrderDto;
+import com.mosinsa.product.application.dto.OrderProductDto;
+import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.common.ex.ProductError;
 import com.mosinsa.product.common.ex.ProductException;
-import com.mosinsa.product.domain.product.ProductId;
-import com.mosinsa.product.ui.request.ProductAddRequest;
-import com.mosinsa.product.ui.request.ProductUpdateRequest;
-import com.mosinsa.product.dto.OrderDto;
-import com.mosinsa.product.dto.OrderProductDto;
-import com.mosinsa.product.dto.ProductDto;
-import com.mosinsa.product.domain.product.Product;
-import com.mosinsa.product.infra.repository.ProductRepository;
-import com.mosinsa.product.infra.kafka.KafkaProducer;
 import com.mosinsa.product.common.wrapper.PageWrapper;
+import com.mosinsa.product.domain.category.Category;
+import com.mosinsa.product.domain.product.Product;
+import com.mosinsa.product.domain.product.ProductId;
+import com.mosinsa.product.infra.kafka.KafkaProducer;
+import com.mosinsa.product.infra.repository.ProductRepository;
+import com.mosinsa.product.ui.request.CreateProductRequest;
+import com.mosinsa.product.ui.request.DecreaseStockRequest;
+import com.mosinsa.product.ui.request.IncreaseStockRequest;
+import com.mosinsa.product.ui.request.LikesProductRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,80 +28,99 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    private final KafkaProducer kafkaProducer;
-    private final ProductRepository productRepository;
+	private final KafkaProducer kafkaProducer;
+	private final ProductRepository productRepository;
+	private final CategoryService categoryService;
 
-    @Value("${mosinsa.topic.order.rollback}")
-    private String rollbackTopic;
+	@Value("${mosinsa.topic.order.rollback}")
+	private String rollbackTopic;
 
-    @Value("${mosinsa.topic.order.commit}")
-    private String commitTopic;
+	@Value("${mosinsa.topic.order.commit}")
+	private String commitTopic;
 
-    @Override
-    @Transactional
-    public ProductDto addProduct(ProductAddRequest productAddRequest) {
+	@Override
+	public ProductDto createProduct(CreateProductRequest request) {
 
-        return new ProductDto(productRepository.save(new Product(productAddRequest)));
-    }
+		Category category = categoryService.getCategory(request.categoryId());
 
-    @Override
-    @CacheEvict(value = "product", key = "#productId")
-    @Transactional
-    public void updateProduct(String productId, ProductUpdateRequest productUpdateRequest) {
-        Product findProduct = productRepository.findById(ProductId.of(productId)).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
-        findProduct.change(productUpdateRequest);
-    }
+		return new ProductDto(
+				productRepository.save(
+						Product.create(request.name(),
+								request.price(),
+								category,
+								request.stock())
+				));
+	}
 
-    @Override
-    @Cacheable(value = "product")
-    public ProductDto findProductById(String productId) {
-        log.info("findProductById");
-        Product product = productRepository.findById(ProductId.of(productId)).orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
-        return new ProductDto(product);
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public ProductDto getProductById(String productId) {
 
-    @Override
-    @Cacheable(value = "products", key = "#pageable.pageSize +'-' + #pageable.pageNumber")
-    public Page<ProductDto> findAllProducts(Pageable pageable) {
+		return new ProductDto(productRepository.findById(ProductId.of(productId))
+				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)));
+	}
 
-        return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ProductDto> getAllProducts(Pageable pageable) {
 
-    @Transactional
-    public void orderProduct(OrderDto orderDto) {
+		return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
+	}
 
-        List<OrderProductDto> tempOrderProductDtos = new ArrayList<>();
-        try{
-            orderDto.getOrderProducts().forEach(op -> {
-                log.info("orderProductDto {}", op);
-                productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
-                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-                        .removeStock(op.getOrderCount());
-                tempOrderProductDtos.add(op);
-            });
-            kafkaProducer.completeTransaction(commitTopic, orderDto);
-        }catch (Exception e){
-            log.error("order product fail", e);
-            tempOrderProductDtos.forEach(op -> productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
-                    .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-                    .addStock(op.getOrderCount()));
+	@Override
+	public void likes(LikesProductRequest request) {
+		productRepository.findById(ProductId.of(request.productId()))
+				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+				.likes(request.memberId());
+	}
 
-            OrderDto rollbackOrder =
-                    new OrderDto(orderDto.getOrderId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
-            kafkaProducer.completeTransaction(rollbackTopic, rollbackOrder);
-        }
-    }
+	@Override
+	public void increaseStock(IncreaseStockRequest request) {
+		productRepository.findById(ProductId.of(request.productId()))
+				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+				.increaseStock(request.stock());
+	}
 
-    @Transactional
-    public void cancelOrder(OrderDto orderDto) {
-        log.info("cancelOrder: {}", orderDto);
-        orderDto.getOrderProducts().forEach(op ->
-                productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
-                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-                        .addStock(op.getOrderCount()));
-    }
+	@Override
+	public void decreaseStock(DecreaseStockRequest request) {
+		productRepository.findById(ProductId.of(request.productId()))
+				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+				.decreaseStock(request.stock());
+	}
+
+	public void orderProduct(OrderDto orderDto) {
+
+		List<OrderProductDto> tempOrderProductDtos = new ArrayList<>();
+		try {
+			orderDto.getOrderProducts().forEach(op -> {
+				log.info("orderProductDto {}", op);
+				productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
+						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+						.decreaseStock(op.getOrderCount());
+				tempOrderProductDtos.add(op);
+			});
+			kafkaProducer.completeTransaction(commitTopic, orderDto);
+		} catch (Exception e) {
+			log.error("order product fail", e);
+			tempOrderProductDtos.forEach(op -> productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
+					.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+					.increaseStock(op.getOrderCount()));
+
+			OrderDto rollbackOrder =
+					new OrderDto(orderDto.getOrderId(), orderDto.getCustomerId(), orderDto.getTotalPrice(), orderDto.getStatus(), tempOrderProductDtos);
+			kafkaProducer.completeTransaction(rollbackTopic, rollbackOrder);
+		}
+	}
+
+	public void cancelOrder(OrderDto orderDto) {
+		log.info("cancelOrder: {}", orderDto);
+		orderDto.getOrderProducts().forEach(op ->
+				productRepository.findById(ProductId.of(op.getProductDto().getProductId()))
+						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+						.increaseStock(op.getOrderCount()));
+	}
 }

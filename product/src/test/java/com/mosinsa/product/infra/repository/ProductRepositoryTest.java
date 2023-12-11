@@ -1,25 +1,30 @@
 package com.mosinsa.product.infra.repository;
 
+import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.domain.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProductRepositoryTest {
 
     @Autowired
-    private ProductRepository repository;
+    private ProductRepository productRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 
     @Test
-    @Commit
     void create(){
-        Product product = Product.create("name", 1000, "category1", 10);
-        Product saveProduct = repository.save(product);
+		Category category = categoryRepository.save(Category.of("category1"));
+
+		Product product = Product.create("name", 1000, category, 10);
+        Product saveProduct = productRepository.save(product);
 
         assertThat(product).isEqualTo(saveProduct);
         assertThat(product.getId()).isEqualTo(saveProduct.getId());
@@ -29,5 +34,27 @@ class ProductRepositoryTest {
         assertThat(product.totalLikes()).isZero();
         assertThat(product.getLikes()).isEmpty();
     }
+
+	@Test
+	@Commit
+	@Transactional
+	void likes(){
+		Category category = categoryRepository.save(Category.of("category1"));
+		Product product = productRepository.save(Product.create("name", 1000, category, 10));
+		productRepository.save(Product.create("name", 1000, category, 10));
+
+		assertThat(product.totalLikes()).isZero();
+
+		product.likes("memberId1");
+		assertThat(product.totalLikes()).isEqualTo(1);
+
+		product.likes("memberId2");
+		assertThat(product.totalLikes()).isEqualTo(2);
+
+
+		product.likes("memberId1");
+		assertThat(product.totalLikes()).isEqualTo(1);
+
+	}
 
 }

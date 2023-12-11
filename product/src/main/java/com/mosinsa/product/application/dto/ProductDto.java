@@ -1,4 +1,4 @@
-package com.mosinsa.product.dto;
+package com.mosinsa.product.application.dto;
 
 import com.mosinsa.product.domain.product.Product;
 import lombok.*;
@@ -14,21 +14,18 @@ public class ProductDto {
 
     private int price;
 
-    private int stock;
+    private long stock;
 
     private int discountPrice;
 
     private long likes;
 
     public ProductDto(Product product) {
-//        this.productId = product.getId();
+        this.productId = product.getId().getId();
         this.name = product.getName();
-//        this.price = product.getPrice();
-//        this.stock = product.getStock();
-//        this.likes = product.getLikes();
-    }
-
-    static class Update{
+        this.price = product.getPrice().getPrice();
+        this.stock = product.getStock().getRemain();
+        this.likes = product.getLikes().size();
 
     }
 }

@@ -1,6 +1,6 @@
 package com.mosinsa.product.infra.kafka;
 
-import com.mosinsa.product.dto.OrderDto;
+import com.mosinsa.product.application.dto.OrderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

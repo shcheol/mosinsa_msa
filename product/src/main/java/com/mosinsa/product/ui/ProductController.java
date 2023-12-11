@@ -1,9 +1,8 @@
 package com.mosinsa.product.ui;
 
 
-import com.mosinsa.product.ui.request.ProductAddRequest;
-import com.mosinsa.product.ui.request.ProductUpdateRequest;
-import com.mosinsa.product.dto.ProductDto;
+import com.mosinsa.product.ui.request.CreateProductRequest;
+import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.application.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +29,13 @@ public class ProductController {
     @GetMapping
     public Page<ProductDto> findAllProducts(Pageable pageable){
 
-		return productService.findAllProducts(pageable);
+		return productService.getAllProducts(pageable);
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductAddRequest request){
+    public ResponseEntity<ProductDto> addProduct(@RequestBody CreateProductRequest request){
 
-        ProductDto productDto = productService.addProduct(request);
+        ProductDto productDto = productService.createProduct(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
     }
@@ -45,17 +44,9 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
         log.info("getProduct {}", productId);
-        ProductDto product = productService.findProductById(productId);
+        ProductDto product = productService.getProductById(productId);
 
         return ResponseEntity.ok().body(product);
-    }
-
-    @PutMapping("/{productId}")
-    public ResponseEntity<Void> updateProduct(@PathVariable String productId, @RequestBody ProductUpdateRequest request){
-
-        productService.updateProduct(productId, request);
-
-        return ResponseEntity.ok().build();
     }
 
 
