@@ -23,6 +23,8 @@ sonar {
         property 'sonar.java.source', 17
         property 'encoding', 'UTF-8'
         property 'charSet', 'UTF-8'
+        property 'sonar.exclusions', '**/dto/**,**/ex/**, ' +
+                '**/*Dto.java,**/*Form.java, **/*Request.java, **/*Response.java, **/*Application.java'
     }
 }
 
