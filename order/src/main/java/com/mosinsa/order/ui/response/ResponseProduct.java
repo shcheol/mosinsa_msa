@@ -1,6 +1,6 @@
 package com.mosinsa.order.ui.response;
 
-import com.mosinsa.order.db.DiscountPolicy;
+import com.mosinsa.order.domain.DiscountPolicy;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

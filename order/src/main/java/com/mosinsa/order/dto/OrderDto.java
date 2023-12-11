@@ -1,7 +1,7 @@
 package com.mosinsa.order.dto;
 
-import com.mosinsa.order.db.Order;
-import com.mosinsa.order.db.OrderStatus;
+import com.mosinsa.order.domain.Order;
+import com.mosinsa.order.domain.OrderStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

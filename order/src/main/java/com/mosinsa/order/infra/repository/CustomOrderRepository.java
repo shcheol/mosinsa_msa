@@ -1,7 +1,7 @@
 package com.mosinsa.order.infra.repository;
 
 import com.mosinsa.order.ui.request.SearchCondition;
-import com.mosinsa.order.db.Order;
+import com.mosinsa.order.domain.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

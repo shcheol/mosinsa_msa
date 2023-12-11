@@ -3,7 +3,7 @@ package com.mosinsa.order.application;
 
 import com.mosinsa.order.ui.request.SearchCondition;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.db.OrderStatus;
+import com.mosinsa.order.domain.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

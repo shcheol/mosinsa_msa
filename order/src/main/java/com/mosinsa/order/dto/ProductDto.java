@@ -1,7 +1,7 @@
 package com.mosinsa.order.dto;
 
 import com.mosinsa.order.ui.response.ResponseProduct;
-import com.mosinsa.order.db.DiscountPolicy;
+import com.mosinsa.order.domain.DiscountPolicy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

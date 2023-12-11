@@ -1,6 +1,6 @@
 package com.mosinsa.order.infra.kafka;
 
-import com.mosinsa.order.db.OrderStatus;
+import com.mosinsa.order.domain.OrderStatus;
 import com.mosinsa.order.application.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

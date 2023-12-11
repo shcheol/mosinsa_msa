@@ -1,4 +1,4 @@
-package com.mosinsa.order.db;
+package com.mosinsa.order.domain;
 
 public enum DiscountPolicy {
 

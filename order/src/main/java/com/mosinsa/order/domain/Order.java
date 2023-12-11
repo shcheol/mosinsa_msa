@@ -1,4 +1,4 @@
-package com.mosinsa.order.db;
+package com.mosinsa.order.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,19 +15,23 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends AuditingEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private Long id;
+    @EmbeddedId
+    private OrderId id;
 
     private String customerId;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private final List<OrderProduct> orderProducts = new ArrayList<>();
+    private Money totalPrice;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<OrderProduct> orderProducts = new ArrayList<>();
+
+    private void calculateTotalPrice(){
+        orderProducts.stream().map(op -> op.getP)
+    }
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }

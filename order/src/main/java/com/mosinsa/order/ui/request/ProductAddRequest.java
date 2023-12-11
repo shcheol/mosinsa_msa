@@ -1,6 +1,6 @@
 package com.mosinsa.order.ui.request;
 
-import com.mosinsa.order.db.DiscountPolicy;
+import com.mosinsa.order.domain.DiscountPolicy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;

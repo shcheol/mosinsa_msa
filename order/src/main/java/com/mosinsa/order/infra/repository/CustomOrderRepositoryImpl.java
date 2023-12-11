@@ -1,8 +1,8 @@
 package com.mosinsa.order.infra.repository;
 
 import com.mosinsa.order.ui.request.SearchCondition;
-import com.mosinsa.order.db.Order;
-import com.mosinsa.order.db.OrderStatus;
+import com.mosinsa.order.domain.Order;
+import com.mosinsa.order.domain.OrderStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mosinsa.order.db.QOrder.order;
+import static com.mosinsa.order.domain.QOrder.order;
 
 @AllArgsConstructor
 public class CustomOrderRepositoryImpl implements CustomOrderRepository{
