@@ -4,14 +4,11 @@ import com.mosinsa.gateway.filter.AuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -24,6 +21,7 @@ public class FilterConfig {
 	private final AuthorizationFilter authorizationFilter;
 
 	private final String REPLACEMENT = "/$\\{segment}";
+
 	@Bean
 	public GlobalFilter globalLogFilter() {
 

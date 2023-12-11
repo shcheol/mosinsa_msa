@@ -1,0 +1,42 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: apigateway-service
+  config:
+    import: "optional:configserver:http://127.0.0.1:8888/"
+  data:
+    redis:
+      port: 6666
+      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+
+feignclient:
+  url:
+    customer: 152.67.205.195:8000/customer-service
+    order: 152.67.205.195:8000/order-service
+    product: 152.67.205.195:8000/product-service
+
+mosinsa:
+  topic:
+    order:
+      request: mosinsa-order
+      cancel: mosinsa-order-cancel
+      commit: mosinsa-order-commit
+      rollback: mosinsa-order-rollback
+
+
+token:
+  access:
+    secret: access_secret
+    expiration: 3600000
+  #    expiration: 10000
+  refresh:
+    secret: refresh_secret
+    expiration: 1209600000
