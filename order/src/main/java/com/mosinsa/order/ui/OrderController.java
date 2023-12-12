@@ -61,7 +61,7 @@ public class OrderController {
     @PostMapping("/orders")
     public ResponseEntity<OrderDto> orders(@RequestBody OrderCreateRequest orderRequest, HttpServletRequest request){
 
-        OrderDto orderDto = orderService.order(orderRequest.getCustomerId(), orderRequest.getProducts(), getAuthMap(request));
+        OrderDto orderDto = orderService.order(orderRequest, getAuthMap(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
     }
 

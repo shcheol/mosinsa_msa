@@ -12,7 +12,8 @@ public enum OrderError {
 	ORDER_NOT_FOUND("주문 정보가 없습니다.", HttpStatus.NOT_FOUND),
 	VALIDATION_ERROR("값 검증 에러", HttpStatus.INTERNAL_SERVER_ERROR),
 
-	;
+	ORDER_AT_LEAST_ONE_OR_MORE_PRODUCTS("상품을 한개 이상 주문해야합니다.", HttpStatus.BAD_REQUEST),
+	NO_ORDER_CUSTOMER("주문자가 없습니다.", HttpStatus.BAD_REQUEST);
 
 	private String message;
 	private HttpStatus status;

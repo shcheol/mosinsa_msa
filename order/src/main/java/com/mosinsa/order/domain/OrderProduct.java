@@ -1,9 +1,11 @@
 package com.mosinsa.order.domain;
 
+import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderProduct {
@@ -15,13 +17,13 @@ public class OrderProduct {
 
     private Money amounts;
 
-    public static OrderProduct createOrderProduct(String productId, Money price, int quantity) {
+    public static OrderProduct createOrderProduct(String productId, int price, int quantity) {
 
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.productId = productId;
-        orderProduct.price = price;
+        orderProduct.price = Money.of(price);
         orderProduct.quantity = quantity;
-        orderProduct.amounts = price.multiply(quantity);
+        orderProduct.amounts = orderProduct.price.multiply(quantity);
 
         return orderProduct;
     }

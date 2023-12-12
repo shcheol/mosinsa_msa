@@ -3,6 +3,7 @@ package com.mosinsa.order.application;
 
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.ui.request.OrderCreateRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
 import com.mosinsa.order.ui.response.ResponseCustomer;
 import com.mosinsa.order.dto.OrderDto;
@@ -46,22 +47,32 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
     @Transactional
-    public OrderDto order(String customerId, Map<String, Integer> productMap, Map<String, Collection<String>> authMap) {
-        Assert.isTrue(productMap.size()>=1, "1개 이상의 상품을 주문해야 합니다.");
+    public OrderDto order(OrderCreateRequest request, Map<String, Collection<String>> authMap) {
 
 		log.info("header map {}", authMap);
-		ResponseCustomer customer =customerServiceClient.getCustomer(authMap, customerId);
+		ResponseCustomer customer =customerServiceClient.getCustomer(authMap, request.getCustomerId());
 
 		List<OrderProduct> orderProductList = new ArrayList<>();
         List<OrderProductDto> orderProductDtos = new ArrayList<>();
 
-		productMap.keySet().forEach(productId ->{
-			orderProductList.add(OrderProduct.createOrderProduct(productId, productMap.get(productId)));
-			orderProductDtos.add(
-					new OrderProductDto(
-							OrderProduct.createOrderProduct(productId, productMap.get(productId)).getId(),
-							productMap.get(productId), new ProductDto(productServiceClient.getProduct(authMap, productId))));
+		request.getMyOrderProducts().forEach(myOrderProduct -> {
+			OrderProduct orderProduct = OrderProduct.createOrderProduct(
+					myOrderProduct.getProductId(),
+					myOrderProduct.getPrice(),
+					myOrderProduct.getPrice());
+			orderProductList.add(orderProduct);
+//			orderProductDtos.add(
+//					new OrderProductDto(orderProduct, myOrderProduct.getProductId(),)
 		});
+
+
+//		productMap.keySet().forEach(productId ->{
+//			orderProductList.add(OrderProduct.createOrderProduct(productId, productMap.get(productId)));
+//			orderProductDtos.add(
+//					new OrderProductDto(
+//							OrderProduct.createOrderProduct(productId, productMap.get(productId)).getId(),
+//							productMap.get(productId), new ProductDto(productServiceClient.getProduct(authMap, productId))));
+//		});
 
 		Order order = orderRepository.save(Order.createOrder(customer.getId(), orderProductList));
 		OrderDto orderDto = new OrderDto(order.getId(), customer.getId(), getTotalPrice(order.getId(), authMap), OrderStatus.CREATE, orderProductDtos);
