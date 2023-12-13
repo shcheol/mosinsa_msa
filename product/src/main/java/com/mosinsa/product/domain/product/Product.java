@@ -17,12 +17,12 @@ import java.util.Set;
 public class Product {
 
     @EmbeddedId
-    @Column(name = "product_id")
     private ProductId id;
 
     private String name;
 
     @Embedded
+	@Column(name = "price")
     private Money price;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

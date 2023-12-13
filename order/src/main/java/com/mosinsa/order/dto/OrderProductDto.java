@@ -1,21 +1,20 @@
 package com.mosinsa.order.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.mosinsa.order.domain.OrderProduct;
+import lombok.Value;
 
-@Getter
-@ToString
-@NoArgsConstructor
+@Value
 public class OrderProductDto {
 
-    private String orderProductId;
-    private int orderCount;
-    private ProductDto productDto;
+    String productId;
+    int price;
+    int quantity;
+	int amounts;
 
-    public OrderProductDto(String orderProductId, int orderCount, ProductDto productDto) {
-        this.orderProductId = orderProductId;
-        this.orderCount = orderCount;
-        this.productDto = productDto;
-    }
+	public OrderProductDto(OrderProduct orderProduct){
+		this.productId = orderProduct.getProductId();
+		this.price = orderProduct.getPrice().getValue();
+		this.quantity = orderProduct.getQuantity();
+		this.amounts = orderProduct.getAmounts().getValue();
+	}
 }

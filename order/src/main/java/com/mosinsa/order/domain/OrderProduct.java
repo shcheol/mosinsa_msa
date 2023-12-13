@@ -1,5 +1,7 @@
 package com.mosinsa.order.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,13 +13,17 @@ import lombok.NoArgsConstructor;
 public class OrderProduct {
     private String productId;
 
+	@Convert(converter = MoneyConverter.class)
+	@Column(name = "price")
     private Money price;
 
     private int quantity;
 
+	@Convert(converter = MoneyConverter.class)
+	@Column(name = "amounts")
     private Money amounts;
 
-    public static OrderProduct createOrderProduct(String productId, int price, int quantity) {
+    public static OrderProduct create(String productId, int price, int quantity) {
 
         OrderProduct orderProduct = new OrderProduct();
         orderProduct.productId = productId;

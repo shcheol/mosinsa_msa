@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum OrderStatus {
 
-    // 주문 생성, 취소, 주문요청 성공, 주문 완료(배송, 결제 로직필요)
-    CREATE, CANCEL, REQUEST_SUCCESS, COMPLETE
+	// 결제 대기, 상품 준비, 출고, 배송중, 배송 완료, 취소
+	PAYMENT_WAITING, PREPARING, SHIPPED, DELIVERING, DELIVERY_COMPLETED, CANCELED
 	;
 
 	public static boolean contains(OrderStatus status){

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Component
 @FeignClient(name = "customer-service", url = "${feignclient.url.customer}")
-public interface CustomerServiceClient {
+public interface CustomerClient {
 
     @GetMapping("/customers/{customerId}")
 	ResponseCustomer getCustomer(@RequestHeader Map<String, Collection<String>> headers, @PathVariable(value = "customerId") String customerId);

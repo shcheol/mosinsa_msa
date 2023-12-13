@@ -2,15 +2,17 @@ package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.common.ex.ProductException;
-import com.mosinsa.product.ui.request.DecreaseStockRequest;
-import com.mosinsa.product.ui.request.IncreaseStockRequest;
+import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.LikesProductRequest;
+import com.mosinsa.product.ui.request.OrderProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,30 +40,30 @@ class ProductServiceImplTest {
 	}
 
 	@Test
-	void increaseStock(){
+	void orderProduct(){
 
 		long beforeStock = productService.getProductById("productId1").getStock();
 		assertThat(beforeStock).isEqualTo(10);
 
-		IncreaseStockRequest request = new IncreaseStockRequest("productId1", 3);
-		productService.increaseStock(request);
+		OrderProductRequest request = new OrderProductRequest("productId1", 3);
+		productService.orderProduct(List.of(request));
 
 		long afterStock = productService.getProductById("productId1").getStock();
-		assertThat(afterStock).isEqualTo(13);
+		assertThat(afterStock).isEqualTo(7);
 
 	}
 
 	@Test
-	void decreaseStock(){
+	void cancelOrderProduct(){
 
 		long beforeStock = productService.getProductById("productId2").getStock();
 		assertThat(beforeStock).isEqualTo(20);
 
-		DecreaseStockRequest request = new DecreaseStockRequest("productId2", 3);
-		productService.decreaseStock(request);
+		CancelOrderProductRequest request = new CancelOrderProductRequest("productId2", 3);
+		productService.cancelOrderProduct(List.of(request));
 
 		long afterStock = productService.getProductById("productId2").getStock();
-		assertThat(afterStock).isEqualTo(17);
+		assertThat(afterStock).isEqualTo(23);
 
 	}
 

@@ -3,7 +3,6 @@ package com.mosinsa.order.domain;
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.UUID;
 @Access(AccessType.FIELD)
 public class OrderId implements Serializable {
 
-    @EmbeddedId
     private String id;
 
     public static OrderId newId() {

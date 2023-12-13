@@ -12,7 +12,7 @@ import java.util.List;
 public class OrderCreateRequest {
 
     private String customerId;
-	private List<MyOrderProduct> myOrderProducts = new ArrayList<>();
+	private final List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
     public OrderCreateRequest(String customerId, List<MyOrderProduct> myOrderProducts) {
         this.customerId = customerId;

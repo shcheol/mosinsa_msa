@@ -50,7 +50,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderDto> getOrder(@PathVariable Long orderId){
+    public ResponseEntity<OrderDto> getOrder(@PathVariable String orderId){
 
         OrderDto orderDto = orderService.findOrderById(orderId);
 
@@ -70,7 +70,7 @@ public class OrderController {
 
 
         Assert.isTrue(cancelRequest.getCustomerId()!= null && !cancelRequest.getCustomerId().isBlank(),"고객 id가 없습니다.");
-        Assert.isTrue(cancelRequest.getOrderId()!= null && cancelRequest.getOrderId()>0,"주문 id가 없습니다.");
+        Assert.isTrue(cancelRequest.getOrderId()!= null ,"주문 id가 없습니다.");
 
         orderService.cancelOrder(cancelRequest.getCustomerId(), cancelRequest.getOrderId(), getAuthMap(request));
         return ResponseEntity.ok().build();

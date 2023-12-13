@@ -1,24 +1,18 @@
 package com.mosinsa.product.application.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@ToString
-@NoArgsConstructor
-@EqualsAndHashCode
+@Value
 public class OrderDto {
 
-    private Long orderId;
-    private String customerId;
-    private int totalPrice;
-    private String status;
-    private final List<OrderProductDto> orderProducts = new ArrayList<>();
+    Long orderId;
+    String customerId;
+    int totalPrice;
+    String status;
+    List<OrderProductDto> orderProducts = new ArrayList<>();
 
     public OrderDto(Long orderId, String customerId, int totalPrice, String orderStatus, List<OrderProductDto> orderProducts) {
         this.orderId = orderId;
@@ -27,7 +21,6 @@ public class OrderDto {
         this.status = orderStatus;
 
         this.orderProducts.addAll(orderProducts);
-
     }
 
 }

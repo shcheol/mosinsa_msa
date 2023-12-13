@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -23,6 +22,8 @@ public class Order extends AuditingEntity {
 
 	private String customerId;
 
+	@Convert(converter = MoneyConverter.class)
+	@Column(name = "total_price")
 	private Money totalPrice;
 
 	@Enumerated(EnumType.STRING)
@@ -34,15 +35,13 @@ public class Order extends AuditingEntity {
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public static Order createOrder(String customerId, List<OrderProduct> orderProducts) {
+	public static Order create(String customerId, List<OrderProduct> orderProducts) {
 
 		Order order = new Order();
-
+		order.id = OrderId.newId();
 		order.setCustomerId(customerId);
-		order.status = OrderStatus.CREATE;
-
+		order.status = OrderStatus.PAYMENT_WAITING;
 		order.addOrderProducts(orderProducts);
-
 		return order;
 	}
 
@@ -54,14 +53,15 @@ public class Order extends AuditingEntity {
 		this.customerId = customerId;
 	}
 
-	public void changeOrderStatus(OrderStatus status) {
-		this.status = status;
-	}
-
 	public void addOrderProducts(List<OrderProduct> orderProducts) {
 		verifyAtLeastOneOrderProducts(orderProducts);
 		this.orderProducts.addAll(orderProducts);
 		calculateTotalPrice();
+	}
+
+	public void cancelOrder() {
+		verifyNotYetShipped();
+		this.status = OrderStatus.CANCELED;
 	}
 	private void verifyAtLeastOneOrderProducts(List<OrderProduct> orderProducts) {
 		if (orderProducts == null || orderProducts.isEmpty()){
@@ -69,13 +69,18 @@ public class Order extends AuditingEntity {
 		}
 	}
 	private void calculateTotalPrice() {
-		this.totalPrice = Money.of(orderProducts.stream().mapToInt(op -> op.getAmounts().getPrice()).sum());
+		this.totalPrice = Money.of(orderProducts.stream().mapToInt(op -> op.getAmounts().getValue()).sum());
 	}
 
-	public void cancelOrder() {
+	private void verifyNotYetShipped() {
+		if(!isNotYetShipped()){
+			throw new AlreadyShippedException();
+		}
 
-		this.changeOrderStatus(OrderStatus.CANCEL);
+	}
 
+	private boolean isNotYetShipped() {
+		return status == OrderStatus.PAYMENT_WAITING || status == OrderStatus.PREPARING;
 	}
 
 }

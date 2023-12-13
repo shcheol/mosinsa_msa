@@ -1,12 +1,11 @@
 package com.mosinsa.product.application;
 
-import com.mosinsa.product.ui.request.CreateProductRequest;
+import com.mosinsa.product.ui.request.*;
 import com.mosinsa.product.application.dto.ProductDto;
-import com.mosinsa.product.ui.request.DecreaseStockRequest;
-import com.mosinsa.product.ui.request.IncreaseStockRequest;
-import com.mosinsa.product.ui.request.LikesProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface ProductService {
 
@@ -18,8 +17,8 @@ public interface ProductService {
 
 	void likes(LikesProductRequest request);
 
-	void increaseStock(IncreaseStockRequest stock);
+	void orderProduct(List<OrderProductRequest> requests);
 
-	void decreaseStock(DecreaseStockRequest stock);
+	void cancelOrderProduct(List<CancelOrderProductRequest> requests);
 
 }

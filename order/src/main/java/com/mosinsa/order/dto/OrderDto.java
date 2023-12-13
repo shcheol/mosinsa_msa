@@ -2,36 +2,27 @@ package com.mosinsa.order.dto;
 
 import com.mosinsa.order.domain.Order;
 import com.mosinsa.order.domain.OrderStatus;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@ToString
-@NoArgsConstructor
+@Value
 public class OrderDto {
 
-    private String orderId;
-    private String customerId;
-    private int totalPrice;
-    private OrderStatus status;
-    private final List<OrderProductDto> orderProducts = new ArrayList<>();
-
-    public OrderDto(String orderId, String customerId, int totalPrice, OrderStatus orderStatus, List<OrderProductDto> orderProducts) {
-        this.orderId = orderId;
-        this.customerId = customerId;
-        this.totalPrice = totalPrice;
-        this.status = orderStatus;
-        this.orderProducts.addAll(orderProducts);
-    }
+    String orderId;
+    String customerId;
+    int totalPrice;
+    OrderStatus status;
+    List<OrderProductDto> orderProducts = new ArrayList<>();
 
     public OrderDto(Order order) {
         this.orderId = order.getId().getId();
         this.customerId = order.getCustomerId();
         this.status = order.getStatus();
+		this.totalPrice = order.getTotalPrice().getValue();
+		this.orderProducts.addAll(
+				order.getOrderProducts().stream().map(OrderProductDto::new).toList());
     }
 
 }

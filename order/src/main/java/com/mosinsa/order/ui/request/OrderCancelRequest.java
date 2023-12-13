@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 public class OrderCancelRequest {
 
     private String customerId;
-    private Long orderId;
+    private String orderId;
 
-    public OrderCancelRequest(String customerId, Long orderId) {
+    public OrderCancelRequest(String customerId, String orderId) {
         this.customerId = customerId;
         this.orderId = orderId;
     }
