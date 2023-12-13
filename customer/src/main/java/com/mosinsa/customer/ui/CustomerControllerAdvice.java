@@ -1,6 +1,7 @@
 package com.mosinsa.customer.ui;
 
 import com.mosinsa.customer.common.ex.CustomerException;
+import com.mosinsa.customer.ui.response.BaseResponse;
 import com.mosinsa.customer.ui.response.GlobalResponseEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class CustomerControllerAdvice {
 
 	@ExceptionHandler(CustomerException.class)
 	@ResponseBody
-	public static ResponseEntity<?> productExceptionHandler(CustomerException exception) {
+	public static ResponseEntity<BaseResponse> productExceptionHandler(CustomerException exception) {
 		log.error("response error message : {}", exception.getError().getMessage(), exception);
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
@@ -26,7 +27,7 @@ public class CustomerControllerAdvice {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
-	public static ResponseEntity<?> exceptionHandler(Exception exception) {
+	public static ResponseEntity<BaseResponse> exceptionHandler(Exception exception) {
 		log.error("response error message : {}", exception.getMessage(), exception );
 		return GlobalResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
 	}

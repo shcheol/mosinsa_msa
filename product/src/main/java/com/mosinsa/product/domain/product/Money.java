@@ -1,31 +1,29 @@
 package com.mosinsa.product.domain.product;
 
-import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
-@Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Money {
 
-	private int price;
+	private int value;
 
 	public static Money of(int value) {
 		inputValidCheck(value);
-
 		return new Money(value);
 	}
 
 	private Money(int value){
-		this.price = value;
+		this.value = value;
 	}
 
 	public Money multiply(int multiplier) {
-		return new Money(price * multiplier);
+		inputValidCheck(multiplier);
+		return new Money(value * multiplier);
 	}
 
 	private static void inputValidCheck(int value) {
@@ -39,11 +37,11 @@ public class Money {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Money money = (Money) o;
-		return price == money.price;
+		return value == money.value;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(price);
+		return Objects.hash(value);
 	}
 }

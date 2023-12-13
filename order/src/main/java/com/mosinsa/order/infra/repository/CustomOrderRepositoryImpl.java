@@ -16,7 +16,7 @@ import java.util.List;
 import static com.mosinsa.order.domain.QOrder.order;
 
 @AllArgsConstructor
-public class CustomOrderRepositoryImpl implements CustomOrderRepository{
+public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 
 	private final JPAQueryFactory factory;
 
@@ -32,35 +32,31 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize()).fetch();
 
-		return PageableExecutionUtils.getPage(fetch, pageable, factory.select(order.count())
-				.from(order)
-				.where(
-						customer(condition.getCustomerId()),
-						dateBetween(condition.getStartDate(), condition.getEndDate()),
-								status(condition.getStatus())
-
-				)::fetchOne);
+		return PageableExecutionUtils
+				.getPage(fetch, pageable,
+						factory
+								.select(order.count())
+								.from(order)
+								.where(
+										customer(condition.getCustomerId()),
+										dateBetween(condition.getStartDate(), condition.getEndDate()),
+										status(condition.getStatus())
+								)::fetchOne);
 	}
 
 	private BooleanExpression dateBetween(LocalDateTime startDate, LocalDateTime endDate) {
-		if(startDate == null && endDate == null){
+		if (startDate == null && endDate == null) {
 			return null;
 		}
 		return order.createdDate.between(startDate, endDate);
 	}
 
-	private BooleanExpression customer(String customerId){
-		if(customerId == null){
-			return null;
-		}
-		return order.customerId.eq(customerId);
+	private BooleanExpression customer(String customerId) {
+		return customerId == null ? null : order.customerId.eq(customerId);
 	}
 
 	private BooleanExpression status(OrderStatus status) {
-		if (OrderStatus.contains(status)) {
-			return order.status.eq(status);
-		}
-		return null;
+		return OrderStatus.contains(status) ? order.status.eq(status) : null;
 	}
 
 }

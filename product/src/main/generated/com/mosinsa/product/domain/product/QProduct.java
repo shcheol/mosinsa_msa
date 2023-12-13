@@ -30,7 +30,7 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final StringPath name = createString("name");
 
-    public final QMoney price;
+    public final SimplePath<Money> price = createSimple("price", Money.class);
 
     public final QStock stock;
 
@@ -54,7 +54,6 @@ public class QProduct extends EntityPathBase<Product> {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new com.mosinsa.product.domain.category.QCategory(forProperty("category"), inits.get("category")) : null;
         this.id = inits.isInitialized("id") ? new QProductId(forProperty("id")) : null;
-        this.price = inits.isInitialized("price") ? new QMoney(forProperty("price")) : null;
         this.stock = inits.isInitialized("stock") ? new QStock(forProperty("stock")) : null;
     }
 

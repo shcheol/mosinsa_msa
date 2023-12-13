@@ -4,6 +4,7 @@ import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class Order extends AuditingEntity {
 
 	@EmbeddedId
@@ -46,14 +48,14 @@ public class Order extends AuditingEntity {
 	}
 
 
-	public void setCustomerId(String customerId) {
+	private void setCustomerId(String customerId) {
 		if (!StringUtils.hasText(customerId)){
 			throw new OrderException(OrderError.NO_ORDER_CUSTOMER);
 		}
 		this.customerId = customerId;
 	}
 
-	public void addOrderProducts(List<OrderProduct> orderProducts) {
+	private void addOrderProducts(List<OrderProduct> orderProducts) {
 		verifyAtLeastOneOrderProducts(orderProducts);
 		this.orderProducts.addAll(orderProducts);
 		calculateTotalPrice();

@@ -23,6 +23,7 @@ public class Money {
     }
 
     public Money multiply(int multiplier) {
+		inputValidCheck(multiplier);
         return new Money(value * multiplier);
     }
 

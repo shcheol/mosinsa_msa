@@ -23,7 +23,6 @@ public class OrderId implements Serializable {
         return new OrderId(UUID.randomUUID().toString());
     }
 
-
     public static OrderId of(String id) {
         return new OrderId(id);
     }

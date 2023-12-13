@@ -4,9 +4,9 @@ alter table order_product
 
 drop table if exists order_product;
 
-drop table if exists orders;
+drop table if exists orders;12
 
-create table order_product
+create table if not exists order_product
 (
     order_id   varchar(255) not null,
     amounts    integer,
@@ -15,14 +15,14 @@ create table order_product
     quantity   integer      not null
 ) engine = InnoDB;
 
-create table orders
+create table if not exists orders
 (
     id                 varchar(255) not null,
-    created_date       datetime(6),
-    last_modified_date datetime(6),
     customer_id        varchar(255),
     status             varchar(255),
     total_price        integer,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
     primary key (id)
 ) engine = InnoDB;
 

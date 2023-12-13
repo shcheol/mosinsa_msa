@@ -8,12 +8,12 @@ import org.springframework.util.StringUtils;
 
 @Getter
 @NoArgsConstructor
-public class OrderCancelRequest {
+public class CancelOrderRequest {
 
     private String customerId;
     private String orderId;
 
-    public OrderCancelRequest(String customerId, String orderId) {
+    public CancelOrderRequest(String customerId, String orderId) {
         this.customerId = customerId;
         this.orderId = orderId;
 		valid();

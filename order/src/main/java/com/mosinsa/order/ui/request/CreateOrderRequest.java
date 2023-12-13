@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Value
-public class OrderCreateRequest {
+public class CreateOrderRequest {
 
     String customerId;
 	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
-    public OrderCreateRequest(String customerId, List<MyOrderProduct> myOrderProducts) {
+    public CreateOrderRequest(String customerId, List<MyOrderProduct> myOrderProducts) {
         this.customerId = customerId;
         this.myOrderProducts.addAll(myOrderProducts);
 		valid();

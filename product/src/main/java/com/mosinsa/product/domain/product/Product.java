@@ -21,7 +21,7 @@ public class Product {
 
     private String name;
 
-    @Embedded
+	@Convert(converter = MoneyConverter.class)
 	@Column(name = "price")
     private Money price;
 

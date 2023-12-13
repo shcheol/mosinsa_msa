@@ -1,6 +1,7 @@
 package com.mosinsa.order.ui;
 
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.ui.response.BaseResponse;
 import com.mosinsa.order.ui.response.GlobalResponseEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class OrderControllerAdvice {
 
 	@ExceptionHandler(OrderException.class)
 	@ResponseBody
-	public static ResponseEntity<?> productExceptionHandler(OrderException exception) {
+	public static ResponseEntity<BaseResponse> productExceptionHandler(OrderException exception) {
 		log.error("response error message : {}", exception.getError().getMessage(), exception);
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
@@ -26,7 +27,7 @@ public class OrderControllerAdvice {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
-	public static ResponseEntity<?> exceptionHandler(Exception exception) {
+	public static ResponseEntity<BaseResponse> exceptionHandler(Exception exception) {
 		log.error("response error message : {}", exception.getMessage(), exception);
 		return GlobalResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
 	}

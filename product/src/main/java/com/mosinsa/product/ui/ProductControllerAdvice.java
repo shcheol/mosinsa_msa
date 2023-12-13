@@ -1,5 +1,6 @@
 package com.mosinsa.product.ui;
 
+import com.mosinsa.product.ui.response.BaseResponse;
 import com.mosinsa.product.ui.response.GlobalResponseEntity;
 import com.mosinsa.product.common.ex.ProductException;
 import lombok.AccessLevel;
@@ -18,7 +19,7 @@ public class ProductControllerAdvice {
 
 	@ExceptionHandler(ProductException.class)
 	@ResponseBody
-	public static ResponseEntity<?> productExceptionHandler(ProductException exception) {
+	public static ResponseEntity<BaseResponse> productExceptionHandler(ProductException exception) {
 		log.error("response error message : {}", exception.getError().getMessage(), exception);
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
@@ -26,7 +27,7 @@ public class ProductControllerAdvice {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
-	public static ResponseEntity<?> exceptionHandler(Exception exception) {
+	public static ResponseEntity<BaseResponse> exceptionHandler(Exception exception) {
 		log.error("response error message : {}", exception.getMessage(), exception );
 		return GlobalResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
 	}
