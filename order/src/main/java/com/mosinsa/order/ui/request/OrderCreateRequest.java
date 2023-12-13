@@ -1,23 +1,35 @@
 package com.mosinsa.order.ui.request;
 
+import com.mosinsa.order.common.ex.OrderError;
+import com.mosinsa.order.common.ex.OrderException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Value;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
+@Value
 public class OrderCreateRequest {
 
-    private String customerId;
-	private final List<MyOrderProduct> myOrderProducts = new ArrayList<>();
+    String customerId;
+	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
     public OrderCreateRequest(String customerId, List<MyOrderProduct> myOrderProducts) {
         this.customerId = customerId;
         this.myOrderProducts.addAll(myOrderProducts);
+		valid();
     }
+
+	public void valid(){
+		if (!StringUtils.hasText(customerId)){
+			throw new OrderException(OrderError.VALIDATION_ERROR);
+		}
+		if (myOrderProducts.isEmpty()){
+			throw new OrderException(OrderError.VALIDATION_ERROR);
+		}
+	}
 
 	@AllArgsConstructor
 	@Getter

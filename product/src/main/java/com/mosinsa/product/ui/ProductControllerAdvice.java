@@ -20,7 +20,7 @@ public class ProductControllerAdvice {
 	@ResponseBody
 	public static ResponseEntity<?> productExceptionHandler(ProductException exception) {
 		log.error("response error message : {}", exception.getError().getMessage(), exception);
-		return GlobalResponseEntity.Error(exception.getError().getStatus(), exception.getError().getMessage());
+		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
 
 
@@ -28,6 +28,6 @@ public class ProductControllerAdvice {
 	@ResponseBody
 	public static ResponseEntity<?> exceptionHandler(Exception exception) {
 		log.error("response error message : {}", exception.getMessage(), exception );
-		return GlobalResponseEntity.Error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+		return GlobalResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
 	}
 }

@@ -1,4 +1,4 @@
-package com.mosinsa.customer.ui.response;
+package com.mosinsa.customer.infra.feignclient;
 
 import lombok.Getter;
 import lombok.ToString;

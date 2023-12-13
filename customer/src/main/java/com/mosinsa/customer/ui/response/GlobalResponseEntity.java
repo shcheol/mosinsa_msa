@@ -5,15 +5,15 @@ import org.springframework.http.ResponseEntity;
 
 public class GlobalResponseEntity {
 
-	public static ResponseEntity<?> Ok(Object data){
-		return new ResponseEntity<>(data, HttpStatus.OK);
+	public static ResponseEntity<BaseResponse> ok(Object data) {
+		return new ResponseEntity<>(new GlobalResponse<>("success", data, null), HttpStatus.OK);
 	}
 
-	public static ResponseEntity<?> Ok(HttpStatus httpStatus, Object data){
-		return new ResponseEntity<>(new GlobalResponse<Object>("success", data, null), httpStatus);
+	public static ResponseEntity<BaseResponse> success(HttpStatus httpStatus, Object data) {
+		return new ResponseEntity<>(new GlobalResponse<>("success", data, null), httpStatus);
 	}
 
-	public static ResponseEntity<?> Error(HttpStatus httpStatus, String message){
-		return new ResponseEntity<>(new GlobalResponse<Object>("error", null, message), httpStatus);
+	public static ResponseEntity<BaseResponse> error(HttpStatus httpStatus, String message) {
+		return new ResponseEntity<>(new GlobalResponse<>("error", null, message), httpStatus);
 	}
 }

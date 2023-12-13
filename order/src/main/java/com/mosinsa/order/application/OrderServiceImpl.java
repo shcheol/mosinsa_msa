@@ -13,7 +13,7 @@ import com.mosinsa.order.infra.feignclient.ProductClient;
 import com.mosinsa.order.infra.repository.OrderRepository;
 import com.mosinsa.order.ui.request.OrderCreateRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
-import com.mosinsa.order.ui.response.ResponseCustomer;
+import com.mosinsa.order.infra.feignclient.CustomerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
 	public OrderDto order(OrderCreateRequest request, Map<String, Collection<String>> authMap) {
 
 		log.info("header map {}", authMap);
-		ResponseCustomer customer = customerClient.getCustomer(authMap, request.getCustomerId());
+		CustomerResponse customer = customerClient.getCustomer(authMap, request.getCustomerId());
 
 		List<OrderProduct> orderProducts = request.getMyOrderProducts().stream().map(
 				myOrderProduct -> OrderProduct.create(
@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
 						new OrderProductRequest(op.getProductId(), op.getQuantity())
 				).toList());
 
-		Order order = orderRepository.save(Order.create(customer.getId(), orderProducts));
+		Order order = orderRepository.save(Order.create(customer.id(), orderProducts));
 		return new OrderDto(order);
 	}
 

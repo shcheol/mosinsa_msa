@@ -12,14 +12,14 @@ class ProductTest {
 
     @Test
     void invalidMoneyException(){
-
-		assertThrows(InvalidMoneyException.class, () -> Product.create("name", 0, Category.of("category1"), 10));
+		Category of = Category.of("category1");
+		assertThrows(InvalidMoneyException.class, () -> Product.create("name", 0, of, 10));
     }
 
 	@Test
 	void invalidStockException(){
-
-		assertThrows(InvalidStockException.class, () -> Product.create("name", 100, Category.of("category1"), 0));
+		Category of = Category.of("category1");
+		assertThrows(InvalidStockException.class, () -> Product.create("name", 100, of, 0));
 	}
 
 }

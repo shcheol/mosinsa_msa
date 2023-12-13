@@ -1,11 +1,12 @@
 package com.mosinsa.product.ui;
 
-
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.application.ProductService;
 import com.mosinsa.product.ui.request.OrderProductRequest;
+import com.mosinsa.product.ui.response.BaseResponse;
+import com.mosinsa.product.ui.response.GlobalResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,18 +32,19 @@ public class ProductController {
 	}
 
 	@GetMapping("/{productId}")
-	public ResponseEntity<ProductDto> getProduct(@PathVariable String productId){
+	public ResponseEntity<BaseResponse> getProduct(@PathVariable String productId){
 		log.info("getProduct {}", productId);
-		ProductDto product = productService.getProductById(productId);
 
-		return ResponseEntity.ok().body(product);
+		ProductDto productDto = productService.getProductById(productId);
+		return GlobalResponseEntity.ok(productDto);
 	}
 
     @GetMapping
-    public Page<ProductDto> findAllProducts(Pageable pageable){
+    public ResponseEntity<BaseResponse> findAllProducts(Pageable pageable){
 
-		return productService.getAllProducts(pageable);
-    }
+		Page<ProductDto> allProducts = productService.getAllProducts(pageable);
+		return GlobalResponseEntity.ok(allProducts);
+	}
 
 	@PostMapping("/order")
 	public ResponseEntity<Void> orderProducts(@RequestBody List<OrderProductRequest> request){
@@ -61,11 +63,11 @@ public class ProductController {
 	}
 
     @PostMapping
-    public ResponseEntity<ProductDto> addProduct(@RequestBody CreateProductRequest request){
+    public ResponseEntity<BaseResponse> addProduct(@RequestBody CreateProductRequest request){
 
         ProductDto productDto = productService.createProduct(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
+		return GlobalResponseEntity.success(HttpStatus.CREATED, productDto);
     }
 
 }

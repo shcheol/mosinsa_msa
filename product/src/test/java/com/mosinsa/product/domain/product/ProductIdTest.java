@@ -8,17 +8,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductIdTest {
 
 	@Test
-	void equals(){
+	void equals() {
 		ProductId test = ProductId.of("test");
-		assertThat(test).isEqualTo(test);
-		assertThat(test).isNotEqualTo(null);
-		assertThat(test).isNotEqualTo(new TestClass());
+		assertThat(test).isEqualTo(test)
+				.isNotEqualTo(null)
+				.isNotEqualTo(new TestClass());
 
 		ProductId test2 = ProductId.of("test");
 		assertThat(test).isEqualTo(test2);
 	}
 
-	static class TestClass{}
+	static class TestClass {
+	}
 
 
 }

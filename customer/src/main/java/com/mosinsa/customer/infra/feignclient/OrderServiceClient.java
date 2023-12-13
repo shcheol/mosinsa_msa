@@ -1,6 +1,5 @@
 package com.mosinsa.customer.infra.feignclient;
 
-import com.mosinsa.customer.ui.response.ResponseOrder;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;

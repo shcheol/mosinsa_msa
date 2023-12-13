@@ -9,7 +9,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GlobalResponse<T> {
+public class GlobalResponse<T> implements BaseResponse{
 
 	private String result;
 

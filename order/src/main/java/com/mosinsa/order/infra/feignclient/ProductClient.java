@@ -1,6 +1,5 @@
 package com.mosinsa.order.infra.feignclient;
 
-import com.mosinsa.order.ui.response.ResponseProduct;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,11 @@ import java.util.Map;
 public interface ProductClient {
 
     @GetMapping("/products/{productId}")
-    ResponseProduct getProduct(@RequestHeader Map<String, Collection<String>> headers, @PathVariable(value = "productId") String productId);
+	ProductResponse getProduct(@RequestHeader Map<String, Collection<String>> headers, @PathVariable(value = "productId") String productId);
 
 	@PostMapping("/products/order")
-	ResponseProduct orderProducts(@RequestBody List<OrderProductRequest> request);
+	ProductResponse orderProducts(@RequestBody List<OrderProductRequest> request);
 
 	@PostMapping("/products/cancel")
-	ResponseProduct cancelOrderProducts(@RequestBody List<CancelOrderProductRequest> request);
+	ProductResponse cancelOrderProducts(@RequestBody List<CancelOrderProductRequest> request);
 }
