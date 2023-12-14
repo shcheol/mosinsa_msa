@@ -1,7 +1,7 @@
 package com.mosinsa.customer.ui;
 
-import com.mosinsa.customer.dto.CustomerDto;
 import com.mosinsa.customer.application.CustomerService;
+import com.mosinsa.customer.dto.CustomerDto;
 import com.mosinsa.customer.ui.request.CreateCustomerRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
 
 @Slf4j
 @Transactional
@@ -43,8 +41,7 @@ public class CustomerController {
 	@GetMapping("/customers/{customerId}")
 	public ResponseEntity<CustomerDto> customerDetails(@PathVariable String customerId, HttpServletRequest request) {
 
-		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-		System.out.println("header = " + header);
+		log.debug("header: {}", request.getHeader(HttpHeaders.AUTHORIZATION));
 
 		CustomerDto customerDetails = customerService.customerDetails(customerId);
 

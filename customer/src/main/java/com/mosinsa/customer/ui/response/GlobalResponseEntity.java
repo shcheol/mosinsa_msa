@@ -1,8 +1,11 @@
 package com.mosinsa.customer.ui.response;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GlobalResponseEntity {
 
 	public static ResponseEntity<BaseResponse> ok(Object data) {
