@@ -19,10 +19,13 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+#  sql:
+#    init:
+#      schema-locations: classpath:db/schema.sql
 #  thymeleaf:
 #    prefix: classpath:/templates/
 #    suffix: .html
@@ -30,6 +33,7 @@ spring:
     redis:
       port: 6666
       host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+
 
 management:
   endpoints:

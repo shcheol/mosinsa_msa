@@ -1,16 +1,30 @@
 package com.mosinsa.customer.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import com.mosinsa.customer.domain.Customer;
+import com.mosinsa.customer.domain.CustomerGrade;
+import lombok.Value;
 
-@Getter
-@ToString
-@AllArgsConstructor
+@Value
 public class CustomerDto {
 
-    private String id;
+	String id;
+	String name;
+	String loginId;
+	String email;
+	CustomerGrade grade;
+	String city;
+	String street;
+	String zipcode;
 
-    private String name;
+	public CustomerDto(Customer customer) {
+		this.id = customer.getId().getId();
+		this.loginId = customer.getCert().getLoginId();
+		this.name = customer.getName();
+		this.email = customer.getEmail();
+		this.grade = customer.getGrade();
+		this.city = customer.getAddress().getCity();
+		this.street = customer.getAddress().getStreet();
+		this.zipcode = customer.getAddress().getZipcode();
+	}
 
 }

@@ -12,12 +12,15 @@ import java.util.Map;
 @FeignClient(name = "product-service", url = "${feignclient.url.product}")
 public interface ProductClient {
 
-    @GetMapping("/products/{productId}")
-	ProductResponse getProduct(@RequestHeader Map<String, Collection<String>> headers, @PathVariable(value = "productId") String productId);
+	@GetMapping("/products/{productId}")
+	ProductResponse getProduct(@RequestHeader Map<String, Collection<String>> headers,
+							   @PathVariable(value = "productId") String productId);
 
 	@PostMapping("/products/order")
-	ProductResponse orderProducts(@RequestBody List<OrderProductRequest> request);
+	ProductResponse orderProducts(@RequestHeader Map<String, Collection<String>> headers,
+								  @RequestBody List<OrderProductRequest> request);
 
 	@PostMapping("/products/cancel")
-	ProductResponse cancelOrderProducts(@RequestBody List<CancelOrderProductRequest> request);
+	ProductResponse cancelOrderProducts(@RequestHeader Map<String, Collection<String>> headers,
+										@RequestBody List<CancelOrderProductRequest> request);
 }

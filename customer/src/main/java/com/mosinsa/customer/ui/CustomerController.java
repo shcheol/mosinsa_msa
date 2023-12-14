@@ -2,7 +2,7 @@ package com.mosinsa.customer.ui;
 
 import com.mosinsa.customer.dto.CustomerDto;
 import com.mosinsa.customer.application.CustomerService;
-import com.mosinsa.customer.ui.request.RequestCreateCustomer;
+import com.mosinsa.customer.ui.request.CreateCustomerRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,50 +20,35 @@ import java.sql.Timestamp;
 @RestController
 @RequiredArgsConstructor
 public class CustomerController {
-    private final CustomerService customerService;
+	private final CustomerService customerService;
 
-    @GetMapping("/health")
-    @ResponseBody
-    public String health(){
-        log.info("[{}] controller.health",new Timestamp(System.currentTimeMillis()));
-        return "health-check";
-    }
+	@PostMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
 
-        if(session != null){
-            session.invalidate();
-        }
+		return "redirect:/";
+	}
 
-        return "redirect:/";
-    }
-
-    @PostMapping("/customers")
-    public ResponseEntity<String> createCustomer(@RequestBody RequestCreateCustomer request){
+	@PostMapping("/customers")
+	public ResponseEntity<String> createCustomer(@RequestBody CreateCustomerRequest request) {
 
 		String customerId = customerService.join(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
+	}
 
-    @GetMapping("/customers/{customerId}")
-    public ResponseEntity<CustomerDto> getCustomerDetails(@PathVariable String customerId, HttpServletRequest request){
+	@GetMapping("/customers/{customerId}")
+	public ResponseEntity<CustomerDto> customerDetails(@PathVariable String customerId, HttpServletRequest request) {
 
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		System.out.println("header = " + header);
 
-		CustomerDto customerDetails = customerService.getCustomerDetailsByCustomerId(customerId);
+		CustomerDto customerDetails = customerService.customerDetails(customerId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(customerDetails);
-    }
-
-	@DeleteMapping("/customers/{customerId}")
-	public ResponseEntity<Void> deleteCustomer(@PathVariable String customerId){
-
-		customerService.delete(customerId);
-
-		return ResponseEntity.ok().build();
+		return ResponseEntity.status(HttpStatus.OK).body(customerDetails);
 	}
 
 }

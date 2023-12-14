@@ -2,6 +2,7 @@ package com.mosinsa.order.domain;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Access(AccessType.FIELD)
 public class OrderId implements Serializable {
 
+	@Column(name = "order_id")
     private String id;
 
     public static OrderId newId() {

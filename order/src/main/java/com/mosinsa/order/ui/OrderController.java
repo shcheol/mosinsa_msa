@@ -4,7 +4,6 @@ import com.mosinsa.order.application.OrderService;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.infra.feignclient.CallExternalService;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
@@ -59,16 +58,14 @@ public class OrderController {
 	@PostMapping
 	public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
-
-
-		OrderDto orderDto = orderService.order(orderRequest);
+		OrderDto orderDto = orderService.order(getAuthMap(request), orderRequest);
 		return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
 	}
 
 	@PostMapping("/cancel")
-	public ResponseEntity<BaseResponse> cancelOrders(@RequestBody CancelOrderRequest cancelRequest) {
+	public ResponseEntity<BaseResponse> cancelOrders(@RequestBody CancelOrderRequest cancelRequest, HttpServletRequest request) {
 
-		orderService.cancelOrder(cancelRequest.getCustomerId(), cancelRequest.getOrderId());
+		orderService.cancelOrder(getAuthMap(request), cancelRequest);
 		return GlobalResponseEntity.success(cancelRequest.getOrderId());
 	}
 

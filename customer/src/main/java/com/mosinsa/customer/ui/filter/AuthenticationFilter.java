@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.customer.common.ex.CustomerError;
 import com.mosinsa.customer.common.ex.CustomerException;
 import com.mosinsa.customer.application.CustomerService;
-import com.mosinsa.customer.ui.request.RequestLogin;
+import com.mosinsa.customer.ui.request.LoginRequest;
 import com.mosinsa.customer.common.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 												HttpServletResponse response) throws AuthenticationException {
 
 		try {
-			RequestLogin credentials = om.readValue(request.getInputStream(), RequestLogin.class);
+			LoginRequest credentials = om.readValue(request.getInputStream(), LoginRequest.class);
 
 			UsernamePasswordAuthenticationToken authentication
 					= new UsernamePasswordAuthenticationToken(credentials.getLoginId(), credentials.getPassword(), new ArrayList<>());
@@ -50,7 +50,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 											HttpServletResponse response,
 											FilterChain chain,
 											Authentication authResult) {
-		String id = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername()).getId();
+		String id = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername()).getId().getId();
 
 		response.addHeader(HeaderConst.CUSTOMER_ID.getName(), id);
 		response.addHeader(HeaderConst.ACCESS_TOKEN.getName(), jwtUtils.createAccessToken(id));

@@ -10,6 +10,7 @@ import com.mosinsa.order.infra.feignclient.CancelOrderProductRequest;
 import com.mosinsa.order.infra.feignclient.OrderProductRequest;
 import com.mosinsa.order.infra.feignclient.ProductClient;
 import com.mosinsa.order.infra.repository.OrderRepository;
+import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -36,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public OrderDto order(CreateOrderRequest request) {
+	public OrderDto order(Map<String, Collection<String>> headers, CreateOrderRequest request) {
 
 		List<OrderProduct> orderProducts = request.getMyOrderProducts().stream().map(
 				myOrderProduct -> OrderProduct.create(
@@ -45,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 						myOrderProduct.getPrice())
 		).toList();
 
-		productClient.orderProducts(
+		productClient.orderProducts(headers,
 				orderProducts.stream().map(op ->
 						new OrderProductRequest(op.getProductId(), op.getQuantity())
 				).toList());
@@ -56,12 +59,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public void cancelOrder(String customerId, String orderId) {
-		Order findOrder = orderRepository.findById(OrderId.of(orderId))
+	public void cancelOrder(Map<String, Collection<String>> headers, CancelOrderRequest request) {
+		Order findOrder = orderRepository.findById(OrderId.of(request.getOrderId()))
 				.orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
-		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), customerId), "주문한 고객과 동일한 고객이 취소해야합니다.");
+		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), request.getCustomerId()), "주문한 고객과 동일한 고객이 취소해야합니다.");
 
-		productClient.cancelOrderProducts(
+		productClient.cancelOrderProducts(headers,
 				findOrder.getOrderProducts().stream().map(op ->
 						new CancelOrderProductRequest(op.getProductId(), op.getQuantity())
 				).toList());
@@ -71,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Page<OrderDto> findMyOrdersByCondition(SearchCondition condition, Pageable pageable) {
-		if (!StringUtils.hasText(condition.getCustomerId())){
+		if (!StringUtils.hasText(condition.getCustomerId())) {
 			throw new OrderException(OrderError.VALIDATION_ERROR);
 		}
 		return orderRepository.findOrdersByCondition(condition, pageable).map(OrderDto::new);
