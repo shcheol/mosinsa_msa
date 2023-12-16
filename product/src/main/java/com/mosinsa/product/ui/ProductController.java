@@ -1,9 +1,9 @@
 package com.mosinsa.product.ui;
 
+import com.mosinsa.product.application.ProductService;
+import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
-import com.mosinsa.product.application.dto.ProductDto;
-import com.mosinsa.product.application.ProductService;
 import com.mosinsa.product.ui.request.OrderProductRequest;
 import com.mosinsa.product.ui.response.BaseResponse;
 import com.mosinsa.product.ui.response.GlobalResponseEntity;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,11 +24,6 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-
-	@InitBinder
-	public void initBinder(WebDataBinder webDataBinder){
-		webDataBinder.setValidator(new ProductValidator());
-	}
 
 	@GetMapping("/{productId}")
 	public ResponseEntity<BaseResponse> getProduct(@PathVariable String productId){
