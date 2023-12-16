@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 				myOrderProduct -> OrderProduct.create(
 						myOrderProduct.getProductId(),
 						myOrderProduct.getPrice(),
-						myOrderProduct.getPrice())
+						myOrderProduct.getQuantity())
 		).toList();
 
 		productClient.orderProducts(headers,
