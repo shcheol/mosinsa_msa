@@ -1,9 +1,9 @@
 package com.mosinsa.customer.common.config;
 
 import com.mosinsa.customer.application.CustomerService;
+import com.mosinsa.customer.common.jwt.Token;
 import com.mosinsa.customer.ui.filter.AuthenticationFilter;
 import com.mosinsa.customer.ui.filter.JwtLogoutHandler;
-import com.mosinsa.customer.common.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -17,26 +17,27 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-	private final CustomerService customerService;
-	private final JwtUtils jwtUtils;
+    private final CustomerService customerService;
 
+    private final Map<String, Token> tokenUtilMap;
     private static final String[] AUTH_WHITELIST = {
             "/**", "/h2-console/**", "/error"
     };
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
+        AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
 
-		return http
+        return http
                 .csrf().disable()
                 .headers(authorize -> authorize.frameOptions().disable())
                 .authorizeHttpRequests(authorize -> {
@@ -45,14 +46,14 @@ public class SecurityConfig {
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
                                         .anyRequest().authenticated()
                                         .and()
-										.logout()
-										.addLogoutHandler(jwtLogoutHandler())
-										.logoutSuccessHandler((request, response, authentication) -> {
-											response.getWriter().print("logout success");
-											response.getWriter().close();
-										})
-										.and()
-										.addFilter(getAuthenticationFilter(authenticationManager));
+                                        .logout()
+                                        .addLogoutHandler(jwtLogoutHandler())
+                                        .logoutSuccessHandler((request, response, authentication) -> {
+                                            response.getWriter().print("logout success");
+                                            response.getWriter().close();
+                                        })
+                                        .and()
+                                        .addFilter(getAuthenticationFilter(authenticationManager));
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
@@ -63,21 +64,20 @@ public class SecurityConfig {
                 .build();
     }
 
-	@Bean
-	public AuthenticationFilter getAuthenticationFilter(AuthenticationManager manager) {
-		AuthenticationFilter authenticationFilter = new AuthenticationFilter(customerService, jwtUtils);
-		authenticationFilter.setAuthenticationManager(manager);
-		return authenticationFilter;
-	}
+    @Bean
+    public AuthenticationFilter getAuthenticationFilter(AuthenticationManager manager) {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(customerService, tokenUtilMap);
+        authenticationFilter.setAuthenticationManager(manager);
+        return authenticationFilter;
+    }
 
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-		return configuration.getAuthenticationManager();
-	}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
-	@Bean
-	public LogoutHandler jwtLogoutHandler(){
-		return new JwtLogoutHandler();
-	}
-
+    @Bean
+    public LogoutHandler jwtLogoutHandler() {
+        return new JwtLogoutHandler(tokenUtilMap);
+    }
 }

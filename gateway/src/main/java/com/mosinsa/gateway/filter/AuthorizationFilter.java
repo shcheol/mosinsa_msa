@@ -1,6 +1,7 @@
 package com.mosinsa.gateway.filter;
 
-import com.mosinsa.gateway.jwt.JwtUtils;
+import com.mosinsa.gateway.jwt.Token;
+import com.mosinsa.gateway.jwt.TokenConst;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,70 +21,75 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class AuthorizationFilter extends AbstractGatewayFilterFactory<AuthorizationFilter.Config> {
-	private final JwtUtils utils;
-	private final Set<String> whiteList = new HashSet<>();
-	private static final String[] AUTH_WHITELIST = {
-			"/customers", "/login",
-			"/actuator/prometheus"
-	};
+    private final Map<String, Token> tokenUtilMap;
+    private final Set<String> whiteList = new HashSet<>();
+    private static final String[] AUTH_WHITELIST = {
+            "/customers", "/login",
+            "/actuator/prometheus"
+    };
 
-	@PostConstruct
-	void init(){
-		whiteList.addAll(Arrays.stream(AUTH_WHITELIST).toList());
-	}
+    @PostConstruct
+    void init() {
+        whiteList.addAll(Arrays.stream(AUTH_WHITELIST).toList());
+    }
 
-	@Override
-	public GatewayFilter apply(AuthorizationFilter.Config config) {
+    @Override
+    public GatewayFilter apply(AuthorizationFilter.Config config) {
 
-		return ((exchange, chain) -> {
-			ServerHttpRequest request = exchange.getRequest();
-			log.info("request path [{}]", request.getPath());
+        return ((exchange, chain) -> {
+            ServerHttpRequest request = exchange.getRequest();
+            log.info("request path [{}]", request.getPath());
 
-			if (whiteList.contains(request.getPath().toString())/* && request.getMethod() == HttpMethod.POST*/){
-				return chain.filter(exchange);
-			}
+            if (whiteList.contains(request.getPath().toString())/* && request.getMethod() == HttpMethod.POST*/) {
+                return chain.filter(exchange);
+            }
 
-			HttpHeaders headers = request.getHeaders();
-			if (!headers.containsKey(HttpHeaders.AUTHORIZATION)){
-				return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
-			}
-			Optional<String> token = Objects.requireNonNull(headers.get(HttpHeaders.AUTHORIZATION)).stream()
-					.filter(f -> f.startsWith("Bearer")).findFirst();
-			if (token.isEmpty()){
-				return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
-			}
+            HttpHeaders headers = request.getHeaders();
 
-			String accessToken = token.get().replace("Bearer", "");
-			log.info("access token: {}", accessToken);
+            Optional<String> authorizationHeader = Objects.requireNonNull(
+                            request.getHeaders().get(HttpHeaders.AUTHORIZATION)).stream()
+                    .filter(f -> f.startsWith("Bearer"))
+                    .map(b -> b.replace("Bearer", ""))
+                    .findAny();
+            if (authorizationHeader.isEmpty()) {
+                return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
+            }
 
-			if(!utils.isAccessTokenValid(accessToken)){
-				List<String> refreshTokenHeader = headers.get(HeaderConst.REFRESH_TOKEN.getName());
-				if(refreshTokenHeader == null || refreshTokenHeader.isEmpty()){
-					return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
-				}
-				String refreshToken = headers.get(HeaderConst.REFRESH_TOKEN.getName()).get(0);
+            String accessToken = authorizationHeader.get();
+            log.info("access token: {}", accessToken);
 
-				if (!utils.isRefreshTokenValid(refreshToken)){
-					return onError(exchange, AuthorizationError.JWT_VALID_ERROR);
-				}
+            Token accessTokenUtil = tokenUtilMap.get(TokenConst.ACCESS_TOKEN.getValue());
+            if (accessTokenUtil.isValid(accessToken)) {
+                return chain.filter(exchange);
+            }
 
-				String newAccessToken = utils.createAccessToken(utils.getSubject(refreshToken));
-				exchange.getResponse().getHeaders().add(HeaderConst.ACCESS_TOKEN.getName(), newAccessToken);
-			}
+            Optional<String> refreshTokenHeader = Objects.requireNonNull(headers.get(HeaderConst.REFRESH_TOKEN.getValue())).stream().findAny();
+            if (refreshTokenHeader.isEmpty()) {
+                return onError(exchange, AuthorizationError.EMPTY_AUTHORIZATION_TOKEN);
+            }
+            String refreshToken = refreshTokenHeader.get();
+            log.info("refresh token: {}", refreshToken);
 
-			return chain.filter(exchange);
-		});
-	}
+            Token refreshTokenUtil = tokenUtilMap.get(TokenConst.REFRESH_TOKEN.getValue());
+            if (refreshTokenUtil.isValid(refreshToken)) {
+                String newAccessToken = accessTokenUtil.create(refreshTokenUtil.getSubject(refreshToken));
+                exchange.getResponse().getHeaders().add(HeaderConst.ACCESS_TOKEN.getValue(), newAccessToken);
+                return chain.filter(exchange);
+            }
 
-	@Getter
-	public static class Config {
-	}
+            return onError(exchange, AuthorizationError.JWT_VALID_ERROR);
+        });
+    }
 
-	private Mono<Void> onError(ServerWebExchange exchange, AuthorizationError error){
-		log.error(error.getMessage());
+    @Getter
+    public static class Config {
+    }
 
-		ServerHttpResponse response = exchange.getResponse();
-		response.setStatusCode(error.getStatus());
-		return response.setComplete();
-	}
+    private Mono<Void> onError(ServerWebExchange exchange, AuthorizationError error) {
+        log.error(error.getMessage());
+
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(error.getStatus());
+        return response.setComplete();
+    }
 }
