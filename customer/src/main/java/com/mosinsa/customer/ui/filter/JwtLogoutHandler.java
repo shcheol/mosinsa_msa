@@ -9,13 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
 public class JwtLogoutHandler implements LogoutHandler {
 
     private final Map<String, Token> tokenUtilMap;
