@@ -2,8 +2,11 @@ package com.mosinsa.product.ui;
 
 import com.mosinsa.product.application.ProductService;
 import com.mosinsa.product.application.dto.ProductDto;
+import com.mosinsa.product.common.ex.ProductError;
+import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
+import com.mosinsa.product.ui.request.LikesProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
 import com.mosinsa.product.ui.response.BaseResponse;
 import com.mosinsa.product.ui.response.GlobalResponseEntity;
@@ -31,6 +34,17 @@ public class ProductController {
 
 		ProductDto productDto = productService.getProductById(productId);
 		return GlobalResponseEntity.ok(productDto);
+	}
+
+	@PatchMapping("/{productId}/likes")
+	public ResponseEntity<BaseResponse> likes(@PathVariable String productId, @RequestBody LikesProductRequest request){
+
+		if (!productId.equals(request.productId())){
+			log.error("product Id match fail {}, {}", productId, request.productId());
+			throw new ProductException(ProductError.VALIDATION_ERROR);
+		}
+		productService.likes(request);
+		return ResponseEntity.ok().build();
 	}
 
     @GetMapping
