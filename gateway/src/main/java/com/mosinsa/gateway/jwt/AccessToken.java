@@ -38,10 +38,12 @@ public class AccessToken implements Token {
 
     @Override
     public boolean isValid(String token) {
-        Claims claims = getClaims(token, secret);
-        Date now = new Date();
-        return claims.getIssuedAt().before(now)
-                && claims.getExpiration().after(now);
+		try {
+			getClaims(token, secret);
+			return true;
+		} catch (Exception e){
+			return false;
+		}
     }
 
     @Override

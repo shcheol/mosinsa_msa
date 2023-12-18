@@ -1,7 +1,6 @@
 package com.mosinsa.customer.common.jwt;
 
 import com.mosinsa.customer.infra.repository.TokenRepository;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +37,12 @@ public class AccessToken implements Token {
 
     @Override
     public boolean isValid(String token) {
-        Claims claims = getClaims(token, secret);
-        Date now = new Date();
-        return claims.getIssuedAt().before(now)
-                && claims.getExpiration().after(now);
+		try {
+			getClaims(token, secret);
+			return true;
+		} catch (Exception e){
+			return false;
+		}
     }
 
     @Override

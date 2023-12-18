@@ -43,12 +43,13 @@ public class RefreshToken implements Token {
 
     @Override
     public boolean isValid(String token) {
-        Claims claims = getClaims(token, secret);
-        validStoredToken(repository.get(claims.getSubject()), token);
-
-        Date now = new Date();
-        return claims.getIssuedAt().before(now)
-                && claims.getExpiration().after(now);
+		try {
+			Claims claims = getClaims(token, secret);
+			validStoredToken(repository.get(claims.getSubject()), token);
+			return true;
+		} catch (Exception e){
+			return false;
+		}
     }
 
     @Override
