@@ -1,20 +1,32 @@
 package com.mosinsa.product.domain.product;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Embeddable
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Likes {
 
-    private String memberId;
+	@Id
+	private LikesId id;
 
-    public static Likes of(String memberId) {
+	private Integer total;
+
+	@OneToMany(mappedBy = "likes", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private final Set<LikesMember> likesMember = new HashSet<>();
+
+
+	public static Likes of(String productId, String memberId) {
         Likes likes = new Likes();
-        likes.memberId = memberId;
+		likes.id = LikesId.newId();
+		likes.total = likes.likesMember.size();
         return likes;
     }
+
 }

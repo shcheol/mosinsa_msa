@@ -32,11 +32,12 @@ public class Product {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Stock stock;
 
-    @ElementCollection
-    @CollectionTable(name = "likes",
-            joinColumns = @JoinColumn(name = "product_id")
-    )
-    private final Set<Likes> likes = new HashSet<>();
+//    @ElementCollection
+//    @CollectionTable(name = "likes",
+//            joinColumns = @JoinColumn(name = "product_id")
+//    )
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Likes likes;
 
 
     public static Product create(String name, Integer price, Category category, long stock){
@@ -47,18 +48,6 @@ public class Product {
         product.category = category;
         product.stock = Stock.of(stock);
         return product;
-    }
-    public long totalLikes() {
-        return this.likes.size();
-    }
-
-    public void likes(String memberId) {
-        Likes of = Likes.of(memberId);
-        if (this.likes.contains(of)){
-            this.likes.remove(of);
-        }else{
-            this.likes.add(of);
-        }
     }
 
     public void increaseStock(long stock) {
