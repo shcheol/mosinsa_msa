@@ -74,8 +74,8 @@ class ProductServiceImplTest {
 
 		productService.likes(user1);
 		assertThat(
-				productService.getProductById(
-						user1.productId()).getLikes())
+				productService.getProductById(user1.productId())
+						.getLikes())
 				.isEqualTo(1);
 
 		productService.likes(user2);

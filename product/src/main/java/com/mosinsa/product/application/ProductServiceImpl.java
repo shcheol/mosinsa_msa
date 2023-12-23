@@ -8,7 +8,10 @@ import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.domain.product.Product;
 import com.mosinsa.product.domain.product.ProductId;
 import com.mosinsa.product.infra.repository.ProductRepository;
-import com.mosinsa.product.ui.request.*;
+import com.mosinsa.product.ui.request.CancelOrderProductRequest;
+import com.mosinsa.product.ui.request.CreateProductRequest;
+import com.mosinsa.product.ui.request.LikesProductRequest;
+import com.mosinsa.product.ui.request.OrderProductRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,58 +27,59 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-	private final ProductRepository productRepository;
-	private final CategoryService categoryService;
+    private final ProductRepository productRepository;
+    private final CategoryService categoryService;
 
-	@Override
-	public ProductDto createProduct(CreateProductRequest request) {
+    @Override
+    public ProductDto createProduct(CreateProductRequest request) {
 
-		Category category = categoryService.getCategory(request.categoryId());
+        Category category = categoryService.getCategory(request.categoryId());
 
-		return new ProductDto(
-				productRepository.save(
-						Product.create(request.name(),
-								request.price(),
-								category,
-								request.stock()
-						)));
-	}
+        return new ProductDto(
+                productRepository.save(
+                        Product.create(request.name(),
+                                request.price(),
+                                category,
+                                request.stock()
+                        )));
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public ProductDto getProductById(String productId) {
-		return new ProductDto(productRepository.findById(ProductId.of(productId))
-				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)));
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public ProductDto getProductById(String productId) {
+        return new ProductDto(productRepository.findById(ProductId.of(productId))
+                .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)));
+    }
 
-	@Override
-	@Transactional(readOnly = true)
-	public Page<ProductDto> getAllProducts(Pageable pageable) {
-		return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
+        return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
+    }
 
-	@Override
-	public void likes(LikesProductRequest request) {
-		productRepository.findById(ProductId.of(request.productId()))
-				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-				.likes(request.memberId());
-	}
 
-	@Override
-	public void orderProduct(List<OrderProductRequest> requests) {
-		log.info("order: {}", requests);
-		requests.forEach(request ->
-				productRepository.findById(ProductId.of(request.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-						.decreaseStock(request.quantity()));
-	}
+    @Override
+    public void orderProduct(List<OrderProductRequest> requests) {
+        log.info("order: {}", requests);
+        requests.forEach(request ->
+                productRepository.findById(ProductId.of(request.productId()))
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                        .decreaseStock(request.quantity()));
+    }
 
-	@Override
-	public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
-		log.info("cancelOrder: {}", requests);
-		requests.forEach(request ->
-				productRepository.findById(ProductId.of(request.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-						.increaseStock(request.quantity()));
-	}
+    @Override
+    public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
+        log.info("cancelOrder: {}", requests);
+        requests.forEach(request ->
+                productRepository.findById(ProductId.of(request.productId()))
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                        .increaseStock(request.quantity()));
+    }
+
+    @Override
+    public void likes(LikesProductRequest request) {
+        productRepository.findById(ProductId.of(request.productId()))
+                .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+                .likes(request.memberId());
+    }
 }

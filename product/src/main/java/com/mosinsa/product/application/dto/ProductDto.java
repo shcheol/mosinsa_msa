@@ -17,6 +17,6 @@ public class ProductDto {
         this.name = product.getName();
         this.price = product.getPrice().getValue();
         this.stock = product.getStock().getRemain();
-        this.likes = product.getLikes().size();
+        this.likes = product.getLikes().getTotal();
     }
 }

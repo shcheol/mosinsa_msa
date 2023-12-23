@@ -1,15 +1,16 @@
 package com.mosinsa.product.domain.product;
 
 import com.mosinsa.product.domain.category.Category;
+import com.mosinsa.product.domain.likes.Likes;
+import com.mosinsa.product.domain.likes.LikesMember;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -21,8 +22,8 @@ public class Product {
 
     private String name;
 
-	@Convert(converter = MoneyConverter.class)
-	@Column(name = "price")
+    @Convert(converter = MoneyConverter.class)
+    @Column(name = "price")
     private Money price;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -32,22 +33,28 @@ public class Product {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Stock stock;
 
-//    @ElementCollection
-//    @CollectionTable(name = "likes",
-//            joinColumns = @JoinColumn(name = "product_id")
-//    )
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "likes_id")
     private Likes likes;
 
 
-    public static Product create(String name, Integer price, Category category, long stock){
+    public static Product create(String name, Integer price, Category category, long stock) {
         Product product = new Product();
         product.id = ProductId.newId();
         product.name = name;
         product.price = Money.of(price);
         product.category = category;
         product.stock = Stock.of(stock);
+        product.likes = Likes.create();
         return product;
+    }
+
+    public void likes(String memberId) {
+
+        this.likes.likes(
+                this.likes.getLikesMember().stream()
+                        .filter(lm -> lm.getMemberId().equals(memberId))
+                        .findFirst().orElse(LikesMember.create(memberId)));
     }
 
     public void increaseStock(long stock) {

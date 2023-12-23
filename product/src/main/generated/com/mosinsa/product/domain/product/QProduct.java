@@ -26,7 +26,7 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final QProductId id;
 
-    public final SetPath<Likes, QLikes> likes = this.<Likes, QLikes>createSet("likes", Likes.class, QLikes.class, PathInits.DIRECT2);
+    public final com.mosinsa.product.domain.likes.QLikes likes;
 
     public final StringPath name = createString("name");
 
@@ -54,6 +54,7 @@ public class QProduct extends EntityPathBase<Product> {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new com.mosinsa.product.domain.category.QCategory(forProperty("category"), inits.get("category")) : null;
         this.id = inits.isInitialized("id") ? new QProductId(forProperty("id")) : null;
+        this.likes = inits.isInitialized("likes") ? new com.mosinsa.product.domain.likes.QLikes(forProperty("likes"), inits.get("likes")) : null;
         this.stock = inits.isInitialized("stock") ? new QStock(forProperty("stock")) : null;
     }
 

@@ -15,10 +15,10 @@ public interface ProductService {
 
 	Page<ProductDto> getAllProducts(Pageable pageable);
 
-	void likes(LikesProductRequest request);
-
 	void orderProduct(List<OrderProductRequest> requests);
 
 	void cancelOrderProduct(List<CancelOrderProductRequest> requests);
+
+	void likes(LikesProductRequest request);
 
 }

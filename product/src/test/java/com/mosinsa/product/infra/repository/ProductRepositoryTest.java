@@ -31,29 +31,27 @@ class ProductRepositoryTest {
         assertThat(product.getName()).isEqualTo(saveProduct.getName());
         assertThat(product.getCategory()).isEqualTo(saveProduct.getCategory());
         assertThat(product.getStock()).isEqualTo(saveProduct.getStock());
-        assertThat(product.totalLikes()).isZero();
-        assertThat(product.getLikes()).isEmpty();
+        assertThat(product.getLikes().getTotal()).isZero();
+        assertThat(product.getLikes().getLikesMember()).isEmpty();
     }
 
 	@Test
-	@Commit
-	@Transactional
 	void likes(){
 		Category category = categoryRepository.save(Category.of("category1"));
 		Product product = productRepository.save(Product.create("name", 1000, category, 10));
 		productRepository.save(Product.create("name", 1000, category, 10));
 
-		assertThat(product.totalLikes()).isZero();
+		assertThat(product.getLikes().getTotal()).isZero();
 
 		product.likes("memberId1");
-		assertThat(product.totalLikes()).isEqualTo(1);
+		assertThat(product.getLikes().getTotal()).isEqualTo(1);
 
 		product.likes("memberId2");
-		assertThat(product.totalLikes()).isEqualTo(2);
+		assertThat(product.getLikes().getTotal()).isEqualTo(2);
 
 
 		product.likes("memberId1");
-		assertThat(product.totalLikes()).isEqualTo(1);
+		assertThat(product.getLikes().getTotal()).isEqualTo(1);
 
 	}
 

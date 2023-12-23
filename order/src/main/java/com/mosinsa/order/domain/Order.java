@@ -4,19 +4,19 @@ import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 public class Order extends AuditingEntity {
 
 	@EmbeddedId
@@ -85,4 +85,16 @@ public class Order extends AuditingEntity {
 		return status == OrderStatus.PAYMENT_WAITING || status == OrderStatus.PREPARING;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+		Order order = (Order) o;
+		return id != null && Objects.equals(id, order.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 }
