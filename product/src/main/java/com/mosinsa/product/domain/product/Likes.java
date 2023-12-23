@@ -1,13 +1,14 @@
-package com.mosinsa.product.domain.likes;
+package com.mosinsa.product.domain.product;
 
-import com.mosinsa.product.domain.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -18,9 +19,6 @@ public class Likes {
 	private LikesId id;
 
 	private int total;
-
-//	@OneToOne(mappedBy = "likes")
-//	private Product product;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "likes_id")

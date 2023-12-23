@@ -3,7 +3,7 @@ truncate table likes;
 truncate table stock;
 truncate table product;
 truncate table category;
-truncate table likes_member
+truncate table likes_member;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into category (category_id, name) values ('categoryId1','상의');

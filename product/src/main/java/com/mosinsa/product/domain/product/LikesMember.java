@@ -1,4 +1,4 @@
-package com.mosinsa.product.domain.likes;
+package com.mosinsa.product.domain.product;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -18,9 +18,6 @@ public class LikesMember {
 	@Column(name = "likes_member_id")
 	private String id;
 
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "like_id")
-//	private Likes likes;
 	private String memberId;
 
 	public static LikesMember create(String memberId){

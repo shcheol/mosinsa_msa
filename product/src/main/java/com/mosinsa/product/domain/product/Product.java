@@ -1,8 +1,6 @@
 package com.mosinsa.product.domain.product;
 
 import com.mosinsa.product.domain.category.Category;
-import com.mosinsa.product.domain.likes.Likes;
-import com.mosinsa.product.domain.likes.LikesMember;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Getter
