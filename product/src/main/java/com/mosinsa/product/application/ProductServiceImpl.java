@@ -32,7 +32,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    private static final String LOCK_KEY = "stockLockKey";
+    private static final String ORDER_LOCK_KEY = "orderStockLock";
+    private static final String CANCEL_LOCK_KEY = "cancelStockLock";
 
     @Override
     public ProductDto createProduct(CreateProductRequest request) {
@@ -63,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    @RedissonLock(value = LOCK_KEY)
+    @RedissonLock(value = ORDER_LOCK_KEY)
     public void orderProduct(List<OrderProductRequest> requests) {
 
         log.info("order: {}", requests);
@@ -75,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @RedissonLock(value = LOCK_KEY)
+    @RedissonLock(value = CANCEL_LOCK_KEY)
     public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
         log.info("cancelOrder: {}", requests);
         requests.forEach(request ->
