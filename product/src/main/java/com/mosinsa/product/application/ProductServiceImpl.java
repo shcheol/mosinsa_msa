@@ -1,6 +1,7 @@
 package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.ProductDto;
+import com.mosinsa.product.common.aop.RedissonLock;
 import com.mosinsa.product.common.ex.ProductError;
 import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.common.wrapper.PageWrapper;
@@ -17,18 +18,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(isolation = Isolation.SERIALIZABLE)
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+
+    private static final String LOCK_KEY = "stockLockKey";
 
     @Override
     public ProductDto createProduct(CreateProductRequest request) {
@@ -59,15 +63,19 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @RedissonLock(value = LOCK_KEY)
     public void orderProduct(List<OrderProductRequest> requests) {
+
         log.info("order: {}", requests);
         requests.forEach(request ->
                 productRepository.findById(ProductId.of(request.productId()))
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
                         .decreaseStock(request.quantity()));
+
     }
 
     @Override
+    @RedissonLock(value = LOCK_KEY)
     public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
         log.info("cancelOrder: {}", requests);
         requests.forEach(request ->

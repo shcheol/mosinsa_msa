@@ -5,6 +5,7 @@ import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.LikesProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,6 +55,36 @@ class ProductServiceImplTest {
 
 		long afterStock = productService.getProductById("productId1").getStock();
 		assertThat(afterStock).isEqualTo(7);
+
+	}
+
+	@Test
+	@DisplayName("재고감소 - 동시요청")
+	void orderProductConcurrency() throws InterruptedException {
+
+		String productId = "productId3";
+		long beforeStock = productService.getProductById(productId).getStock();
+		assertThat(beforeStock).isEqualTo(30);
+
+		int size = 10;
+		ExecutorService es = Executors.newFixedThreadPool(size);
+		CountDownLatch countDownLatch = new CountDownLatch(size);
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < size; i++) {
+			es.execute(() -> {
+				productService.orderProduct(List.of(new OrderProductRequest(productId, 1)));
+				countDownLatch.countDown();
+			});
+		}
+
+		countDownLatch.await();
+		long end = System.currentTimeMillis();
+		System.out.println("실행 시간: " + (end - start));
+
+		es.shutdown();
+
+		long afterStock = productService.getProductById(productId).getStock();
+		assertThat(afterStock).isEqualTo(20);
 
 	}
 
@@ -95,6 +130,35 @@ class ProductServiceImplTest {
 				productService.getProductById(
 						user1.productId()).getLikes())
 				.isZero();
+	}
+
+//	@Test
+	void likesConcurrency() throws InterruptedException {
+
+		String productId = "productId1";
+		assertThat(
+				productService.getProductById(productId).getLikes()
+		).isZero();
+		int size = 10;
+		ExecutorService es = Executors.newFixedThreadPool(size);
+		CountDownLatch countDownLatch = new CountDownLatch(size);
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < size; i++) {
+			es.execute(() -> {
+				productService.likes(new LikesProductRequest(productId, UUID.randomUUID().toString()));
+				countDownLatch.countDown();
+			});
+		}
+
+		countDownLatch.await();
+		long end = System.currentTimeMillis();
+		System.out.println("실행 시간: " + (end - start));
+
+		es.shutdown();
+		assertThat(
+				productService.getProductById(productId).getLikes()
+		).isEqualTo(size);
+
 	}
 
 }

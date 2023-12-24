@@ -31,12 +31,10 @@ public class Likes {
     }
 
 	public void likes(LikesMember member){
-		if(likesMember.add(member)){
-			this.total += 1;
-		}else{
+		if(!likesMember.add(member)){
 			this.likesMember.remove(member);
-			this.total -= 1;
 		}
+		this.total = likesMember.size();
 	}
 
 	@Override
