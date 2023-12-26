@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto createProduct(CreateProductRequest request) {
 
-        Category category = categoryService.getCategory(request.categoryId());
+        Category category = categoryService.getCategory(request.category());
 
         return new ProductDto(
                 productRepository.save(

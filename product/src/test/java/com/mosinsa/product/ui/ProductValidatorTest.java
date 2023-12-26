@@ -3,14 +3,12 @@ package com.mosinsa.product.ui;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.MapBindingResult;
 
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProductValidatorTest {
 

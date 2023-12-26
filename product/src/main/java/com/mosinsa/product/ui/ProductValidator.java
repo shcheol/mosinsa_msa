@@ -25,7 +25,7 @@ public class ProductValidator implements Validator {
 		int price = request.price();
 		Assert.isTrue(price > 0, "상품 가격은 0보다 커야합니다.");
 
-		String categoryId = request.categoryId();
+		String categoryId = request.category();
 		Assert.hasText(categoryId, "카테고리는 필수입니다.");
 
 		int stock = request.stock();
