@@ -2,6 +2,7 @@ package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.product.domain.product.InvalidStockException;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.LikesProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
@@ -59,6 +60,18 @@ class ProductServiceImplTest {
 	}
 
 	@Test
+	void orderProduct_Ex(){
+
+		long beforeStock = productService.getProductById("productId1").getStock();
+		assertThat(beforeStock).isEqualTo(10);
+
+		assertThrows(RuntimeException.class,
+				() -> productService.orderProduct(List.of(new OrderProductRequest("productId1", 11))));
+		long afterStock = productService.getProductById("productId1").getStock();
+		assertThat(afterStock).isEqualTo(10);
+	}
+
+	@Test
 	@DisplayName("재고감소 - 동시요청")
 	void orderProductConcurrency() throws InterruptedException {
 
@@ -69,23 +82,21 @@ class ProductServiceImplTest {
 		int size = 10;
 		ExecutorService es = Executors.newFixedThreadPool(size);
 		CountDownLatch countDownLatch = new CountDownLatch(size);
-		long start = System.currentTimeMillis();
 		for (int i = 0; i < size; i++) {
 			es.execute(() -> {
-				productService.orderProduct(List.of(new OrderProductRequest(productId, 1)));
-				countDownLatch.countDown();
+				try {
+					productService.orderProduct(List.of(new OrderProductRequest(productId, 1)));
+				}finally {
+					countDownLatch.countDown();
+				}
 			});
 		}
 
 		countDownLatch.await();
-		long end = System.currentTimeMillis();
-		System.out.println("실행 시간: " + (end - start));
-
 		es.shutdown();
 
 		long afterStock = productService.getProductById(productId).getStock();
 		assertThat(afterStock).isEqualTo(20);
-
 	}
 
 	@Test

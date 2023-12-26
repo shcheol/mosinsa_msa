@@ -18,22 +18,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Slf4j
 @Service
-@Transactional(isolation = Isolation.SERIALIZABLE)
+@Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    private static final String ORDER_LOCK_KEY = "orderStockLock";
-    private static final String CANCEL_LOCK_KEY = "cancelStockLock";
+    private static final String STOCK_LOCK_KEY = "stockLock";
 
     @Override
     public ProductDto createProduct(CreateProductRequest request) {
@@ -64,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    @RedissonLock(value = ORDER_LOCK_KEY)
+    @RedissonLock(value = STOCK_LOCK_KEY)
     public void orderProduct(List<OrderProductRequest> requests) {
 
         log.info("order: {}", requests);
@@ -72,11 +70,10 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.findById(ProductId.of(request.productId()))
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
                         .decreaseStock(request.quantity()));
-
     }
 
     @Override
-    @RedissonLock(value = CANCEL_LOCK_KEY)
+    @RedissonLock(value = STOCK_LOCK_KEY)
     public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
         log.info("cancelOrder: {}", requests);
         requests.forEach(request ->
