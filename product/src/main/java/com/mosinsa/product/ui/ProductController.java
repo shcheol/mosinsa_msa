@@ -4,10 +4,7 @@ import com.mosinsa.product.application.ProductService;
 import com.mosinsa.product.application.dto.ProductDto;
 import com.mosinsa.product.common.ex.ProductError;
 import com.mosinsa.product.common.ex.ProductException;
-import com.mosinsa.product.ui.request.CancelOrderProductRequest;
-import com.mosinsa.product.ui.request.CreateProductRequest;
-import com.mosinsa.product.ui.request.LikesProductRequest;
-import com.mosinsa.product.ui.request.OrderProductRequest;
+import com.mosinsa.product.ui.request.*;
 import com.mosinsa.product.ui.response.BaseResponse;
 import com.mosinsa.product.ui.response.GlobalResponseEntity;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +52,9 @@ public class ProductController {
 	}
 
 	@PostMapping("/order")
-	public ResponseEntity<Void> orderProducts(@RequestBody List<OrderProductRequest> request){
+	public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request){
 
-		productService.orderProduct(request);
+		productService.orderProduct(request.orderProductRequestList());
 
 		return ResponseEntity.ok().build();
 	}

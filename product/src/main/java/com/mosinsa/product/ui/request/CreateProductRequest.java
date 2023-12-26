@@ -1,4 +1,4 @@
 package com.mosinsa.product.ui.request;
 
-public record CreateProductRequest(String name, int price, String categoryId, int stock) {
+public record CreateProductRequest(String name, int price, String category, int stock) {
 }

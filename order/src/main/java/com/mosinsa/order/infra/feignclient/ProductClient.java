@@ -18,9 +18,9 @@ public interface ProductClient {
 
 	@PostMapping("/products/order")
 	ProductResponse orderProducts(@RequestHeader Map<String, Collection<String>> headers,
-								  @RequestBody List<OrderProductRequest> request);
+								  @RequestBody OrderProductRequests request);
 
 	@PostMapping("/products/cancel")
 	ProductResponse cancelOrderProducts(@RequestHeader Map<String, Collection<String>> headers,
-										@RequestBody List<CancelOrderProductRequest> request);
+										@RequestBody CancelOrderProductRequests request);
 }

@@ -6,9 +6,7 @@ import com.mosinsa.order.domain.Order;
 import com.mosinsa.order.domain.OrderId;
 import com.mosinsa.order.domain.OrderProduct;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.infra.feignclient.CancelOrderProductRequest;
-import com.mosinsa.order.infra.feignclient.OrderProductRequest;
-import com.mosinsa.order.infra.feignclient.ProductClient;
+import com.mosinsa.order.infra.feignclient.*;
 import com.mosinsa.order.infra.repository.OrderRepository;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
@@ -49,9 +47,10 @@ public class OrderServiceImpl implements OrderService {
 		).toList();
 
 		productClient.orderProducts(headers,
-				orderProducts.stream().map(op ->
-						new OrderProductRequest(op.getProductId(), op.getQuantity())
-				).toList());
+				new OrderProductRequests(
+						orderProducts.stream().map(op ->
+								new OrderProductRequest(op.getProductId(), op.getQuantity())
+						).toList()));
 
 		Order order = orderRepository.save(Order.create(request.getCustomerId(), orderProducts));
 		return new OrderDto(order);
@@ -65,9 +64,10 @@ public class OrderServiceImpl implements OrderService {
 		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), request.getCustomerId()), "주문한 고객과 동일한 고객이 취소해야합니다.");
 
 		productClient.cancelOrderProducts(headers,
-				findOrder.getOrderProducts().stream().map(op ->
-						new CancelOrderProductRequest(op.getProductId(), op.getQuantity())
-				).toList());
+				new CancelOrderProductRequests(
+						findOrder.getOrderProducts().stream().map(op ->
+								new CancelOrderProductRequest(op.getProductId(), op.getQuantity())
+						).toList()));
 
 		findOrder.cancelOrder();
 	}
