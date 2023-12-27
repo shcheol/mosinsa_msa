@@ -30,7 +30,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
-
     private static final String STOCK_LOCK_KEY = "stockLock";
 
     @Override
@@ -70,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.findById(ProductId.of(request.productId()))
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
                         .decreaseStock(request.quantity()));
+
     }
 
     @Override
