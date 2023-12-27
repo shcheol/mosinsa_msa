@@ -53,16 +53,17 @@ public class ProductController {
 
 	@PostMapping("/order")
 	public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request){
+		System.out.println(request);
 
-		productService.orderProduct(request.orderProductRequestList());
+		productService.orderProduct(request.orderProductRequests());
 
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/cancel")
-	public ResponseEntity<Void> cancelOrderProducts(@RequestBody List<CancelOrderProductRequest> request){
+	public ResponseEntity<Void> cancelOrderProducts(@RequestBody CancelOrderProductRequests request){
 
-		productService.cancelOrderProduct(request);
+		productService.cancelOrderProduct(request.cancelOrderProductRequests());
 
 		return ResponseEntity.ok().build();
 	}
