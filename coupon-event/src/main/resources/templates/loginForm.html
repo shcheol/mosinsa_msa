@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <th:block th:replace="~{fragments/layout :: cssjs}"/>
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<div class="container">
+    <form action="/login" th:action th:object="${loginForm}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">아이디</label>
+            <input type="text" class="form-control" id="username" name="username" th:errorclass="field-error" th:field="*{username}" >
+            <div class="field-error" th:errors="*{username}">입력오류</div>
+        </div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+</div>
+
+<hr>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

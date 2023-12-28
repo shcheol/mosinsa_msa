@@ -1,0 +1,51 @@
+server:
+  port: 0
+  tomcat:
+    mbeanregistry:
+      enabled: true
+  servlet:
+    session:
+      tracking-modes: cookie
+spring:
+  application:
+    name: coupon-service
+  config:
+    import: "optional:configserver:http://152.67.205.195:8888/"
+  datasource:
+    url: ENC(C5coq2VePxUa73Oodsi+EH0WRdiR84qF2hlCTdQzRyErot6Qg1I4ofNdwKJ+Q0qCB0Ew4CVQSgUq8AH4z8Sj7JGT3+ZWwWmI/6BImCKvDwQ=) # rewriteBatchedStatements=true
+    username: ENC(Z+kCoiiTU28oexg5wmaj/g==)
+    password: ENC(RlzzorPTl/dnKbUpwlJTmRLWfKm7D+4H)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+  # JPA Setting
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 50
+        order_updates: true
+        order_inserts: true
+    open-in-view: false
+  sql:
+    init:
+      schema-locations: classpath:db/schema.sql
+#      data-locations: classpath:db/data.sql
+      mode: always
+
+logging:
+  level:
+    root: info
+    com.mosinsa: debug
+    org.hibernate.type: trace
+    org.springframework.jdbc.core: trace
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

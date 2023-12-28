@@ -55,6 +55,11 @@ public class FilterConfig {
 								.filters(apply))
 						.uri("lb://ORDER-SERVICE")
 				)
+				.route(r -> r.path("/coupon-service/**")
+						.filters(f -> f.rewritePath("/coupon-service/(?<segment>.*)", REPLACE)
+								.filters(apply))
+						.uri("lb://COUPON-SERVICE")
+				)
 				.build();
 	}
 }
