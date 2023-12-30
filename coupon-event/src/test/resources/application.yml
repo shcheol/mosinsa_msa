@@ -26,6 +26,8 @@ spring:
       schema-locations: classpath:db/schema.sql
 #      data-locations: classpath:db/data.sql
       mode: always
+  kafka:
+    bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
 
 logging:
   level:
