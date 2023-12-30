@@ -2,9 +2,7 @@ package com.mosinsa.coupon.application;
 
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
-import com.mosinsa.coupon.domain.Coupon;
-import com.mosinsa.coupon.domain.CouponId;
-import com.mosinsa.coupon.domain.CouponIssuedEvent;
+import com.mosinsa.coupon.domain.*;
 import com.mosinsa.coupon.dto.CouponDto;
 import com.mosinsa.coupon.dto.CouponSearchCondition;
 import com.mosinsa.coupon.infra.repository.CouponRepository;
@@ -35,7 +33,16 @@ public class CouponService {
                 Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
     }
 
-    public long count(String promotionId){
+	public void createForNewMember(String memberId){
+		couponRepository.save(
+				Coupon.create(
+						null,
+						CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
+				.issuedCoupon(memberId);
+
+	}
+
+	public long count(String promotionId){
 		return couponRepository.countCouponsByPromotionIdAndMemberIdIsNull(PromotionId.of(promotionId));
     }
 
