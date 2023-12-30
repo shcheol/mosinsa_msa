@@ -24,7 +24,8 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 	private final Map<String, Token> tokenUtilMap;
 	private final Set<String> whiteList = new HashSet<>();
 	private static final String[] AUTH_WHITELIST = {
-			"/customers", "/login",
+			"/customers", "/customers/v2","/coupons",
+			"/login",
 			"/actuator/prometheus"
 	};
 
