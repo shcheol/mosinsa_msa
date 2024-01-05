@@ -52,8 +52,8 @@ mosinsa:
       cancel: mosinsa-order-cancel
       commit: mosinsa-order-commit
       rollback: mosinsa-order-rollback
-
-
+    customer:
+      create: mosinsa-customer-create
 token:
   access:
     secret: access_secret

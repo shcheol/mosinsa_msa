@@ -38,13 +38,6 @@ public class CustomerController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
 	}
 
-	@PostMapping("/customers/v2")
-	public ResponseEntity<String> createCustomerV2(@RequestBody CreateCustomerRequest request) {
-
-		String customerId = customerService.joinV2(request);
-		return ResponseEntity.status(HttpStatus.CREATED).body(customerId);
-	}
-
 	@GetMapping("/customers/{customerId}")
 	public ResponseEntity<CustomerDto> customerDetails(@PathVariable String customerId, HttpServletRequest request) {
 

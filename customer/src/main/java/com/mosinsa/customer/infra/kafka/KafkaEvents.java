@@ -12,7 +12,6 @@ public class KafkaEvents {
 
     static void setKafkaTemplate(KafkaTemplate<String, String> kafkaTemplate) {
         KafkaEvents.kafkaTemplate = kafkaTemplate;
-
     }
 
     public static void raise(Object event) {
@@ -20,11 +19,7 @@ public class KafkaEvents {
             log.info("kafkaTemplate is null");
             return;
         }
-        String topic = "";
-        if (event instanceof CustomerCreatedEvent){
-            topic = "mosinsa-customer-created";
-        }
-
+        String topic = findTopic(event);
         log.info("publish event topic {}", topic);
         try {
             kafkaTemplate.send(topic, new ObjectMapper().writeValueAsString(event));
@@ -33,6 +28,13 @@ public class KafkaEvents {
         }
     }
 
-    private KafkaEvents() {
+	private static String findTopic(Object event) {
+		if (event instanceof CustomerCreatedEvent){
+			return "mosinsa-customer-created";
+		}
+		throw new IllegalArgumentException("not found topic");
+	}
+
+	private KafkaEvents() {
     }
 }

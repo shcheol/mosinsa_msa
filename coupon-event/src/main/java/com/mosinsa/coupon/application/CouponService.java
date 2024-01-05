@@ -34,17 +34,11 @@ public class CouponService {
     }
 
 	public void createForNewMember(String memberId){
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
 		couponRepository.save(
 				Coupon.create(
 						null,
 						CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
 				.issuedCoupon(memberId);
-
 	}
 
 	public long count(String promotionId){

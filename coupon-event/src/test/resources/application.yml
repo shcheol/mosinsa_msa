@@ -45,3 +45,8 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+
+mosinsa:
+  topic:
+    customer:
+      create: mosinsa-customer-create

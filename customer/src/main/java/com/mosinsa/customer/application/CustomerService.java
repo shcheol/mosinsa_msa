@@ -9,8 +9,6 @@ public interface CustomerService extends UserDetailsService {
 
 	String join(CreateCustomerRequest requestCustomer);
 
-    String joinV2(CreateCustomerRequest requestCustomer);
-
     Customer findByLoginId(String loginId);
 
     Customer login(String loginId, String password);

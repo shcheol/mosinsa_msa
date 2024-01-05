@@ -53,20 +53,6 @@ public class Customer {
 		return customer;
 	}
 
-
-	public static Customer createV2(String loginId, String password, String name, String email,
-								  String city, String street, String zipcode){
-
-		Customer customer = new Customer();
-		customer.id = CustomerId.newId();
-		customer.cert = Certification.create(loginId, password);
-		customer.name = name;
-		customer.email = email;
-		customer.grade = CustomerGrade.BRONZE;
-		customer.address = Address.of(city, street, zipcode);
-		return customer;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
