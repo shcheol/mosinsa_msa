@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public abstract class Event {
 
-    private long timestamp;
+    private final long timestamp;
 
     protected Event() {
         this.timestamp = System.currentTimeMillis();

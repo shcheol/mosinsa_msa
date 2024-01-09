@@ -3,7 +3,7 @@ package com.mosinsa.promotion.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mosinsa.common.event.EventsConfiguration;
+import com.mosinsa.common.event.EventsConfig;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.application.CouponService;
@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(PromotionController.class)
 @ExtendWith(MockitoExtension.class)
-@Import({EventsConfiguration.class})
+@Import({EventsConfig.class})
 class PromotionControllerTest {
 
     @Autowired

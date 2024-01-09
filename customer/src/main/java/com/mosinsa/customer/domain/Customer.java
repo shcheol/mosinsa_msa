@@ -1,7 +1,7 @@
 package com.mosinsa.customer.domain;
 
+import com.mosinsa.customer.common.event.Events;
 import com.mosinsa.customer.infra.kafka.CustomerCreatedEvent;
-import com.mosinsa.customer.infra.kafka.KafkaEvents;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -49,7 +49,7 @@ public class Customer {
 		customer.email = email;
 		customer.grade = CustomerGrade.BRONZE;
 		customer.address = Address.of(city, street, zipcode);
-		KafkaEvents.raise(new CustomerCreatedEvent(customer.id.getId()));
+		Events.raise(new CustomerCreatedEvent(customer.id.getId()));
 		return customer;
 	}
 
