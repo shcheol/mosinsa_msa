@@ -1,5 +1,6 @@
 package com.mosinsa.coupon.application;
 
+import com.mosinsa.common.aop.Retry;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.domain.*;
@@ -21,34 +22,44 @@ import java.util.List;
 @Transactional
 public class CouponService {
 
-    private final CouponRepository couponRepository;
+	private final CouponRepository couponRepository;
 
-    public void createAll(PromotionCreatedEvent event){
-        couponRepository.saveAll(
-                Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
-    }
+	public void createAll(PromotionCreatedEvent event) {
+		couponRepository.saveAll(
+				Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
+	}
 
-    public void createAllByBatchInsert(PromotionCreatedEvent event){
-        couponRepository.batchInsert(
-                Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
-    }
+	public void createAllByBatchInsert(PromotionCreatedEvent event) {
+		couponRepository.batchInsert(
+				Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
+	}
 
-	public void createForNewMember(String memberId){
+	@Retry(times = 3)
+	public void createForNewMember(String memberId) {
+		checkDuplicateIssue(memberId);
+
 		couponRepository.save(
-				Coupon.create(
-						null,
-						CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
+						Coupon.create(
+								null,
+								CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
 				.issuedCoupon(memberId);
 	}
 
-	public long count(String promotionId){
+	private void checkDuplicateIssue(String memberId) {
+		List<CouponDto> myCoupons = couponRepository.findMyCoupons(memberId);
+		if (!myCoupons.isEmpty()) {
+			throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
+		}
+	}
+
+	public long count(String promotionId) {
 		return couponRepository.countCouponsByPromotionIdAndMemberIdIsNull(PromotionId.of(promotionId));
-    }
+	}
 
 	@Transactional
-    public CouponId issue(CouponIssuedEvent event){
+	public CouponId issue(CouponIssuedEvent event) {
 
-        CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
+		CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
 		log.info("coupon issue event {}", event);
 		checkDuplicateParticipation(condition);
 
@@ -58,25 +69,25 @@ public class CouponService {
 					throw new CouponException(CouponError.EMPTY_STOCK);
 				});
 
-        coupon.issuedCoupon(event.getMemberId());
+		coupon.issuedCoupon(event.getMemberId());
 		log.info("member {} issue coupon", condition.memberId());
 
-        return coupon.getCouponId();
-    }
+		return coupon.getCouponId();
+	}
 
 	private void checkDuplicateParticipation(CouponSearchCondition condition) {
 		CouponId couponWithMember = couponRepository.findAssignedCoupon(condition);
-		if (couponWithMember != null){
+		if (couponWithMember != null) {
 			log.info("member {} {}", condition.memberId(), CouponError.DUPLICATE_PARTICIPATION.getMessage());
 			throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
 		}
 	}
 
-	public List<CouponDto> myCoupons(String memberId){
+	public List<CouponDto> myCoupons(String memberId) {
 		return couponRepository.findMyCoupons(memberId);
 	}
 
-	public CouponDto findById(String couponId){
+	public CouponDto findById(String couponId) {
 		return CouponDto.convert(
 				couponRepository.findById(CouponId.of(couponId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND)));
 	}

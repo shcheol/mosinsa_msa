@@ -61,7 +61,7 @@ class CustomerServiceImplTest {
 
 	public long getOffset() throws ExecutionException, InterruptedException {
 		Map<TopicPartition, OffsetSpec> target = new HashMap<>();
-		TopicPartition partition = new TopicPartition("mosinsa-customer-created", 0);
+		TopicPartition partition = new TopicPartition("mosinsa-customer-create", 0);
 		target.put(partition, OffsetSpec.latest());
 		ListOffsetsResult listOffsetsResult = adminClient.listOffsets(target);
 		return listOffsetsResult.partitionResult(partition).get().offset();

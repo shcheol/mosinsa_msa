@@ -30,7 +30,7 @@ public class KafkaEvents {
 
 	private static String findTopic(Object event) {
 		if (event instanceof CustomerCreatedEvent){
-			return "mosinsa-customer-created";
+			return "mosinsa-customer-create";
 		}
 		throw new IllegalArgumentException("not found topic");
 	}

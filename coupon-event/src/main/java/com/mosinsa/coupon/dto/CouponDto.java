@@ -22,7 +22,7 @@ public class CouponDto {
     @QueryProjection
     public CouponDto(CouponId couponId, PromotionId promotionId, LocalDateTime issuedDate, String memberId, CouponState state, CouponDetails details) {
         this.couponId = couponId.getId();
-        this.promotionId = promotionId.getId();
+        this.promotionId = promotionId == null ? null : promotionId.getId();
         this.issuedDate = issuedDate;
         this.memberId = memberId;
         this.state = state;
