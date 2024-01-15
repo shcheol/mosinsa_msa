@@ -9,6 +9,12 @@ const routes = [
         component: HomeView
     },
     {
+        path: '/products/:id',
+        name: 'productDetails',
+        component: () => import('../views/Detail.vue'),
+        props: true
+    },
+    {
         path: '/about',
         name: 'about',
         component: () => import('../views/About.vue')

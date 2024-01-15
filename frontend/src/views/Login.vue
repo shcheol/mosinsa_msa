@@ -14,7 +14,6 @@
 
 <script>
 import apiBoard from '@/api/board'
-import router from '@/router/index.js'
 
 export default {
   data(){
@@ -28,7 +27,7 @@ export default {
       apiBoard.postLogin(username, password)
           .then(function (response) {
             console.log(response);
-            router.push("/");
+            this.$router.push("/");
           })
           .catch(function (e) {
             console.log(e);

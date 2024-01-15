@@ -3,11 +3,11 @@
   <div class="container">
     <h2>카테고리</h2>
 
-    <div class="card mb-3" style="max-width: 540px;" v-for="product in products" :key="product">
+    <div class="card mb-3" style="max-width: 540px;" v-for="(product, i) in products" :key="product">
       <div class="row g-0">
         <div class="col-md-4">
-          <a @click="productDetails(product.productId)">{{ product.name }}
-            <img class="img-fluid rounded-start" src="../assets/logo.png" alt="../assets/logo.png" >
+          <a @click="productDetails(i)">{{ product.name }}
+            <!--            <img class="img-fluid rounded-start" src="../assets/logo.png" alt="../assets/logo.png" >-->
           </a>
         </div>
         <div class="col-md-8">
@@ -16,14 +16,10 @@
             <p>가격 : {{ product.price }} 원</p>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="card mb-3" style="max-width: 540px;" v-for="product in products" :key="product">
-      <h4 @click="productDetails(product.productId)">{{ product.name }}</h4>
-      <p>가격 : {{ product.price }} 원</p>
-      <p>잔여 수량 : {{ product.stock }}</p>
-      <p>좋아요 : {{ product.likes }}</p>
+        <!--        <button @click="productDetails(product.productId)")>상품보기</button>-->
+      </div>
+      <br/>
     </div>
   </div>
 </template>
@@ -47,19 +43,13 @@ export default {
         .catch(function (e) {
           console.log(e);
         });
-
-
   },
   methods: {
-    productDetails(id) {
-      apiBoard.getProductDetails(id)
-          .then((response) => {
-            console.log(response.data);
-            this.detail = response.data.response;
-          })
-          .catch(function (e) {
-            console.log(e);
-          });
+    productDetails(i) {
+      this.$router.push({
+        name: 'productDetails',
+        params: {id: this.products[i].productId}
+      })
     }
   }
 }
