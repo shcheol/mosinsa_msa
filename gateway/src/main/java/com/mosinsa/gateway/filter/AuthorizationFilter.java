@@ -40,8 +40,8 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 		return ((exchange, chain) -> {
 			ServerHttpRequest request = exchange.getRequest();
 			log.info("request path [{}]", request.getPath());
-
-			if (whiteList.contains(request.getPath().toString())/* && request.getMethod() == HttpMethod.POST*/) {
+			return chain.filter(exchange);
+/*			if (whiteList.contains(request.getPath().toString())*//* && request.getMethod() == HttpMethod.POST*//*) {
 				return chain.filter(exchange);
 			}
 
@@ -81,7 +81,7 @@ public class AuthorizationFilter extends AbstractGatewayFilterFactory<Authorizat
 				return chain.filter(exchange);
 			}
 
-			return onError(exchange, AuthorizationError.JWT_VALID_ERROR);
+			return onError(exchange, AuthorizationError.JWT_VALID_ERROR);*/
 		});
 	}
 
