@@ -11,7 +11,7 @@ const routes = [
     {
         path: '/products/:id',
         name: 'productDetails',
-        component: () => import('../views/Detail.vue'),
+        component: () => import('../views/ProductDetail.vue'),
         props: true
     },
     {
@@ -23,6 +23,27 @@ const routes = [
         path: '/myPage',
         name: 'myPage',
         component: () => import('../views/MyPage.vue')
+    },
+    {
+        path: '/myPage/likes',
+        name: 'likes',
+        component: () => import('../views/Likes.vue')
+    },
+    {
+        path: '/myPage/orders',
+        name: 'orders',
+        component: () => import('../views/Orders.vue')
+    },
+    {
+        path: '/myPage/orders/:id',
+        name: 'orderDetails',
+        component: () => import('../views/OrderDetail.vue'),
+        props: true
+    },
+    {
+        path: '/myPage/coupons',
+        name: 'coupons',
+        component: () => import('../views/Coupons.vue')
     },
     {
         path: '/login',

@@ -16,10 +16,7 @@
             <p>가격 : {{ product.price }} 원</p>
           </div>
         </div>
-
-        <!--        <button @click="productDetails(product.productId)")>상품보기</button>-->
       </div>
-      <br/>
     </div>
   </div>
 </template>

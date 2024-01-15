@@ -14,6 +14,7 @@
 
 <script>
 import apiBoard from '@/api/board'
+import router from "@/router/index.js";
 
 export default {
   data(){
@@ -27,7 +28,9 @@ export default {
       apiBoard.postLogin(username, password)
           .then(function (response) {
             console.log(response);
-            this.$router.push("/");
+            localStorage.setItem('access-token', response.headers.get("access-token"));
+            localStorage.setItem('customerId', response.headers.get("customerId"));
+            router.push("/");
           })
           .catch(function (e) {
             console.log(e);
