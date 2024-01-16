@@ -35,7 +35,7 @@
       </tr>
       </tbody>
     </table>
-
+    <button @click="addCart(product)">+</button>
     <button @click="modalState=!modalState">주문하기</button>
     <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
   </div>
@@ -70,6 +70,9 @@ export default {
         name: 'orderPage',
         state: {orderProduct: [{productId: productId, price: price, quantity: quantity}]}
       })
+    },
+    addCart(product) {
+      this.$store.dispatch("addCart", product);
     },
     likes() {
     }

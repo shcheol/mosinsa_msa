@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td>기간</td>
-        <td v-if="promotion!=null">{{ promotion.period.startDate }} ~ {{promotion.period.endDate}}</td>
+        <td v-if="promotion!=null">{{ promotion.period.startDate }} ~ {{ promotion.period.endDate }}</td>
       </tr>
       <tr>
         <td>수량</td>
@@ -59,6 +59,10 @@ export default {
   },
   methods: {
     joinPromotion(promotionId) {
+      if (localStorage.getItem("customerId") == null) {
+        alert('login이 필요합니다.')
+        this.$router.push({name: "login"})
+      }
       apiBoard.patchJoinPromotions(localStorage.getItem("customerId"), promotionId).then((response) => {
         alert(response.data.result);
       })

@@ -34,6 +34,12 @@ export default {
       myOrderProducts: []
     }
   },
+  beforeCreate() {
+    if (localStorage.getItem("customerId")==null){
+      alert('login이 필요합니다.')
+      this.$router.push({name:"login"})
+    }
+  },
   mounted() {
     this.myOrderProducts = history.state.orderProduct;
   },
