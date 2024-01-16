@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class PromotionController {
 
@@ -26,34 +26,31 @@ public class PromotionController {
 	private final CouponService couponService;
 
 	@GetMapping("/promotions")
-	public String promotions(PromotionSearchCondition condition, Pageable pageable, Model model) {
+	public ResponseEntity<Page<PromotionDto>> promotions(PromotionSearchCondition condition, Pageable pageable, Model model) {
 		Page<PromotionDto> promotions = promotionService.findByPromotions(condition, pageable);
 		model.addAttribute("promotions", promotions);
-		return "promotion/promotionList";
+		return ResponseEntity.ok(promotions);
 	}
 
 	@GetMapping("/promotions/{promotionId}")
-	public String detail(@PathVariable("promotionId") String promotionId, Model model) {
+	public ResponseEntity<PromotionDetails> detail(@PathVariable("promotionId") String promotionId, Model model) {
 		log.info("{}", promotionId);
 
 		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
-		model.addAttribute("promotion", promotionDto);
 		long count = couponService.count(promotionId);
-		model.addAttribute("stock", count);
 
-		return "promotion/promotionDetail";
+		PromotionDetails promotionDetails = new PromotionDetails(promotionDto, count);
+		return ResponseEntity.ok(promotionDetails);
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/promotions")
-	@ResponseBody
 	public PromotionDto create(@RequestBody CreatePromotionRequest request) {
 		log.info("request {}", request);
 		return promotionService.create(request);
 	}
 
 	@PatchMapping(value = "/promotions", consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
 	public ResponseEntity<JoinResult> joinPromotion(@RequestBody JoinPromotionRequest request) {
 		String promotionId = request.promotionId();
 		String memberId = request.memberId();
