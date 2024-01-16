@@ -2,31 +2,26 @@
   <div class="container">
     <h2>쿠폰목록</h2>
 
-    <table class="table">
-      <tbody>
-      <tr>
-        <td>쿠폰번호</td>
-        <td v-if="product!=null">{{ product.productId }}</td>
-      </tr>
-      <tr>
-        <td>이름</td>
-        <td v-if="product!=null">{{ product.name }}</td>
-      </tr>
-      <tr>
-        <td>수량</td>
-        <td v-if="product!=null">{{ product.stock }}</td>
-      </tr>
-      <tr>
-        <td>가격</td>
-        <td v-if="product!=null">{{ product.price }}</td>
-      </tr>
-      <tr>
-        <td>좋아요</td>
-        <td v-if="product!=null">{{ product.likes }}</td>
-        <button @click="likes">좋아요</button>
-      </tr>
-      </tbody>
-    </table>
+    <div class="card mb-3" style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
+      <table class="table">
+        <tbody>
+        <tr>
+          <td>쿠폰번호</td>
+          <td v-if="coupon!=null">{{ coupon.couponId }}</td>
+          <button v-if="coupon!=null" @click="couponDetails(coupon.couponId)">쿠폰상세</button>
+        </tr>
+        <tr>
+          <td>프로모션번호</td>
+          <td v-if="coupon!=null">{{ coupon.promotionId }}</td>
+        </tr>
+        <tr>
+          <td>상태</td>
+          <td v-if="coupon!=null">{{ coupon.state }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
 
     <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
   </div>
@@ -38,24 +33,42 @@ import apiBoard from '@/api/board'
 export default {
   data() {
     return {
-      product: null,
-      productId: null
+      coupons: null,
+      promotionDetail: null
     }
   },
   mounted() {
-    apiBoard.getProductDetails(this.$route.params.id)
+    apiBoard.getCoupons(localStorage.getItem("customerId"))
         .then((response) => {
-          console.log('response' + response);
-          this.product = response.data.response;
+          console.log(response);
+          this.coupons = response.data;
         })
         .catch(function (e) {
           console.log(e);
         });
   },
   methods: {
-    likes() {
+    couponDetails(id) {
+      this.$router.push({
+        name: 'couponDetails',
+        params: {id: id}
+      })
+    },
+    promotionDetails(id){
+      apiBoard.getPromotionDetails(id)
+          .then((response) => {
+            console.log(response);
+            this.coupons = response.data;
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
+
+
     }
+
   }
+
 
 }
 </script>

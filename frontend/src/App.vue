@@ -2,8 +2,9 @@
   <div class="menu">
     <router-link to="/">Home</router-link>
     <router-link to="/myPage">MyPage</router-link>
-    <router-link to="/about">About</router-link>
-    <router-link to="/login">Login</router-link>
+    <router-link to="/promotions">Promotions</router-link>
+    <router-link v-if="!isLogin" to="/login">Login</router-link>
+    <router-link v-if="isLogin" to="/logout">Logout</router-link>
   </div>
   <router-view/>
 
@@ -38,13 +39,11 @@ export default {
       products: ['역삼동운룸', '천호동원룸', '어디 원룸'],
       menus: ['Home', 'Shop', 'About'],
       likes : ['0','0','0'],
-      modalState : false
+      isLogin : false
     }
   },
-  methods : {
-    increase(i){
-      this.likes[i]++;
-    }
+  mounted() {
+    this.isLogin = localStorage.getItem("customerId")!=null
   },
   components: {}
 }

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import Logout from '../views/Logout.vue'
 
 const routes = [
     {
@@ -15,9 +16,20 @@ const routes = [
         props: true
     },
     {
-        path: '/about',
-        name: 'about',
-        component: () => import('../views/About.vue')
+        path: '/orderPage',
+        name: 'orderPage',
+        component: () => import('../views/OrderPage.vue'),
+        props: true
+    },
+    {
+        path: '/promotions',
+        name: 'promotions',
+        component: () => import('../views/Promotions.vue')
+    },
+    {
+        path: '/promotions/:id',
+        name: 'promotionDetails',
+        component: () => import('../views/PromotionDetail.vue')
     },
     {
         path: '/myPage',
@@ -46,10 +58,21 @@ const routes = [
         component: () => import('../views/Coupons.vue')
     },
     {
+        path: '/myPage/coupons/:id',
+        name: 'couponDetails',
+        component: () => import('../views/CouponDetail.vue')
+    },
+    {
         path: '/login',
         name: 'login',
         component: Login
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        component: Logout
     }
+
 ]
 
 const router = createRouter({

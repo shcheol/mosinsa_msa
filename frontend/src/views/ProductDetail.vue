@@ -1,7 +1,15 @@
 <template>
   <div class="container">
-    <h2>상품 상세</h2>
 
+    <div class="black-bg" v-if="modalState">
+      <div class="white-bg">
+        <h4>수량</h4>
+        <input type="number" class="form-control" id="quantity" name="quantity" v-model="quantity"/>
+        <button @click="orders(product.productId, product.price, quantity)">주문하기</button>
+      </div>
+    </div>
+
+    <h2>상품 상세</h2>
     <table class="table">
       <tbody>
       <tr>
@@ -28,6 +36,7 @@
       </tbody>
     </table>
 
+    <button @click="modalState=!modalState">주문하기</button>
     <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
   </div>
 </template>
@@ -39,6 +48,8 @@ export default {
   data() {
     return {
       product: null,
+      modalState: false,
+      quantity: null
     }
   },
   mounted() {
@@ -52,9 +63,34 @@ export default {
         });
   },
   methods: {
+    orders(productId, price, quantity) {
+      this.modalState = false;
+
+      this.$router.push({
+        name: 'orderPage',
+        state: {orderProduct: [{productId: productId, price: price, quantity: quantity}]}
+      })
+    },
     likes() {
     }
   }
 
 }
 </script>
+
+<style>
+.black-bg {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  padding: 20px;
+}
+
+.white-bg {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+</style>

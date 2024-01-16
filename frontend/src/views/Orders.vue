@@ -1,27 +1,27 @@
 <template>
-<div class="container">
+  <div class="container">
     <h2>주문목록</h2>
 
-  <div class="card mb-3" style="max-width: 540px;" v-for="(order) in orders" :key="order">
-    <table class="table">
-      <tbody>
-      <tr>
-        <td>주문번호</td>
-        <td v-if="order!=null">{{order.orderId}}</td>
-        <button v-if="order!=null" @click="orderDetails(order.orderId)">주문상세</button>
-      </tr>
-      <tr>
-        <td>결제금액</td>
-        <td v-if="order!=null">{{order.totalPrice}}</td>
-      </tr>
-      <tr>
-        <td>주문상태</td>
-        <td v-if="order!=null">{{order.status}}</td>
-      </tr>
-      </tbody>
-    </table>
+    <div class="card mb-3" style="max-width: 540px;" v-for="(order) in orders" :key="order">
+      <table class="table">
+        <tbody>
+        <tr>
+          <td>주문번호</td>
+          <td v-if="order!=null">{{ order.orderId }}</td>
+          <button v-if="order!=null" @click="orderDetails(order.orderId)">주문상세</button>
+        </tr>
+        <tr>
+          <td>결제금액</td>
+          <td v-if="order!=null">{{ order.totalPrice }}</td>
+        </tr>
+        <tr>
+          <td>주문상태</td>
+          <td v-if="order!=null">{{ order.status }}</td>
+        </tr>
+        </tbody>
+      </table>
 
-  </div>
+    </div>
 
 
     <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
@@ -32,7 +32,7 @@
 import apiBoard from '@/api/board'
 
 export default {
-  data(){
+  data() {
     return {
       orders: null
     }
@@ -40,15 +40,15 @@ export default {
   mounted() {
     apiBoard.getOrders(localStorage.getItem("customerId"))
         .then((response) => {
-          console.log('response' + response);
+          console.log(response);
           this.orders = response.data.response.content;
         })
         .catch(function (e) {
           console.log(e);
         });
   },
-  methods:{
-    orderDetails(id){
+  methods: {
+    orderDetails(id) {
       this.$router.push({
         name: 'orderDetails',
         params: {id: id}
