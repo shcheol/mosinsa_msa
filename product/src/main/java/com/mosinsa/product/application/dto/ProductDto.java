@@ -1,6 +1,7 @@
 package com.mosinsa.product.application.dto;
 
 import com.mosinsa.product.domain.product.Product;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @Value
@@ -12,6 +13,7 @@ public class ProductDto {
     long stock;
     long likes;
 
+	@QueryProjection
     public ProductDto(Product product) {
         this.productId = product.getId().getId();
         this.name = product.getName();

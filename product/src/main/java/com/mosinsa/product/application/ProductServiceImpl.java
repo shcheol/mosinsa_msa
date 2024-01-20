@@ -9,10 +9,7 @@ import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.domain.product.Product;
 import com.mosinsa.product.domain.product.ProductId;
 import com.mosinsa.product.infra.repository.ProductRepository;
-import com.mosinsa.product.ui.request.CancelOrderProductRequest;
-import com.mosinsa.product.ui.request.CreateProductRequest;
-import com.mosinsa.product.ui.request.LikesProductRequest;
-import com.mosinsa.product.ui.request.OrderProductRequest;
+import com.mosinsa.product.ui.request.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -59,8 +56,13 @@ public class ProductServiceImpl implements ProductService {
         return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
     }
 
+	@Override
+	public List<ProductDto> findProductsByCondition(SearchCondition condition) {
+		return productRepository.findByCondition(condition);
+	}
 
-    @Override
+
+	@Override
     @RedissonLock(value = STOCK_LOCK_KEY)
     public void orderProduct(List<OrderProductRequest> requests) {
 

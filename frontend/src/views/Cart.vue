@@ -3,11 +3,13 @@
     <div id="addedproductlist">
       <div>
         <div>
-          <div v-if="$store.getters.getCartProducts.length === 0" class="shopped-item">
+          <div v-if="$store.getters.getCartProducts.length === 0">
             장바구니에 담은 상품이 없습니다.
           </div>
-          <div v-else class="shopped-item" v-for="cp in $store.getters.getCartProducts" :key="cp">
+          <div v-else v-for="(cp, idx) in $store.getters.getCartProducts" :key="cp">
+
             <div>
+              <label><input type="checkbox" :id="idx" v-model="checked[idx]"/></label>
 <!--              <img src="../assets/logo.png"/>-->
               <div>상품명: {{ cp.name }}</div>
             </div>
@@ -23,6 +25,9 @@
           <div>
             총 가격 : {{ $store.getters.cartTotal }}원
           </div>
+          <div>
+            <button @click="orders">주문하기</button>
+          </div>
         </div>
       </div>
     </div>
@@ -32,7 +37,24 @@
 <script>
 
 export default {
+  data(){
+    return{
+      checked:[]
+    }
+  },
   methods: {
+    orders() {
+      let orderProduct = this.$store.getters.getCartProducts.filter((cp,idx) => this.checked[idx]).map(cp => {
+        return {
+          productId: cp.productId, price: cp.price, quantity: cp.quantity
+        }
+      });
+
+      this.$router.push({
+        name: 'orderPage',
+        state: {orderProduct: orderProduct}
+      })
+    },
     addCart(product) {
       this.$store.dispatch("addCart", product);
     },

@@ -35,9 +35,11 @@
       </tr>
       </tbody>
     </table>
-    <button @click="addCart(product)">+</button>
+    <button @click="addCart(product)">담기</button>
     <button @click="modalState=!modalState">주문하기</button>
-    <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
+    <div>
+      <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
+    </div>
   </div>
 </template>
 

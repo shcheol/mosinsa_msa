@@ -45,7 +45,7 @@ public class ProductController {
 	}
 
     @GetMapping
-    public ResponseEntity<BaseResponse> findAllProducts(Pageable pageable){
+    public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable){
 
 		Page<ProductDto> allProducts = productService.getAllProducts(pageable);
 		return GlobalResponseEntity.ok(allProducts);

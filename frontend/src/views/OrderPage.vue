@@ -52,6 +52,7 @@ export default {
           name: 'orderDetails',
           params: {id: response.data.response.orderId}
         })
+        this.$state.clear();
       })
           .catch(function (e) {
             console.log(e);
