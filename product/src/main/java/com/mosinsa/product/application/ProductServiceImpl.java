@@ -63,12 +63,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-	public List<ProductDto> findProductsByCondition(SearchCondition condition) {
-		return productRepository.findByCondition(condition);
-	}
+    public Page<ProductDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
+        return productRepository.findByCondition(condition, pageable);
+    }
 
 
-	@Override
+    @Override
     @RedissonLock(value = STOCK_LOCK_KEY)
     public void orderProduct(List<OrderProductRequest> requests) {
 

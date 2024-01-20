@@ -33,6 +33,20 @@ public class ProductController {
 		return GlobalResponseEntity.ok(productDto);
 	}
 
+	@GetMapping
+	public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable){
+
+		Page<ProductDto> allProducts = productService.findProductsByCondition(condition, pageable);
+		return GlobalResponseEntity.ok(allProducts);
+	}
+
+	@GetMapping("/likes")
+	public ResponseEntity<BaseResponse> getLikesProducts(@RequestParam String customer){
+
+		List<ProductDto> myLikesProducts = productService.findMyLikesProducts(customer);
+		return GlobalResponseEntity.ok(myLikesProducts);
+	}
+
 	@PatchMapping("/{productId}/likes")
 	public ResponseEntity<BaseResponse> likes(@PathVariable String productId, @RequestBody LikesProductRequest request){
 
@@ -42,13 +56,6 @@ public class ProductController {
 		}
 		productService.likes(request);
 		return ResponseEntity.ok().build();
-	}
-
-    @GetMapping
-    public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable){
-
-		Page<ProductDto> allProducts = productService.getAllProducts(pageable);
-		return GlobalResponseEntity.ok(allProducts);
 	}
 
 	@PostMapping("/order")

@@ -47,11 +47,7 @@ public class Product {
     }
 
     public void likes(String memberId) {
-
         this.likes.likes(memberId);
-//                this.likes.getLikesMember().stream()
-//                        .filter(lm -> lm.getMemberId().equals(memberId))
-//                        .findFirst().orElse(LikesMember.create(memberId)));
     }
 
     public void increaseStock(long stock) {

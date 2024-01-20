@@ -1,4 +1,4 @@
 package com.mosinsa.product.ui.request;
 
-public record SearchCondition(String name, String price, String likes, String categoryId) {
+public record SearchCondition(OrderEnum name, OrderEnum price, OrderEnum likes, String categoryId) {
 }
