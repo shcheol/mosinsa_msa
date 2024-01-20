@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mosinsa.product.domain.product.QProduct.product;
 
@@ -49,10 +51,24 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
     }
 
     private OrderSpecifier[] orderSpecifier(SearchCondition condition) {
-        return new OrderSpecifier[]{
-                condition.name() == null ? null : condition.name().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc(),
-                condition.price() == null ? null : condition.price().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc(),
-                condition.likes() == null ? null : condition.likes().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc()};
+
+        List<OrderSpecifier> specifierList = getOrderSpecifierList(condition);
+
+        OrderSpecifier[] orderSpecifiers = new OrderSpecifier[specifierList.size()];
+        AtomicInteger idx = new AtomicInteger();
+        specifierList.forEach(sp -> orderSpecifiers[idx.getAndIncrement()] = sp);
+
+        return orderSpecifiers;
+    }
+
+    private List<OrderSpecifier> getOrderSpecifierList(SearchCondition condition) {
+        List<OrderSpecifier> specifier2 = new ArrayList<>();
+        specifier2.add(condition.name() == null ?
+                product.name.asc() : condition.name().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc());
+        if (condition.likes() != null) {
+            specifier2.add(condition.likes().equals(OrderEnum.ASC) ? product.likes.total.asc() : product.likes.total.desc())
+        }
+        return specifier2;
     }
 
     private BooleanExpression category(String categoryId) {
