@@ -15,6 +15,8 @@ public interface ProductService {
 
 	Page<ProductDto> getAllProducts(Pageable pageable);
 
+	List<ProductDto> findMyLikesProducts(String customerId);
+
 	List<ProductDto> findProductsByCondition(SearchCondition condition);
 
 	void orderProduct(List<OrderProductRequest> requests);

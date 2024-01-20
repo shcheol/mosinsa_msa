@@ -17,13 +17,17 @@ public class LikesMember {
 	@Id
 	@Column(name = "likes_member_id")
 	private String id;
-
 	private String memberId;
 
-	public static LikesMember create(String memberId){
+	@ManyToOne
+	@JoinColumn(name = "likes_id")
+	private Likes likes;
+
+	public static LikesMember create(String memberId, Likes likes){
 		LikesMember likesMember = new LikesMember();
 		likesMember.id = UUID.randomUUID().toString();
 		likesMember.memberId = memberId;
+		likesMember.likes = likes;
 		return likesMember;
 	}
 

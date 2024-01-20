@@ -18,7 +18,9 @@ public interface ProductRepository extends JpaRepository<Product, ProductId>, Cu
 	@Query(value = "SELECT RELEASE_LOCK(:key)", nativeQuery = true)
 	void unlock(@Param(value = "key") String key);
 
-	@Query(value = "select new com.mosinsa.product.application.dto.ProductDto(p) from Product p where p")
-	List<ProductDto> findLikesProduct(String likesMember);
+	@Query(value = "select new com.mosinsa.product.application.dto.ProductDto(p) " +
+			"from Product p " +
+			"where p.likes in (select l.id from Likes l, LikesMember lm where l.id = lm.likes and :likesMember = lm.memberId )")
+	List<ProductDto> findLikesProduct(@Param(value = "likesMember") String likesMember);
 }
 

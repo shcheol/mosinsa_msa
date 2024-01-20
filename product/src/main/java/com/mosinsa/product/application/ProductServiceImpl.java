@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private static final String STOCK_LOCK_KEY = "stockLock";
+    private static final String LIKES_LOCK_KEY = "likesLock";
 
     @Override
     public ProductDto createProduct(CreateProductRequest request) {
@@ -56,7 +57,12 @@ public class ProductServiceImpl implements ProductService {
         return new PageWrapper<>(productRepository.findAll(pageable).map(ProductDto::new));
     }
 
-	@Override
+    @Override
+    public List<ProductDto> findMyLikesProducts(String customerId) {
+        return productRepository.findLikesProduct(customerId);
+    }
+
+    @Override
 	public List<ProductDto> findProductsByCondition(SearchCondition condition) {
 		return productRepository.findByCondition(condition);
 	}
@@ -85,6 +91,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @RedissonLock(value = LIKES_LOCK_KEY)
     public void likes(LikesProductRequest request) {
         productRepository.findById(ProductId.of(request.productId()))
                 .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))

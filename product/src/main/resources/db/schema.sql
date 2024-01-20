@@ -48,23 +48,3 @@ create table stock
     remain bigint       not null,
     primary key (id)
 ) engine = InnoDB;
-
-alter table likes_member
-    add constraint FKkpcwhnbcpqe8y92f8oo4ya745
-        foreign key (like_id)
-            references likes (likes_id);
-
-alter table product
-    add constraint FK1mtsbur82frn64de7balymq9s
-        foreign key (category_id)
-            references category (category_id);
-
-alter table product
-    add constraint FKc4d1sffbsfgl23p2n98fboi68
-        foreign key (likes_id)
-            references likes (likes_id);
-
-alter table product
-    add constraint FK90w0j7y2y7chsmk4v4k02ekqf
-        foreign key (stock_id)
-            references stock (id);
