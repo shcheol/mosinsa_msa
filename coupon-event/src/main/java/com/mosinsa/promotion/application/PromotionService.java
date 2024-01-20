@@ -34,7 +34,7 @@ public class PromotionService {
 								request.quantity(),
 								request.discountPolicy(),
 								request.period(),
-								new CouponDetails(LocalDateTime.now(), request.discountPolicy()))));
+								new CouponDetails(request.details().getDuringDate(), request.discountPolicy()))));
 	}
 
 	@Transactional
