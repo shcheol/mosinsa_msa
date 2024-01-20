@@ -66,7 +66,7 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
         specifier2.add(condition.name() == null ?
                 product.name.asc() : condition.name().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc());
         if (condition.likes() != null) {
-            specifier2.add(condition.likes().equals(OrderEnum.ASC) ? product.likes.total.asc() : product.likes.total.desc())
+            specifier2.add(condition.likes().equals(OrderEnum.ASC) ? product.likes.total.asc() : product.likes.total.desc());
         }
         return specifier2;
     }
