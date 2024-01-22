@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@Sql("classpath:test-init.sql")
+@Sql("classpath:db/test-init.sql")
 class ProductServiceImplTest {
 
     @Autowired

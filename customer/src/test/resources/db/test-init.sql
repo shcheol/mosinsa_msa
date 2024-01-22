@@ -1,4 +1,4 @@
-truncate customer;
+truncate table customer;
 
 insert into customer
 (customer_id, login_id, password, name, email, grade, city, street, zipcode)

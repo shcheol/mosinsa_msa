@@ -11,10 +11,7 @@ spring:
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
-    url: ENC(S7oD+0XH91BYG/RHyVPrSJeqEOxtHpIEbRmiNIgCyylJJXFvucSI9zoNLNfQ6exjxUV7Dtwaedg=)
-    username: ENC(O7X+XjZySqGansb61khTfg0h+VYWzeka)
-    password: ENC(fTghhInL2PJjPioJiTHpXAhaPmhERI88)
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL
   # JPA Setting
   jpa:
     show-sql: true
@@ -23,9 +20,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  #  thymeleaf:
-  #    prefix: classpath:/templates/
-  #    suffix: .html
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  sql:
+    init:
+      schema-locations: classpath:db/schema.sql
+      #      data-locations: classpath:db/data.sql
+      mode: always
   data:
     redis:
       port: 6666

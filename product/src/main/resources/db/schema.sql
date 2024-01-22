@@ -25,10 +25,10 @@ create table likes
 
 create table likes_member
 (
-    id        varchar(255) not null,
+    likes_member_id        varchar(255) not null,
     member_id varchar(255),
-    like_id   varchar(255),
-    primary key (id)
+    likes_id   varchar(255),
+    primary key (likes_member_id)
 ) engine = InnoDB;
 
 create table product

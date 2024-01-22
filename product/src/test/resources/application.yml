@@ -14,10 +14,7 @@ spring:
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
-    url: ENC(pHMxxASZrAc4eZiOR4l3a9bMuqxQW+jp6KBFQmYBM50/pW+ZKwU6fPeCJBueUHS/Q2J7D+1jenE=)
-    username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
-    password: ENC(8AvrvIm/Ria2OTgXu6tsqhToqOb0mI/I)
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL
   # JPA Setting
   jpa:
     show-sql: true
@@ -26,6 +23,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+  sql:
+    init:
+      encoding: UTF-8
+      schema-locations: classpath:db/schema.sql
+      #      data-locations: classpath:db/data.sql
+      mode: always
   kafka:
     bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
   #  thymeleaf:
@@ -35,9 +40,6 @@ spring:
     redis:
       port: 6666
       host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
-  sql:
-    init:
-      encoding: UTF-8
 
 management:
   endpoints:

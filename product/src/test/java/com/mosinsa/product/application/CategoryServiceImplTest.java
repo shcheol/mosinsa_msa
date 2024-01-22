@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Sql("classpath:test-init.sql")
+@Sql("classpath:db/test-init.sql")
 class CategoryServiceImplTest {
 
 	@Autowired

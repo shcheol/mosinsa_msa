@@ -1,7 +1,7 @@
 create table if not exists customer
 (
     customer_id varchar(255) not null,
-    login_id    varchar(255) unique ,
+    login_id    varchar(255) not null unique,
     password    varchar(255),
     name        varchar(255),
     email       varchar(255),
