@@ -48,3 +48,6 @@ create table stock
     remain bigint       not null,
     primary key (id)
 ) engine = InnoDB;
+
+show index from likes_member;
+ALTER TABLE likes_member ADD INDEX likes_member_index(likes_id, member_id);
