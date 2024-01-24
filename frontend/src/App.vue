@@ -71,4 +71,19 @@ div{
   background: white;
   border-radius: 8px; padding: 20px;
 }
+
+
+ tbody {
+   /* 테투리 css */
+   border: 4px dotted #009688;
+   border-radius: 20px;
+
+   /* 기본 css */
+   display: inline-block;
+   text-align: center;
+   padding: 20px 100px;
+   /*color: white;*/
+   background-color: white;
+ }
+
 </style>

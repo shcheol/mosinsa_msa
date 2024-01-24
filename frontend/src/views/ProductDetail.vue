@@ -31,7 +31,7 @@
       <tr>
         <td>좋아요</td>
         <td v-if="product!=null">{{ product.likes }}</td>
-        <button @click="likes">좋아요</button>
+        <button @click="likes(product.productId)">좋아요</button>
       </tr>
       </tbody>
     </table>
@@ -57,7 +57,7 @@ export default {
   mounted() {
     apiBoard.getProductDetails(this.$route.params.id)
         .then((response) => {
-          console.log('response' + response);
+          console.log(response);
           this.product = response.data.response;
         })
         .catch(function (e) {
@@ -76,7 +76,22 @@ export default {
     addCart(product) {
       this.$store.dispatch("addCart", product);
     },
-    likes() {
+    likes(productId) {
+      apiBoard.patchLikesProduct(localStorage.getItem("customerId"),productId)
+          .then((response) => {
+            console.log(response);
+            apiBoard.getProductDetails(productId)
+                .then((response) => {
+                  console.log(response);
+                  this.product = response.data.response;
+                })
+                .catch(function (e) {
+                  console.log(e);
+                });
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
     }
   }
 

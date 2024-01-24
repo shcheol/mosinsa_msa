@@ -2,8 +2,8 @@
   <div class="container">
     <h2>프로모션 목록</h2>
 
-    <div class="card mb-3" style="max-width: 540px;" v-for="(promotion) in promotions" :key="promotion">
-      <table class="table">
+    <div v-for="(promotion) in promotions" :key="promotion">
+      <table>
         <tbody>
         <tr>
           <td>프로모션 번호</td>

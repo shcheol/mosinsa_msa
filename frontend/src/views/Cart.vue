@@ -8,12 +8,9 @@
           </div>
           <div v-else v-for="(cp, idx) in $store.getters.getCartProducts" :key="cp">
 
-            <div>
-              <label><input type="checkbox" :id="idx" v-model="checked[idx]"/></label>
-<!--              <img src="../assets/logo.png"/>-->
+            <div class="cart-item">
+              <input type="checkbox" :id="idx" v-model="checked[idx]"/>
               <div>상품명: {{ cp.name }}</div>
-            </div>
-            <div>
               <div> 수량: {{ cp.quantity }}</div>
               <button @click="removeCart(cp)">-</button>
               <button @click="addCart(cp)">+</button>
@@ -44,12 +41,20 @@ export default {
   },
   methods: {
     orders() {
+      if (this.checked.length < 1){
+        alert("담은 상품이 없습니다.");
+        return;
+      }
       let orderProduct = this.$store.getters.getCartProducts.filter((cp,idx) => this.checked[idx]).map(cp => {
         return {
           productId: cp.productId, price: cp.price, quantity: cp.quantity
         }
       });
-
+      console.log(orderProduct);
+      if (orderProduct.length < 1){
+        alert("선택된 상품이 없습니다.");
+        return;
+      }
       this.$router.push({
         name: 'orderPage',
         state: {orderProduct: orderProduct}
@@ -65,3 +70,17 @@ export default {
 
 }
 </script>
+
+<style>
+.cart-item{
+  border: 4px dotted #009688;
+  border-radius: 20px;
+
+  /* 기본 css */
+  display: inline-block;
+  text-align: center;
+  padding: 20px 100px;
+  /*color: white;*/
+  background-color: white;
+}
+</style>

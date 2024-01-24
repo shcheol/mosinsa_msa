@@ -10,8 +10,20 @@ export default{
     getProducts: function (){
         return axios.get(BASE_URL + 'product-service/products')
     },
+    getProductsInCategory: function (categoryId){
+        return axios.get(BASE_URL + 'product-service/products?categoryId='+categoryId)
+    },
+    getLikesProducts: function (customerId){
+        return axios.get(BASE_URL + 'product-service/products/likes?customer='+customerId)
+    },
     getProductDetails: function (id){
         return axios.get(BASE_URL + 'product-service/products/'+id)
+    },
+    patchLikesProduct: function (customerId, productId){
+        return axios.patch(BASE_URL + 'product-service/products/'+productId+'/likes',{
+            "productId": productId,
+            "memberId": customerId
+        })
     },
     postOrders: function (customerId, myOrderProducts){
         return axios.post(BASE_URL + 'order-service/orders',{

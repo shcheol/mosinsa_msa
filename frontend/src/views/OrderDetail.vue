@@ -15,8 +15,8 @@
 
       <div v-if="order!=null">
         <table class="table">
-          <tbody>
           <div v-for="op in order.orderProducts" :key="op">
+            <tbody>
             <tr>
               <td>상품아이디</td>
               <td>{{ op.productId }}</td>
@@ -33,8 +33,8 @@
               <td>합계</td>
               <td>{{ op.amounts }}</td>
             </tr>
+            </tbody>
           </div>
-          </tbody>
         </table>
       </div>
       <tr>
@@ -60,7 +60,7 @@ export default {
   mounted() {
     apiBoard.getOrderDetails(this.$route.params.id)
         .then((response) => {
-          console.log('response' + response);
+          console.log(response);
           this.order = response.data.response;
         })
         .catch(function (e) {

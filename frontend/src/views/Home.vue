@@ -3,26 +3,21 @@
   <div class="container">
     <h2>카테고리</h2>
     <div>
-      <a>전체</a>
-      <div v-for="category in categories" :key="category">
-        <a @click="setCategoryId(category.categoryId)">{{ category.name }}</a>
-      </div>
+      <ul>
+        <li class="category" v-for="category in categories" :key="category"
+            @click="setCategoryId(category.categoryId)">
+          <div v-if="category.categoryId===-1">{{ category.name }}</div>
+          <div v-else>|{{ category.name }}</div>
+        </li>
+      </ul>
+
     </div>
-    <div class="card mb-3" style="max-width: 540px;" v-for="(product, i) in products" :key="product">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <a @click="productDetails(i)">{{ product.name }}
-            <!--            <img class="img-fluid rounded-start" src="../assets/logo.png" alt="../assets/logo.png" >-->
-          </a>
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
+    <ul v-for="(product, i) in products" :key="product">
+          <li class="item">
+            <p @click="productDetails(i)">{{ product.name }}</p>
             <p>가격 : {{ product.price }} 원</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </li>
+    </ul>
   </div>
 </template>
 
@@ -32,7 +27,11 @@ import apiBoard from '@/api/board'
 export default {
   data() {
     return {
-      categories: [],
+      categories: [{
+        categoryId: -1,
+        name: '전체'
+      }],
+      temp: [],
       categoryId: null,
       products: null,
       detail: null
@@ -41,8 +40,8 @@ export default {
   mounted() {
     apiBoard.getCategories()
         .then((response) => {
-          console.log(response.data);
-          this.categories = response.data;
+          this.temp = response.data;
+          Array.prototype.push.apply(this.categories, this.temp)
         })
         .catch(function (e) {
           console.log(e);
@@ -64,7 +63,27 @@ export default {
       })
     },
     setCategoryId(id) {
-      this.categoryId = id;
+      if (id === -1) {
+        apiBoard.getProducts()
+            .then((response) => {
+              console.log(response.data);
+              this.products = response.data.response.content;
+            })
+            .catch(function (e) {
+              console.log(e);
+            });
+      } else {
+
+        this.categoryId = id;
+        apiBoard.getProductsInCategory(id)
+            .then((response) => {
+              console.log(response.data);
+              this.products = response.data.response.content;
+            })
+            .catch(function (e) {
+              console.log(e);
+            });
+      }
     }
   }
 }
@@ -72,26 +91,26 @@ export default {
 
 <style scoped>
 
-body {
-  margin: 0
-}
 
 div {
   box-sizing: border-box;
 }
 
-.black-bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  padding: 20px;
+.item {
+  /* 테투리 css */
+  border: 4px dotted #009688;
+  border-radius: 20px;
+
+  /* 기본 css */
+  display: inline-block;
+  text-align: center;
+  padding: 20px 80px;
+  /*color: white;*/
+  background-color: white;
 }
 
-.white-bg {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
+.category {
+  display: inline-block;
 }
+
 </style>
