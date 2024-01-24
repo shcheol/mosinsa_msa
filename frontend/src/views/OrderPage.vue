@@ -18,7 +18,24 @@
         </tbody>
       </table>
     </div>
+    <div>
+      <button class="btn btn-primary" @click="myCoupons">쿠폰</button>
+      <p v-if="orderCoupon!=null"> {{orderCoupon}}</p>
+    </div>
+    <div>
       <button class="btn btn-primary" @click="orders(myOrderProducts)">주문하기</button>
+    </div>
+  </div>
+  <div class="black-bg" v-if="modalState">
+    <div class="white-bg">
+      <h4>쿠폰목록</h4>
+      <div class="card mb-3" style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
+        <p>{{coupon.discouponPolicy}}</p>
+        <button @click="useCoupon(coupon.couponId)">사용하기</button>
+      </div>
+
+      <button @click="modalState=!modalState">닫기</button>
+    </div>
   </div>
 </template>
 
@@ -26,24 +43,27 @@
 import apiBoard from '@/api/board'
 
 export default {
-  data(){
-    return{
+  data() {
+    return {
+      modalState: false,
       productId: null,
-      price:null,
+      price: null,
       quantity: null,
-      myOrderProducts: []
+      orderCoupon: null,
+      myOrderProducts: [],
+      coupons: []
     }
   },
   beforeCreate() {
-    if (localStorage.getItem("customerId")==null){
+    if (localStorage.getItem("customerId") == null) {
       alert('login이 필요합니다.')
-      this.$router.push({name:"login"})
+      this.$router.push({name: "login"})
     }
   },
   mounted() {
     this.myOrderProducts = history.state.orderProduct;
   },
-  methods : {
+  methods: {
     orders(orderProducts) {
       this.modalState = false;
       apiBoard.postOrders(localStorage.getItem("customerId"), orderProducts).then((response) => {
@@ -58,10 +78,44 @@ export default {
             console.log(e);
           });
     },
+    myCoupons() {
+      this.modalState=true;
+      apiBoard.getCoupons(localStorage.getItem("customerId"))
+          .then((response) => {
+            console.log(response);
+            this.coupons = response.data.filter(c => c.state === "ISSUED")
+                .filter(c => {
+                  let current = new Date();
+                  let duringDate = new Date(c.details.duringDate);
+                  console.log(duringDate);
+                  return current <= duringDate;
+                }).map(c => c);
+            console.log(this.coupons);
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
+    },
+    useCoupon(id) {
+      this.modalState=false;
+      this.orderCoupon = id;
+    }
   }
 }
 </script>
 
 <style scoped>
-
+div{
+  box-sizing: border-box;
+}
+.black-bg{
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  position: fixed; padding: 20px;
+}
+.white-bg{
+  width: 100%;
+  background: white;
+  border-radius: 8px; padding: 20px;
+}
 </style>

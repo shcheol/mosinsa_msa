@@ -2,7 +2,12 @@
   <div class="home"></div>
   <div class="container">
     <h2>카테고리</h2>
-
+    <div>
+      <a>전체</a>
+      <div v-for="category in categories" :key="category">
+        <a @click="setCategoryId(category.categoryId)">{{ category.name }}</a>
+      </div>
+    </div>
     <div class="card mb-3" style="max-width: 540px;" v-for="(product, i) in products" :key="product">
       <div class="row g-0">
         <div class="col-md-4">
@@ -27,11 +32,21 @@ import apiBoard from '@/api/board'
 export default {
   data() {
     return {
+      categories: [],
+      categoryId: null,
       products: null,
       detail: null
     }
   },
   mounted() {
+    apiBoard.getCategories()
+        .then((response) => {
+          console.log(response.data);
+          this.categories = response.data;
+        })
+        .catch(function (e) {
+          console.log(e);
+        });
     apiBoard.getProducts()
         .then((response) => {
           console.log(response.data);
@@ -47,6 +62,9 @@ export default {
         name: 'productDetails',
         params: {id: this.products[i].productId}
       })
+    },
+    setCategoryId(id) {
+      this.categoryId = id;
     }
   }
 }

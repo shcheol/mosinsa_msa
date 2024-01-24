@@ -4,6 +4,9 @@ import axios from "axios";
 const BASE_URL="/";
 
 export default{
+    getCategories: function (){
+        return axios.get(BASE_URL + 'product-service/category')
+    },
     getProducts: function (){
         return axios.get(BASE_URL + 'product-service/products')
     },
