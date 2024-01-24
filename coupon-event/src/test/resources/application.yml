@@ -4,7 +4,7 @@ spring:
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL
+    url: jdbc:h2:mem:coupondb;MODE=MySQL
     hikari:
       maximum-pool-size: 10
   # JPA Setting

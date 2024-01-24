@@ -7,8 +7,6 @@ drop table if exists likes_member;
 drop table if exists category;
 SET FOREIGN_KEY_CHECKS = 1;
 
-
-
 create table category
 (
     category_id varchar(255) not null,
@@ -28,6 +26,7 @@ create table likes_member
     likes_member_id        varchar(255) not null,
     member_id varchar(255),
     likes_id   varchar(255),
+    INDEX likes_member_index(likes_id, member_id),
     primary key (likes_member_id)
 ) engine = InnoDB;
 
@@ -48,6 +47,3 @@ create table stock
     remain bigint       not null,
     primary key (id)
 ) engine = InnoDB;
-
-show index from likes_member;
-ALTER TABLE likes_member ADD INDEX likes_member_index(likes_id, member_id);

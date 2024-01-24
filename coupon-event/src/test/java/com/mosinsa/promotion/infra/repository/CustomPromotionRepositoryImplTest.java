@@ -19,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-@Sql("classpath:test-init.sql")
+@Sql("classpath:db/test-init.sql")
 class CustomPromotionRepositoryImplTest {
 
 	@Autowired

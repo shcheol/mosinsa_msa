@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Sql("classpath:test-init.sql")
+@Sql("classpath:db/test-init.sql")
 class CouponIssuedEventHandlerTest {
 
 	@Autowired

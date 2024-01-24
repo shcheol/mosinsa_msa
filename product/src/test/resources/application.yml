@@ -14,7 +14,7 @@ spring:
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL
+    url: jdbc:h2:mem:productdb;MODE=MySQL
   # JPA Setting
   jpa:
     show-sql: true
@@ -27,7 +27,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
   sql:
     init:
-      encoding: UTF-8
       schema-locations: classpath:db/schema.sql
       #      data-locations: classpath:db/data.sql
       mode: always
