@@ -4,6 +4,8 @@ import com.mosinsa.promotion.dto.PromotionDto;
 import com.mosinsa.promotion.dto.QPromotionDto;
 import com.mosinsa.promotion.dto.PromotionSearchCondition;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,18 +28,23 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 	@Override
 	public Page<PromotionDto> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable) {
 
-		List<PromotionDto> fetch = queryFactory.select(new QPromotionDto(
-						promotion.promotionId,
-						promotion.title,
-						promotion.context,
-						promotion.quantity,
-						promotion.discountPolicy,
-						promotion.period
-				)).from(promotion)
+		List<PromotionDto> fetch = queryFactory.select(
+						new QPromotionDto(
+								promotion.promotionId,
+								promotion.title,
+								promotion.context,
+								promotion.quantity,
+								promotion.discountPolicy,
+								promotion.period
+						)
+				).from(promotion)
 				.where(
 						proceeding(condition.now(), condition.proceeding())
-				)
-				.offset(pageable.getOffset())
+				).orderBy(
+						new OrderSpecifier<>(Order.DESC, promotion.period.endDate),
+						new OrderSpecifier<>(Order.ASC, promotion.period.startDate),
+						new OrderSpecifier<>(Order.ASC, promotion.title)
+				).offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
 				.fetch();
 
@@ -64,6 +71,6 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 	}
 
 	private BooleanExpression proceeding(LocalDateTime now, boolean proceeding) {
-		return now!=null && proceeding?promotion.period.endDate.after(now).and(promotion.period.startDate.before(now)):null;
+		return now != null && proceeding ? promotion.period.endDate.after(now).and(promotion.period.startDate.before(now)) : null;
 	}
 }

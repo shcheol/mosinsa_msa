@@ -20,7 +20,7 @@
     </div>
     <div>
       <button class="btn btn-primary" @click="myCoupons">쿠폰</button>
-      <p v-if="orderCoupon!=null"> {{orderCoupon}}</p>
+      <p v-if="orderCoupon!=null"> {{ orderCoupon }}</p>
     </div>
     <div>
       <button class="btn btn-primary" @click="orders(myOrderProducts)">주문하기</button>
@@ -29,10 +29,13 @@
   <div class="black-bg" v-if="modalState">
     <div class="white-bg">
       <h4>쿠폰목록</h4>
-      <div class="card mb-3" style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
-        <p>{{coupon.discouponPolicy}}</p>
-        <button @click="useCoupon(coupon.couponId)">사용하기</button>
+      <div v-if="coupons.length > 0">
+        <div style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
+          <p>{{ coupon.discouponPolicy }}</p>
+          <button @click="useCoupon(coupon.couponId)">사용하기</button>
+        </div>
       </div>
+      <div v-else>사용가능한 쿠폰이 없습니다</div>
 
       <button @click="modalState=!modalState">닫기</button>
     </div>
@@ -79,7 +82,7 @@ export default {
           });
     },
     myCoupons() {
-      this.modalState=true;
+      this.modalState = true;
       apiBoard.getCoupons(localStorage.getItem("customerId"))
           .then((response) => {
             console.log(response);
@@ -97,7 +100,7 @@ export default {
           });
     },
     useCoupon(id) {
-      this.modalState=false;
+      this.modalState = false;
       this.orderCoupon = id;
     }
   }
@@ -105,17 +108,22 @@ export default {
 </script>
 
 <style scoped>
-div{
+div {
   box-sizing: border-box;
 }
-.black-bg{
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  position: fixed; padding: 20px;
+
+.black-bg {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  padding: 20px;
 }
-.white-bg{
+
+.white-bg {
   width: 100%;
   background: white;
-  border-radius: 8px; padding: 20px;
+  border-radius: 8px;
+  padding: 20px;
 }
 </style>

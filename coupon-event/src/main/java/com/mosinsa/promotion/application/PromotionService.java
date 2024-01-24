@@ -49,7 +49,6 @@ public class PromotionService {
 	}
 
 	public void joinPromotion(String memberId, String promotionId) {
-
 		Events.raise(new CouponIssuedEvent(memberId, promotionId));
 	}
 

@@ -2,6 +2,7 @@ package com.mosinsa.coupon.infra.repository;
 
 import com.mosinsa.coupon.domain.Coupon;
 import com.mosinsa.coupon.domain.CouponId;
+import com.mosinsa.coupon.domain.CouponState;
 import com.mosinsa.coupon.dto.CouponDto;
 import com.mosinsa.coupon.dto.CouponSearchCondition;
 import com.mosinsa.coupon.dto.QCouponDto;
@@ -16,6 +17,7 @@ import org.hibernate.LockOptions;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +33,10 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 		return queryFactory.select(
 						coupon.couponId
 				).from(coupon)
-				.where(promotionEq(condition.promotionId()),
+				.where(
+						promotionEq(condition.promotionId()),
 						notAssignedCoupon()
-				)
-				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+				).orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 				.fetch();
 
 
@@ -46,10 +48,10 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 				queryFactory.select(
 								coupon
 						).from(coupon)
-						.where(promotionEq(condition.promotionId()),
+						.where(
+								promotionEq(condition.promotionId()),
 								notAssignedCoupon()
-						)
-						.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+						).orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 						.limit(1)
 						.setLockMode(LockModeType.PESSIMISTIC_WRITE)
 						.setHint(
@@ -71,9 +73,12 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 								coupon.memberId,
 								coupon.state,
 								coupon.details
-						)).from(coupon)
-				.where(coupon.memberId.eq(memberId))
-				.orderBy(new OrderSpecifier<>(Order.DESC, coupon.issuedDate))
+						)
+				).from(coupon)
+				.where(
+						coupon.memberId.eq(memberId),
+						availableCoupons()
+				).orderBy(new OrderSpecifier<>(Order.DESC, coupon.issuedDate))
 				.fetch();
 	}
 
@@ -82,11 +87,23 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 		return queryFactory.select(
 						coupon.couponId
 				).from(coupon)
-				.where(promotionEq(condition.promotionId()),
-						assignedCoupon(condition.memberId()
-						))
-				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+				.where(
+						promotionEq(condition.promotionId()),
+						assignedCoupon(condition.memberId())
+				).orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 				.fetchFirst();
+	}
+
+	private BooleanExpression availableCoupons() {
+		return availableDate().and(availableState());
+	}
+
+	private BooleanExpression availableState() {
+		return coupon.state.eq(CouponState.ISSUED);
+	}
+
+	private BooleanExpression availableDate() {
+		return coupon.details.duringDate.after(LocalDateTime.now());
 	}
 
 	private BooleanExpression promotionEq(String promotionId) {
