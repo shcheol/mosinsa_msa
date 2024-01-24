@@ -31,7 +31,7 @@
       <h4>쿠폰목록</h4>
       <div v-if="coupons.length > 0">
         <div style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
-          <p>{{ coupon.discouponPolicy }}</p>
+          <p>{{ coupon.details.discountPolicy }}</p>
           <button @click="useCoupon(coupon.couponId)">사용하기</button>
         </div>
       </div>

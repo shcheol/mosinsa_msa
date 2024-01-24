@@ -63,12 +63,12 @@ export default {
         alert('login이 필요합니다.')
         this.$router.push({name: "login"})
       }
-      apiBoard.patchJoinPromotions(localStorage.getItem("customerId"), promotionId).then((response) => {
-        alert(response.data.result);
-      })
-          .catch(function (e) {
-            console.log(e);
-          });
+      apiBoard.patchJoinPromotions(localStorage.getItem("customerId"), promotionId)
+          .then((response) => {
+            alert(response.data.result);
+          }).catch(function (e) {
+        console.log(e);
+      });
     }
   }
 
