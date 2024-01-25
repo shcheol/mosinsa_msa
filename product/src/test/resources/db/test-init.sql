@@ -7,8 +7,14 @@ truncate table likes_member;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into category (category_id, name) values ('categoryId1','상의');
-insert into category (category_id, name) values ('categoryId2','하의');
+insert into category (category_id, name) values ('categoryId2','바지');
 insert into category (category_id, name) values ('categoryId3','아우터');
+insert into category (category_id, name) values ('categoryId4','신발');
+insert into category (category_id, name) values ('categoryId5','가방');
+insert into category (category_id, name) values ('categoryId6','양말');
+insert into category (category_id, name) values ('categoryId7','원피스');
+insert into category (category_id, name) values ('categoryId8','치마');
+insert into category (category_id, name) values ('categoryId9','모자');
 insert into stock values ('stockId1',10);
 insert into stock values ('stockId2',20);
 insert into stock values ('stockId3',30);

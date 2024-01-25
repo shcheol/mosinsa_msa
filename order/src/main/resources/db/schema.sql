@@ -11,6 +11,7 @@ create table if not exists orders
 (
     order_id           varchar(255) not null,
     customer_id        varchar(255),
+    coupon_id          varchar(255),
     status             varchar(255),
     total_price        integer,
     created_date       datetime(6),

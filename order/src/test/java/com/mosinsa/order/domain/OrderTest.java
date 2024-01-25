@@ -12,6 +12,7 @@ class OrderTest {
 	@Test
 	void create(){
 		List<OrderProduct> orderProducts = List.of();
-		assertThrows(OrderException.class, () -> Order.create("customerId", orderProducts));
+		assertThrows(OrderException.class,
+				() -> Order.create("customerId", "couponId1", "ISSUED", "TEN_PERCENTAGE", orderProducts));
 	}
 }

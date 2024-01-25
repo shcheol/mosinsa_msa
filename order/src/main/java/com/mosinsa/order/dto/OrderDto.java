@@ -12,6 +12,7 @@ public class OrderDto {
 
     String orderId;
     String customerId;
+	String couponId;
     int totalPrice;
     OrderStatus status;
     List<OrderProductDto> orderProducts = new ArrayList<>();
@@ -19,6 +20,7 @@ public class OrderDto {
     public OrderDto(Order order) {
         this.orderId = order.getId().getId();
         this.customerId = order.getCustomerId();
+		this.couponId = order.getCouponId();
         this.status = order.getStatus();
 		this.totalPrice = order.getTotalPrice().getValue();
 		this.orderProducts.addAll(

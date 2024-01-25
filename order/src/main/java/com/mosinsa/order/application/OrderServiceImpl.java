@@ -52,7 +52,13 @@ public class OrderServiceImpl implements OrderService {
 								new OrderProductRequest(op.getProductId(), op.getQuantity())
 						).toList()));
 
-		Order order = orderRepository.save(Order.create(request.getCustomerId(), orderProducts));
+		Order order = orderRepository.save(
+				Order.create(
+						request.getCustomerId(),
+						request.getCouponInfo().getCouponId(),
+						request.getCouponInfo().getState(),
+						request.getCouponInfo().getDiscountPolicy(),
+						orderProducts));
 		return new OrderDto(order);
 	}
 

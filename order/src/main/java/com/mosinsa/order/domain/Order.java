@@ -24,6 +24,8 @@ public class Order extends AuditingEntity {
 
 	private String customerId;
 
+	private String couponId;
+
 	@Convert(converter = MoneyConverter.class)
 	@Column(name = "total_price")
 	private Money totalPrice;
@@ -37,14 +39,42 @@ public class Order extends AuditingEntity {
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public static Order create(String customerId, List<OrderProduct> orderProducts) {
-
+	public static Order create(String customerId, String couponId, String state, String discountPolicy, List<OrderProduct> orderProducts) {
 		Order order = new Order();
 		order.id = OrderId.newId();
 		order.setCustomerId(customerId);
 		order.status = OrderStatus.PAYMENT_WAITING;
 		order.addOrderProducts(orderProducts);
+		order.addCoupon(couponId, state, discountPolicy);
 		return order;
+	}
+
+	private void addCoupon(String couponId, String state, String discountPolicy) {
+		if(!StringUtils.hasText(couponId)){
+			return;
+		}
+		verifyNotYetUsed(state);
+		this.couponId = couponId;
+		calculateTotalPriceWithCoupon(discountPolicy);
+	}
+
+	private void calculateTotalPriceWithCoupon(String discountPolicy) {
+
+		int discountPrice = DiscountPolicy.valueOf(discountPolicy).applyDiscountPrice(this.totalPrice.getValue());
+		int discountedTotalPrice = this.totalPrice.getValue() - discountPrice;
+		if(discountedTotalPrice < 0){
+			throw new InvalidCouponException();
+		}
+		this.totalPrice = Money.of(discountedTotalPrice);
+	}
+
+	private void verifyNotYetUsed(String state) {
+		if(!StringUtils.hasText(state)){
+			throw new InvalidCouponException();
+		}
+		if(!state.equals("ISSUED")){
+			throw new InvalidCouponException();
+		}
 	}
 
 

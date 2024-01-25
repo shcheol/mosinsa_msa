@@ -23,7 +23,8 @@ class OrderRepositoryTest {
 
 	@Test
 	void create() {
-		Order order = Order.create("customerId", List.of(OrderProduct.create("productId", 1000, 10)));
+		Order order = Order.create("customerId","couponId1", "ISSUED", "TEN_PERCENTAGE",
+				List.of(OrderProduct.create("productId", 1000, 10)));
 		Order saveOrder = repository.save(order);
 
 		assertThat(order).isEqualTo(saveOrder);

@@ -14,10 +14,12 @@ import java.util.List;
 public class CreateOrderRequest {
 
     String customerId;
+	CouponInfo couponInfo;
 	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
-    public CreateOrderRequest(String customerId, List<MyOrderProduct> myOrderProducts) {
+    public CreateOrderRequest(String customerId, CouponInfo couponInfo, List<MyOrderProduct> myOrderProducts) {
         this.customerId = customerId;
+		this.couponInfo = couponInfo;
         this.myOrderProducts.addAll(myOrderProducts);
 		valid();
     }
@@ -29,6 +31,14 @@ public class CreateOrderRequest {
 		if (myOrderProducts.isEmpty()){
 			throw new OrderException(OrderError.VALIDATION_ERROR);
 		}
+	}
+
+	@AllArgsConstructor
+	@Getter
+	public static class CouponInfo{
+		String couponId;
+		String discountPolicy;
+		String state;
 	}
 
 	@AllArgsConstructor
