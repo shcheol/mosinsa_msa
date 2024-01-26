@@ -20,15 +20,15 @@ class CategoryServiceImplTest {
 
 	@Test
 	void createCategory() {
-		assertThat(service.getCategoryList()).hasSize(3);
+		assertThat(service.getCategoryList()).hasSize(9);
 		CreateCategoryRequest request = new CreateCategoryRequest("신발");
 		service.createCategory(request);
-		assertThat(service.getCategoryList()).hasSize(4);
+		assertThat(service.getCategoryList()).hasSize(10);
 	}
 
 	@Test
 	void getCategoryList() {
 		List<String> strings = service.getCategoryList().stream().map(CategoryDto::name).toList();
-		assertThat(strings).contains("상의","하의","아우터");
+		assertThat(strings).contains("상의", "바지", "아우터", "신발", "가방", "양말", "원피스", "치마", "모자");
 	}
 }
