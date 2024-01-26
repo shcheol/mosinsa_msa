@@ -37,7 +37,7 @@ spring:
 #      data-locations: classpath:db/data.sql
       mode: always
   kafka:
-    bootstrap-servers: ENC(sJkMOYtFM5FygJ99wjDBApKl+j/KZbMJco0J+sY0EHY=)
+    bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
 
 logging:
   level:
