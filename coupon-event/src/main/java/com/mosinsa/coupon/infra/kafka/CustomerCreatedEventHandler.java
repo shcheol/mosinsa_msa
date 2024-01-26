@@ -13,7 +13,7 @@ public class CustomerCreatedEventHandler {
 
     private final CouponService couponService;
 
-    @KafkaListener(topics = "${mosinsa.topic.customer.create")
+    @KafkaListener(topics = "${mosinsa.topic.customer.create}")
     public void customerCreatedEvent(String message) throws JsonProcessingException {
         CustomerCreatedEvent customerCreatedEvent = new ObjectMapper().readValue(message, CustomerCreatedEvent.class);
 
