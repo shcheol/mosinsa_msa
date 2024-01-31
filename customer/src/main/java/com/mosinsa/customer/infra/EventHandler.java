@@ -17,7 +17,7 @@ public class EventHandler {
 	)
 	public void handle(CustomerCreatedEvent event) {
 		log.info("handle customer created event");
-		KafkaEvents.raise(event);
+		KafkaEvents.raise(event.customerId(), event);
 	}
 
 }

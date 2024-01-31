@@ -28,6 +28,20 @@ public class KafkaEvents {
         }
     }
 
+	public static void raise(String key, Object event) {
+		if (kafkaTemplate == null) {
+			log.info("kafkaTemplate is null");
+			return;
+		}
+		String topic = findTopic(event);
+		log.info("publish event topic {}", topic);
+		try {
+			kafkaTemplate.send(topic, key, new ObjectMapper().writeValueAsString(event));
+		} catch (JsonProcessingException e){
+			throw new IllegalStateException(e);
+		}
+	}
+
 	private static String findTopic(Object event) {
 		if (event instanceof CustomerCreatedEvent){
 			return "mosinsa-customer-create";
