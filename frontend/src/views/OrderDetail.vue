@@ -43,7 +43,7 @@
       </tr>
       </tbody>
     </table>
-
+    <button @click="cancelOrder(order.orderId)">취소</button>
     <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
   </div>
 </template>
@@ -66,6 +66,22 @@ export default {
         .catch(function (e) {
           console.log(e);
         });
+  },
+  methods: {
+    cancelOrder() {
+      apiBoard.cancelOrders(localStorage.getItem("customerId"), this.order.orderId).then((response) => {
+        console.log(response);
+        if (response.status === 200){
+          alert("주문이 취소되었습니다.")
+        } else{
+          alert("주문 취소 실패")
+        }
+      })
+          .catch(function (e) {
+            alert("주문 취소 실패")
+            console.log(e);
+          });
+    }
   }
 
 }

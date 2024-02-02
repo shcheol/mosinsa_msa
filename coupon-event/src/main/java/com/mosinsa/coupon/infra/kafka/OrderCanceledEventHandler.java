@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CustomerCreatedEventHandler {
+public class OrderCanceledEventHandler {
 
     private final CouponService couponService;
 
-    @KafkaListener(topics = "${mosinsa.topic.customer.create}")
-    public void customerCreatedEvent(String message) throws JsonProcessingException {
-        CustomerCreatedEvent customerCreatedEvent = new ObjectMapper().readValue(message, CustomerCreatedEvent.class);
+	@KafkaListener(topics = "${mosinsa.topic.order.cancel}")
+	public void orderCreatedEvent(String message) throws JsonProcessingException {
+		OrderCanceledEvent orderCreatedEvent = new ObjectMapper().readValue(message, OrderCanceledEvent.class);
 
-        couponService.createForNewMember(customerCreatedEvent.customerId());
-    }
+		couponService.rollbackCoupon(orderCreatedEvent.couponId());
+	}
 }

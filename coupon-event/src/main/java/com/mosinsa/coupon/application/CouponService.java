@@ -93,6 +93,12 @@ public class CouponService {
 				.useCoupon();
 	}
 
+	public void rollbackCoupon(String couponId) {
+		couponRepository.findById(CouponId.of(couponId))
+				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
+				.unUseCoupon();
+	}
+
 	public CouponDto findById(String couponId) {
 		return CouponDto.convert(
 				couponRepository.findById(CouponId.of(couponId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND)));

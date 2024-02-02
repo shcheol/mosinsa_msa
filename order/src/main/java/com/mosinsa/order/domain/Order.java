@@ -3,6 +3,7 @@ package com.mosinsa.order.domain;
 import com.mosinsa.order.common.event.Events;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
 import com.mosinsa.order.infra.kafka.OrderCreatedEvent;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -97,6 +98,7 @@ public class Order extends AuditingEntity {
 	public void cancelOrder() {
 		verifyNotYetShipped();
 		this.status = OrderStatus.CANCELED;
+		Events.raise(new OrderCanceledEvent(this.id.getId(), this.couponId));
 	}
 	private void verifyAtLeastOneOrderProducts(List<OrderProduct> orderProducts) {
 		if (orderProducts == null || orderProducts.isEmpty()){

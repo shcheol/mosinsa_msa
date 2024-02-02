@@ -59,6 +59,17 @@ public class Coupon {
 		this.state = CouponState.USED;
 	}
 
+	public void unUseCoupon() {
+		verifyUsedCoupon();
+		this.state = CouponState.ISSUED;
+	}
+
+	private void verifyUsedCoupon() {
+		if (this.state != CouponState.USED) {
+			throw new InvalidCouponStateException();
+		}
+	}
+
 	private void verifyCanUseState() {
 		if (this.state != CouponState.ISSUED) {
 			throw new InvalidCouponStateException();

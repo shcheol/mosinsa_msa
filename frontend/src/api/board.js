@@ -38,6 +38,18 @@ export default{
                 }
             })
     },
+    cancelOrders: function (customerId, orderId){
+        return axios.post(BASE_URL + 'order-service/orders/cancel',{
+                "customerId" : customerId,
+                "orderId" : orderId
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
     getOrders: function (id){
         return axios.get(BASE_URL + 'order-service/orders?customerId=' + id)
     },

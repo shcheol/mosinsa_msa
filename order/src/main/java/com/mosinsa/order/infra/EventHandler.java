@@ -1,6 +1,7 @@
 package com.mosinsa.order.infra;
 
 import com.mosinsa.order.infra.kafka.KafkaEvents;
+import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
 import com.mosinsa.order.infra.kafka.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,17 @@ public class EventHandler {
 			classes = OrderCreatedEvent.class,
 			phase = TransactionPhase.AFTER_COMMIT
 	)
-	public void handle(OrderCreatedEvent event) {
+	public void handleOrderCreate(OrderCreatedEvent event) {
 		log.info("handle OrderCreatedEvent");
+		KafkaEvents.raise(event.couponId(), event);
+	}
+
+	@TransactionalEventListener(
+			classes = OrderCanceledEvent.class,
+			phase = TransactionPhase.AFTER_COMMIT
+	)
+	public void handleOrderCancel(OrderCanceledEvent event) {
+		log.info("handle OrderCanceledEvent");
 		KafkaEvents.raise(event.couponId(), event);
 	}
 
