@@ -1,8 +1,8 @@
 <template>
 <div class="container">
     <h2>좋아요 목록</h2>
-  <div v-if="products === null">
-    장바구니에 담은 상품이 없습니다.
+  <div v-if="products === null || products.length <= 0">
+    찜한 상품이 없습니다.
   </div>
   <div v-else v-for="product in products" :key="product">
     <table class="table">

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="card mb-3" style="max-width: 540px;" v-for="(op) in myOrderProducts" :key="op">
+    <div v-for="(op) in myOrderProducts" :key="op">
       <table class="table">
         <tbody>
         <tr>

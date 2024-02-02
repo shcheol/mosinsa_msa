@@ -2,7 +2,7 @@
   <div class="container">
     <h2>쿠폰목록</h2>
 
-    <div class="card mb-3" style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
+    <div v-for="(coupon) in coupons" :key="coupon">
       <table class="table">
         <tbody>
         <tr>

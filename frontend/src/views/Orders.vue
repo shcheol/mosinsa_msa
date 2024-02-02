@@ -2,7 +2,7 @@
   <div class="container">
     <h2>주문목록</h2>
 
-    <div class="card mb-3" style="max-width: 540px;" v-for="(order) in orders" :key="order">
+    <div v-for="(order) in orders" :key="order">
       <table class="table">
         <tbody>
         <tr>

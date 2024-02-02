@@ -72,6 +72,11 @@ div{
   border-radius: 8px; padding: 20px;
 }
 
+table{
+  border:1px;
+  margin-left:auto;
+  margin-right:auto;
+}
 
  tbody {
    /* 테투리 css */
