@@ -87,6 +87,12 @@ public class CouponService {
 		return couponRepository.findMyCoupons(memberId);
 	}
 
+	public void usedCoupon(String couponId) {
+		couponRepository.findById(CouponId.of(couponId))
+				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
+				.useCoupon();
+	}
+
 	public CouponDto findById(String couponId) {
 		return CouponDto.convert(
 				couponRepository.findById(CouponId.of(couponId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND)));

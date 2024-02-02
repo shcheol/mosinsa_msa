@@ -49,7 +49,7 @@ feignclient:
 mosinsa:
   topic:
     order:
-      request: mosinsa-order
+      create: mosinsa-order-create
       cancel: mosinsa-order-cancel
       commit: mosinsa-order-commit
       rollback: mosinsa-order-rollback

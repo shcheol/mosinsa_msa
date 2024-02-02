@@ -48,5 +48,8 @@ server:
 
 mosinsa:
   topic:
+    order:
+      create: mosinsa-order-create
+      cancel: mosinsa-order-cancel
     customer:
       create: mosinsa-customer-create

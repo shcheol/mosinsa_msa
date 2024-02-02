@@ -25,10 +25,11 @@ export default{
             "memberId": customerId
         })
     },
-    postOrders: function (customerId, myOrderProducts){
+    postOrders: function (customerId, myOrderProducts, couponInfo){
         return axios.post(BASE_URL + 'order-service/orders',{
                 "customerId" : customerId,
-                "myOrderProducts":myOrderProducts
+                "myOrderProducts":myOrderProducts,
+                "couponInfo" : couponInfo
             },
             {
                 headers: {

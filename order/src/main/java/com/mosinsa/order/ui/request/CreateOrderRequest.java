@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Value
 public class CreateOrderRequest {
@@ -19,7 +20,7 @@ public class CreateOrderRequest {
 
     public CreateOrderRequest(String customerId, CouponInfo couponInfo, List<MyOrderProduct> myOrderProducts) {
         this.customerId = customerId;
-		this.couponInfo = couponInfo;
+		this.couponInfo = Optional.ofNullable(couponInfo).orElse(new CouponInfo("","",""));
         this.myOrderProducts.addAll(myOrderProducts);
 		valid();
     }

@@ -20,7 +20,7 @@
     </div>
     <div>
       <button class="btn btn-primary" @click="myCoupons">쿠폰</button>
-      <p v-if="orderCoupon!=null"> {{ orderCoupon }}</p>
+      <p v-if="orderCouponInfo!=null"> {{ orderCouponInfo.couponId }}</p>
     </div>
     <div>
       <button class="btn btn-primary" @click="orders(myOrderProducts)">주문하기</button>
@@ -32,7 +32,7 @@
       <div v-if="coupons.length > 0">
         <div style="max-width: 540px;" v-for="(coupon) in coupons" :key="coupon">
           <p>{{ coupon.details.discountPolicy }}</p>
-          <button @click="useCoupon(coupon.couponId)">사용하기</button>
+          <button @click="useCoupon(coupon.couponId, coupon.details.discountPolicy, coupon.state)">사용하기</button>
         </div>
       </div>
       <div v-else>사용가능한 쿠폰이 없습니다</div>
@@ -52,7 +52,7 @@ export default {
       productId: null,
       price: null,
       quantity: null,
-      orderCoupon: null,
+      orderCouponInfo: null,
       myOrderProducts: [],
       coupons: []
     }
@@ -69,7 +69,7 @@ export default {
   methods: {
     orders(orderProducts) {
       this.modalState = false;
-      apiBoard.postOrders(localStorage.getItem("customerId"), orderProducts).then((response) => {
+      apiBoard.postOrders(localStorage.getItem("customerId"), orderProducts, this.orderCouponInfo).then((response) => {
         console.log(response);
         this.$router.push({
           name: 'orderDetails',
@@ -99,9 +99,9 @@ export default {
             console.log(e);
           });
     },
-    useCoupon(id) {
+    useCoupon(id, discountPolicy, state) {
       this.modalState = false;
-      this.orderCoupon = id;
+      this.orderCouponInfo = { couponId: id, discountPolicy: discountPolicy, state: state};
     }
   }
 }

@@ -19,4 +19,11 @@ public class CustomerCreatedEventHandler {
 
         couponService.createForNewMember(customerCreatedEvent.customerId());
     }
+
+	@KafkaListener(topics = "${mosinsa.topic.order.create}")
+	public void orderCreatedEvent(String message) throws JsonProcessingException {
+		OrderCreatedEvent orderCreatedEvent = new ObjectMapper().readValue(message, OrderCreatedEvent.class);
+
+		couponService.usedCoupon(orderCreatedEvent.couponId());
+	}
 }
