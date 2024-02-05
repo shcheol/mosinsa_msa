@@ -45,6 +45,7 @@ feignclient:
     customer: 152.67.205.195:8000/customer-service
     order: 152.67.205.195:8000/order-service
     product: 152.67.205.195:8000/product-service
+    coupon: 152.67.205.195:8000/coupon-service
 
 mosinsa:
   topic:
