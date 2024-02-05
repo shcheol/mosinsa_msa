@@ -16,5 +16,6 @@ create table if not exists orders
     total_price        integer,
     created_date       datetime(6),
     last_modified_date datetime(6),
+    INDEX order_customer_idx(customer_id),
     primary key (order_id)
 ) engine = InnoDB;
