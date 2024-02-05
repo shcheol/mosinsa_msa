@@ -9,6 +9,10 @@
         <td v-if="order!=null">{{ order.orderId }}</td>
       </tr>
       <tr>
+        <td v-if="order!=null && order.couponId!=null">쿠폰</td>
+        <td v-if="order!=null && order.couponId!=null">{{ order.couponId }}</td>
+      </tr>
+      <tr>
         <td>결제 금액</td>
         <td v-if="order!=null">{{ order.totalPrice }}</td>
       </tr>

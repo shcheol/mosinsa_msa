@@ -29,6 +29,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 						dateBetween(condition.getStartDate(), condition.getEndDate()),
 						status(condition.getStatus())
 				)
+				.orderBy(order.createdDate.desc())
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize()).fetch();
 
@@ -41,7 +42,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 										customer(condition.getCustomerId()),
 										dateBetween(condition.getStartDate(), condition.getEndDate()),
 										status(condition.getStatus())
-								)::fetchOne);
+								).orderBy(order.createdDate.desc())::fetchOne);
 	}
 
 	private BooleanExpression dateBetween(LocalDateTime startDate, LocalDateTime endDate) {

@@ -69,7 +69,7 @@ export default {
   methods: {
     orders(orderProducts) {
       this.modalState = false;
-      apiBoard.postOrders(localStorage.getItem("customerId"), orderProducts, this.orderCouponInfo).then((response) => {
+      apiBoard.postOrders(localStorage.getItem("customerId"), orderProducts, this.orderCouponInfo.couponId).then((response) => {
         console.log(response);
         this.$router.push({
           name: 'orderDetails',
