@@ -7,6 +7,7 @@ import com.mosinsa.coupon.domain.Coupon;
 import com.mosinsa.coupon.domain.CouponDetails;
 import com.mosinsa.coupon.domain.DiscountPolicy;
 import com.mosinsa.coupon.dto.CouponDto;
+import com.mosinsa.coupon.ui.response.CouponResponse;
 import com.mosinsa.promotion.domain.PromotionId;
 import com.mosinsa.promotion.dto.JoinPromotionRequest;
 import org.junit.jupiter.api.AfterEach;
@@ -66,6 +67,7 @@ class CouponControllerTest {
 		);
 		coupon.issuedCoupon("memberId");
 		CouponDto couponDto = CouponDto.convert(coupon);
+		CouponResponse couponResponse = new CouponResponse(couponDto);
 
 		when(couponService.findById(any()))
 				.thenReturn(couponDto);
