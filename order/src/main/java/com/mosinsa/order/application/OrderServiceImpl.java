@@ -5,6 +5,7 @@ import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.domain.Order;
 import com.mosinsa.order.domain.OrderId;
 import com.mosinsa.order.domain.OrderProduct;
+import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
 import com.mosinsa.order.infra.feignclient.*;
 import com.mosinsa.order.infra.repository.OrderRepository;
@@ -17,13 +18,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -38,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public OrderDto order(Map<String, Collection<String>> headers, CreateOrderRequest request) {
+	public OrderDetailDto order(Map<String, Collection<String>> headers, CreateOrderRequest request) {
 
 		List<OrderProduct> orderProducts = request.getMyOrderProducts().stream().map(
 				myOrderProduct -> OrderProduct.create(
@@ -71,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 							orderProducts));
 		}
 
-		return new OrderDto(order);
+		return new OrderDetailDto(order);
 	}
 
 	@Override
@@ -98,8 +97,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDto getOrderDetails(String orderId) {
-		return new OrderDto(orderRepository.findById(OrderId.of(orderId))
+	public OrderDetailDto getOrderDetails(String orderId) {
+		return new OrderDetailDto(orderRepository.findById(OrderId.of(orderId))
 				.orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND)));
 	}
 

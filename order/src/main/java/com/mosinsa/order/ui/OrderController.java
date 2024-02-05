@@ -3,6 +3,7 @@ package com.mosinsa.order.ui;
 import com.mosinsa.order.application.OrderService;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
@@ -50,7 +51,7 @@ public class OrderController {
 		if (!StringUtils.hasText(orderId)) {
 			throw new OrderException(OrderError.VALIDATION_ERROR);
 		}
-		OrderDto orderDto = orderService.getOrderDetails(orderId);
+		OrderDetailDto orderDto = orderService.getOrderDetails(orderId);
 		return GlobalResponseEntity.success(orderDto);
 	}
 
@@ -58,7 +59,7 @@ public class OrderController {
 	@PostMapping
 	public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
-		OrderDto orderDto = orderService.order(getAuthMap(request), orderRequest);
+		OrderDetailDto orderDto = orderService.order(getAuthMap(request), orderRequest);
 		return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
 	}
 

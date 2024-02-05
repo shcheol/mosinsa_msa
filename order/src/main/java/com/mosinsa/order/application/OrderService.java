@@ -1,5 +1,6 @@
 package com.mosinsa.order.application;
 
+import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
@@ -13,12 +14,12 @@ import java.util.Map;
 
 public interface OrderService {
 
-	OrderDto order(Map<String, Collection<String>> headers, CreateOrderRequest request);
+	OrderDetailDto order(Map<String, Collection<String>> headers, CreateOrderRequest request);
 
 	void cancelOrder(Map<String, Collection<String>> headers, CancelOrderRequest request);
 
 	Page<OrderDto> findMyOrdersByCondition(SearchCondition condition, Pageable pageable);
 
-	OrderDto getOrderDetails(String orderId);
+	OrderDetailDto getOrderDetails(String orderId);
 
 }
