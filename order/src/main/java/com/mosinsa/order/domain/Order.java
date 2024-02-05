@@ -42,24 +42,35 @@ public class Order extends AuditingEntity {
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public static Order create(String customerId, String couponId, String state, String discountPolicy, List<OrderProduct> orderProducts) {
+	public static Order create(String customerId, List<OrderProduct> orderProducts) {
 		Order order = new Order();
 		order.id = OrderId.newId();
 		order.setCustomerId(customerId);
 		order.status = OrderStatus.PAYMENT_WAITING;
 		order.addOrderProducts(orderProducts);
-		order.addCoupon(couponId, state, discountPolicy);
-		Events.raise(new OrderCreatedEvent(order.id.getId(), order.couponId));
 		return order;
 	}
 
-	private void addCoupon(String couponId, String state, String discountPolicy) {
+	public static Order create(String customerId, String couponId, String discountPolicy, boolean available, List<OrderProduct> orderProducts) {
+		Order order = new Order();
+		order.id = OrderId.newId();
+		order.setCustomerId(customerId);
+		order.status = OrderStatus.PAYMENT_WAITING;
+		order.addOrderProducts(orderProducts);
+		order.addCoupon(couponId, discountPolicy, available);
+		return order;
+	}
+
+	private void addCoupon(String couponId, String discountPolicy, boolean available) {
 		if(!StringUtils.hasText(couponId)){
 			return;
 		}
-		verifyNotYetUsed(state);
+		if (!available){
+			throw new InvalidCouponException();
+		}
 		this.couponId = couponId;
 		calculateTotalPriceWithCoupon(discountPolicy);
+		Events.raise(new OrderCreatedEvent(this.id.getId(), this.couponId));
 	}
 
 	private void calculateTotalPriceWithCoupon(String discountPolicy) {
@@ -71,16 +82,6 @@ public class Order extends AuditingEntity {
 		}
 		this.totalPrice = Money.of(discountedTotalPrice);
 	}
-
-	private void verifyNotYetUsed(String state) {
-		if(!StringUtils.hasText(state)){
-			throw new InvalidCouponException();
-		}
-		if(!state.equals("ISSUED")){
-			throw new InvalidCouponException();
-		}
-	}
-
 
 	private void setCustomerId(String customerId) {
 		if (!StringUtils.hasText(customerId)){

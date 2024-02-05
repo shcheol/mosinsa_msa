@@ -5,6 +5,7 @@ import com.mosinsa.coupon.application.CouponService;
 import com.mosinsa.coupon.domain.CouponIssuedEvent;
 import com.mosinsa.coupon.dto.CouponDto;
 import com.mosinsa.coupon.ui.request.CreateCouponRequest;
+import com.mosinsa.coupon.ui.response.CouponResponse;
 import com.mosinsa.promotion.dto.JoinPromotionRequest;
 import com.mosinsa.promotion.dto.JoinResult;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,10 @@ public class CouponController {
     private final CouponService couponService;
 
     @GetMapping("/coupons/{couponId}")
-    public ResponseEntity<CouponDto> details(@PathVariable("couponId") String couponId) {
+    public ResponseEntity<CouponResponse> details(@PathVariable("couponId") String couponId) {
 
 		CouponDto findCoupon = couponService.findById(couponId);
-		return ResponseEntity.ok(findCoupon);
+		return ResponseEntity.ok(new CouponResponse(findCoupon));
     }
 
 	@GetMapping("/coupons/my/{memberId}")

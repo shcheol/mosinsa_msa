@@ -17,7 +17,7 @@ public interface ProductClient {
 							   @PathVariable(value = "productId") String productId);
 
 	@PostMapping("/products/order")
-	ProductResponse orderProducts(@RequestHeader Map<String, Collection<String>> headers,
+	void orderProducts(@RequestHeader Map<String, Collection<String>> headers,
 								  @RequestBody OrderProductRequests request);
 
 	@PostMapping("/products/cancel")

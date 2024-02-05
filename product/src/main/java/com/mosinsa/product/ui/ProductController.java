@@ -60,8 +60,8 @@ public class ProductController {
 
 	@PostMapping("/order")
 	public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request){
-		System.out.println(request);
 
+		log.info("orderProductRequests {}", request);
 		productService.orderProduct(request.orderProductRequests());
 
 		return ResponseEntity.ok().build();

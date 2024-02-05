@@ -9,18 +9,17 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Value
 public class CreateOrderRequest {
 
     String customerId;
-	CouponInfo couponInfo;
+	String couponId;
 	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
-    public CreateOrderRequest(String customerId, CouponInfo couponInfo, List<MyOrderProduct> myOrderProducts) {
+    public CreateOrderRequest(String customerId, String couponId, List<MyOrderProduct> myOrderProducts) {
         this.customerId = customerId;
-		this.couponInfo = Optional.ofNullable(couponInfo).orElse(new CouponInfo("","",""));
+		this.couponId = couponId;
         this.myOrderProducts.addAll(myOrderProducts);
 		valid();
     }
@@ -32,14 +31,6 @@ public class CreateOrderRequest {
 		if (myOrderProducts.isEmpty()){
 			throw new OrderException(OrderError.VALIDATION_ERROR);
 		}
-	}
-
-	@AllArgsConstructor
-	@Getter
-	public static class CouponInfo{
-		String couponId;
-		String discountPolicy;
-		String state;
 	}
 
 	@AllArgsConstructor

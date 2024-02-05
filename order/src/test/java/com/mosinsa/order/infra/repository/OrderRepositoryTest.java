@@ -23,7 +23,7 @@ class OrderRepositoryTest {
 
 	@Test
 	void create() {
-		Order order = Order.create("customerId","couponId1", "ISSUED", "TEN_PERCENTAGE",
+		Order order = Order.create("customerId","couponId1", "TEN_PERCENTAGE", true,
 				List.of(OrderProduct.create("productId", 1000, 10)));
 		Order saveOrder = repository.save(order);
 

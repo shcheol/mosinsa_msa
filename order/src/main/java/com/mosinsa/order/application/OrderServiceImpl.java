@@ -33,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
 	private final OrderRepository orderRepository;
 	private final ProductClient productClient;
+	private final CouponClient couponClient;
 
 
 	@Override
@@ -52,13 +53,24 @@ public class OrderServiceImpl implements OrderService {
 								new OrderProductRequest(op.getProductId(), op.getQuantity())
 						).toList()));
 
-		Order order = orderRepository.save(
-				Order.create(
-						request.getCustomerId(),
-						request.getCouponInfo().getCouponId(),
-						request.getCouponInfo().getState(),
-						request.getCouponInfo().getDiscountPolicy(),
-						orderProducts));
+		String couponId = request.getCouponId();
+		Order order = null;
+		if (StringUtils.hasText(couponId)) {
+			CouponResponse coupon = couponClient.getCoupon(headers, couponId);
+			order = orderRepository.save(
+					Order.create(
+							request.getCustomerId(),
+							coupon.couponId(),
+							coupon.discountPolicy(),
+							coupon.available(),
+							orderProducts));
+		} else {
+			order = orderRepository.save(
+					Order.create(
+							request.getCustomerId(),
+							orderProducts));
+		}
+
 		return new OrderDto(order);
 	}
 
@@ -67,7 +79,6 @@ public class OrderServiceImpl implements OrderService {
 	public void cancelOrder(Map<String, Collection<String>> headers, CancelOrderRequest request) {
 		Order findOrder = orderRepository.findById(OrderId.of(request.getOrderId()))
 				.orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
-		Assert.isTrue(Objects.equals(findOrder.getCustomerId(), request.getCustomerId()), "주문한 고객과 동일한 고객이 취소해야합니다.");
 
 		productClient.cancelOrderProducts(headers,
 				new CancelOrderProductRequests(
