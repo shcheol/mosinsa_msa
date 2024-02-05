@@ -18,15 +18,16 @@
       </tr>
       <tr>
         <td>상태</td>
-        <td v-if="coupon!=null">{{ coupon.state }}</td>
+        <td v-if="coupon!=null && coupon.available">사용가능</td>
+        <td v-if="coupon!=null && !coupon.available">사용불가</td>
       </tr>
       <tr>
         <td>만료기간</td>
-        <td v-if="coupon!=null">{{ coupon.details.duringDate }}</td>
+        <td v-if="coupon!=null">{{ coupon.duringDate }}</td>
       </tr>
       <tr>
         <td>할인률</td>
-        <td v-if="coupon!=null">{{ coupon.details.discountPolicy }}</td>
+        <td v-if="coupon!=null">{{ coupon.discountPolicy }}</td>
       </tr>
       </tbody>
     </table>
