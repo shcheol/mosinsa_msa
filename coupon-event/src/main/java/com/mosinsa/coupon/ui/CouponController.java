@@ -31,6 +31,14 @@ public class CouponController {
 		return ResponseEntity.ok(new CouponResponse(findCoupon));
     }
 
+	@GetMapping("/coupons/{couponId}")
+	public ResponseEntity<JoinResult> useCoupon(@PathVariable("couponId") String couponId) {
+
+		couponService.usedCoupon(couponId);
+
+		return ResponseEntity.ok().build();
+	}
+
 	@GetMapping("/coupons/my/{memberId}")
 	public ResponseEntity<List<CouponDto>> myCoupons(@PathVariable("memberId") String memberId) {
 

@@ -5,12 +5,14 @@ import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.domain.Order;
 import com.mosinsa.order.domain.OrderId;
 import com.mosinsa.order.domain.OrderProduct;
+import com.mosinsa.order.dto.CreateOrderDto;
 import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.infra.feignclient.*;
+import com.mosinsa.order.infra.feignclient.CancelOrderProductRequest;
+import com.mosinsa.order.infra.feignclient.CancelOrderProductRequests;
+import com.mosinsa.order.infra.feignclient.ProductClient;
 import com.mosinsa.order.infra.repository.OrderRepository;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
-import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,45 +34,35 @@ public class OrderServiceImpl implements OrderService {
 
 	private final OrderRepository orderRepository;
 	private final ProductClient productClient;
-	private final CouponClient couponClient;
 
 
 	@Override
 	@Transactional
-	public OrderDetailDto order(Map<String, Collection<String>> headers, CreateOrderRequest request) {
+	public OrderDetailDto order(CreateOrderDto createOrderDto) {
 
-		List<OrderProduct> orderProducts = request.getMyOrderProducts().stream().map(
+		List<OrderProduct> orderProducts = createOrderDto.getMyOrderProducts().stream().map(
 				myOrderProduct -> OrderProduct.create(
 						myOrderProduct.getProductId(),
 						myOrderProduct.getPrice(),
 						myOrderProduct.getQuantity())
 		).toList();
 
-		productClient.orderProducts(headers,
-				new OrderProductRequests(
-						orderProducts.stream().map(op ->
-								new OrderProductRequest(op.getProductId(), op.getQuantity())
-						).toList()));
-
-		String couponId = request.getCouponId();
-		Order order = null;
-		if (StringUtils.hasText(couponId)) {
-			CouponResponse coupon = couponClient.getCoupon(headers, couponId);
-			order = orderRepository.save(
-					Order.create(
-							request.getCustomerId(),
-							coupon.couponId(),
-							coupon.discountPolicy(),
-							coupon.available(),
-							orderProducts));
-		} else {
-			order = orderRepository.save(
-					Order.create(
-							request.getCustomerId(),
-							orderProducts));
+		if (createOrderDto.isAvailable()) {
+			return new OrderDetailDto(
+					orderRepository.save(
+							Order.create(
+									createOrderDto.getCustomerId(),
+									createOrderDto.getCouponId(),
+									createOrderDto.getDiscountPolicy(),
+									createOrderDto.isAvailable(),
+									orderProducts)));
 		}
 
-		return new OrderDetailDto(order);
+		return new OrderDetailDto(
+				orderRepository.save(
+						Order.create(
+								createOrderDto.getCustomerId(),
+								orderProducts)));
 	}
 
 	@Override

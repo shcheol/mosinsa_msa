@@ -15,4 +15,8 @@ public interface CouponClient {
 	CouponResponse getCoupon(@RequestHeader Map<String, Collection<String>> headers,
 							   @PathVariable(value = "couponId") String couponId);
 
+	@PatchMapping("/coupons/{couponId}")
+	CouponResponse useCoupon(@RequestHeader Map<String, Collection<String>> headers,
+							 @PathVariable(value = "couponId") String couponId);
+
 }

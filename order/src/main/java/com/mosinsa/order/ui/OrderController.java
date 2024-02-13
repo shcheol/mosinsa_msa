@@ -1,10 +1,15 @@
 package com.mosinsa.order.ui;
 
+import com.mosinsa.order.application.CouponCommandService;
+import com.mosinsa.order.application.CouponQueryService;
 import com.mosinsa.order.application.OrderService;
+import com.mosinsa.order.application.ProductCommandService;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.dto.CreateOrderDto;
 import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
+import com.mosinsa.order.infra.feignclient.CouponResponse;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
@@ -38,6 +43,12 @@ public class OrderController {
 
 	private final OrderService orderService;
 
+	private final CouponQueryService couponQueryService;
+
+	private final CouponCommandService couponCommandService;
+
+	private final ProductCommandService productCommandService;
+
 
 	@GetMapping
 	public ResponseEntity<BaseResponse> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
@@ -59,8 +70,25 @@ public class OrderController {
 	@PostMapping
 	public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
-		OrderDetailDto orderDto = orderService.order(getAuthMap(request), orderRequest);
-		return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
+		Map<String, Collection<String>> authMap = getAuthMap(request);
+		CouponResponse coupon = couponQueryService.getCoupon(authMap, orderRequest.getCouponId());
+		productCommandService.orderProduct(authMap, orderRequest);
+
+		CreateOrderDto createOrderDto = new CreateOrderDto(
+				orderRequest.getCustomerId(),
+				coupon.couponId(),
+				coupon.discountPolicy(),
+				coupon.available(),
+				orderRequest.getMyOrderProducts());
+		try {
+			OrderDetailDto orderDto = orderService.order(createOrderDto);
+			couponCommandService.useCoupon(authMap, coupon.couponId());
+			return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+//			throw new OrderRollbackException(e);
+		}
+
 	}
 
 	@PostMapping("/cancel")
