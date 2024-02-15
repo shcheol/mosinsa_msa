@@ -11,6 +11,7 @@ import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
 import com.mosinsa.order.infra.feignclient.CouponResponse;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
+import com.mosinsa.order.infra.feignclient.SimpleCouponResponse;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -71,7 +72,7 @@ public class OrderController {
 	public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
 		Map<String, Collection<String>> authMap = getAuthMap(request);
-		CouponResponse coupon = couponQueryService.getCoupon(authMap, orderRequest.getCouponId());
+		SimpleCouponResponse coupon = couponQueryService.getCoupon(authMap, orderRequest.getCouponId());
 		productCommandService.orderProduct(authMap, orderRequest);
 
 		CreateOrderDto createOrderDto = new CreateOrderDto(
