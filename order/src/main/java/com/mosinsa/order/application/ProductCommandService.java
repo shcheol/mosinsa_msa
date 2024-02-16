@@ -1,8 +1,7 @@
 package com.mosinsa.order.application;
 
-import com.mosinsa.order.infra.feignclient.OrderProductRequest;
-import com.mosinsa.order.infra.feignclient.OrderProductRequests;
-import com.mosinsa.order.infra.feignclient.ProductClient;
+import com.mosinsa.order.dto.OrderDetailDto;
+import com.mosinsa.order.infra.feignclient.*;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,4 +23,12 @@ public class ProductCommandService {
 						).toList()));
 	}
 
+
+	public void cancelOrderProduct(Map<String, Collection<String>> headers, OrderDetailDto orderDetailDto){
+		productClient.cancelOrderProducts(headers,
+				new CancelOrderProductRequests(
+						orderDetailDto.getOrderProducts().stream().map(op ->
+								new CancelOrderProductRequest(op.getProductId(), op.getQuantity())
+						).toList()));
+	}
 }

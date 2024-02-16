@@ -99,7 +99,7 @@ public class Order extends AuditingEntity {
 	public void cancelOrder() {
 		verifyNotYetShipped();
 		this.status = OrderStatus.CANCELED;
-		Events.raise(new OrderCanceledEvent(this.id.getId(), this.couponId));
+//		Events.raise(new OrderCanceledEvent(this.id.getId(), this.couponId));
 	}
 	private void verifyAtLeastOneOrderProducts(List<OrderProduct> orderProducts) {
 		if (orderProducts == null || orderProducts.isEmpty()){

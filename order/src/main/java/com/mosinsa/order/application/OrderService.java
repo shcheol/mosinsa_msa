@@ -16,7 +16,7 @@ public interface OrderService {
 
 	OrderDetailDto order(CreateOrderDto createOrderDto);
 
-	void cancelOrder(Map<String, Collection<String>> headers, CancelOrderRequest request);
+	OrderDetailDto cancelOrder(CancelOrderRequest request);
 
 	Page<OrderDto> findMyOrdersByCondition(SearchCondition condition, Pageable pageable);
 

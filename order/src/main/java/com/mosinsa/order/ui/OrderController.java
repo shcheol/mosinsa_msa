@@ -6,12 +6,11 @@ import com.mosinsa.order.application.OrderService;
 import com.mosinsa.order.application.ProductCommandService;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.common.ex.OrderRollbackException;
 import com.mosinsa.order.dto.CreateOrderDto;
 import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.infra.feignclient.CouponResponse;
-import com.mosinsa.order.infra.feignclient.HeaderConst;
-import com.mosinsa.order.infra.feignclient.SimpleCouponResponse;
+import com.mosinsa.order.infra.feignclient.*;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -83,11 +82,10 @@ public class OrderController {
 				orderRequest.getMyOrderProducts());
 		try {
 			OrderDetailDto orderDto = orderService.order(createOrderDto);
-			couponCommandService.useCoupon(authMap, coupon.couponId());
+			couponCommandService.useCoupon(authMap, orderDto.getCouponId());
 			return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
-//			throw new OrderRollbackException(e);
+			throw new OrderRollbackException(e);
 		}
 
 	}
@@ -95,7 +93,10 @@ public class OrderController {
 	@PostMapping("/cancel")
 	public ResponseEntity<BaseResponse> cancelOrders(@RequestBody CancelOrderRequest cancelRequest, HttpServletRequest request) {
 
-		orderService.cancelOrder(getAuthMap(request), cancelRequest);
+		Map<String, Collection<String>> authMap = getAuthMap(request);
+		OrderDetailDto cancelOrder = orderService.cancelOrder(cancelRequest);
+		productCommandService.cancelOrderProduct(authMap, cancelOrder);
+
 		return GlobalResponseEntity.success(cancelRequest.getOrderId());
 	}
 

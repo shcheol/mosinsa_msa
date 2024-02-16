@@ -8,9 +8,6 @@ import com.mosinsa.order.domain.OrderProduct;
 import com.mosinsa.order.dto.CreateOrderDto;
 import com.mosinsa.order.dto.OrderDetailDto;
 import com.mosinsa.order.dto.OrderDto;
-import com.mosinsa.order.infra.feignclient.CancelOrderProductRequest;
-import com.mosinsa.order.infra.feignclient.CancelOrderProductRequests;
-import com.mosinsa.order.infra.feignclient.ProductClient;
 import com.mosinsa.order.infra.repository.OrderRepository;
 import com.mosinsa.order.ui.request.CancelOrderRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -22,19 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
 	private final OrderRepository orderRepository;
-	private final ProductClient productClient;
-
 
 	@Override
 	@Transactional
@@ -67,17 +59,11 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public void cancelOrder(Map<String, Collection<String>> headers, CancelOrderRequest request) {
+	public OrderDetailDto cancelOrder(CancelOrderRequest request) {
 		Order findOrder = orderRepository.findById(OrderId.of(request.getOrderId()))
 				.orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
-
-		productClient.cancelOrderProducts(headers,
-				new CancelOrderProductRequests(
-						findOrder.getOrderProducts().stream().map(op ->
-								new CancelOrderProductRequest(op.getProductId(), op.getQuantity())
-						).toList()));
-
 		findOrder.cancelOrder();
+		return new OrderDetailDto(findOrder);
 	}
 
 	@Override
