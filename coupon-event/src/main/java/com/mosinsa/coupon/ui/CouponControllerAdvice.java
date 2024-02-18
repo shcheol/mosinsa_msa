@@ -1,8 +1,8 @@
-package com.mosinsa.order.ui;
+package com.mosinsa.coupon.ui;
 
-import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.ui.response.BaseResponse;
-import com.mosinsa.order.ui.response.GlobalResponseEntity;
+import com.mosinsa.common.exception.CouponException;
+import com.mosinsa.coupon.ui.response.BaseResponse;
+import com.mosinsa.coupon.ui.response.GlobalResponseEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @ControllerAdvice
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderControllerAdvice {
+public class CouponControllerAdvice {
 
-	@ExceptionHandler(OrderException.class)
+	@ExceptionHandler(CouponException.class)
 	@ResponseBody
-	public static ResponseEntity<BaseResponse> orderExceptionHandler(OrderException exception) {
+	public static ResponseEntity<BaseResponse> couponExceptionHandler(CouponException exception) {
 		log.error("response error message : {}", exception.getError().getMessage(), exception);
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}

@@ -1,8 +1,5 @@
-package com.mosinsa.order.application;
+package com.mosinsa.order.infra.feignclient.coupon;
 
-import com.mosinsa.order.domain.InvalidCouponException;
-import com.mosinsa.order.infra.feignclient.CouponClient;
-import com.mosinsa.order.infra.feignclient.SimpleCouponResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,17 +11,24 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CouponQueryService {
+public class CouponCommandService {
 
 	private final CouponClient couponClient;
 
-	public SimpleCouponResponse getCoupon(Map<String, Collection<String>> headers, String couponId) {
-
+	public void useCoupon(Map<String, Collection<String>> headers, String couponId){
 		if (!inputValidCheck(couponId)) {
 			log.debug("order without coupon");
-			return new SimpleCouponResponse("", "", false);
+			return;
 		}
-		return SimpleCouponResponse.of(couponClient.getCoupon(headers, couponId));
+		couponClient.useCoupon(headers, couponId);
+	}
+
+	public void cancelCoupon(Map<String, Collection<String>> headers, String couponId){
+		if (!inputValidCheck(couponId)) {
+			log.debug("no cancel coupon");
+			return;
+		}
+		couponClient.cancelCoupon(headers, couponId);
 	}
 
 	private boolean inputValidCheck(String couponId) {

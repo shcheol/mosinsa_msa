@@ -33,11 +33,4 @@ public class CreateOrderRequest {
 		}
 	}
 
-	@AllArgsConstructor
-	@Getter
-	public static class MyOrderProduct{
-		String productId;
-		Integer price;
-		Integer quantity;
-	}
 }

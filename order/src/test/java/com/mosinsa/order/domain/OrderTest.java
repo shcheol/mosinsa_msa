@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OrderTest {
 
@@ -13,6 +13,6 @@ class OrderTest {
 	void create(){
 		List<OrderProduct> orderProducts = List.of();
 		assertThrows(OrderException.class,
-				() -> Order.create("customerId", "couponId1", "TEN_PERCENTAGE",true, orderProducts));
+				() -> Order.create("customerId",  orderProducts));
 	}
 }

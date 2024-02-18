@@ -51,17 +51,7 @@ public class Order extends AuditingEntity {
 		return order;
 	}
 
-	public static Order create(String customerId, String couponId, String discountPolicy, boolean available, List<OrderProduct> orderProducts) {
-		Order order = new Order();
-		order.id = OrderId.newId();
-		order.setCustomerId(customerId);
-		order.status = OrderStatus.PAYMENT_WAITING;
-		order.addOrderProducts(orderProducts);
-		order.addCoupon(couponId, discountPolicy, available);
-		return order;
-	}
-
-	private void addCoupon(String couponId, String discountPolicy, boolean available) {
+	public void useCoupon(String couponId, String discountPolicy, boolean available) {
 		if(!StringUtils.hasText(couponId)){
 			return;
 		}

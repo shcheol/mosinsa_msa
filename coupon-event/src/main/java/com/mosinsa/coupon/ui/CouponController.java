@@ -39,6 +39,14 @@ public class CouponController {
 		return ResponseEntity.ok().build();
 	}
 
+    @PatchMapping("/coupons/{couponId}/cancel")
+    public ResponseEntity<JoinResult> cancelCoupon(@PathVariable("couponId") String couponId) {
+
+        couponService.rollbackCoupon(couponId);
+
+        return ResponseEntity.ok().build();
+    }
+
 	@GetMapping("/coupons/my/{memberId}")
 	public ResponseEntity<List<CouponDto>> myCoupons(@PathVariable("memberId") String memberId) {
 

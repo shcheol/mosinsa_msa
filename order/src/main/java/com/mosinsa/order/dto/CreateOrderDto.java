@@ -2,8 +2,7 @@ package com.mosinsa.order.dto;
 
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.mosinsa.order.ui.request.MyOrderProduct;
 import lombok.Value;
 import org.springframework.util.StringUtils;
 
@@ -19,13 +18,13 @@ public class CreateOrderDto {
 	boolean available;
 	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
-	public CreateOrderDto(String customerId, String couponId, String discountPolicy, boolean available, List<com.mosinsa.order.ui.request.CreateOrderRequest.MyOrderProduct> myOrderProducts) {
+	public CreateOrderDto(String customerId, String couponId, String discountPolicy, boolean available, List<MyOrderProduct> myOrderProducts) {
 		this.customerId = customerId;
 		this.couponId = couponId;
 		this.discountPolicy = discountPolicy;
 		this.available = available;
 		myOrderProducts.forEach(op ->
-			this.myOrderProducts.add(new MyOrderProduct(op.getProductId(), op.getPrice(), op.getQuantity())));
+			this.myOrderProducts.add(new MyOrderProduct(op.productId(), op.price(), op.quantity())));
 		valid();
 	}
 
@@ -38,11 +37,4 @@ public class CreateOrderDto {
 		}
 	}
 
-	@AllArgsConstructor
-	@Getter
-	public static class MyOrderProduct {
-		String productId;
-		Integer price;
-		Integer quantity;
-	}
 }

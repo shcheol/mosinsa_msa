@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.feignclient;
+package com.mosinsa.order.infra.feignclient.product;
 
 import java.util.List;
 

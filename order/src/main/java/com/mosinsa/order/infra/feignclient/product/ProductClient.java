@@ -1,11 +1,10 @@
-package com.mosinsa.order.infra.feignclient;
+package com.mosinsa.order.infra.feignclient.product;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @Component
