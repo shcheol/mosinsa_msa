@@ -43,84 +43,82 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
+	private final OrderService orderService;
 
-    private final CouponQueryService couponQueryService;
+	private final CouponQueryService couponQueryService;
 
-    private final CouponCommandService couponCommandService;
+	private final CouponCommandService couponCommandService;
 
-    private final ProductCommandService productCommandService;
-
-
-    @GetMapping
-    public ResponseEntity<BaseResponse> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
-        log.info("condition {}", condition);
-        Page<OrderDto> orderCustomer = orderService.findMyOrdersByCondition(condition, pageable);
-        return GlobalResponseEntity.success(orderCustomer);
-    }
-
-    @GetMapping("/{orderId}")
-    public ResponseEntity<BaseResponse> orderDetails(@PathVariable String orderId) {
-        if (!StringUtils.hasText(orderId)) {
-            throw new OrderException(OrderError.VALIDATION_ERROR);
-        }
-        OrderDetailDto orderDto = orderService.getOrderDetails(orderId);
-        return GlobalResponseEntity.success(orderDto);
-    }
+	private final ProductCommandService productCommandService;
 
 
-    @PostMapping
-    public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
+	@GetMapping
+	public ResponseEntity<BaseResponse> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
+		log.info("condition {}", condition);
+		Page<OrderDto> orderCustomer = orderService.findMyOrdersByCondition(condition, pageable);
+		return GlobalResponseEntity.success(orderCustomer);
+	}
 
-        Map<String, Collection<String>> authMap = getAuthMap(request);
-        SimpleCouponResponse coupon = couponQueryService.couponCheck(authMap, orderRequest.getCouponId());
-        productCommandService.orderProduct(authMap, orderRequest);
+	@GetMapping("/{orderId}")
+	public ResponseEntity<BaseResponse> orderDetails(@PathVariable String orderId) {
+		if (!StringUtils.hasText(orderId)) {
+			throw new OrderException(OrderError.VALIDATION_ERROR);
+		}
+		OrderDetailDto orderDto = orderService.getOrderDetails(orderId);
+		return GlobalResponseEntity.success(orderDto);
+	}
 
-        try {
-            CreateOrderDto createOrderDto = new CreateOrderDto(
-                    orderRequest.getCustomerId(),
-                    coupon.couponId(),
-                    coupon.discountPolicy(),
-                    coupon.available(),
-                    orderRequest.getMyOrderProducts());
 
-            OrderDetailDto orderDto = orderService.order(createOrderDto);
-            couponCommandService.useCoupon(authMap, orderDto.getCouponId());
-            return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
-        } catch (Exception e) {
-            log.error("order fail => rollback product stock, coupon use");
+	@PostMapping
+	public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
-            productCommandService.cancelOrderProduct(authMap, orderRequest.getMyOrderProducts());
-            couponCommandService.cancelCoupon(authMap, coupon.couponId());
+		Map<String, Collection<String>> authMap = getAuthMap(request);
+		SimpleCouponResponse coupon = couponQueryService.couponCheck(authMap, orderRequest.getCouponId());
+		productCommandService.orderProduct(authMap, orderRequest);
 
-            throw new OrderRollbackException(e);
-        }
+		try {
+			OrderDetailDto orderDto = orderService.order(new CreateOrderDto(
+					orderRequest.getCustomerId(),
+					coupon.couponId(),
+					coupon.discountPolicy(),
+					coupon.available(),
+					orderRequest.getMyOrderProducts()));
 
-    }
+			couponCommandService.useCoupon(authMap, orderDto.getCouponId());
+			return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
+		} catch (Exception e) {
+			log.error("order fail => rollback product stock, coupon use");
 
-    @PostMapping("/cancel")
-    public ResponseEntity<BaseResponse> cancelOrders(@RequestBody CancelOrderRequest cancelRequest, HttpServletRequest request) {
+			productCommandService.cancelOrderProduct(authMap, orderRequest.getMyOrderProducts());
+			couponCommandService.cancelCoupon(authMap, coupon.couponId());
+			throw new OrderRollbackException(e);
+		}
 
-        Map<String, Collection<String>> authMap = getAuthMap(request);
-        OrderDetailDto cancelOrder = orderService.cancelOrder(cancelRequest);
-        productCommandService.cancelOrderProduct(authMap,
-                cancelOrder.getOrderProducts().stream().map(
-                        op -> new MyOrderProduct(op.getProductId(),op.getPrice(),op.getQuantity())).toList());
+	}
 
-        return GlobalResponseEntity.success(cancelRequest.getOrderId());
-    }
+	@PostMapping("/cancel")
+	public ResponseEntity<BaseResponse> cancelOrders(@RequestBody CancelOrderRequest cancelRequest, HttpServletRequest request) {
 
-    private Map<String, Collection<String>> getAuthMap(HttpServletRequest request) {
-        Map<String, Collection<String>> authMap = new HashMap<>();
-        String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(auth)) {
-            authMap.put(HttpHeaders.AUTHORIZATION, List.of(auth));
-        }
-        String token = request.getHeader(HeaderConst.REFRESH_TOKEN.getName());
-        if (StringUtils.hasText(token)) {
-            authMap.put(HeaderConst.REFRESH_TOKEN.getName(), List.of(token));
-        }
-        return authMap;
-    }
+		Map<String, Collection<String>> authMap = getAuthMap(request);
+		OrderDetailDto cancelOrder = orderService.cancelOrder(cancelRequest);
+		productCommandService.cancelOrderProduct(authMap,
+				cancelOrder.getOrderProducts().stream().map(
+						op -> new MyOrderProduct(op.getProductId(), op.getPrice(), op.getQuantity())).toList());
+
+		return GlobalResponseEntity.success(cancelRequest.getOrderId());
+	}
+
+	private Map<String, Collection<String>> getAuthMap(HttpServletRequest request) {
+		Map<String, Collection<String>> authMap = new HashMap<>();
+		String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
+		if (StringUtils.hasText(auth)) {
+			authMap.put(HttpHeaders.AUTHORIZATION, List.of(auth));
+		}
+		String token = request.getHeader(HeaderConst.REFRESH_TOKEN.getName());
+		if (StringUtils.hasText(token)) {
+			authMap.put(HeaderConst.REFRESH_TOKEN.getName(), List.of(token));
+		}
+		return authMap;
+	}
 
 }

@@ -31,7 +31,7 @@ public class CouponController {
 		return ResponseEntity.ok(new CouponResponse(findCoupon));
     }
 
-	@PatchMapping("/coupons/{couponId}")
+	@PostMapping("/coupons/{couponId}")
 	public ResponseEntity<JoinResult> useCoupon(@PathVariable("couponId") String couponId) {
 
 		couponService.usedCoupon(couponId);
@@ -39,7 +39,7 @@ public class CouponController {
 		return ResponseEntity.ok().build();
 	}
 
-    @PatchMapping("/coupons/{couponId}/cancel")
+    @PostMapping("/coupons/{couponId}/cancel")
     public ResponseEntity<JoinResult> cancelCoupon(@PathVariable("couponId") String couponId) {
 
         couponService.rollbackCoupon(couponId);
@@ -55,7 +55,16 @@ public class CouponController {
 		return ResponseEntity.ok(couponDtos);
 	}
 
-    @PatchMapping("/coupons")
+
+	@PostMapping("/coupons")
+	public ResponseEntity<JoinResult> createCouponForNewMember(@RequestBody CreateCouponRequest request) {
+
+		couponService.createForNewMember(request.memberId());
+
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+    @PostMapping("/coupons/issue")
     public ResponseEntity<JoinResult> joinPromotion(@RequestBody JoinPromotionRequest request) {
         String promotionId = request.promotionId();
         String memberId = request.memberId();
@@ -71,14 +80,5 @@ public class CouponController {
         }
         return ResponseEntity.ok(new JoinResult("발급되었습니다."));
     }
-
-    @PostMapping("/coupons")
-    public ResponseEntity<JoinResult> createCouponForNewMember(@RequestBody CreateCouponRequest request) {
-
-        couponService.createForNewMember(request.memberId());
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
 
 }

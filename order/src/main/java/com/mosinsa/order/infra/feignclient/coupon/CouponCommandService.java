@@ -16,22 +16,24 @@ public class CouponCommandService {
 	private final CouponClient couponClient;
 
 	public void useCoupon(Map<String, Collection<String>> headers, String couponId){
-		if (!inputValidCheck(couponId)) {
-			log.debug("order without coupon");
+		if (verifyCouponInput(couponId)) {
+			log.debug("use coupon {}", couponId);
+			couponClient.useCoupon(headers, couponId);
 			return;
 		}
-		couponClient.useCoupon(headers, couponId);
+		log.debug("order without coupon");
 	}
 
 	public void cancelCoupon(Map<String, Collection<String>> headers, String couponId){
-		if (!inputValidCheck(couponId)) {
-			log.debug("no cancel coupon");
+		if (verifyCouponInput(couponId)) {
+			log.debug("cancel coupon {}", couponId);
+			couponClient.cancelCoupon(headers, couponId);
 			return;
 		}
-		couponClient.cancelCoupon(headers, couponId);
+		log.debug("no cancel coupon");
 	}
 
-	private boolean inputValidCheck(String couponId) {
+	private boolean verifyCouponInput(String couponId) {
 		return StringUtils.hasText(couponId);
 	}
 }

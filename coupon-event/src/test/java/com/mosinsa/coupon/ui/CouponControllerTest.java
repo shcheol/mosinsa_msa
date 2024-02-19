@@ -115,7 +115,7 @@ class CouponControllerTest {
 	void joinPromotionsWithoutLogin() throws Exception {
 		JoinPromotionRequest request = new JoinPromotionRequest(null, "promotion2");
 		mockMvc.perform(
-						patch("/coupons")
+						post("/coupons/issue")
 								.contentType(MediaType.APPLICATION_JSON_VALUE)
 								.content(om.writeValueAsString(request))
 				).andExpect(status().isBadRequest())
@@ -128,7 +128,7 @@ class CouponControllerTest {
 	void joinPromotionsWithLogin() throws Exception {
 		JoinPromotionRequest request = new JoinPromotionRequest("1", "promotion2");
 		mockMvc.perform(
-						patch("/coupons")
+						post("/coupons/issue")
 								.contentType(MediaType.APPLICATION_JSON_VALUE)
 								.content(om.writeValueAsString(request))
 				).andExpect(status().isOk())
@@ -145,7 +145,7 @@ class CouponControllerTest {
 				.thenThrow(CouponException.class);
 
 		mockMvc.perform(
-				patch("/coupons")
+				post("/coupons/issue")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content(om.writeValueAsString(request))
 		).andExpect(status().isBadRequest());
