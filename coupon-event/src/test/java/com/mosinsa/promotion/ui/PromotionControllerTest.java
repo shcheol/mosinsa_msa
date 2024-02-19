@@ -103,7 +103,7 @@ class PromotionControllerTest {
 
 		mockMvc.perform(
 						get("/promotions")
-				).andExpect(status().isOk())
+				).andExpect(status().is4xxClientError())
 //                .andExpect(view().name("promotion/noPromotion"))
 				.andDo(print());
 	}

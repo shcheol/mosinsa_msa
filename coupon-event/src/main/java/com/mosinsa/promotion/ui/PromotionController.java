@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -52,19 +51,23 @@ public class PromotionController {
 
 	@PostMapping(value = "/promotions/{promotionId}/join", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<JoinResult> joinPromotion(@PathVariable("promotionId") String promotionId, @RequestBody JoinPromotionRequest request) {
-		String memberId = request.memberId();
-		log.info("promotionId: {}, memberId: {}", promotionId, memberId);
-		if (!StringUtils.hasText(memberId)) {
-			return ResponseEntity.badRequest().body(new JoinResult("login first"));
-		}
 
-		promotionService.joinPromotion(memberId, promotionId);
+		validateLogin(request.memberId());
+
+		promotionService.joinPromotion(request.memberId(), promotionId);
 
 		return ResponseEntity.ok(new JoinResult("request..."));
 	}
 
-	@ExceptionHandler(CouponException.class)
-	public String handleNoPromotion() {
-		return "promotion/noPromotion";
+	private void validateLogin(String memberId) {
+		if(!StringUtils.hasText(memberId)){
+			log.warn("login before join promotion request: {}", memberId);
+			throw new NotLoginRequestException();
+		}
+	}
+
+	@ExceptionHandler(NotLoginRequestException.class)
+	public ResponseEntity<JoinResult> notLoginRequest() {
+		return ResponseEntity.badRequest().body(new JoinResult("login first"));
 	}
 }

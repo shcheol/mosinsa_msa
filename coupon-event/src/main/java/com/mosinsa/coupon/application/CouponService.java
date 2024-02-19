@@ -30,8 +30,7 @@ public class CouponService {
 	}
 
 	public void createAllByBatchInsert(PromotionCreatedEvent event) {
-		couponRepository.batchInsert(
-				Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
+		couponRepository.batchInsert(Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
 	}
 
 	@Retry(times = 3)
@@ -39,8 +38,7 @@ public class CouponService {
 		checkDuplicateIssue(memberId);
 
 		couponRepository.save(
-						Coupon.create(
-								null,
+						Coupon.create(null,
 								CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
 				.issuedCoupon(memberId);
 	}
@@ -59,23 +57,24 @@ public class CouponService {
 	@Transactional
 	public CouponId issue(CouponIssuedEvent event) {
 
-		CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
 		log.info("coupon issue event {}", event);
-		checkDuplicateParticipation(condition);
+		CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
 
-		Coupon coupon = couponRepository.findCouponInPromotionAndCanIssue(condition)
+		duplicateParticipationCheck(condition);
+
+		Coupon coupon = couponRepository.findNotIssuedCoupon(condition)
 				.orElseThrow(() -> {
 					log.info("member {} {}", condition.memberId(), CouponError.EMPTY_STOCK.getMessage());
 					throw new CouponException(CouponError.EMPTY_STOCK);
 				});
-
 		coupon.issuedCoupon(event.getMemberId());
+
 		log.info("member {} issue coupon", condition.memberId());
 
 		return coupon.getCouponId();
 	}
 
-	private void checkDuplicateParticipation(CouponSearchCondition condition) {
+	private void duplicateParticipationCheck(CouponSearchCondition condition) {
 		CouponId couponWithMember = couponRepository.findAssignedCoupon(condition);
 		if (couponWithMember != null) {
 			log.info("member {} {}", condition.memberId(), CouponError.DUPLICATE_PARTICIPATION.getMessage());

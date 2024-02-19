@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface CustomCouponRepository {
 
-    Optional<Coupon> findCouponInPromotionAndCanIssue(CouponSearchCondition condition);
+    Optional<Coupon> findNotIssuedCoupon(CouponSearchCondition condition);
 
 	List<CouponId> findCouponsInPromotion(CouponSearchCondition condition);
 

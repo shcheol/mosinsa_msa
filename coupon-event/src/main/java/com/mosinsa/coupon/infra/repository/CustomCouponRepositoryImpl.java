@@ -30,28 +30,26 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 
 	@Override
 	public List<CouponId> findCouponsInPromotion(CouponSearchCondition condition) {
-		return queryFactory.select(
-						coupon.couponId
-				).from(coupon)
+		return queryFactory.select(coupon.couponId).from(coupon)
 				.where(
 						promotionEq(condition.promotionId()),
-						notAssignedCoupon()
-				).orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+						notAssignedCoupon())
+				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 				.fetch();
 
 
 	}
 
 	@Override
-	public Optional<Coupon> findCouponInPromotionAndCanIssue(CouponSearchCondition condition) {
+	public Optional<Coupon> findNotIssuedCoupon(CouponSearchCondition condition) {
 		return Optional.ofNullable(
-				queryFactory.select(
-								coupon
-						).from(coupon)
+				queryFactory.select(coupon)
+						.from(coupon)
 						.where(
 								promotionEq(condition.promotionId()),
 								notAssignedCoupon()
-						).orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+						)
+						.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 						.limit(1)
 						.setLockMode(LockModeType.PESSIMISTIC_WRITE)
 						.setHint(
@@ -72,25 +70,23 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 								coupon.issuedDate,
 								coupon.memberId,
 								coupon.state,
-								coupon.details
-						)
-				).from(coupon)
+								coupon.details))
+				.from(coupon)
 				.where(
 						coupon.memberId.eq(memberId),
-						availableCoupons()
-				).orderBy(new OrderSpecifier<>(Order.DESC, coupon.issuedDate))
+						availableCoupons())
+				.orderBy(new OrderSpecifier<>(Order.DESC, coupon.issuedDate))
 				.fetch();
 	}
 
 	@Override
 	public CouponId findAssignedCoupon(CouponSearchCondition condition) {
-		return queryFactory.select(
-						coupon.couponId
-				).from(coupon)
+		return queryFactory.select(coupon.couponId)
+				.from(coupon)
 				.where(
 						promotionEq(condition.promotionId()),
-						assignedCoupon(condition.memberId())
-				).orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+						assignedCoupon(condition.memberId()))
+				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 				.fetchFirst();
 	}
 
