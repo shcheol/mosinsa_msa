@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     likes(productId){
-      apiBoard.patchLikesProduct(localStorage.getItem("customerId"), productId)
+      apiBoard.postLikesProduct(localStorage.getItem("customerId"), productId)
           .then((response) => {
             console.log(response);
             apiBoard.getLikesProducts(localStorage.getItem("customerId"))

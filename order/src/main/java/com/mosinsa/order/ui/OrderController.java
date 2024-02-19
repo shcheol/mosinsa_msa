@@ -89,23 +89,37 @@ public class OrderController {
 		} catch (Exception e) {
 			log.error("order fail => rollback product stock, coupon use");
 
-			productCommandService.cancelOrderProduct(authMap, orderRequest.getMyOrderProducts());
-			couponCommandService.cancelCoupon(authMap, coupon.couponId());
+			try {
+				productCommandService.cancelOrderProduct(authMap, orderRequest.getMyOrderProducts());
+				couponCommandService.cancelCoupon(authMap, coupon.couponId());
+			} catch (Exception ex) {
+				//TODO: kafka 이용 후처리
+
+			}
 			throw new OrderRollbackException(e);
 		}
 
 	}
 
-	@PostMapping("/cancel")
-	public ResponseEntity<BaseResponse> cancelOrders(@RequestBody CancelOrderRequest cancelRequest, HttpServletRequest request) {
+	@PostMapping("/{orderId}/cancel")
+	public ResponseEntity<BaseResponse> cancelOrders(@PathVariable String orderId, HttpServletRequest request) {
 
 		Map<String, Collection<String>> authMap = getAuthMap(request);
-		OrderDetailDto cancelOrder = orderService.cancelOrder(cancelRequest);
-		productCommandService.cancelOrderProduct(authMap,
-				cancelOrder.getOrderProducts().stream().map(
-						op -> new MyOrderProduct(op.getProductId(), op.getPrice(), op.getQuantity())).toList());
 
-		return GlobalResponseEntity.success(cancelRequest.getOrderId());
+		OrderDetailDto cancelOrder = orderService.cancelOrder(orderId);
+
+		try {
+			productCommandService.cancelOrderProduct(authMap,
+					cancelOrder.getOrderProducts().stream().map(
+							op -> new MyOrderProduct(op.getProductId(), op.getPrice(), op.getQuantity())).toList());
+			couponCommandService.cancelCoupon(authMap, cancelOrder.getCouponId());
+		} catch (Exception e) {
+			//TODO: kafka 이용 후처리
+			// 주문 취소 성공, 외부 api 호출(상품 수량 증가) 실패
+			// 호출을 주문 취소 이후에하는 이유는 취소에 주문 실패했을 때 롤백요청하는 사이에 타 사용자가 수량 가져갈 가능성
+		}
+
+		return GlobalResponseEntity.success(orderId);
 	}
 
 	private Map<String, Collection<String>> getAuthMap(HttpServletRequest request) {

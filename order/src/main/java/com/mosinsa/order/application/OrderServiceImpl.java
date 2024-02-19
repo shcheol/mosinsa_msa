@@ -52,8 +52,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDetailDto cancelOrder(CancelOrderRequest request) {
-        Order findOrder = orderRepository.findById(OrderId.of(request.getOrderId()))
+    public OrderDetailDto cancelOrder(String orderId) {
+        Order findOrder = orderRepository.findById(OrderId.of(orderId))
                 .orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
         findOrder.cancelOrder();
         return new OrderDetailDto(findOrder);

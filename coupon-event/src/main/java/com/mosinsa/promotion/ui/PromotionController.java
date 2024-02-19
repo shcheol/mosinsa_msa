@@ -33,7 +33,7 @@ public class PromotionController {
 	}
 
 	@GetMapping("/promotions/{promotionId}")
-	public ResponseEntity<PromotionDetails> detail(@PathVariable("promotionId") String promotionId, Model model) {
+	public ResponseEntity<PromotionDetails> detail(@PathVariable("promotionId") String promotionId) {
 		log.info("{}", promotionId);
 
 		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
@@ -50,9 +50,8 @@ public class PromotionController {
 		return promotionService.create(request);
 	}
 
-	@PatchMapping(value = "/promotions", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JoinResult> joinPromotion(@RequestBody JoinPromotionRequest request) {
-		String promotionId = request.promotionId();
+	@PostMapping(value = "/promotions/{promotionId}/join", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<JoinResult> joinPromotion(@PathVariable("promotionId") String promotionId, @RequestBody JoinPromotionRequest request) {
 		String memberId = request.memberId();
 		log.info("promotionId: {}, memberId: {}", promotionId, memberId);
 		if (!StringUtils.hasText(memberId)) {

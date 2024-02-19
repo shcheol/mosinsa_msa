@@ -1,6 +1,5 @@
 package com.mosinsa.order.infra.feignclient.product;
 
-import com.mosinsa.order.dto.OrderProductDto;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.MyOrderProduct;
 import lombok.RequiredArgsConstructor;

@@ -19,8 +19,8 @@ export default{
     getProductDetails: function (id){
         return axios.get(BASE_URL + 'product-service/products/'+id)
     },
-    patchLikesProduct: function (customerId, productId){
-        return axios.patch(BASE_URL + 'product-service/products/'+productId+'/likes',{
+    postLikesProduct: function (customerId, productId){
+        return axios.post(BASE_URL + 'product-service/products/'+productId+'/likes',{
             "productId": productId,
             "memberId": customerId
         })
@@ -39,9 +39,8 @@ export default{
             })
     },
     cancelOrders: function (customerId, orderId){
-        return axios.post(BASE_URL + 'order-service/orders/cancel',{
-                "customerId" : customerId,
-                "orderId" : orderId
+        return axios.post(BASE_URL + 'order-service/orders/'+orderId+'/cancel',{
+                "customerId" : customerId
             },
             {
                 headers: {
@@ -65,10 +64,9 @@ export default{
     getPromotions: function (){
         return axios.get(BASE_URL + 'coupon-service/promotions')
     },
-    patchJoinPromotions: function (memberId, promotionId){
-        return axios.patch(BASE_URL + 'coupon-service/promotions', {
-            "memberId":memberId,
-            "promotionId":promotionId
+    joinPromotions: function (memberId, promotionId){
+        return axios.post(BASE_URL + 'coupon-service/promotions/'+promotionId+'/join', {
+            "memberId":memberId
         },
             {
                 headers: {

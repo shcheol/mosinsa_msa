@@ -25,14 +25,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-	@GetMapping("/{productId}")
-	public ResponseEntity<BaseResponse> getProduct(@PathVariable String productId){
-		log.info("getProduct {}", productId);
-
-		ProductDto productDto = productService.getProductById(productId);
-		return GlobalResponseEntity.ok(productDto);
-	}
-
 	@GetMapping
 	public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable){
 
@@ -40,14 +32,23 @@ public class ProductController {
 		return GlobalResponseEntity.ok(allProducts);
 	}
 
+	@GetMapping("/{productId}")
+	public ResponseEntity<BaseResponse> productDetails(@PathVariable String productId){
+		log.info("getProduct {}", productId);
+
+		ProductDto productDto = productService.getProductById(productId);
+		return GlobalResponseEntity.ok(productDto);
+	}
+
+
 	@GetMapping("/likes")
-	public ResponseEntity<BaseResponse> getLikesProducts(@RequestParam String customer){
+	public ResponseEntity<BaseResponse> likesProducts(@RequestParam String customer){
 
 		List<ProductDto> myLikesProducts = productService.findMyLikesProducts(customer);
 		return GlobalResponseEntity.ok(myLikesProducts);
 	}
 
-	@PatchMapping("/{productId}/likes")
+	@PostMapping("/{productId}/likes")
 	public ResponseEntity<BaseResponse> likes(@PathVariable String productId, @RequestBody LikesProductRequest request){
 
 		if (!productId.equals(request.productId())){
@@ -56,6 +57,14 @@ public class ProductController {
 		}
 		productService.likes(request);
 		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping
+	public ResponseEntity<BaseResponse> addProduct(@RequestBody CreateProductRequest request){
+
+		ProductDto productDto = productService.createProduct(request);
+
+		return GlobalResponseEntity.success(HttpStatus.CREATED, productDto);
 	}
 
 	@PostMapping("/order")
@@ -74,13 +83,5 @@ public class ProductController {
 
 		return ResponseEntity.ok().build();
 	}
-
-    @PostMapping
-    public ResponseEntity<BaseResponse> addProduct(@RequestBody CreateProductRequest request){
-
-        ProductDto productDto = productService.createProduct(request);
-
-		return GlobalResponseEntity.success(HttpStatus.CREATED, productDto);
-    }
 
 }

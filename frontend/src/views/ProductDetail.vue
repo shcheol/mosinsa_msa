@@ -77,7 +77,7 @@ export default {
       this.$store.dispatch("addCart", product);
     },
     likes(productId) {
-      apiBoard.patchLikesProduct(localStorage.getItem("customerId"),productId)
+      apiBoard.postLikesProduct(localStorage.getItem("customerId"),productId)
           .then((response) => {
             console.log(response);
             apiBoard.getProductDetails(productId)

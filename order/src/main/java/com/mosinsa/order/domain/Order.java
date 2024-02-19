@@ -1,10 +1,7 @@
 package com.mosinsa.order.domain;
 
-import com.mosinsa.order.common.event.Events;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
-import com.mosinsa.order.infra.kafka.OrderCreatedEvent;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -60,7 +57,7 @@ public class Order extends AuditingEntity {
 		}
 		this.couponId = couponId;
 		calculateTotalPriceWithCoupon(discountPolicy);
-		Events.raise(new OrderCreatedEvent(this.id.getId(), this.couponId));
+//		Events.raise(new OrderCreatedEvent(this.id.getId(), this.couponId));
 	}
 
 	private void calculateTotalPriceWithCoupon(String discountPolicy) {
