@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Component
-@FeignClient(name = "product-service", url = "${feignclient.url.product}")
+@FeignClient(name = "product-service", url = "${feignclient.url.product}", fallback = ProductFallback.class)
 public interface ProductClient {
 
 	@GetMapping("/products/{productId}")

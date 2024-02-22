@@ -12,7 +12,7 @@ bootJar.enabled = false
 
 subprojects {
     group = 'com.mosinsa'
-    version = '0.0.1-SNAPSHOT'
+    version = '0.0.1'
     sourceCompatibility = '17'
 
     apply plugin: 'java'

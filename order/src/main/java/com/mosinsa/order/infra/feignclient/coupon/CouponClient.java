@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Component
-@FeignClient(name = "coupon-service", url = "${feignclient.url.coupon}")
+@FeignClient(name = "coupon-service", url = "${feignclient.url.coupon}", fallback = CouponFallback.class, dismiss404 = true)
 public interface CouponClient {
 
 	@GetMapping("/coupons/{couponId}")

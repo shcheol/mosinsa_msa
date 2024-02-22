@@ -28,6 +28,12 @@ spring:
         format_sql: true
   kafka:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+        alphanumeric-ids:
+          enabled: true
 
 management:
   endpoints:
@@ -35,7 +41,13 @@ management:
       exposure:
         include: "*"
 
-#  thymeleaf:
-#    prefix: classpath:/templates/
-#    suffix: .html
-
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+resilience4j.timelimiter:
+  configs:
+    default:
+      timeoutDuration: 5s
+      cancelRunningFuture: true
