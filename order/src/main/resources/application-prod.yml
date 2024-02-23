@@ -51,3 +51,11 @@ resilience4j.timelimiter:
     default:
       timeoutDuration: 5s
       cancelRunningFuture: true
+
+
+logging:
+  level:
+    root: info
+    com.mosinsa: debug
+    org.hibernate.type: trace
+    org.springframework.jdbc.core: trace
