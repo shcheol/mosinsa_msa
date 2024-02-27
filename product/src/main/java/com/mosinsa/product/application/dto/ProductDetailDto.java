@@ -5,7 +5,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @Value
-public class ProductDto {
+public class ProductDetailDto {
     String productId;
     String name;
 
@@ -14,7 +14,7 @@ public class ProductDto {
     long likes;
 
 	@QueryProjection
-    public ProductDto(Product product) {
+    public ProductDetailDto(Product product) {
         this.productId = product.getId().getId();
         this.name = product.getName();
         this.price = product.getPrice().getValue();

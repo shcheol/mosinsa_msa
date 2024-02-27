@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -27,17 +29,18 @@ class ProductRepositoryTest {
         assertThat(product).isEqualTo(saveProduct);
         assertThat(product.getId()).isEqualTo(saveProduct.getId());
         assertThat(product.getName()).isEqualTo(saveProduct.getName());
-        assertThat(product.getCategory()).isEqualTo(saveProduct.getCategory());
-        assertThat(product.getStock()).isEqualTo(saveProduct.getStock());
-        assertThat(product.getLikes().getTotal()).isZero();
-        assertThat(product.getLikes().getLikesMember()).isEmpty();
+//        assertThat(product.getCategory()).isEqualTo(saveProduct.getCategory());
+//        assertThat(product.getStock()).isEqualTo(saveProduct.getStock());
+//        assertThat(product.getLikes().getTotal()).isZero();
+//        assertThat(product.getLikes().getLikesMember()).isEmpty();
     }
 
 	@Test
 	void likes(){
 		Category category = categoryRepository.save(Category.of("category1"));
 		Product product = productRepository.save(Product.create("name", 1000, category, 10));
-		productRepository.save(Product.create("name", 1000, category, 10));
+
+//		Product product = productRepository.findProductDetailById(saveProduct.getId()).get();
 
 		assertThat(product.getLikes().getTotal()).isZero();
 

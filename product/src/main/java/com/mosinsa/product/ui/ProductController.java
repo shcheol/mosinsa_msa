@@ -1,7 +1,8 @@
 package com.mosinsa.product.ui;
 
 import com.mosinsa.product.application.ProductService;
-import com.mosinsa.product.application.dto.ProductDto;
+import com.mosinsa.product.application.dto.ProductDetailDto;
+import com.mosinsa.product.application.dto.ProductQueryDto;
 import com.mosinsa.product.common.ex.ProductError;
 import com.mosinsa.product.common.ex.ProductException;
 import com.mosinsa.product.ui.request.*;
@@ -28,7 +29,7 @@ public class ProductController {
 	@GetMapping
 	public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable){
 
-		Page<ProductDto> allProducts = productService.findProductsByCondition(condition, pageable);
+		Page<ProductQueryDto> allProducts = productService.findProductsByCondition(condition, pageable);
 		return GlobalResponseEntity.ok(allProducts);
 	}
 
@@ -36,15 +37,15 @@ public class ProductController {
 	public ResponseEntity<BaseResponse> productDetails(@PathVariable String productId){
 		log.info("getProduct {}", productId);
 
-		ProductDto productDto = productService.getProductById(productId);
-		return GlobalResponseEntity.ok(productDto);
+		ProductDetailDto productDetailDto = productService.getProductById(productId);
+		return GlobalResponseEntity.ok(productDetailDto);
 	}
 
 
 	@GetMapping("/likes")
 	public ResponseEntity<BaseResponse> likesProducts(@RequestParam String customer){
 
-		List<ProductDto> myLikesProducts = productService.findMyLikesProducts(customer);
+		List<ProductDetailDto> myLikesProducts = productService.findMyLikesProducts(customer);
 		return GlobalResponseEntity.ok(myLikesProducts);
 	}
 
@@ -62,9 +63,9 @@ public class ProductController {
 	@PostMapping
 	public ResponseEntity<BaseResponse> addProduct(@RequestBody CreateProductRequest request){
 
-		ProductDto productDto = productService.createProduct(request);
+		ProductDetailDto productDetailDto = productService.createProduct(request);
 
-		return GlobalResponseEntity.success(HttpStatus.CREATED, productDto);
+		return GlobalResponseEntity.success(HttpStatus.CREATED, productDetailDto);
 	}
 
 	@PostMapping("/order")

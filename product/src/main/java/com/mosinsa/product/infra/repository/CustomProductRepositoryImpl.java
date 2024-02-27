@@ -1,7 +1,7 @@
 package com.mosinsa.product.infra.repository;
 
-import com.mosinsa.product.application.dto.ProductDto;
-import com.mosinsa.product.application.dto.QProductDto;
+import com.mosinsa.product.application.dto.ProductQueryDto;
+import com.mosinsa.product.application.dto.QProductQueryDto;
 import com.mosinsa.product.ui.request.OrderEnum;
 import com.mosinsa.product.ui.request.SearchCondition;
 import com.querydsl.core.types.OrderSpecifier;
@@ -24,9 +24,9 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public Page<ProductDto> findByCondition(SearchCondition condition, Pageable pageable) {
+    public Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable) {
 
-        List<ProductDto> fetch = factory.select(new QProductDto(product))
+        List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
                 .from(product)
                 .where(
                         category(condition.categoryId())
