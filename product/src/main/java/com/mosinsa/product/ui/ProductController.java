@@ -1,6 +1,7 @@
 package com.mosinsa.product.ui;
 
-import com.mosinsa.product.application.ProductService;
+import com.mosinsa.product.application.ProductCommandService;
+import com.mosinsa.product.application.ProductQueryService;
 import com.mosinsa.product.application.dto.ProductDetailDto;
 import com.mosinsa.product.application.dto.ProductQueryDto;
 import com.mosinsa.product.common.ex.ProductError;
@@ -24,12 +25,13 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductQueryService productQueryService;
+	private final ProductCommandService productCommandService;
 
 	@GetMapping
 	public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable){
 
-		Page<ProductQueryDto> allProducts = productService.findProductsByCondition(condition, pageable);
+		Page<ProductQueryDto> allProducts = productQueryService.findProductsByCondition(condition, pageable);
 		return GlobalResponseEntity.ok(allProducts);
 	}
 
@@ -37,7 +39,7 @@ public class ProductController {
 	public ResponseEntity<BaseResponse> productDetails(@PathVariable String productId){
 		log.info("getProduct {}", productId);
 
-		ProductDetailDto productDetailDto = productService.getProductById(productId);
+		ProductDetailDto productDetailDto = productQueryService.getProductById(productId);
 		return GlobalResponseEntity.ok(productDetailDto);
 	}
 
@@ -45,7 +47,7 @@ public class ProductController {
 	@GetMapping("/likes")
 	public ResponseEntity<BaseResponse> likesProducts(@RequestParam String customer){
 
-		List<ProductDetailDto> myLikesProducts = productService.findMyLikesProducts(customer);
+		List<ProductDetailDto> myLikesProducts = productQueryService.findMyLikesProducts(customer);
 		return GlobalResponseEntity.ok(myLikesProducts);
 	}
 
@@ -56,14 +58,14 @@ public class ProductController {
 			log.error("product Id match fail {}, {}", productId, request.productId());
 			throw new ProductException(ProductError.VALIDATION_ERROR);
 		}
-		productService.likes(request);
+		productCommandService.likes(request);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping
 	public ResponseEntity<BaseResponse> addProduct(@RequestBody CreateProductRequest request){
 
-		ProductDetailDto productDetailDto = productService.createProduct(request);
+		ProductDetailDto productDetailDto = productCommandService.createProduct(request);
 
 		return GlobalResponseEntity.success(HttpStatus.CREATED, productDetailDto);
 	}
@@ -72,7 +74,7 @@ public class ProductController {
 	public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request){
 
 		log.info("orderProductRequests {}", request);
-		productService.orderProduct(request.orderProductRequests());
+		productCommandService.orderProduct(request.orderProductRequests());
 
 		return ResponseEntity.ok().build();
 	}
@@ -80,7 +82,7 @@ public class ProductController {
 	@PostMapping("/cancel")
 	public ResponseEntity<Void> cancelOrderProducts(@RequestBody CancelOrderProductRequests request){
 
-		productService.cancelOrderProduct(request.cancelOrderProductRequests());
+		productCommandService.cancelOrderProduct(request.cancelOrderProductRequests());
 
 		return ResponseEntity.ok().build();
 	}

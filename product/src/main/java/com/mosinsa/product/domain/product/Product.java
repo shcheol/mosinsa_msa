@@ -46,9 +46,13 @@ public class Product {
         return product;
     }
 
-    public void likes(String memberId) {
-        this.likes.likes(memberId);
+    public void likes() {
+        this.likes.likes();
     }
+
+	public void likesCancel() {
+		this.likes.likesCancel();
+	}
 
     public void increaseStock(long stock) {
         this.stock.increase(stock);

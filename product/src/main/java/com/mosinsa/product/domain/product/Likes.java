@@ -20,29 +20,18 @@ public class Likes {
 
 	private int total;
 
-	@OneToMany(mappedBy = "likes", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private final Set<LikesMember> likesMember = new HashSet<>();
-
 	public static Likes create() {
-        Likes likes = new Likes();
+		Likes likes = new Likes();
 		likes.id = LikesId.newId();
-        return likes;
-    }
-
-	public void likes(String memberId){
-		LikesMember member = likesMember.stream().filter(lm -> lm.getMemberId().equals(memberId))
-				.findFirst().orElse(LikesMember.create(memberId, this));
-
-		if(!likesMember.add(member)){
-			this.likesMember.remove(member);
-		}
-		this.total = likesMember.size();
+		return likes;
 	}
-	public void likes(LikesMember member){
-		if(!likesMember.add(member)){
-			this.likesMember.remove(member);
-		}
-		this.total = likesMember.size();
+
+	public void likes() {
+		this.total += 1;
+	}
+
+	public void likesCancel() {
+		this.total -= 1;
 	}
 
 	@Override

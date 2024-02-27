@@ -25,7 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ProductServiceImplTest {
 
 	@Autowired
-	ProductService productService;
+	ProductQueryService productQueryService;
+	@Autowired
+	ProductCommandService productCommandService;
 
 
 	@Test
@@ -33,19 +35,19 @@ class ProductServiceImplTest {
 		String productId = "productId1xxx";
 
 		assertThrows(ProductException.class, () ->
-				productService.getProductById(productId));
+				productQueryService.getProductById(productId));
 	}
 
 	@Test
 	void orderProduct() {
 
-		long beforeStock = productService.getProductById("productId1").getStock();
+		long beforeStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(beforeStock).isEqualTo(10);
 
 		OrderProductRequest request = new OrderProductRequest("productId1", 3);
-		productService.orderProduct(List.of(request));
+		productCommandService.orderProduct(List.of(request));
 
-		long afterStock = productService.getProductById("productId1").getStock();
+		long afterStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(afterStock).isEqualTo(7);
 
 	}
@@ -53,12 +55,12 @@ class ProductServiceImplTest {
 	@Test
 	void orderProduct_Ex() {
 
-		long beforeStock = productService.getProductById("productId1").getStock();
+		long beforeStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(beforeStock).isEqualTo(10);
 
 		assertThrows(RuntimeException.class,
-				() -> productService.orderProduct(List.of(new OrderProductRequest("productId1", 11))));
-		long afterStock = productService.getProductById("productId1").getStock();
+				() -> productCommandService.orderProduct(List.of(new OrderProductRequest("productId1", 11))));
+		long afterStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(afterStock).isEqualTo(10);
 	}
 
@@ -67,7 +69,7 @@ class ProductServiceImplTest {
 	void orderProductConcurrency() throws InterruptedException {
 
 		String productId = "productId3";
-		long beforeStock = productService.getProductById(productId).getStock();
+		long beforeStock = productQueryService.getProductById(productId).getStock();
 		assertThat(beforeStock).isEqualTo(30);
 
 		int size = 10;
@@ -76,7 +78,7 @@ class ProductServiceImplTest {
 		for (int i = 0; i < size; i++) {
 			es.execute(() -> {
 				try {
-					productService.orderProduct(List.of(new OrderProductRequest(productId, 1)));
+					productCommandService.orderProduct(List.of(new OrderProductRequest(productId, 1)));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -86,19 +88,19 @@ class ProductServiceImplTest {
 		countDownLatch.await();
 		es.shutdown();
 
-		long afterStock = productService.getProductById(productId).getStock();
+		long afterStock = productQueryService.getProductById(productId).getStock();
 		assertThat(afterStock).isEqualTo(20);
 	}
 
 	@Test
 	void cancelOrderProduct() {
-		long beforeStock = productService.getProductById("productId2").getStock();
+		long beforeStock = productQueryService.getProductById("productId2").getStock();
 		assertThat(beforeStock).isEqualTo(20);
 
 		CancelOrderProductRequest request = new CancelOrderProductRequest("productId2", 3);
-		productService.cancelOrderProduct(List.of(request));
+		productCommandService.cancelOrderProduct(List.of(request));
 
-		long afterStock = productService.getProductById("productId2").getStock();
+		long afterStock = productQueryService.getProductById("productId2").getStock();
 		assertThat(afterStock).isEqualTo(23);
 
 	}
@@ -108,20 +110,20 @@ class ProductServiceImplTest {
 		LikesProductRequest user1 = new LikesProductRequest("productId1", "memberId1");
 		LikesProductRequest user2 = new LikesProductRequest("productId1", "memberId2");
 
-		productService.likes(user1);
-		assertThat(productService.getProductById(user1.productId()).getLikes())
+		productCommandService.likes(user1);
+		assertThat(productQueryService.getProductById(user1.productId()).getLikes())
 				.isEqualTo(1);
 
-		productService.likes(user2);
-		assertThat(productService.getProductById(user1.productId()).getLikes())
+		productCommandService.likes(user2);
+		assertThat(productQueryService.getProductById(user1.productId()).getLikes())
 				.isEqualTo(2);
 
-		productService.likes(user2);
-		assertThat(productService.getProductById(user1.productId()).getLikes())
+		productCommandService.likes(user2);
+		assertThat(productQueryService.getProductById(user1.productId()).getLikes())
 				.isEqualTo(1);
 
-		productService.likes(user1);
-		assertThat(productService.getProductById(user1.productId()).getLikes())
+		productCommandService.likes(user1);
+		assertThat(productQueryService.getProductById(user1.productId()).getLikes())
 				.isZero();
 	}
 
@@ -131,13 +133,13 @@ class ProductServiceImplTest {
 		LikesProductRequest request2 = new LikesProductRequest("productId1", "memberId2");
 		LikesProductRequest request3 = new LikesProductRequest("productId2", "memberId1");
 
-		productService.likes(request1);
-		productService.likes(request2);
-		productService.likes(request3);
+		productCommandService.likes(request1);
+		productCommandService.likes(request2);
+		productCommandService.likes(request3);
 
-		List<ProductDetailDto> memberId1 = productService.findMyLikesProducts("memberId1");
+		List<ProductDetailDto> memberId1 = productQueryService.findMyLikesProducts("memberId1");
 		assertThat(memberId1).size().isEqualTo(2);
-		List<ProductDetailDto> memberId2 = productService.findMyLikesProducts("memberId2");
+		List<ProductDetailDto> memberId2 = productQueryService.findMyLikesProducts("memberId2");
 		assertThat(memberId2).size().isEqualTo(1);
 	}
 
@@ -146,7 +148,7 @@ class ProductServiceImplTest {
 
 		String productId = "productId1";
 		assertThat(
-				productService.getProductById(productId).getLikes()
+				productQueryService.getProductById(productId).getLikes()
 		).isZero();
 		int size = 10;
 		ExecutorService es = Executors.newFixedThreadPool(size);
@@ -154,7 +156,7 @@ class ProductServiceImplTest {
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < size; i++) {
 			es.execute(() -> {
-				productService.likes(new LikesProductRequest(productId, UUID.randomUUID().toString()));
+				productCommandService.likes(new LikesProductRequest(productId, UUID.randomUUID().toString()));
 				countDownLatch.countDown();
 			});
 		}
@@ -165,7 +167,7 @@ class ProductServiceImplTest {
 
 		es.shutdown();
 		assertThat(
-				productService.getProductById(productId).getLikes()
+				productQueryService.getProductById(productId).getLikes()
 		).isEqualTo(size);
 
 	}

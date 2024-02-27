@@ -40,20 +40,13 @@ class ProductRepositoryTest {
 		Category category = categoryRepository.save(Category.of("category1"));
 		Product product = productRepository.save(Product.create("name", 1000, category, 10));
 
-//		Product product = productRepository.findProductDetailById(saveProduct.getId()).get();
-
 		assertThat(product.getLikes().getTotal()).isZero();
 
-		product.likes("memberId1");
+		product.likes();
 		assertThat(product.getLikes().getTotal()).isEqualTo(1);
 
-		product.likes("memberId2");
+		product.likes();
 		assertThat(product.getLikes().getTotal()).isEqualTo(2);
-
-
-		product.likes("memberId1");
-		assertThat(product.getLikes().getTotal()).isEqualTo(1);
-
 	}
 
 }

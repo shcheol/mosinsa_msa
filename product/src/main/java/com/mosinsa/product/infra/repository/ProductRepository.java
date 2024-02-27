@@ -22,6 +22,12 @@ public interface ProductRepository extends JpaRepository<Product, ProductId>, Cu
 	@Query(value = "select p from Product p inner join fetch p.likes inner join fetch p.stock where p.id = :productId")
 	Optional<Product> findProductDetailById(@Param(value = "productId") ProductId productId);
 
+	@Query(value = "select p from Product p " +
+			"inner join Likes l on p.likes = l.id " +
+			"inner join LikesMember lm on l.id = lm.likes " +
+			"where p.id =:productId and lm.memberId = :memberId")
+	Optional<Product> likesCheck(@Param(value = "productId") ProductId productId, @Param(value = "memberId") String memberId);
+
 	//	@Query(value = "select new com.mosinsa.product.application.dto.ProductDto(p) " +
 //			"from Product p " +
 //			"where p.likes in (select l.id from Likes l, LikesMember lm where l.id = lm.likes and :likesMember = lm.memberId )")
@@ -30,6 +36,8 @@ public interface ProductRepository extends JpaRepository<Product, ProductId>, Cu
 			"inner join Likes l on p.likes = l.id " +
 			"inner join LikesMember lm on l.id = lm.likes " +
 			"where lm.memberId=:likesMember")
-	List<ProductDetailDto> findLikesProduct(@Param(value = "likesMember") String likesMember);
+	List<ProductDetailDto> findMyLikesProduct(@Param(value = "likesMember") String likesMember);
+
+
 }
 

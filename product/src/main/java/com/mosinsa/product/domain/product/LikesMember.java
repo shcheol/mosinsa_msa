@@ -19,7 +19,7 @@ public class LikesMember {
 	private String id;
 	private String memberId;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "likes_id")
 	private Likes likes;
 
