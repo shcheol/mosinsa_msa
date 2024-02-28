@@ -1,7 +1,7 @@
 package com.mosinsa.coupon.infra.repository;
 
 import com.mosinsa.coupon.domain.CouponId;
-import com.mosinsa.coupon.dto.CouponSearchCondition;
+import com.mosinsa.coupon.application.dto.CouponSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

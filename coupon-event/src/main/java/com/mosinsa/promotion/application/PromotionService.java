@@ -7,17 +7,15 @@ import com.mosinsa.coupon.domain.CouponDetails;
 import com.mosinsa.coupon.domain.CouponIssuedEvent;
 import com.mosinsa.promotion.domain.Promotion;
 import com.mosinsa.promotion.domain.PromotionId;
-import com.mosinsa.promotion.dto.CreatePromotionRequest;
-import com.mosinsa.promotion.dto.PromotionDto;
-import com.mosinsa.promotion.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.application.dto.CreatePromotionRequest;
+import com.mosinsa.promotion.application.dto.PromotionDto;
+import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
 import com.mosinsa.promotion.infra.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

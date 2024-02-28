@@ -4,7 +4,7 @@ import com.mosinsa.customer.common.ex.CustomerError;
 import com.mosinsa.customer.common.ex.CustomerException;
 import com.mosinsa.customer.domain.Customer;
 import com.mosinsa.customer.domain.CustomerId;
-import com.mosinsa.customer.dto.CustomerDto;
+import com.mosinsa.customer.application.dto.CustomerDto;
 import com.mosinsa.customer.infra.repository.CustomerRepository;
 import com.mosinsa.customer.ui.request.CreateCustomerRequest;
 import lombok.RequiredArgsConstructor;

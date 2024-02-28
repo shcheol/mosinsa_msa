@@ -2,8 +2,8 @@ package com.mosinsa.promotion.infra.repository;
 
 import com.mosinsa.promotion.domain.Promotion;
 import com.mosinsa.promotion.domain.PromotionId;
-import com.mosinsa.promotion.dto.PromotionDto;
-import com.mosinsa.promotion.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.application.dto.PromotionDto;
+import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
 import com.querydsl.core.Tuple;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -14,8 +14,8 @@ import com.mosinsa.product.ui.request.LikesProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -67,9 +67,8 @@ public class ProductCommandService {
 
 		try {
 			productLikesService.likes(request);
-		} catch (Exception e){
+		} catch (DataIntegrityViolationException e){
 			productLikesService.likesCancel(request);
 		}
-
 	}
 }

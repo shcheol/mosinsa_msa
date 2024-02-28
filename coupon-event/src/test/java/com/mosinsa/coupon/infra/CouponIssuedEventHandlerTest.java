@@ -2,7 +2,7 @@ package com.mosinsa.coupon.infra;
 
 import com.mosinsa.common.event.Events;
 import com.mosinsa.coupon.domain.CouponIssuedEvent;
-import com.mosinsa.coupon.dto.CouponDto;
+import com.mosinsa.coupon.application.dto.CouponDto;
 import com.mosinsa.coupon.infra.repository.CouponRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.mosinsa.customer.application;
 
-import com.mosinsa.customer.dto.CustomerDto;
+import com.mosinsa.customer.application.dto.CustomerDto;
 import com.mosinsa.customer.domain.Customer;
 import com.mosinsa.customer.ui.request.CreateCustomerRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,9 +1,8 @@
 package com.mosinsa.promotion.ui;
 
-import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.application.CouponService;
 import com.mosinsa.promotion.application.PromotionService;
-import com.mosinsa.promotion.dto.*;
+import com.mosinsa.promotion.application.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

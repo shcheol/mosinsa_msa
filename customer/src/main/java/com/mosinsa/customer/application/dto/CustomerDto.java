@@ -1,4 +1,4 @@
-package com.mosinsa.customer.dto;
+package com.mosinsa.customer.application.dto;
 
 import com.mosinsa.customer.domain.Customer;
 import com.mosinsa.customer.domain.CustomerGrade;

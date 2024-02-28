@@ -1,7 +1,7 @@
 package com.mosinsa.customer.ui;
 
 import com.mosinsa.customer.application.CustomerService;
-import com.mosinsa.customer.dto.CustomerDto;
+import com.mosinsa.customer.application.dto.CustomerDto;
 import com.mosinsa.customer.ui.request.CreateCustomerRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.dto;
+package com.mosinsa.coupon.application.dto;
 
 import com.mosinsa.coupon.domain.Coupon;
 import com.mosinsa.coupon.domain.CouponDetails;

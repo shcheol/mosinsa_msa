@@ -1,7 +1,7 @@
 package com.mosinsa.promotion.infra.repository;
 
-import com.mosinsa.promotion.dto.PromotionDto;
-import com.mosinsa.promotion.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.application.dto.PromotionDto;
+import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
 import com.querydsl.core.Tuple;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

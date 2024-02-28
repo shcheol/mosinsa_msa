@@ -25,6 +25,7 @@ public class ProductLikesService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void likes(LikesProductRequest request) {
+
 		Product product = productRepository.findProductDetailById(ProductId.of(request.productId()))
 				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
 		likesMemberRepository.save(LikesMember.create(request.memberId(), product.getLikes()));
@@ -36,9 +37,7 @@ public class ProductLikesService {
 
 		Product product = productRepository.findProductDetailById(ProductId.of(request.productId()))
 				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT));
-
 		likesMemberRepository.deleteLikesMemberByLikesIdAndMemberId(request.memberId(), product.getLikes());
-
 		product.likesCancel();
 	}
 }

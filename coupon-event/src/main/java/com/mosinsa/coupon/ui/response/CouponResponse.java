@@ -1,7 +1,7 @@
 package com.mosinsa.coupon.ui.response;
 
 import com.mosinsa.coupon.domain.CouponState;
-import com.mosinsa.coupon.dto.CouponDto;
+import com.mosinsa.coupon.application.dto.CouponDto;
 import lombok.Value;
 
 import java.time.LocalDateTime;

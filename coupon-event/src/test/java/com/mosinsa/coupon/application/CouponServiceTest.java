@@ -2,8 +2,8 @@ package com.mosinsa.coupon.application;
 
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.domain.*;
-import com.mosinsa.coupon.dto.CouponDto;
-import com.mosinsa.coupon.dto.CouponSearchCondition;
+import com.mosinsa.coupon.application.dto.CouponDto;
+import com.mosinsa.coupon.application.dto.CouponSearchCondition;
 import com.mosinsa.coupon.infra.repository.CouponRepository;
 import com.mosinsa.promotion.domain.PromotionCreatedEvent;
 import com.mosinsa.promotion.domain.PromotionId;

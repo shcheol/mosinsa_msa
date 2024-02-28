@@ -1,4 +1,4 @@
-package com.mosinsa.order.dto;
+package com.mosinsa.order.application.dto;
 
 import com.mosinsa.order.domain.Order;
 import com.mosinsa.order.domain.OrderStatus;
