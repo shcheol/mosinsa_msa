@@ -22,20 +22,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductQueryService {
 
-	private final ProductRepository productRepository;
-	private final CategoryService categoryService;
+    private final ProductRepository productRepository;
 
-	public ProductDetailDto getProductById(String productId) {
-		return new ProductDetailDto(productRepository.findProductDetailById(ProductId.of(productId))
-				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)));
-	}
+    public ProductDetailDto getProductById(String productId) {
+        return new ProductDetailDto(productRepository.findProductDetailById(ProductId.of(productId))
+                .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)));
+    }
 
-	public List<ProductDetailDto> findMyLikesProducts(String customerId) {
-		return productRepository.findMyLikesProduct(customerId);
-	}
+    public List<ProductDetailDto> findMyLikesProducts(String customerId) {
+        return productRepository.findMyLikesProduct(customerId);
+    }
 
-	public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
-		return productRepository.findByCondition(condition, pageable);
-	}
+    public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
+        return productRepository.findByCondition(condition, pageable);
+    }
 
 }

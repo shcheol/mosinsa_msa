@@ -28,9 +28,7 @@ public class CouponDetails {
     }
 
     private static LocalDateTime getYearAfter(){
-        LocalDateTime now = LocalDateTime.now();
-
-        return LocalDateTime.of(LocalDate.of(now.getYear() + 1, now.getMonth(), now.getDayOfMonth()), LocalTime.NOON);
+        return LocalDateTime.now().plusYears(1);
     }
 
 }
