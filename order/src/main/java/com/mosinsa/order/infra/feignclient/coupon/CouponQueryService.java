@@ -1,5 +1,6 @@
 package com.mosinsa.order.infra.feignclient.coupon;
 
+import com.mosinsa.order.infra.feignclient.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,9 @@ public class CouponQueryService {
             return SimpleCouponResponse.empty();
         }
 
-        return SimpleCouponResponse.of(couponClient.getCoupon(headers, couponId));
+		ResponseResult<SimpleCouponResponse> response = couponClient.getCoupon(headers, couponId);
+//        return SimpleCouponResponse.of(couponClient.getCoupon(headers, couponId));
+		return response.get();
     }
 
 }

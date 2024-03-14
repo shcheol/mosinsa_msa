@@ -30,10 +30,10 @@ spring:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
   cloud:
     openfeign:
-      circuitbreaker:
-        enabled: true
-        alphanumeric-ids:
-          enabled: true
+#      circuitbreaker:
+#        enabled: true
+#        alphanumeric-ids:
+#          enabled: true
       client:
         config:
           default:

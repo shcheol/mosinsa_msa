@@ -1,5 +1,6 @@
 package com.mosinsa.product.common.aop;
 
+import com.mosinsa.product.common.ex.ProductException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,25 +18,27 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedissonLockAspect {
 
-    private final RedissonClient redissonClient;
+	private final RedissonClient redissonClient;
 
 
-    @Around("@annotation(redissonLock)")
-    public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) {
-        String key = redissonLock.value();
+	@Around("@annotation(redissonLock)")
+	public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) {
+		String key = redissonLock.value();
 
-        RLock lock = redissonClient.getLock(key);
-        try {
-            if (!lock.tryLock(3, 5, TimeUnit.SECONDS)) {
-                throw new TryLockFailException();
-            }
-            return joinPoint.proceed();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (lock.isLocked()) {
-                lock.unlock();
-            }
-        }
-    }
+		RLock lock = redissonClient.getLock(key);
+		try {
+			if (!lock.tryLock(3, 5, TimeUnit.SECONDS)) {
+				throw new TryLockFailException();
+			}
+			return joinPoint.proceed();
+		} catch (ProductException pe) {
+			throw pe;
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (lock.isLocked()) {
+				lock.unlock();
+			}
+		}
+	}
 }
