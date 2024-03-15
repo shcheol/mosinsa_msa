@@ -1,9 +1,11 @@
 package com.mosinsa.order.infra.feignclient;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.order.infra.feignclient.coupon.SimpleCouponResponse;
 import feign.Response;
 import lombok.Getter;
+import org.springframework.core.ParameterizedTypeReference;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,10 +49,11 @@ public class ResponseResult<T> {
 		try {
 			InputStream inputStream = response.body().asInputStream();
 			byte[] bytes = inputStream.readAllBytes();
-			ObjectMapper objectMapper = new ObjectMapper();
-			Object o = objectMapper.readValue(bytes, Object.class);
-			T o1 = (T) o;
-			return new ResponseResult<>(response.status(), o1, response.reason());
+			ObjectMapper om = new ObjectMapper();
+			Object o1 = om.readValue(bytes, Object.class);
+			T o = om.convertValue(o1, new TypeReference<T>() {});
+
+			return new ResponseResult<>(response.status(), o, response.reason());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

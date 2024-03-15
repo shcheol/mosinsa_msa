@@ -17,7 +17,7 @@ import java.util.Map;
 public interface CouponClient {
 
 	@GetMapping("/coupons/{couponId}")
-	ResponseResult<SimpleCouponResponse> getCoupon(@RequestHeader Map<String, Collection<String>> headers,
+	Response getCoupon(@RequestHeader Map<String, Collection<String>> headers,
 									  @PathVariable(value = "couponId") String couponId);
 
 	@PostMapping("/coupons/{couponId}")

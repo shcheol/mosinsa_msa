@@ -23,9 +23,10 @@ public class CouponQueryService {
             return SimpleCouponResponse.empty();
         }
 
-		ResponseResult<SimpleCouponResponse> response = couponClient.getCoupon(headers, couponId);
+		ResponseResult<CouponResponse> response = ResponseResult.of(couponClient.getCoupon(headers, couponId));
+		System.out.println(response.get());
 //        return SimpleCouponResponse.of(couponClient.getCoupon(headers, couponId));
-		return response.get();
+		return SimpleCouponResponse.of(response.get());
     }
 
 }
