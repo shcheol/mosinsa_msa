@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class FeignErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
+		log.error("=================================");
         switch (response.status()){
             case 400:
                 return new BadRequestException();
