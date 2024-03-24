@@ -14,14 +14,14 @@ import java.util.Map;
 public interface ProductClient {
 
 	@GetMapping("/products/{productId}")
-	Response getProduct(@RequestHeader Map<String, Collection<String>> headers,
+	ProductResponse getProduct(@RequestHeader Map<String, Collection<String>> headers,
 						@PathVariable(value = "productId") String productId);
 
 	@PostMapping("/products/order")
-	ResponseResult<Void> orderProducts(@RequestHeader Map<String, Collection<String>> headers,
+	Void orderProducts(@RequestHeader Map<String, Collection<String>> headers,
 								  @RequestBody OrderProductRequests request);
 
 	@PostMapping("/products/cancel")
-	ResponseResult<ProductResponse> cancelOrderProducts(@RequestHeader Map<String, Collection<String>> headers,
+	Void cancelOrderProducts(@RequestHeader Map<String, Collection<String>> headers,
 										@RequestBody CancelOrderProductRequests request);
 }

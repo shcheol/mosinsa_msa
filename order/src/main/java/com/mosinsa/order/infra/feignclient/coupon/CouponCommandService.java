@@ -1,5 +1,6 @@
 package com.mosinsa.order.infra.feignclient.coupon;
 
+import com.mosinsa.order.infra.feignclient.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class CouponCommandService {
 	public void useCoupon(Map<String, Collection<String>> headers, String couponId){
 		if (verifyCouponInput(couponId)) {
 			log.debug("use coupon {}", couponId);
-			couponClient.useCoupon(headers, couponId);
+			ResponseResult<CouponResponse> response = ResponseResult.execute(() -> couponClient.useCoupon(headers, couponId));
 			return;
 		}
 		log.debug("order without coupon");
@@ -27,7 +28,7 @@ public class CouponCommandService {
 	public void cancelCoupon(Map<String, Collection<String>> headers, String couponId){
 		if (verifyCouponInput(couponId)) {
 			log.debug("cancel coupon {}", couponId);
-			couponClient.cancelCoupon(headers, couponId);
+			ResponseResult<CouponResponse> response = ResponseResult.execute(() -> couponClient.cancelCoupon(headers, couponId));
 			return;
 		}
 		log.debug("no cancel coupon");

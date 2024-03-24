@@ -6,6 +6,9 @@ public record SimpleCouponResponse(String couponId, String discountPolicy, boole
         return new SimpleCouponResponse("","",false);
     }
     public static SimpleCouponResponse of(CouponResponse response) {
+        if (response == null){
+            return SimpleCouponResponse.empty();
+        }
         return new SimpleCouponResponse(response.couponId(), response.discountPolicy(), response.available());
     }
 }

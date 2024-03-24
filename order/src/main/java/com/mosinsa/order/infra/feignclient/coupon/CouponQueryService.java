@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,21 +23,11 @@ public class CouponQueryService {
             log.debug("order without coupon");
             return SimpleCouponResponse.empty();
         }
-//		ResponseResult<CouponResponse> response = null;
-		try {
-//			CouponResponse coupon = couponClient.getCoupon(headers, couponId);
-//			ResponseResult<CouponResponse> response = ResponseResult.
 
-			ResponseResult<CouponResponse> execute = ResponseResult.execute(() -> couponClient.getCoupon(headers, couponId));
-			CouponResponse couponResponse = execute.get();
-			return SimpleCouponResponse.of(couponResponse);
-		}catch (Exception e){
-			log.error("ttttttteeeeeeeeeesssssstttt");
-			e.printStackTrace();
-			throw e;
-		}
-//        return SimpleCouponResponse.of(couponClient.getCoupon(headers, couponId));
-//		return SimpleCouponResponse.of(response.get());
+        ResponseResult<CouponResponse> execute = ResponseResult.execute(() -> couponClient.getCoupon(headers, couponId));
+        CouponResponse couponResponse = execute.orElse(null);
+        return SimpleCouponResponse.of(couponResponse);
+
     }
 
 }
