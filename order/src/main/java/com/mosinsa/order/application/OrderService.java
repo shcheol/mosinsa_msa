@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 public interface OrderService {
 
-	OrderDetailDto order(CreateOrderDto createOrderDto, Predicate<CouponResponse> predicate);
+	OrderDetailDto order(CreateOrderDto createOrderDto, Predicate<CreateOrderDto> predicate);
 
 	OrderDetailDto cancelOrder(String orderId);
 

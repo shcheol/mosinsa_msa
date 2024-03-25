@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDetailDto order(CreateOrderDto createOrderDto, Predicate<CouponResponse> predicate) {
+    public OrderDetailDto order(CreateOrderDto createOrderDto, Predicate<CreateOrderDto> predicate) {
 
         Order order = orderRepository.save(
                 Order.create(
@@ -42,9 +42,9 @@ public class OrderServiceImpl implements OrderService {
                                         myOrderProduct.quantity())
                         ).toList()));
 
-        CouponResponse coupon = createOrderDto.getCouponResponse();
-        if (predicate.test(coupon)) {
+        if (predicate.test(createOrderDto)) {
             log.info("order [{}] use coupon {}", order.getId().getId(), order.getCouponId());
+            CouponResponse coupon = createOrderDto.getCouponResponse();
             order.useCoupon(coupon.couponId(), coupon.discountPolicy(), coupon.available());
         }
 

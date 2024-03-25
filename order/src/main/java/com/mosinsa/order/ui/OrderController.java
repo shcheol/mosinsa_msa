@@ -79,7 +79,7 @@ public class OrderController {
             CreateOrderDto createOrderDto = new CreateOrderDto(orderRequest.getCustomerId(),
                     coupon, orderRequest.getMyOrderProducts());
 
-            OrderDetailDto orderDto = orderService.order(createOrderDto, CouponResponse::available);
+            OrderDetailDto orderDto = orderService.order(createOrderDto, (c) -> c.getCouponResponse().available());
 
             return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
         } catch (Exception e) {
