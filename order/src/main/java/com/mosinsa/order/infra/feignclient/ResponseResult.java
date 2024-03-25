@@ -37,14 +37,14 @@ public class ResponseResult<T> {
 
     public ResponseResult<T> onSuccess(Supplier<T> supplier) {
         if (this.isSuccess()) {
-            supplier.get();
+            return ResponseResult.execute(supplier);
         }
         return this;
     }
 
     public ResponseResult<T> onFailure(Supplier<T> supplier) {
         if (!this.isSuccess()) {
-            supplier.get();
+            return ResponseResult.execute(supplier);
         }
         return this;
     }
