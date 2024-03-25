@@ -1,6 +1,5 @@
 package com.mosinsa.order.infra.feignclient;
 
-import com.mosinsa.order.infra.feignclient.coupon.SimpleCouponResponse;
 import feign.Response;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +15,6 @@ public class ResponseResult<T> {
     private final int status;
     private final String message;
     private final T data;
-
-    public T get() {
-        return data;
-    }
 
     private ResponseResult(int status, T data, String message) {
         this.status = status;
@@ -67,6 +62,10 @@ public class ResponseResult<T> {
         return (ResponseResult<T>) EMPTY;
     }
 
+    public T get() {
+        return data;
+    }
+
     public <X extends Throwable> T orElseThrow() throws X {
         if (this.isSuccess()) {
             return data;
@@ -76,7 +75,7 @@ public class ResponseResult<T> {
     }
 
     public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        if (data != null) {
+        if (this.isSuccess()) {
             return data;
         } else {
             throw exceptionSupplier.get();

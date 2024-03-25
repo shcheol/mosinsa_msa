@@ -1,13 +1,14 @@
 package com.mosinsa.order.application;
 
+import com.mosinsa.order.application.dto.CreateOrderDto;
+import com.mosinsa.order.application.dto.OrderDetailDto;
+import com.mosinsa.order.application.dto.OrderDto;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.domain.Order;
 import com.mosinsa.order.domain.OrderId;
 import com.mosinsa.order.domain.OrderProduct;
-import com.mosinsa.order.application.dto.CreateOrderDto;
-import com.mosinsa.order.application.dto.OrderDetailDto;
-import com.mosinsa.order.application.dto.OrderDto;
+import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
 import com.mosinsa.order.infra.repository.OrderRepository;
 import com.mosinsa.order.ui.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.function.Predicate;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -27,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDetailDto order(CreateOrderDto createOrderDto) {
+    public OrderDetailDto order(CreateOrderDto createOrderDto, Predicate<CouponResponse> predicate) {
 
         Order order = orderRepository.save(
                 Order.create(
@@ -39,11 +42,10 @@ public class OrderServiceImpl implements OrderService {
                                         myOrderProduct.quantity())
                         ).toList()));
 
-        if (createOrderDto.isAvailable()) {
-            order.useCoupon(createOrderDto.getCouponId(),
-                    createOrderDto.getDiscountPolicy(),
-                    createOrderDto.isAvailable());
+        CouponResponse coupon = createOrderDto.getCouponResponse();
+        if (predicate.test(coupon)) {
             log.info("order [{}] use coupon {}", order.getId().getId(), order.getCouponId());
+            order.useCoupon(coupon.couponId(), coupon.discountPolicy(), coupon.available());
         }
 
         return new OrderDetailDto(order);
