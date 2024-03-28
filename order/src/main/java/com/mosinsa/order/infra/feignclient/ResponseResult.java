@@ -83,7 +83,7 @@ public class ResponseResult<T> {
     }
 
     public T orElse(T other) {
-        return data != null ? data : other;
+        return this.isSuccess() && data != null ? data : other;
     }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class FeignErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
-		log.error("=================================");
+		log.error("call {} fail", methodKey);
         return new ResponseFailureException(response);
     }
 }
