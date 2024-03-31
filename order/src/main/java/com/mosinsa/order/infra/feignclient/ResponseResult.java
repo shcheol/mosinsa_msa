@@ -43,7 +43,7 @@ public class ResponseResult<T> {
     }
 
     public ResponseResult<T> onFailure(Supplier<T> supplier) {
-        if (!this.isSuccess()) {
+        if (this.isFailure()) {
             return ResponseResult.execute(supplier);
         }
         return this;
