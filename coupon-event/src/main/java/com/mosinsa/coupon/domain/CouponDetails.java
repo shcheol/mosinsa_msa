@@ -1,11 +1,12 @@
 package com.mosinsa.coupon.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

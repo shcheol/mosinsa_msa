@@ -1,7 +1,7 @@
 package com.mosinsa.order.ui;
 
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.infra.feignclient.ExternalErrorException;
+import com.mosinsa.order.infra.feignclient.ExternalServerException;
 import com.mosinsa.order.ui.response.BaseResponse;
 import com.mosinsa.order.ui.response.GlobalResponseEntity;
 import lombok.AccessLevel;
@@ -25,11 +25,11 @@ public class OrderControllerAdvice {
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
 
-	@ExceptionHandler(ExternalErrorException.class)
+	@ExceptionHandler(ExternalServerException.class)
 	@ResponseBody
-	public static ResponseEntity<BaseResponse> ExternalExceptionHandler(ExternalErrorException exception) {
+	public static ResponseEntity<BaseResponse> externalExceptionHandler(ExternalServerException exception) {
 		log.error("response error message : {}", exception.getMessage(), exception);
-		return GlobalResponseEntity.error(HttpStatus.valueOf(exception.getResult().getStatus()), exception.getResult().getMessage());
+		return GlobalResponseEntity.error(HttpStatus.valueOf(exception.getStatus()), exception.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)

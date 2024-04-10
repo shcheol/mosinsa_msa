@@ -13,8 +13,4 @@ public class ResponseFailureException extends RuntimeException {
         this.response = response;
     }
 
-    public ResponseFailureException(String message, Response response) {
-        super(message);
-        this.response = response;
-    }
 }

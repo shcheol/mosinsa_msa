@@ -29,6 +29,6 @@ public class RetryAspect {
             }
         }
 
-        throw new RuntimeException();
+        throw new RetryFailException();
     }
 }

@@ -66,11 +66,11 @@ public class ResponseResult<T> {
         return data;
     }
 
-    public <X extends Throwable> T orElseThrow() throws X {
+    public <X extends Throwable> T orElseThrow() {
         if (this.isSuccess()) {
             return data;
         } else {
-            throw new ExternalErrorException(this);
+            throw new ExternalServerException(this.status, this.message);
         }
     }
 
