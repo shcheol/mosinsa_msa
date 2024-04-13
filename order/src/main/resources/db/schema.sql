@@ -16,6 +16,12 @@ create table if not exists orders
     total_price        integer,
     created_date       datetime(6),
     last_modified_date datetime(6),
+    shipping_zip_code varchar(6),
+    shipping_addr1 varchar(100),
+    shipping_addr2 varchar(100),
+    shipping_message varchar(200),
+    receiver_name varchar(50),
+    receiver_phone varchar(50),
     INDEX order_customer_idx(customer_id),
     primary key (order_id)
 ) engine = InnoDB;

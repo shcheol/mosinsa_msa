@@ -14,7 +14,6 @@ import java.util.List;
 public class CreateOrderDto {
 
 	String customerId;
-
 	CouponResponse couponResponse;
 	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 

@@ -5,9 +5,7 @@ import com.mosinsa.order.application.dto.OrderDetailDto;
 import com.mosinsa.order.application.dto.OrderDto;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.domain.Order;
-import com.mosinsa.order.domain.OrderId;
-import com.mosinsa.order.domain.OrderProduct;
+import com.mosinsa.order.domain.*;
 import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
 import com.mosinsa.order.infra.repository.OrderRepository;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -40,12 +38,12 @@ public class OrderServiceImpl implements OrderService {
                                         myOrderProduct.productId(),
                                         myOrderProduct.price(),
                                         myOrderProduct.quantity())
-                        ).toList()));
+                        ).toList(),ShippingInfo.of(Address.of("","",""),"",Receiver.of("",""))));
 
         if (predicate.test(createOrderDto)) {
             log.info("order [{}] use coupon {}", order.getId().getId(), order.getCouponId());
             CouponResponse coupon = createOrderDto.getCouponResponse();
-            order.useCoupon(coupon.couponId(), coupon.discountPolicy(), coupon.available());
+            order.useCoupon(coupon.couponId(), coupon.discountPolicy());
         }
 
         return new OrderDetailDto(order);

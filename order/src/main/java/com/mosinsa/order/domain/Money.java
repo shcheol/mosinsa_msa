@@ -27,6 +27,15 @@ public class Money {
         return new Money(value * multiplier);
     }
 
+    public Money minus(int minus) {
+        inputValidCheck(minus);
+        int resultAmount = value - minus;
+        if(resultAmount < 0){
+            throw new InvalidMoneyException();
+        }
+        return new Money(resultAmount);
+    }
+
     private static void inputValidCheck(int value) {
         if(value < 1){
             throw new InvalidMoneyException();

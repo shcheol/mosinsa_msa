@@ -4,6 +4,7 @@ import com.mosinsa.order.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 @Sql("classpath:db/test-init.sql")
 class OrderRepositoryTest {
 
@@ -24,7 +25,8 @@ class OrderRepositoryTest {
 	@Test
 	void create() {
 		Order order = Order.create("customerId",
-				List.of(OrderProduct.create("productId", 1000, 10)));
+				List.of(OrderProduct.create("productId", 1000, 10)),
+				ShippingInfo.of(Address.of("","",""),"",Receiver.of("","")));
 		Order saveOrder = repository.save(order);
 
 		assertThat(order).isEqualTo(saveOrder);

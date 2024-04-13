@@ -30,6 +30,9 @@ public class Order extends AuditingEntity {
 	@Column(name = "total_price")
 	private Money totalPrice;
 
+	@Embedded
+	private ShippingInfo shippingInfo;
+
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 
@@ -39,20 +42,18 @@ public class Order extends AuditingEntity {
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public static Order create(String customerId, List<OrderProduct> orderProducts) {
+	public static Order create(String customerId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo) {
 		Order order = new Order();
 		order.id = OrderId.newId();
 		order.setCustomerId(customerId);
 		order.status = OrderStatus.PAYMENT_WAITING;
 		order.addOrderProducts(orderProducts);
+		order.setShippingInfo(shippingInfo);
 		return order;
 	}
 
-	public void useCoupon(String couponId, String discountPolicy, boolean available) {
+	public void useCoupon(String couponId, String discountPolicy) {
 		if(!StringUtils.hasText(couponId)){
-			return;
-		}
-		if (!available){
 			throw new InvalidCouponException();
 		}
 		this.couponId = couponId;
@@ -61,14 +62,15 @@ public class Order extends AuditingEntity {
 
 	private void calculateTotalPriceWithCoupon(String discountPolicy) {
 
-		int discountPrice = DiscountPolicy.valueOf(discountPolicy).applyDiscountPrice(this.totalPrice.getValue());
-		int discountedTotalPrice = this.totalPrice.getValue() - discountPrice;
-		if(discountedTotalPrice < 0){
-			throw new InvalidCouponException();
-		}
-		this.totalPrice = Money.of(discountedTotalPrice);
+		int discountPrice = DiscountPolicy.valueOf(discountPolicy)
+				.applyDiscountPrice(this.totalPrice.getValue());
+		this.totalPrice = this.totalPrice.minus(discountPrice);
 	}
 
+	private void setShippingInfo(ShippingInfo shippingInfo){
+		verifyNotYetShipped();
+		this.shippingInfo = shippingInfo;
+	}
 	private void setCustomerId(String customerId) {
 		if (!StringUtils.hasText(customerId)){
 			throw new OrderException(OrderError.NO_ORDER_CUSTOMER);
@@ -92,14 +94,14 @@ public class Order extends AuditingEntity {
 		}
 	}
 	private void calculateTotalPrice() {
-		this.totalPrice = Money.of(orderProducts.stream().mapToInt(op -> op.getAmounts().getValue()).sum());
+		this.totalPrice = Money.of(orderProducts.stream()
+				.mapToInt(op -> op.getAmounts().getValue()).sum());
 	}
 
 	private void verifyNotYetShipped() {
 		if(!isNotYetShipped()){
 			throw new AlreadyShippedException();
 		}
-
 	}
 
 	private boolean isNotYetShipped() {
