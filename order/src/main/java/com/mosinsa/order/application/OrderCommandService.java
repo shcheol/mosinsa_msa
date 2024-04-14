@@ -21,12 +21,10 @@ import java.util.function.Predicate;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class OrderServiceImpl implements OrderService {
+public class OrderCommandService {
     private final OrderRepository orderRepository;
 
-    @Override
     @Transactional
     public OrderDetailDto order(CreateOrderDto createOrderDto, Predicate<CreateOrderDto> predicate) {
 
@@ -49,27 +47,12 @@ public class OrderServiceImpl implements OrderService {
         return new OrderDetailDto(order);
     }
 
-    @Override
     @Transactional
     public OrderDetailDto cancelOrder(String orderId) {
         Order findOrder = orderRepository.findById(OrderId.of(orderId))
                 .orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
         findOrder.cancelOrder();
         return new OrderDetailDto(findOrder);
-    }
-
-    @Override
-    public Page<OrderDto> findMyOrdersByCondition(SearchCondition condition, Pageable pageable) {
-        if (!StringUtils.hasText(condition.getCustomerId())) {
-            throw new OrderException(OrderError.VALIDATION_ERROR);
-        }
-        return orderRepository.findOrdersByCondition(condition, pageable).map(OrderDto::new);
-    }
-
-    @Override
-    public OrderDetailDto getOrderDetails(String orderId) {
-        return new OrderDetailDto(orderRepository.findById(OrderId.of(orderId))
-                .orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND)));
     }
 
 }

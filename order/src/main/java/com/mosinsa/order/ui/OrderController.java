@@ -1,12 +1,13 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.application.OrderService;
-import com.mosinsa.order.common.ex.OrderError;
-import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.common.ex.OrderRollbackException;
+import com.mosinsa.order.application.OrderCommandService;
+import com.mosinsa.order.application.OrderQueryService;
 import com.mosinsa.order.application.dto.CreateOrderDto;
 import com.mosinsa.order.application.dto.OrderDetailDto;
 import com.mosinsa.order.application.dto.OrderDto;
+import com.mosinsa.order.common.ex.OrderError;
+import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.common.ex.OrderRollbackException;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
 import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
@@ -30,7 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Transactional
@@ -39,7 +43,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderQueryService orderQueryService;
+
+    private final OrderCommandService orderCommandService;
 
     private final CouponQueryService couponQueryService;
 
@@ -51,7 +57,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<BaseResponse> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
         log.info("condition {}", condition);
-        Page<OrderDto> orderCustomer = orderService.findMyOrdersByCondition(condition, pageable);
+        Page<OrderDto> orderCustomer = orderQueryService.findMyOrdersByCondition(condition, pageable);
         return GlobalResponseEntity.success(orderCustomer);
     }
 
@@ -60,7 +66,7 @@ public class OrderController {
         if (!StringUtils.hasText(orderId)) {
             throw new OrderException(OrderError.VALIDATION_ERROR);
         }
-        OrderDetailDto orderDto = orderService.getOrderDetails(orderId);
+        OrderDetailDto orderDto = orderQueryService.getOrderDetails(orderId);
         return GlobalResponseEntity.success(orderDto);
     }
 
@@ -79,7 +85,7 @@ public class OrderController {
             CreateOrderDto createOrderDto = new CreateOrderDto(orderRequest.getCustomerId(),
                     coupon, orderRequest.getMyOrderProducts());
 
-            OrderDetailDto orderDto = orderService.order(createOrderDto, c -> c.getCouponResponse().available());
+            OrderDetailDto orderDto = orderCommandService.order(createOrderDto, c -> c.getCouponResponse().available());
 
             return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
         } catch (Exception e) {
@@ -102,7 +108,7 @@ public class OrderController {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
 
-        OrderDetailDto cancelOrder = orderService.cancelOrder(orderId);
+        OrderDetailDto cancelOrder = orderCommandService.cancelOrder(orderId);
 
         try {
             productCommandService.cancelOrderProduct(authMap,
