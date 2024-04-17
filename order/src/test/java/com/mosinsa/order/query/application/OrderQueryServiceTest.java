@@ -1,8 +1,7 @@
-package com.mosinsa.order.application;
+package com.mosinsa.order.query.application;
 
-import com.mosinsa.order.query.application.OrderQueryService;
-import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
@@ -40,6 +40,6 @@ class OrderQueryServiceTest {
 
     @Test
     void getOrderDetailsEx() {
-        assertThrows(OrderException.class, () -> orderQueryService.getOrderDetails(""));
+        assertThrows(IllegalArgumentException.class, () -> orderQueryService.getOrderDetails(""));
     }
 }

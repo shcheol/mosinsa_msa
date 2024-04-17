@@ -1,6 +1,8 @@
-package com.mosinsa.order.domain;
+package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.domain.*;
+import com.mosinsa.order.command.application.dto.AddressDto;
+import com.mosinsa.order.command.application.dto.ReceiverDto;
+import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import com.mosinsa.order.common.ex.OrderException;
 import org.junit.jupiter.api.Test;
 
@@ -11,12 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OrderTest {
 
+    private final ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
+
+
     @Test
     void create_상품x() {
         List<OrderProduct> orderProducts = List.of();
         assertThrows(OrderException.class,
                 () -> Order.create("customerId", orderProducts,
-                        ShippingInfo.of(null, "", null)));
+                        ShippingInfo.of(shippingInfoDto)));
     }
 
     @Test
@@ -24,14 +29,14 @@ class OrderTest {
         List<OrderProduct> orderProducts = List.of();
         assertThrows(OrderException.class,
                 () -> Order.create("", orderProducts,
-                        ShippingInfo.of(null, "", null)));
+                        ShippingInfo.of(shippingInfoDto)));
     }
 
     @Test
     void 쿠폰사용() {
         List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
         Order order = Order.create("customerId", orderProducts,
-                ShippingInfo.of(null, "", null));
+                ShippingInfo.of(shippingInfoDto));
         order.useCoupon("couponId", "TEN_PERCENTAGE");
         assertThat(order.getTotalPrice()).isEqualTo(Money.of(900));
     }
@@ -39,7 +44,7 @@ class OrderTest {
     void 쿠폰사용_noId() {
         List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
         Order order = Order.create("customerId", orderProducts,
-                ShippingInfo.of(null, "", null));
+                ShippingInfo.of(shippingInfoDto));
 
         assertThrows(InvalidCouponException.class,
                 () -> order.useCoupon("", "TEN_PERCENTAGE"));
@@ -49,7 +54,7 @@ class OrderTest {
     void 쿠폰사용_invalid_discountPolicy() {
         List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
         Order order = Order.create("customerId", orderProducts,
-                ShippingInfo.of(null, "", null));
+                ShippingInfo.of(shippingInfoDto));
 
         assertThrows(IllegalArgumentException.class,
                 () -> order.useCoupon("asdf", "TEN_PERCENTAGExxxxx"));

@@ -31,7 +31,7 @@ public class PlaceOrderService {
                                         myOrderProduct.productId(),
                                         myOrderProduct.price(),
                                         myOrderProduct.quantity())
-                        ).toList(), ShippingInfo.of(Address.of("","",""),"", Receiver.of("",""))));
+                        ).toList(), ShippingInfo.of(createOrderDto.getShippingInfo())));
 
         if (predicate.test(createOrderDto)) {
             log.info("order [{}] use coupon {}", order.getId().getId(), order.getCouponId());

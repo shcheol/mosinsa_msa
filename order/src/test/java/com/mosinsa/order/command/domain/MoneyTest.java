@@ -1,4 +1,4 @@
-package com.mosinsa.order.domain;
+package com.mosinsa.order.command.domain;
 
 import com.mosinsa.order.command.domain.InvalidMoneyException;
 import com.mosinsa.order.command.domain.Money;

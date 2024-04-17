@@ -15,11 +15,13 @@ public class CreateOrderDto {
 
 	String customerId;
 	CouponResponse couponResponse;
+	ShippingInfoDto shippingInfo;
 	List<MyOrderProduct> myOrderProducts = new ArrayList<>();
 
-	public CreateOrderDto(String customerId, CouponResponse couponResponse, List<MyOrderProduct> myOrderProducts) {
+	public CreateOrderDto(String customerId, CouponResponse couponResponse, ShippingInfoDto shippingInfoDto, List<MyOrderProduct> myOrderProducts) {
 		this.customerId = customerId;
 		this.couponResponse = couponResponse;
+		this.shippingInfo = shippingInfoDto;
 		myOrderProducts.forEach(op ->
 			this.myOrderProducts.add(new MyOrderProduct(op.productId(), op.price(), op.quantity())));
 		valid();

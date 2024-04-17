@@ -3,28 +3,20 @@ package com.mosinsa.order.ui;
 import com.mosinsa.order.command.application.CancelOrderService;
 import com.mosinsa.order.command.application.PlaceOrderService;
 import com.mosinsa.order.command.application.dto.CreateOrderDto;
-import com.mosinsa.order.common.ex.OrderError;
-import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.common.ex.OrderRollbackException;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
 import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
 import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
-import com.mosinsa.order.query.application.OrderQueryService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
-import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.MyOrderProduct;
-import com.mosinsa.order.ui.request.SearchCondition;
 import com.mosinsa.order.ui.response.BaseResponse;
 import com.mosinsa.order.ui.response.GlobalResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,21 +44,29 @@ public class OrderController {
 
     private final ProductCommandService productCommandService;
 
+    @PostMapping("/orderConfirm")
+    public ResponseEntity<BaseResponse> orderConfirm(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
+        // 주문 확인서 return
+        // 멱등키 추가 전달해서 멱등성보장 + 데이터 변조 검사
 
-    @PostMapping
+        return null;
+
+    }
+
+    @PostMapping("/order")
     public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
-        CouponResponse coupon = couponQueryService.couponCheck(authMap, orderRequest.getCouponId())
-                .onSuccess(() -> couponCommandService.useCoupon(authMap, orderRequest.getCouponId()).orElseThrow())
+        CouponResponse coupon = couponQueryService.couponCheck(authMap, orderRequest.couponId())
+                .onSuccess(() -> couponCommandService.useCoupon(authMap, orderRequest.couponId()).orElseThrow())
                 .orElse(CouponResponse.empty());
 
         productCommandService.orderProduct(authMap, orderRequest).orElseThrow();
 
         try {
-            CreateOrderDto createOrderDto = new CreateOrderDto(orderRequest.getCustomerId(),
-                    coupon, orderRequest.getMyOrderProducts());
+            CreateOrderDto createOrderDto = new CreateOrderDto(orderRequest.customerId(),
+                    coupon, orderRequest.shippingInfo(), orderRequest.myOrderProducts());
 
             OrderDetail orderDto = placeOrderService.order(createOrderDto, c -> c.getCouponResponse().available());
 
@@ -75,7 +75,7 @@ public class OrderController {
             log.error("order fail => rollback product stock, coupon use");
 
             try {
-                productCommandService.cancelOrderProduct(authMap, orderRequest.getMyOrderProducts());
+                productCommandService.cancelOrderProduct(authMap, orderRequest.myOrderProducts());
                 couponCommandService.cancelCoupon(authMap, coupon.couponId());
             } catch (Exception ex) {
                 //TODO: kafka 이용 후처리

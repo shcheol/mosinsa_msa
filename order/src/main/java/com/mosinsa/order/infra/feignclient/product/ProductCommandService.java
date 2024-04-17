@@ -20,7 +20,7 @@ public class ProductCommandService {
         return ResponseResult.execute(() ->
                 productClient.orderProducts(headers,
                         new OrderProductRequests(
-                                orderRequest.getMyOrderProducts().stream().map(op ->
+                                orderRequest.myOrderProducts().stream().map(op ->
                                         new OrderProductRequest(op.productId(), op.quantity())
                                 ).toList())));
     }

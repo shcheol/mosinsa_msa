@@ -1,5 +1,8 @@
 package com.mosinsa.order.infra.repository;
 
+import com.mosinsa.order.command.application.dto.AddressDto;
+import com.mosinsa.order.command.application.dto.ReceiverDto;
+import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import com.mosinsa.order.command.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +25,10 @@ class OrderRepositoryTest {
 
 	@Test
 	void create() {
+		ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
 		Order order = Order.create("customerId",
 				List.of(OrderProduct.create("productId", 1000, 10)),
-				ShippingInfo.of(Address.of("","",""),"", Receiver.of("","")));
+				ShippingInfo.of(shippingInfoDto));
 		Order saveOrder = repository.save(order);
 
 		assertThat(order).isEqualTo(saveOrder);

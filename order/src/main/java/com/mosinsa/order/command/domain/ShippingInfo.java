@@ -1,5 +1,6 @@
 package com.mosinsa.order.command.domain;
 
+import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -26,11 +27,11 @@ public class ShippingInfo {
     @Embedded
     private Receiver receiver;
 
-    public static ShippingInfo of(Address address, String message, Receiver receiver){
+    public static ShippingInfo of(ShippingInfoDto shippingInfoDto){
         ShippingInfo shippingInfo = new ShippingInfo();
-        shippingInfo.address = address;
-        shippingInfo.message = message;
-        shippingInfo.receiver = receiver;
+        shippingInfo.address = Address.of(shippingInfoDto.address());
+        shippingInfo.message = shippingInfoDto.message();
+        shippingInfo.receiver = Receiver.of(shippingInfoDto.receiver());
         return shippingInfo;
     }
 

@@ -13,7 +13,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mosinsa.order.domain.QOrder.order;
+import static com.mosinsa.order.command.domain.QOrder.order;
+
 
 @AllArgsConstructor
 public class CustomOrderRepositoryImpl implements CustomOrderRepository {

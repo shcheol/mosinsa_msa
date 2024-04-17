@@ -1,5 +1,6 @@
 package com.mosinsa.order.command.domain;
 
+import com.mosinsa.order.command.application.dto.ReceiverDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -19,10 +20,10 @@ public class Receiver {
     @Column(name = "receiver_phone")
     private String phoneNumber;
 
-    public static Receiver of(String name, String phoneNumber) {
+    public static Receiver of(ReceiverDto receiverDto) {
         Receiver receiver = new Receiver();
-        receiver.name = name;
-        receiver.phoneNumber = phoneNumber;
+        receiver.name = receiverDto.name();
+        receiver.phoneNumber = receiverDto.phoneNumber();
         return receiver;
     }
 }
