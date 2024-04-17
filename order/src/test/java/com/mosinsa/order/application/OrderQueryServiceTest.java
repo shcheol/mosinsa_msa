@@ -1,17 +1,20 @@
 package com.mosinsa.order.application;
 
-import com.mosinsa.order.application.dto.OrderDetailDto;
+import com.mosinsa.order.query.application.OrderQueryService;
+import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Sql("classpath:db/test-init.sql")
 class OrderQueryServiceTest {
 
     @Autowired
@@ -26,7 +29,7 @@ class OrderQueryServiceTest {
 
     @Test
     void getOrderDetails() {
-        OrderDetailDto orderId2 = orderQueryService.getOrderDetails("orderId2");
+        OrderDetail orderId2 = orderQueryService.getOrderDetails("orderId2");
         assertThat(orderId2.getOrderId()).isEqualTo("orderId2");
     }
 

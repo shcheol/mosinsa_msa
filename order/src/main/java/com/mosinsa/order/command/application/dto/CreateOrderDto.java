@@ -1,4 +1,4 @@
-package com.mosinsa.order.application.dto;
+package com.mosinsa.order.command.application.dto;
 
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;

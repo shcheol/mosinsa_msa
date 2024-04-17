@@ -1,6 +1,6 @@
 package com.mosinsa.order.ui.request;
 
-import com.mosinsa.order.domain.OrderStatus;
+import com.mosinsa.order.command.domain.OrderStatus;
 import lombok.*;
 
 import java.time.LocalDate;

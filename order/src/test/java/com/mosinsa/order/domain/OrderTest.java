@@ -1,5 +1,6 @@
 package com.mosinsa.order.domain;
 
+import com.mosinsa.order.command.domain.*;
 import com.mosinsa.order.common.ex.OrderException;
 import org.junit.jupiter.api.Test;
 

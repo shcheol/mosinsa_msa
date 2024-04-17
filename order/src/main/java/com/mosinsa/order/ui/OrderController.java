@@ -1,10 +1,8 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.application.OrderCommandService;
-import com.mosinsa.order.application.OrderQueryService;
-import com.mosinsa.order.application.dto.CreateOrderDto;
-import com.mosinsa.order.application.dto.OrderDetailDto;
-import com.mosinsa.order.application.dto.OrderDto;
+import com.mosinsa.order.command.application.CancelOrderService;
+import com.mosinsa.order.command.application.PlaceOrderService;
+import com.mosinsa.order.command.application.dto.CreateOrderDto;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.common.ex.OrderRollbackException;
@@ -13,6 +11,9 @@ import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
 import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
+import com.mosinsa.order.query.application.OrderQueryService;
+import com.mosinsa.order.query.application.dto.OrderDetail;
+import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.MyOrderProduct;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -27,7 +28,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,15 +37,14 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Transactional
 @RestController
 @RequestMapping(value = "/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderQueryService orderQueryService;
+    private final PlaceOrderService placeOrderService;
 
-    private final OrderCommandService orderCommandService;
+    private final CancelOrderService cancelOrderService;
 
     private final CouponQueryService couponQueryService;
 
@@ -53,22 +52,6 @@ public class OrderController {
 
     private final ProductCommandService productCommandService;
 
-
-    @GetMapping
-    public ResponseEntity<BaseResponse> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
-        log.info("condition {}", condition);
-        Page<OrderDto> orderCustomer = orderQueryService.findMyOrdersByCondition(condition, pageable);
-        return GlobalResponseEntity.success(orderCustomer);
-    }
-
-    @GetMapping("/{orderId}")
-    public ResponseEntity<BaseResponse> orderDetails(@PathVariable String orderId) {
-        if (!StringUtils.hasText(orderId)) {
-            throw new OrderException(OrderError.VALIDATION_ERROR);
-        }
-        OrderDetailDto orderDto = orderQueryService.getOrderDetails(orderId);
-        return GlobalResponseEntity.success(orderDto);
-    }
 
 
     @PostMapping
@@ -85,7 +68,7 @@ public class OrderController {
             CreateOrderDto createOrderDto = new CreateOrderDto(orderRequest.getCustomerId(),
                     coupon, orderRequest.getMyOrderProducts());
 
-            OrderDetailDto orderDto = orderCommandService.order(createOrderDto, c -> c.getCouponResponse().available());
+            OrderDetail orderDto = placeOrderService.order(createOrderDto, c -> c.getCouponResponse().available());
 
             return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
         } catch (Exception e) {
@@ -108,7 +91,7 @@ public class OrderController {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
 
-        OrderDetailDto cancelOrder = orderCommandService.cancelOrder(orderId);
+        OrderDetail cancelOrder = cancelOrderService.cancelOrder(orderId);
 
         try {
             productCommandService.cancelOrderProduct(authMap,

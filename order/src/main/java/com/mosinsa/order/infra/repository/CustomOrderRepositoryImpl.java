@@ -1,8 +1,8 @@
 package com.mosinsa.order.infra.repository;
 
 import com.mosinsa.order.ui.request.SearchCondition;
-import com.mosinsa.order.domain.Order;
-import com.mosinsa.order.domain.OrderStatus;
+import com.mosinsa.order.command.domain.Order;
+import com.mosinsa.order.command.domain.OrderStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.AllArgsConstructor;

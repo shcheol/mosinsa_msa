@@ -1,6 +1,6 @@
-package com.mosinsa.order.application.dto;
+package com.mosinsa.order.command.application.dto;
 
-import com.mosinsa.order.domain.OrderProduct;
+import com.mosinsa.order.command.domain.OrderProduct;
 import lombok.Value;
 
 @Value

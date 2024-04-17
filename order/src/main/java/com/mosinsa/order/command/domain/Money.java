@@ -1,4 +1,4 @@
-package com.mosinsa.order.domain;
+package com.mosinsa.order.command.domain;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

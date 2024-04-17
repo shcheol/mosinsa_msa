@@ -1,11 +1,11 @@
-package com.mosinsa.order.application.dto;
+package com.mosinsa.order.query.application.dto;
 
-import com.mosinsa.order.domain.Order;
-import com.mosinsa.order.domain.OrderStatus;
+import com.mosinsa.order.command.domain.Order;
+import com.mosinsa.order.command.domain.OrderStatus;
 import lombok.Value;
 
 @Value
-public class OrderDto {
+public class OrderSummary {
 
     String orderId;
     String customerId;
@@ -13,7 +13,7 @@ public class OrderDto {
     int totalPrice;
     OrderStatus status;
 
-    public OrderDto(Order order) {
+    public OrderSummary(Order order) {
         this.orderId = order.getId().getId();
         this.customerId = order.getCustomerId();
 		this.couponId = order.getCouponId();

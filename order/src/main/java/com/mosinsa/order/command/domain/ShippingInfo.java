@@ -1,4 +1,4 @@
-package com.mosinsa.order.domain;
+package com.mosinsa.order.command.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
