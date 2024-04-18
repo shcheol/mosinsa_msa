@@ -17,10 +17,6 @@ public class CouponQueryService {
 
     public ResponseResult<CouponResponse> couponCheck(Map<String, Collection<String>> headers, String couponId) {
 
-//        if (!StringUtils.hasText(couponId)) {
-//            log.debug("order without coupon");
-//            return SimpleCouponResponse.empty();
-//        }
         return ResponseResult.execute(() -> couponClient.getCoupon(headers, couponId));
     }
 

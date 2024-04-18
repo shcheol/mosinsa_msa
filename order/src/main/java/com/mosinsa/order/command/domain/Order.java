@@ -42,22 +42,28 @@ public class Order extends AuditingEntity {
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public static Order create(String customerId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo) {
+	public static Order create(String customerId, String couponId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
 		Order order = new Order();
 		order.id = OrderId.newId();
+		order.useCoupon(couponId);
 		order.setCustomerId(customerId);
 		order.status = OrderStatus.PAYMENT_WAITING;
 		order.addOrderProducts(orderProducts);
 		order.setShippingInfo(shippingInfo);
+		order.setTotalPrice(Money.of(totalPrice));
 		return order;
 	}
 
-	public void useCoupon(String couponId, String discountPolicy) {
+	private void setTotalPrice(Money totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	private void useCoupon(String couponId) {
 		if(!StringUtils.hasText(couponId)){
-			throw new InvalidCouponException();
+			return;
 		}
 		this.couponId = couponId;
-		calculateTotalPriceWithCoupon(discountPolicy);
+//		calculateTotalPriceWithCoupon(discountPolicy);
 	}
 
 	private void calculateTotalPriceWithCoupon(String discountPolicy) {
@@ -81,7 +87,7 @@ public class Order extends AuditingEntity {
 	private void addOrderProducts(List<OrderProduct> orderProducts) {
 		verifyAtLeastOneOrderProducts(orderProducts);
 		this.orderProducts.addAll(orderProducts);
-		calculateTotalPrice();
+//		calculateTotalPrice();
 	}
 
 	public void cancelOrder() {

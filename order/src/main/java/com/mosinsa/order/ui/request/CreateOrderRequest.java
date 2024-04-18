@@ -1,10 +1,7 @@
 package com.mosinsa.order.ui.request;
 
-import com.mosinsa.order.command.application.dto.ShippingInfoDto;
+import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 
-import java.util.List;
-
-public record CreateOrderRequest(String customerId, String couponId, ShippingInfoDto shippingInfo,
-                                 List<MyOrderProduct> myOrderProducts) {
+public record CreateOrderRequest(OrderConfirmDto orderConfirm) {
 
 }

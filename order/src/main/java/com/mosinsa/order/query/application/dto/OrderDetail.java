@@ -16,7 +16,6 @@ public class OrderDetail {
 	String couponId;
 	int totalPrice;
 	OrderStatus status;
-
 	List<OrderProductDto> orderProducts = new ArrayList<>();
 
 	public OrderDetail(Order order) {
@@ -25,8 +24,7 @@ public class OrderDetail {
 		this.couponId = order.getCouponId();
 		this.status = order.getStatus();
 		this.totalPrice = order.getTotalPrice().getValue();
-		this.orderProducts.addAll(
-				order.getOrderProducts().stream().map(OrderProductDto::new).toList());
+		this.orderProducts.addAll(order.getOrderProducts().stream().map(OrderProductDto::of).toList());
 	}
 
 }

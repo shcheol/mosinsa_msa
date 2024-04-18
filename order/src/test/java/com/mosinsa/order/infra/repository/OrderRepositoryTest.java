@@ -27,8 +27,10 @@ class OrderRepositoryTest {
 	void create() {
 		ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
 		Order order = Order.create("customerId",
-				List.of(OrderProduct.create("productId", 1000, 10)),
-				ShippingInfo.of(shippingInfoDto));
+				"couponId",
+				List.of(OrderProduct.create("productId",1000, 10)),
+				ShippingInfo.of(shippingInfoDto),
+				10000);
 		Order saveOrder = repository.save(order);
 
 		assertThat(order).isEqualTo(saveOrder);
