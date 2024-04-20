@@ -20,10 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -54,7 +51,13 @@ public class OrderController {
     @PostMapping("/order")
     public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
+        Enumeration<String> headerNames = request.getHeaderNames();
+        for (Iterator<String> it = headerNames.asIterator(); it.hasNext(); ) {
+            Object headerName = it.next();
+            log.info("headerName {}", headerName);
+        }
         String idempotentKey = request.getHeader(IdempotentEnum.ORDER_IDEMPOTENT_KEY.name());
+        log.info("idempotentKey {}", idempotentKey);
         idempotentRepository.verifyIdempotent(idempotentKey, orderRequest.orderConfirm());
 
         Map<String, Collection<String>> authMap = getAuthMap(request);

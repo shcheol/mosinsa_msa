@@ -70,7 +70,7 @@ public class OrderTemplate {
 
 		int sum = confirmOrderProducts.stream().mapToInt(OrderProductDto::amounts).sum();
 
-		if (!StringUtils.hasText(orderConfirmRequest.couponId())){
+		if (StringUtils.hasText(orderConfirmRequest.couponId())){
 			// 쿠폰 조회
 			CouponResponse couponResponse = couponQueryService.couponCheck(authMap, orderConfirmRequest.couponId())
 					.orElseThrow();
@@ -90,8 +90,9 @@ public class OrderTemplate {
     public OrderDetail order(Map<String, Collection<String>> authMap, CreateOrderRequest orderRequest){
 
 		// 쿠폰 사용
-		couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
-
+		if(StringUtils.hasText(orderRequest.orderConfirm().couponId())) {
+			couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
+		}
 		// 상품 수량 감소
 		productCommandService.orderProduct(authMap, orderRequest).orElseThrow();
 
