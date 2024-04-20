@@ -1,6 +1,6 @@
 package com.mosinsa.order.infra.feignclient;
 
-import feign.Response;
+import feign.FeignException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,9 +27,8 @@ public class ResponseResult<T> {
         try {
             T t = supplier.get();
             return new ResponseResult<>(200, t, "");
-        } catch (ResponseFailureException ex) {
-            Response response = ex.getResponse();
-            return new ResponseResult<>(response.status(), null, response.reason());
+        } catch (FeignException ex) {
+            return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
         } catch (Exception e) {
             return ResponseResult.empty();
         }

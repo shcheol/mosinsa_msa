@@ -3,12 +3,15 @@ package com.mosinsa.order.ui;
 import com.mosinsa.order.command.application.OrderTemplate;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
+import com.mosinsa.order.infra.redis.IdempotentEnum;
+import com.mosinsa.order.infra.redis.RedisIdempotentRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import com.mosinsa.order.ui.response.BaseResponse;
 import com.mosinsa.order.ui.response.GlobalResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -30,15 +33,19 @@ public class OrderController {
 
 	private final OrderTemplate orderTemplate;
 
+    private final RedisIdempotentRepository idempotentRepository;
+
     @PostMapping("/orderConfirm")
-    public ResponseEntity<BaseResponse> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Collection<String>> authMap = getAuthMap(request);
 
 		OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(authMap, orderConfirmRequest);
 
 		// 주문 확인서 return
-        // 멱등키 추가 전달해서 멱등성보장 + 데이터 변조 검사
+        // 멱등키 추가 전달해서 멱등성보장 + 데이터 변조 검사 용도
+        String idempotentKeyAndSetData = idempotentRepository.setData(orderConfirmDto);
+        response.addHeader(IdempotentEnum.ORDER_IDEMPOTENT_KEY.name(), idempotentKeyAndSetData);
 
         return GlobalResponseEntity.success(orderConfirmDto);
 
@@ -46,6 +53,9 @@ public class OrderController {
 
     @PostMapping("/order")
     public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
+
+        String idempotentKey = request.getHeader(IdempotentEnum.ORDER_IDEMPOTENT_KEY.name());
+        idempotentRepository.verifyIdempotent(idempotentKey, orderRequest.orderConfirm());
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
 

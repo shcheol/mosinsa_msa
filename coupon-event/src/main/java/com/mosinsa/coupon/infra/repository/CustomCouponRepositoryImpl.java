@@ -1,11 +1,11 @@
 package com.mosinsa.coupon.infra.repository;
 
+import com.mosinsa.coupon.application.dto.QCouponDto;
 import com.mosinsa.coupon.domain.Coupon;
 import com.mosinsa.coupon.domain.CouponId;
 import com.mosinsa.coupon.domain.CouponState;
 import com.mosinsa.coupon.application.dto.CouponDto;
 import com.mosinsa.coupon.application.dto.CouponSearchCondition;
-import com.mosinsa.coupon.dto.QCouponDto;
 import com.mosinsa.promotion.domain.PromotionId;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

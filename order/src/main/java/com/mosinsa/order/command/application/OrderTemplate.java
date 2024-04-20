@@ -19,6 +19,7 @@ import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -41,11 +42,7 @@ public class OrderTemplate {
 	public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, OrderConfirmRequest orderConfirmRequest){
 
 		// 유저 조회
-		CustomerResponse customerResponse = customerQueryService.customerCheck(authMap, orderConfirmRequest.customerId())
-				.orElseThrow();
-
-		// 쿠폰 조회
-		CouponResponse couponResponse = couponQueryService.couponCheck(authMap, orderConfirmRequest.couponId())
+		customerQueryService.customerCheck(authMap, orderConfirmRequest.customerId())
 				.orElseThrow();
 
 		// 상품 조회
@@ -53,22 +50,14 @@ public class OrderTemplate {
 				.myOrderProducts().stream()
 				.map(myOrderProduct -> productQueryService.productCheck(authMap, myOrderProduct).orElseThrow()).toList();
 
-		// 토탈 금액
-
-
-		return makeOrderConfirmDto(orderConfirmRequest, customerResponse, couponResponse, productResponses);
-	}
-
-	private OrderConfirmDto makeOrderConfirmDto(OrderConfirmRequest orderConfirmRequest, CustomerResponse customer,
-												CouponResponse coupon, List<ProductResponse> products){
-
 		List<MyOrderProduct> myOrderProducts = orderConfirmRequest.myOrderProducts();
 		List<OrderProductDto> confirmOrderProducts = new ArrayList<>();
 		for (int i=0;i<myOrderProducts.size(); i++){
-			ProductResponse productResponse = products.get(i);
+			ProductResponse productResponse = productResponses.get(i);
 			MyOrderProduct myOrderProduct = myOrderProducts.get(i);
-
+			log.info("productResponse {}", productResponse.toString());
 			if (myOrderProduct.quantity() > productResponse.stock()){
+				log.info("order quantity {}, product stock {}", myOrderProduct.quantity(), productResponse.stock());
 				throw new NotEnoughProductStockException();
 			}
 			confirmOrderProducts.add(OrderProductDto.builder()
@@ -80,13 +69,18 @@ public class OrderTemplate {
 		}
 
 		int sum = confirmOrderProducts.stream().mapToInt(OrderProductDto::amounts).sum();
-		sum -= DiscountPolicy.valueOf(coupon.discountPolicy()).applyDiscountPrice(sum);
 
+		if (!StringUtils.hasText(orderConfirmRequest.couponId())){
+			// 쿠폰 조회
+			CouponResponse couponResponse = couponQueryService.couponCheck(authMap, orderConfirmRequest.couponId())
+					.orElseThrow();
+			// 토탈 금액
+			sum -= DiscountPolicy.valueOf(couponResponse.discountPolicy()).applyDiscountPrice(sum);
+		}
 
 		return OrderConfirmDto.builder()
-				.customerId(customer.id())
-				.couponId(coupon.couponId())
-				.idempotentKey(UUID.randomUUID().toString())
+				.customerId(orderConfirmRequest.customerId())
+				.couponId(orderConfirmRequest.couponId())
 				.orderProducts(confirmOrderProducts)
 				.totalAmount(sum)
 				.shippingInfo(orderConfirmRequest.shippingInfo())
@@ -96,7 +90,7 @@ public class OrderTemplate {
     public OrderDetail order(Map<String, Collection<String>> authMap, CreateOrderRequest orderRequest){
 
 		// 쿠폰 사용
-		CouponResponse couponResponse = couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
+		couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
 
 		// 상품 수량 감소
 		productCommandService.orderProduct(authMap, orderRequest).orElseThrow();
@@ -109,7 +103,7 @@ public class OrderTemplate {
 
 			try {
 				productCommandService.cancelOrderProduct(authMap, orderRequest.orderConfirm().orderProducts());
-				couponCommandService.cancelCoupon(authMap, couponResponse.couponId());
+				couponCommandService.cancelCoupon(authMap, orderRequest.orderConfirm().couponId());
 			} catch (Exception ex) {
 				//TODO: kafka 이용 후처리
 

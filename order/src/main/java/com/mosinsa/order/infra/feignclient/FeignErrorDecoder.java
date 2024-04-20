@@ -1,5 +1,6 @@
 package com.mosinsa.order.infra.feignclient;
 
+import feign.FeignException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
 		log.error("call {} fail", methodKey);
-        return new ResponseFailureException(response);
+        return FeignException.errorStatus(methodKey, response);
     }
+
 }

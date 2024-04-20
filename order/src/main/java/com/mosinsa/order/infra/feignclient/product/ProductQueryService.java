@@ -16,7 +16,7 @@ public class ProductQueryService {
 
 	public ResponseResult<ProductResponse> productCheck(Map<String, Collection<String>> headers, MyOrderProduct myOrderProduct) {
 
-		return ResponseResult.execute(() -> productClient.getProduct(headers, myOrderProduct.productId()));
+		return ResponseResult.execute(() -> productClient.getProduct(headers, myOrderProduct.productId()).getResponse());
 	}
 
 }
