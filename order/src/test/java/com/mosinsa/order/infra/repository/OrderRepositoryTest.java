@@ -7,6 +7,7 @@ import com.mosinsa.order.command.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +34,10 @@ class OrderRepositoryTest {
 				10000);
 		Order saveOrder = repository.save(order);
 
-		assertThat(order).isEqualTo(saveOrder);
-	}
+		Order findOrder = repository.findById(saveOrder.getId()).get();
 
+		assertThat(findOrder).isEqualTo(saveOrder);
+	}
 
 	@Test
 	void cancelSuccess(){

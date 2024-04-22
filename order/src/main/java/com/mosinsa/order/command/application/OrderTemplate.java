@@ -87,7 +87,7 @@ public class OrderTemplate {
 				.build();
 	}
 
-    public OrderDetail order(Map<String, Collection<String>> authMap, CreateOrderRequest orderRequest){
+    public OrderDetail order(Map<String, Collection<String>> authMap, String idempotentKey, CreateOrderRequest orderRequest){
 
 		// 쿠폰 사용
 		if(StringUtils.hasText(orderRequest.orderConfirm().couponId())) {
@@ -98,7 +98,7 @@ public class OrderTemplate {
 
 		try {
 			// 주문 db
-			return placeOrderService.order(orderRequest);
+			return placeOrderService.order(idempotentKey, orderRequest);
 		} catch (Exception e) {
 			log.error("order save fail => rollback product stock, coupon use");
 

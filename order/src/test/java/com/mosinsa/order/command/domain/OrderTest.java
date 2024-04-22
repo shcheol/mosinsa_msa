@@ -26,9 +26,9 @@ class OrderTest {
 
     @Test
     void create_주문자x() {
-        List<OrderProduct> orderProducts = List.of();
+        List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
         assertThrows(OrderException.class,
-				() -> Order.create("customerId", "couponId", orderProducts,
+				() -> Order.create("", "couponId", orderProducts,
 						ShippingInfo.of(shippingInfoDto), 10000));
     }
 

@@ -62,7 +62,7 @@ public class OrderController {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
 
-		OrderDetail orderDto = orderTemplate.order(authMap, orderRequest);
+		OrderDetail orderDto = orderTemplate.order(authMap, idempotentKey, orderRequest);
 		return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
     }
 

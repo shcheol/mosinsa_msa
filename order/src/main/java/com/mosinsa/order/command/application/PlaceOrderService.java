@@ -1,6 +1,7 @@
 package com.mosinsa.order.command.application;
 
 import com.mosinsa.order.command.domain.Order;
+import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.command.domain.OrderProduct;
 import com.mosinsa.order.command.domain.ShippingInfo;
 import com.mosinsa.order.infra.repository.OrderRepository;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,10 +21,17 @@ public class PlaceOrderService {
 	private final OrderRepository orderRepository;
 
 	@Transactional
-	public OrderDetail order(CreateOrderRequest orderRequest) {
+	public OrderDetail order(String idempotentKey, CreateOrderRequest orderRequest) {
+
+		Optional<Order> byId = orderRepository.findOrderDetailsById(OrderId.of(idempotentKey));
+		if (byId.isPresent()){
+			log.info("duplicate order request, return origin data");
+			return new OrderDetail(byId.get());
+		}
 
 		Order order = orderRepository.save(
-				Order.create(orderRequest.orderConfirm().customerId(),
+				Order.create(idempotentKey,
+						orderRequest.orderConfirm().customerId(),
 						orderRequest.orderConfirm().couponId(),
 						orderRequest.orderConfirm().orderProducts().stream().map(
 								orderProduct -> OrderProduct.create(
@@ -31,7 +41,6 @@ public class PlaceOrderService {
 						).toList(),
 						ShippingInfo.of(orderRequest.orderConfirm().shippingInfo()),
 						orderRequest.orderConfirm().totalAmount()));
-
 
 		return new OrderDetail(order);
 	}

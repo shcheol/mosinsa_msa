@@ -42,6 +42,18 @@ public class Order extends AuditingEntity {
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
+	public static Order create(String idempotentKey, String customerId, String couponId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
+		Order order = new Order();
+		order.id = OrderId.of(idempotentKey);
+		order.useCoupon(couponId);
+		order.setCustomerId(customerId);
+		order.status = OrderStatus.PAYMENT_WAITING;
+		order.addOrderProducts(orderProducts);
+		order.setShippingInfo(shippingInfo);
+		order.setTotalPrice(Money.of(totalPrice));
+		return order;
+	}
+
 	public static Order create(String customerId, String couponId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
 		Order order = new Order();
 		order.id = OrderId.newId();
