@@ -8,7 +8,6 @@ import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
 import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
 import com.mosinsa.order.infra.feignclient.customer.CustomerQueryService;
-import com.mosinsa.order.infra.feignclient.customer.CustomerResponse;
 import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
 import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
 import com.mosinsa.order.infra.feignclient.product.ProductResponse;

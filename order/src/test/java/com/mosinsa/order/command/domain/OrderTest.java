@@ -19,18 +19,35 @@ class OrderTest {
     @Test
     void create_상품x() {
         List<OrderProduct> orderProducts = List.of();
-        assertThrows(OrderException.class,
+		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		assertThrows(OrderException.class,
                 () -> Order.create("customerId", "couponId", orderProducts,
-                        ShippingInfo.of(shippingInfoDto), 10000));
+                        shippingInfo, 10000));
     }
 
     @Test
     void create_주문자x() {
         List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
         assertThrows(OrderException.class,
 				() -> Order.create("", "couponId", orderProducts,
-						ShippingInfo.of(shippingInfoDto), 10000));
+						shippingInfo, 10000));
     }
+
+	@Test
+	void equalsAndHashCode(){
+		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		Order order1 = Order.create("testId1","customerId", "couponId", orderProducts,
+				shippingInfo, 10000);
+		Order order2 = Order.create("testId1","customerId", "couponId", orderProducts,
+				shippingInfo, 10000);
+		assertThat(order1).isEqualTo(order2);
+		assertThat(order1).hasSameHashCodeAs(order2);
+
+	}
+
+
 
 //    @Test
 //    void 쿠폰사용() {

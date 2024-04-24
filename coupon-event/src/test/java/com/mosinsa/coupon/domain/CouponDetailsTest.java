@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouponDetailsTest {
@@ -15,7 +16,7 @@ class CouponDetailsTest {
 		CouponDetails couponDetails1 = new CouponDetails(date, DiscountPolicy.NONE);
 		CouponDetails couponDetails2 = new CouponDetails(date, DiscountPolicy.NONE);
 
-		assertEquals(couponDetails1.hashCode(), couponDetails2.hashCode());
+		assertThat(couponDetails1).hasSameHashCodeAs(couponDetails2);
 		assertEquals(couponDetails1, couponDetails2);
 		assertNotSame(couponDetails1, couponDetails2);
 	}

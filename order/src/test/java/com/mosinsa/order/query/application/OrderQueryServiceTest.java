@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Sql("classpath:db/test-init.sql")
 class OrderQueryServiceTest {
 
-    @Autowired
+	@Autowired
     OrderQueryService orderQueryService;
 
     @Test
     void findMyOrdersByConditionEx() {
         SearchCondition searchCondition = new SearchCondition();
-
-        assertThrows(OrderException.class, () -> orderQueryService.findMyOrdersByCondition(searchCondition, Pageable.ofSize(2)));
+		Pageable pageable = Pageable.ofSize(2);
+        assertThrows(OrderException.class, () -> orderQueryService.findMyOrdersByCondition(searchCondition, pageable));
     }
 
     @Test

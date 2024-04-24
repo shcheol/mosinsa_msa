@@ -71,18 +71,7 @@ public class Order extends AuditingEntity {
 	}
 
 	private void useCoupon(String couponId) {
-		if(!StringUtils.hasText(couponId)){
-			return;
-		}
 		this.couponId = couponId;
-//		calculateTotalPriceWithCoupon(discountPolicy);
-	}
-
-	private void calculateTotalPriceWithCoupon(String discountPolicy) {
-
-		int discountPrice = DiscountPolicy.valueOf(discountPolicy)
-				.applyDiscountPrice(this.totalPrice.getValue());
-		this.totalPrice = this.totalPrice.minus(discountPrice);
 	}
 
 	private void setShippingInfo(ShippingInfo shippingInfo){
@@ -99,7 +88,6 @@ public class Order extends AuditingEntity {
 	private void addOrderProducts(List<OrderProduct> orderProducts) {
 		verifyAtLeastOneOrderProducts(orderProducts);
 		this.orderProducts.addAll(orderProducts);
-//		calculateTotalPrice();
 	}
 
 	public void cancelOrder() {
@@ -110,10 +98,6 @@ public class Order extends AuditingEntity {
 		if (orderProducts == null || orderProducts.isEmpty()){
 			throw new OrderException(OrderError.ORDER_AT_LEAST_ONE_OR_MORE_PRODUCTS);
 		}
-	}
-	private void calculateTotalPrice() {
-		this.totalPrice = Money.of(orderProducts.stream()
-				.mapToInt(op -> op.getAmounts().getValue()).sum());
 	}
 
 	private void verifyNotYetShipped() {
