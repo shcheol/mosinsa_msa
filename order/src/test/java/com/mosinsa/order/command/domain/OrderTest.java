@@ -42,8 +42,8 @@ class OrderTest {
 				shippingInfo, 10000);
 		Order order2 = Order.create("testId1","customerId", "couponId", orderProducts,
 				shippingInfo, 10000);
-		assertThat(order1).isEqualTo(order2);
-		assertThat(order1).hasSameHashCodeAs(order2);
+		assertThat(order1).isEqualTo(order2)
+				.hasSameHashCodeAs(order2);
 
 	}
 

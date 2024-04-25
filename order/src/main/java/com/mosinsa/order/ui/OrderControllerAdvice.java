@@ -21,21 +21,21 @@ public class OrderControllerAdvice {
 	@ExceptionHandler(OrderException.class)
 	@ResponseBody
 	public static ResponseEntity<BaseResponse> orderExceptionHandler(OrderException exception) {
-		log.error("response error message : {}", exception.getError().getMessage(), exception);
+		log.error("order exception occurred : {}", exception.getError().getMessage(), exception);
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
 
 	@ExceptionHandler(ExternalServerException.class)
 	@ResponseBody
 	public static ResponseEntity<BaseResponse> externalExceptionHandler(ExternalServerException exception) {
-		log.error("response error message : {}", exception.getMessage(), exception);
+		log.error("external server error occurred : {}", exception.getMessage(), exception);
 		return GlobalResponseEntity.error(HttpStatus.valueOf(exception.getStatus()), exception.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public static ResponseEntity<BaseResponse> exceptionHandler(Exception exception) {
-		log.error("response error message : {}", exception.getMessage(), exception);
+		log.error("generic error occurred : {}", exception.getMessage(), exception);
 		return GlobalResponseEntity.error(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
 	}
 }

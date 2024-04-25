@@ -4,6 +4,7 @@ import feign.FeignException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -65,12 +66,11 @@ public class ResponseResult<T> {
         return data;
     }
 
-    public <X extends Throwable> T orElseThrow() {
+    public T orElseThrow() {
         if (this.isSuccess()) {
             return data;
-        } else {
-            throw new ExternalServerException(this.status, this.message);
         }
+        throw new ExternalServerException(this.status, this.message);
     }
 
     public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {

@@ -1,7 +1,6 @@
 package com.mosinsa.gateway.jwt;
 
 import com.mosinsa.gateway.repository.TokenRepository;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;

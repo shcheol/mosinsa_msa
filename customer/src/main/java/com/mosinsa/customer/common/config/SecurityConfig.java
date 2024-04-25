@@ -55,7 +55,7 @@ public class SecurityConfig {
                                         .and()
                                         .addFilter(getAuthenticationFilter(authenticationManager));
                             } catch (Exception e) {
-                                throw new RuntimeException(e);
+                                throw new IllegalStateException(e);
                             }
                         }
                 )

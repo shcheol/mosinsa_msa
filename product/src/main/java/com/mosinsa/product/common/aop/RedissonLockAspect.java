@@ -1,6 +1,5 @@
 package com.mosinsa.product.common.aop;
 
-import com.mosinsa.product.common.ex.ProductException;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,19 +21,14 @@ public class RedissonLockAspect {
 
 
 	@Around("@annotation(redissonLock)")
-	public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) {
-		String key = redissonLock.value();
+	public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) throws Throwable {
 
-		RLock lock = redissonClient.getLock(key);
+		RLock lock = redissonClient.getLock(redissonLock.value());
 		try {
-			if (!lock.tryLock(3, 5, TimeUnit.SECONDS)) {
+			if (!lock.tryLock(redissonLock.waitTime(), redissonLock.leaseTime(), redissonLock.timeUnit())) {
 				throw new TryLockFailException();
 			}
 			return joinPoint.proceed();
-		} catch (ProductException pe) {
-			throw pe;
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
 		} finally {
 			if (lock.isLocked()) {
 				lock.unlock();

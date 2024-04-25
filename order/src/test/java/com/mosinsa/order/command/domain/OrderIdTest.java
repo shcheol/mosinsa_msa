@@ -24,8 +24,8 @@ class OrderIdTest {
     void equalsAndHashCode(){
         OrderId id1 = OrderId.of("id");
         OrderId id2 = OrderId.of("id");
-        assertThat(id1).isEqualTo(id2);
-		assertThat(id1).hasSameHashCodeAs(id2);
+        assertThat(id1).isEqualTo(id2)
+				.hasSameHashCodeAs(id2);
     }
 
 }
