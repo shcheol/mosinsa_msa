@@ -9,8 +9,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
-
 @Aspect
 @Component
 @Order(1)
@@ -30,9 +28,7 @@ public class RedissonLockAspect {
 			}
 			return joinPoint.proceed();
 		} finally {
-			if (lock.isLocked()) {
-				lock.unlock();
-			}
+			lock.unlock();
 		}
 	}
 }

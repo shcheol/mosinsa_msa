@@ -57,9 +57,9 @@ class ProductServiceImplTest {
 
 		long beforeStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(beforeStock).isEqualTo(10);
-
+		List<OrderProductRequest> products = List.of(new OrderProductRequest("productId1", 11));
 		assertThrows(RuntimeException.class,
-				() -> productCommandService.orderProduct(List.of(new OrderProductRequest("productId1", 11))));
+				() -> productCommandService.orderProduct(products));
 		long afterStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(afterStock).isEqualTo(10);
 	}

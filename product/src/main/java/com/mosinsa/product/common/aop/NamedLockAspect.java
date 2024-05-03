@@ -18,14 +18,12 @@ public class NamedLockAspect {
 
 
 	@Around("@annotation(namedLock)")
-	public Object tryLock(ProceedingJoinPoint joinPoint, NamedLock namedLock) {
+	public Object tryLock(ProceedingJoinPoint joinPoint, NamedLock namedLock) throws Throwable{
 		String key = namedLock.value();
 
 		try {
 			repository.getLock(key, namedLock.timeout());
 			return joinPoint.proceed();
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
 		} finally {
 			repository.unlock(key);
 		}

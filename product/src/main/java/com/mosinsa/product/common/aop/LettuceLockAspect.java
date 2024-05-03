@@ -18,7 +18,7 @@ public class LettuceLockAspect {
 	public Object tryLock(ProceedingJoinPoint joinPoint, LettuceLock lettuceLock) throws Throwable {
 		String key = lettuceLock.value();
 		try {
-			while (!lockRepository.lock((key))) {
+			while (Boolean.FALSE.equals(lockRepository.lock((key)))) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
