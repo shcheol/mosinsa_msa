@@ -17,7 +17,7 @@ class ResponseResultTest {
     void create(){
         ResponseResult<Object> empty = ResponseResult.empty();
         assertThat(empty.get()).isNull();
-        assertThat(empty.getStatus()).isEqualTo(0);
+        assertThat(empty.getStatus()).isZero();
         assertThat(empty.getMessage()).isEqualTo("empty");
     }
 
@@ -51,7 +51,7 @@ class ResponseResultTest {
         });
 
         assertThat(executeFail.get()).isNull();
-        assertThat(executeFail.getStatus()).isEqualTo(0);
+        assertThat(executeFail.getStatus()).isZero();
         assertThat(executeFail.getMessage()).isEqualTo("empty");
     }
 
@@ -59,6 +59,10 @@ class ResponseResultTest {
     void orElse(){
         ResponseResult<Object> execute = ResponseResult.execute(() -> "test");
         assertThat(execute.orElse("other")).isEqualTo("test");
+
+        ResponseResult<Object> execute2 = ResponseResult.execute(() -> null);
+        assertThat(execute2.orElse("other")).isEqualTo("other");
+
         ResponseResult<Object> executeFail = ResponseResult.execute(() -> {
             throw new RuntimeException();
         });
@@ -120,8 +124,13 @@ class ResponseResultTest {
     void onFailureWithFailureResult(){
         State state = new State();
         assertThat(state.getStatus()).isFalse();
+        FeignException feignException = FeignException
+                .errorStatus("", Response.builder()
+                        .request(Request.create(Request.HttpMethod.GET, "", Map.of(), null, Charset.defaultCharset(), null))
+                        .status(300).build());
+
         ResponseResult<Object> executeFail = ResponseResult.execute(() -> {
-            throw new RuntimeException();
+            throw feignException;
         });
         executeFail.onFailure(state::execute);
         assertThat(state.getStatus()).isTrue();
