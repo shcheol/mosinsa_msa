@@ -46,4 +46,11 @@ class MoneyTest {
         Money three = Money.of(3);
         assertThrows(InvalidMoneyException.class, ()-> three.minus(4));
     }
+
+    @Test
+    void equalsAndHashCode(){
+        Money actual = Money.of(2);
+        Money expect = Money.of(2);
+        assertThat(actual).isEqualTo(expect).hasSameHashCodeAs(expect);
+    }
 }
