@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 public class KafkaEvents {
@@ -14,15 +17,16 @@ public class KafkaEvents {
 		KafkaEvents.kafkaTemplate = kafkaTemplate;
 	}
 
-	public static void raise(Object event) {
+	public static Boolean raise(Object event) {
 		if (kafkaTemplate == null) {
 			log.info("kafkaTemplate is null");
-			return;
+			return false;
 		}
 		String topic = findTopic(event);
 		log.info("publish event topic {}", topic);
 		try {
-			kafkaTemplate.send(topic, new ObjectMapper().writeValueAsString(event));
+			CompletableFuture<SendResult<String, String>> send = kafkaTemplate.send(topic, new ObjectMapper().writeValueAsString(event));
+			return send.isDone();
 		} catch (JsonProcessingException e) {
 			throw new IllegalStateException(e);
 		}

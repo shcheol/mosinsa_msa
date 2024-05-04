@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
@@ -35,16 +36,16 @@ public class ResponseResult<T> {
         }
     }
 
-    public ResponseResult<T> onSuccess(Supplier<T> supplier) {
+    public ResponseResult<T> onSuccess(Runnable runnable) {
         if (this.isSuccess()) {
-            return ResponseResult.execute(supplier);
+            runnable.run();
         }
         return this;
     }
 
-    public ResponseResult<T> onFailure(Supplier<T> supplier) {
+    public ResponseResult<T> onFailure(Runnable runnable) {
         if (this.isFailure()) {
-            return ResponseResult.execute(supplier);
+            runnable.run();
         }
         return this;
     }

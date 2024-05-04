@@ -17,13 +17,22 @@ class OrderTest {
 
 
     @Test
-    void create_상품x() {
+    void create_상품_empty() {
         List<OrderProduct> orderProducts = List.of();
 		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
 		assertThrows(OrderException.class,
                 () -> Order.create("customerId", "couponId", orderProducts,
                         shippingInfo, 10000));
     }
+
+	@Test
+	void create_상품_null() {
+		List<OrderProduct> orderProducts = null;
+		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		assertThrows(OrderException.class,
+				() -> Order.create("customerId", "couponId", orderProducts,
+						shippingInfo, 10000));
+	}
 
     @Test
     void create_주문자x() {

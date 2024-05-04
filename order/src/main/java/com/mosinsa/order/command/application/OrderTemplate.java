@@ -11,6 +11,9 @@ import com.mosinsa.order.infra.feignclient.customer.CustomerQueryService;
 import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
 import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
 import com.mosinsa.order.infra.feignclient.product.ProductResponse;
+import com.mosinsa.order.infra.kafka.CouponCanceledEvent;
+import com.mosinsa.order.infra.kafka.KafkaEvents;
+import com.mosinsa.order.infra.kafka.OrderProductCanceledEvent;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.MyOrderProduct;
@@ -20,111 +23,105 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderTemplate {
 
-	private final CustomerQueryService customerQueryService;
-	private final CouponQueryService couponQueryService;
+    private final CustomerQueryService customerQueryService;
+    private final CouponQueryService couponQueryService;
+    private final CouponCommandService couponCommandService;
+    private final ProductQueryService productQueryService;
+    private final ProductCommandService productCommandService;
+    private final PlaceOrderService placeOrderService;
+    private final CancelOrderService cancelOrderService;
 
-	private final CouponCommandService couponCommandService;
-	private final ProductQueryService productQueryService;
+    public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, OrderConfirmRequest orderConfirmRequest) {
 
-	private final ProductCommandService productCommandService;
+        // 유저 조회
+        customerQueryService.customerCheck(authMap, orderConfirmRequest.customerId())
+                .orElseThrow();
 
-	private final PlaceOrderService placeOrderService;
-	private final CancelOrderService cancelOrderService;
+        // 상품 조회
+        List<ProductResponse> productResponses = orderConfirmRequest
+                .myOrderProducts().stream()
+                .map(myOrderProduct -> productQueryService.productCheck(authMap, myOrderProduct).orElseThrow()).toList();
 
-	public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, OrderConfirmRequest orderConfirmRequest){
+        List<MyOrderProduct> myOrderProducts = orderConfirmRequest.myOrderProducts();
+        List<OrderProductDto> confirmOrderProducts = new ArrayList<>();
+        for (int i = 0; i < myOrderProducts.size(); i++) {
+            ProductResponse productResponse = productResponses.get(i);
+            MyOrderProduct myOrderProduct = myOrderProducts.get(i);
+            log.info("productResponse {}", productResponse.toString());
+            if (myOrderProduct.quantity() > productResponse.stock()) {
+                log.info("order quantity {}, product stock {}", myOrderProduct.quantity(), productResponse.stock());
+                throw new NotEnoughProductStockException();
+            }
+            confirmOrderProducts.add(OrderProductDto.builder()
+                    .price(productResponse.price())
+                    .productId(productResponse.productId())
+                    .quantity(myOrderProduct.quantity())
+                    .amounts(productResponse.price() * myOrderProduct.quantity())
+                    .build());
+        }
 
-		// 유저 조회
-		customerQueryService.customerCheck(authMap, orderConfirmRequest.customerId())
-				.orElseThrow();
+        int sum = confirmOrderProducts.stream().mapToInt(OrderProductDto::amounts).sum();
 
-		// 상품 조회
-		List<ProductResponse> productResponses = orderConfirmRequest
-				.myOrderProducts().stream()
-				.map(myOrderProduct -> productQueryService.productCheck(authMap, myOrderProduct).orElseThrow()).toList();
+        if (StringUtils.hasText(orderConfirmRequest.couponId())) {
+            // 쿠폰 조회
+            CouponResponse couponResponse = couponQueryService.couponCheck(authMap, orderConfirmRequest.couponId())
+                    .orElseThrow();
+            // 토탈 금액
+            sum -= DiscountPolicy.valueOf(couponResponse.discountPolicy()).applyDiscountPrice(sum);
+        }
 
-		List<MyOrderProduct> myOrderProducts = orderConfirmRequest.myOrderProducts();
-		List<OrderProductDto> confirmOrderProducts = new ArrayList<>();
-		for (int i=0;i<myOrderProducts.size(); i++){
-			ProductResponse productResponse = productResponses.get(i);
-			MyOrderProduct myOrderProduct = myOrderProducts.get(i);
-			log.info("productResponse {}", productResponse.toString());
-			if (myOrderProduct.quantity() > productResponse.stock()){
-				log.info("order quantity {}, product stock {}", myOrderProduct.quantity(), productResponse.stock());
-				throw new NotEnoughProductStockException();
-			}
-			confirmOrderProducts.add(OrderProductDto.builder()
-					.price(productResponse.price())
-					.productId(productResponse.productId())
-					.quantity(myOrderProduct.quantity())
-					.amounts(productResponse.price() * myOrderProduct.quantity())
-					.build());
-		}
+        return OrderConfirmDto.builder()
+                .customerId(orderConfirmRequest.customerId())
+                .couponId(orderConfirmRequest.couponId())
+                .orderProducts(confirmOrderProducts)
+                .totalAmount(sum)
+                .shippingInfo(orderConfirmRequest.shippingInfo())
+                .build();
+    }
 
-		int sum = confirmOrderProducts.stream().mapToInt(OrderProductDto::amounts).sum();
+    public OrderDetail order(Map<String, Collection<String>> authMap, String idempotentKey, CreateOrderRequest orderRequest) {
 
-		if (StringUtils.hasText(orderConfirmRequest.couponId())){
-			// 쿠폰 조회
-			CouponResponse couponResponse = couponQueryService.couponCheck(authMap, orderConfirmRequest.couponId())
-					.orElseThrow();
-			// 토탈 금액
-			sum -= DiscountPolicy.valueOf(couponResponse.discountPolicy()).applyDiscountPrice(sum);
-		}
+        // 쿠폰 사용
+        if (StringUtils.hasText(orderRequest.orderConfirm().couponId())) {
+            couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
+        }
+        // 상품 수량 감소
+        productCommandService.orderProduct(authMap, orderRequest).orElseThrow();
 
-		return OrderConfirmDto.builder()
-				.customerId(orderConfirmRequest.customerId())
-				.couponId(orderConfirmRequest.couponId())
-				.orderProducts(confirmOrderProducts)
-				.totalAmount(sum)
-				.shippingInfo(orderConfirmRequest.shippingInfo())
-				.build();
-	}
+        try {
+            // 주문 db
+            return placeOrderService.order(idempotentKey, orderRequest);
+        } catch (Exception e) {
+            log.error("order save fail => rollback product stock, coupon use");
 
-    public OrderDetail order(Map<String, Collection<String>> authMap, String idempotentKey, CreateOrderRequest orderRequest){
+            productCommandService.cancelOrderProduct(authMap, orderRequest.orderConfirm().orderProducts())
+                    .onFailure(() -> KafkaEvents.raise(new OrderProductCanceledEvent()));
+            couponCommandService.cancelCoupon(authMap, orderRequest.orderConfirm().couponId())
+                    .onFailure(() -> KafkaEvents.raise(new CouponCanceledEvent()));
 
-		// 쿠폰 사용
-		if(StringUtils.hasText(orderRequest.orderConfirm().couponId())) {
-			couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
-		}
-		// 상품 수량 감소
-		productCommandService.orderProduct(authMap, orderRequest).orElseThrow();
-
-		try {
-			// 주문 db
-			return placeOrderService.order(idempotentKey, orderRequest);
-		} catch (Exception e) {
-			log.error("order save fail => rollback product stock, coupon use");
-
-			try {
-				productCommandService.cancelOrderProduct(authMap, orderRequest.orderConfirm().orderProducts());
-				couponCommandService.cancelCoupon(authMap, orderRequest.orderConfirm().couponId());
-			} catch (Exception ex) {
-				//TODO: kafka 이용 후처리
-
-			}
-			throw new OrderRollbackException(e);
-		}
+            throw new OrderRollbackException(e);
+        }
 
     }
 
-	public OrderDetail cancelOrder(Map<String, Collection<String>> authMap, String orderId) {
+    public OrderDetail cancelOrder(Map<String, Collection<String>> authMap, String orderId) {
 
-		OrderDetail cancelOrder = cancelOrderService.cancelOrder(orderId);
-		try {
-			productCommandService.cancelOrderProduct(authMap, cancelOrder.getOrderProducts()).orElseThrow();
-			couponCommandService.cancelCoupon(authMap, cancelOrder.getCouponId()).orElseThrow();
-		} catch (Exception e) {
-			//TODO: kafka 이용 후처리
-			// 주문 취소 성공, 외부 api 호출(상품 수량 증가) 실패
-			// 호출을 주문 취소 이후에하는 이유는 취소에 주문 실패했을 때 롤백요청하는 사이에 타 사용자가 수량 가져갈 가능성
-		}
-		return cancelOrder;
+        OrderDetail cancelOrder = cancelOrderService.cancelOrder(orderId);
 
-	}
+        productCommandService.cancelOrderProduct(authMap, cancelOrder.getOrderProducts())
+                .onFailure(() -> KafkaEvents.raise(new OrderProductCanceledEvent()));
+        couponCommandService.cancelCoupon(authMap, cancelOrder.getCouponId())
+                .onFailure(() -> KafkaEvents.raise(new CouponCanceledEvent()));
+        return cancelOrder;
+    }
 }

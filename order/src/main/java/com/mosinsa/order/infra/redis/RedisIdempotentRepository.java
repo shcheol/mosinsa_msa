@@ -31,9 +31,9 @@ public class RedisIdempotentRepository {
             if (Boolean.TRUE.equals(aBoolean)){
                 return key;
             }
-            throw new RuntimeException();
+            throw new OrderException(OrderError.INTERNAL_SERVER_ERROR);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new InvalidJsonFormatException(e);
         }
     }
 
@@ -63,7 +63,7 @@ public class RedisIdempotentRepository {
                 throw new OrderException(OrderError.INVALID_DATA_IDEMPOTENT_KEY);
             }
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new InvalidJsonFormatException(e);
         }
     }
 }
