@@ -7,6 +7,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,7 +31,10 @@ public class CategoryId implements Serializable {
     }
 
     private CategoryId(String id){
-        this.id = id;
+		if (!StringUtils.hasText(id)){
+			throw new IllegalArgumentException("invalid Id value");
+		}
+		this.id = id;
     }
 
     @Override

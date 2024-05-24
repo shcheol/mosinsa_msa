@@ -21,59 +21,58 @@ import static com.mosinsa.product.domain.product.QProduct.product;
 @RequiredArgsConstructor
 public class CustomProductRepositoryImpl implements CustomProductRepository {
 
-    private final JPAQueryFactory factory;
+	private final JPAQueryFactory factory;
 
-    @Override
-    public Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable) {
+	@Override
+	public Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable) {
 
-        List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
-                .from(product)
-                .where(
-                        category(condition.categoryId())
-                )
-                .orderBy(
-                        orderSpecifier(condition)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize()).fetch();
-        return PageableExecutionUtils
-                .getPage(fetch, pageable,
-                        factory
-                                .select(product.count())
-                                .from(product)
-                                .where(
-                                        category(condition.categoryId())
-                                )
-                                .orderBy(
-                                        orderSpecifier(condition)
-                                )::fetchOne);
+		List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
+				.from(product)
+				.where(
+						category(condition.categoryId())
+				)
+				.orderBy(
+						orderSpecifier(condition)
+				)
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize()).fetch();
+		return PageableExecutionUtils
+				.getPage(fetch, pageable,
+						factory.select(product.count())
+								.from(product)
+								.where(
+										category(condition.categoryId())
+								)
+								.orderBy(
+										orderSpecifier(condition)
+								)::fetchOne);
 
-    }
+	}
 
-    private OrderSpecifier[] orderSpecifier(SearchCondition condition) {
+	private OrderSpecifier[] orderSpecifier(SearchCondition condition) {
 
-        List<OrderSpecifier> specifierList = getOrderSpecifierList(condition);
+		List<OrderSpecifier> specifierList = getOrderSpecifierList(condition);
 
-        OrderSpecifier[] orderSpecifiers = new OrderSpecifier[specifierList.size()];
-        AtomicInteger idx = new AtomicInteger();
-        specifierList.forEach(sp -> orderSpecifiers[idx.getAndIncrement()] = sp);
+		OrderSpecifier[] orderSpecifiers = new OrderSpecifier[specifierList.size()];
+		AtomicInteger idx = new AtomicInteger();
+		specifierList.forEach(sp -> orderSpecifiers[idx.getAndIncrement()] = sp);
 
-        return orderSpecifiers;
-    }
+		return orderSpecifiers;
+	}
 
-    private List<OrderSpecifier> getOrderSpecifierList(SearchCondition condition) {
-        List<OrderSpecifier> specifier2 = new ArrayList<>();
-        specifier2.add(condition.name() == null ?
-                product.name.asc() : condition.name().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc());
-        if (condition.likes() != null) {
-            specifier2.add(condition.likes().equals(OrderEnum.ASC) ? product.likes.total.asc() : product.likes.total.desc());
-        }
-        return specifier2;
-    }
+	private List<OrderSpecifier> getOrderSpecifierList(SearchCondition condition) {
+		List<OrderSpecifier> specifier2 = new ArrayList<>();
+		specifier2.add(condition.name() == null ?
+				product.name.asc() : condition.name().equals(OrderEnum.ASC) ? product.name.asc() : product.name.desc());
+		if (condition.likes() != null) {
+			specifier2.add(condition.likes().equals(OrderEnum.ASC) ? product.likes.total.asc() : product.likes.total.desc());
+		}
+		return specifier2;
+	}
 
-    private BooleanExpression category(String categoryId) {
-        return categoryId != null ? product.category.id.id.eq(categoryId) : null;
-    }
+	private BooleanExpression category(String categoryId) {
+		return categoryId != null ? product.category.id.id.eq(categoryId) : null;
+	}
 
 
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,10 +30,17 @@ public class LikesId implements Serializable {
     }
 
     private LikesId(String id) {
+		if (!StringUtils.hasText(id)){
+			throw new IllegalArgumentException("invalid Id value");
+		}
         this.id = id;
     }
 
-    @Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

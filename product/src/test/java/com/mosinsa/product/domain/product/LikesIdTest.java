@@ -3,20 +3,20 @@ package com.mosinsa.product.domain.product;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-class ProductIdTest {
+class LikesIdTest {
 
 	@Test
 	void idCreateFail(){
-		assertThrows(IllegalArgumentException.class, () -> ProductId.of(null));
-		assertThrows(IllegalArgumentException.class, () -> ProductId.of(""));
+		assertThrows(IllegalArgumentException.class, () -> LikesId.of(null));
+		assertThrows(IllegalArgumentException.class, () -> LikesId.of(""));
 	}
 
 	@Test
 	void idCreateSuccess(){
 		String value = "id";
-		ProductId id = ProductId.of(value);
+		LikesId id = LikesId.of(value);
 		assertThat(id.getId()).isEqualTo(value);
 	}
 
@@ -24,11 +24,9 @@ class ProductIdTest {
 	@Test
 	void idEqualsAndHashCode(){
 		String value = "id";
-		ProductId idA = ProductId.of(value);
-		ProductId idB = ProductId.of(value);
+		LikesId idA = LikesId.of(value);
+		LikesId idB = LikesId.of(value);
 
 		assertThat(idA).isEqualTo(idB).hasSameHashCodeAs(idB);
 	}
-
-
 }

@@ -7,6 +7,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -31,6 +32,9 @@ public class ProductId implements Serializable {
 	}
 
 	private ProductId(String id){
+		if (!StringUtils.hasText(id)){
+			throw new IllegalArgumentException("invalid Id value");
+		}
 		this.id = id;
 	}
 
