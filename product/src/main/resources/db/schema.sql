@@ -38,6 +38,7 @@ create table product
     category_id varchar(255),
     likes_id    varchar(255),
     stock_id    varchar(255),
+    created_date timestamp,
     primary key (product_id)
 ) engine = InnoDB;
 

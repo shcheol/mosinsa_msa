@@ -1,14 +1,20 @@
 package com.mosinsa.product.domain;
 
 import com.mosinsa.product.domain.category.Category;
-import com.mosinsa.product.domain.product.InvalidMoneyException;
-import com.mosinsa.product.domain.product.InvalidStockException;
-import com.mosinsa.product.domain.product.Product;
+import com.mosinsa.product.domain.product.*;
+import com.mosinsa.product.infra.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class ProductTest {
+
+	@Autowired
+	ProductRepository repository;
 
     @Test
     void invalidMoneyException(){
@@ -20,6 +26,17 @@ class ProductTest {
 	void invalidStockException(){
 		Category of = Category.of("category1");
 		assertThrows(InvalidStockException.class, () -> Product.create("name", 100, of, 0));
+	}
+
+	@Test
+	void equalsAndHashCode(){
+		Product productA = Product
+				.create("name", 100, Category.of("category1"), 10);
+
+		assertThat(productA).isNotEqualTo(null).isNotEqualTo(new TestClass());
+	}
+	static class TestClass{
+
 	}
 
 }

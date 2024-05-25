@@ -32,7 +32,6 @@ class ProductRepositoryTest {
 //        assertThat(product.getCategory()).isEqualTo(saveProduct.getCategory());
 //        assertThat(product.getStock()).isEqualTo(saveProduct.getStock());
 //        assertThat(product.getLikes().getTotal()).isZero();
-//        assertThat(product.getLikes().getLikesMember()).isEmpty();
     }
 
 	@Test

@@ -24,6 +24,8 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final com.mosinsa.product.domain.category.QCategory category;
 
+    public final DateTimePath<java.time.LocalDateTime> createdDate = createDateTime("createdDate", java.time.LocalDateTime.class);
+
     public final QProductId id;
 
     public final QLikes likes;

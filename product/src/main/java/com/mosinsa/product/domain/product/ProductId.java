@@ -44,7 +44,6 @@ public class ProductId implements Serializable {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		ProductId productId = (ProductId) o;
-
 		return Objects.equals(id, productId.id);
 	}
 

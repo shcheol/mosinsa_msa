@@ -28,5 +28,10 @@ class LikesIdTest {
 		LikesId idB = LikesId.of(value);
 
 		assertThat(idA).isEqualTo(idB).hasSameHashCodeAs(idB);
+
+		assertThat(idA).isNotEqualTo(null).isNotEqualTo(new TestClass());
+	}
+	static class TestClass{
+
 	}
 }

@@ -6,7 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -34,6 +36,8 @@ public class Product {
     @JoinColumn(name = "likes_id")
     private Likes likes;
 
+    private LocalDateTime createdDate;
+
 
     public static Product create(String name, Integer price, Category category, long stock) {
         Product product = new Product();
@@ -43,6 +47,7 @@ public class Product {
         product.category = category;
         product.stock = Stock.of(stock);
         product.likes = Likes.create();
+        product.createdDate = LocalDateTime.now();
         return product;
     }
 
