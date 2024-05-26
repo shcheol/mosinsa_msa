@@ -37,7 +37,7 @@ class ProductServiceImplTest {
 		ProductDetailDto product = productCommandService.createProduct(createProductRequest);
 		assertThat(product.getName()).isEqualTo("product");
 		assertThat(product.getPrice()).isEqualTo(3000);
-		assertThat(product.getLikes()).isEqualTo(0);
+		assertThat(product.getLikes()).isZero();
 		assertThat(product.getStock()).isEqualTo(10);
 	}
 

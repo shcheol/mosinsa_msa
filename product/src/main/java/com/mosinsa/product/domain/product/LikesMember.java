@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.Hibernate;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -34,13 +33,14 @@ public class LikesMember {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-		LikesMember that = (LikesMember) o;
-		return id != null && Objects.equals(id, that.id);
+		if (o == null || getClass() != o.getClass()) return false;
+
+		LikesMember id = (LikesMember) o;
+		return Objects.equals(this.id, id.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return getClass().hashCode();
+		return id != null ? id.hashCode() : 0;
 	}
 }

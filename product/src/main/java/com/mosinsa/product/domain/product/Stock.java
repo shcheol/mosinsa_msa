@@ -5,7 +5,6 @@ import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.Hibernate;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -59,13 +58,14 @@ public class Stock {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-		Stock stock = (Stock) o;
-		return id != null && Objects.equals(id, stock.id);
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Stock id = (Stock) o;
+		return Objects.equals(this.id, id.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return getClass().hashCode();
+		return id != null ? id.hashCode() : 0;
 	}
 }

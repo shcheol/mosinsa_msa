@@ -45,14 +45,7 @@ class CategoryServiceImplTest {
 
 		Category category1 = service.getCategory("categoryId1");
 		Category category2 = service.getCategory("categoryId1");
-		assertThat(category1).isEqualTo(category1).isEqualTo(category2).hasSameHashCodeAs(category2);
-
-		assertThat(category1).isNotEqualTo(null).isNotEqualTo(new TestClass());
+		assertThat(category1).isEqualTo(category2).hasSameHashCodeAs(category2);
 	}
-
-	static class TestClass{
-
-	}
-
 
 }

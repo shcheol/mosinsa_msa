@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, ProductId>, Cu
 	@Query(value = "SELECT RELEASE_LOCK(:key)", nativeQuery = true)
 	void unlock(@Param(value = "key") String key);
 
-	@Query(value = "select p from Product p inner join fetch p.likes inner join fetch p.stock where p.id = :productId")
+	@Query(value = "select p from Product p inner join fetch p.likes inner join fetch p.stock inner join fetch p.category where p.id = :productId")
 	Optional<Product> findProductDetailById(@Param(value = "productId") ProductId productId);
 
 	@Query(value = "select p from Product p " +
