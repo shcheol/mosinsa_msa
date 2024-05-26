@@ -11,6 +11,7 @@ class OrderStatusTest {
     void contains() {
         boolean contains = OrderStatus.contains(OrderStatus.CANCELED);
         assertThat(contains).isTrue();
+
     }
 
     @Test

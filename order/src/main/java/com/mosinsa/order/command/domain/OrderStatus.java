@@ -2,6 +2,8 @@ package com.mosinsa.order.command.domain;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum OrderStatus {
 
@@ -15,11 +17,7 @@ public enum OrderStatus {
 			return false;
 		}
 
-		for (OrderStatus value : values()) {
-			if(value.name().equalsIgnoreCase(status.name())){
-				return true;
-			}
-		}
-		return false;
+		return Arrays.stream(values())
+				.anyMatch(v -> v.name().equalsIgnoreCase(status.name()));
 	}
 }

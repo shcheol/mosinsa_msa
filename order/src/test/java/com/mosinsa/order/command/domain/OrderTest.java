@@ -43,19 +43,6 @@ class OrderTest {
 						shippingInfo, 10000));
     }
 
-	@Test
-	void equalsAndHashCode(){
-		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
-		Order order1 = Order.create("testId1","customerId", "couponId", orderProducts,
-				shippingInfo, 10000);
-		Order order2 = Order.create("testId1","customerId", "couponId", orderProducts,
-				shippingInfo, 10000);
-		assertThat(order1).isEqualTo(order2)
-				.hasSameHashCodeAs(order2);
-
-	}
-
 
 
 //    @Test

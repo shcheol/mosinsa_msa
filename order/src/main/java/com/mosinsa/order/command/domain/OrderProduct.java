@@ -8,10 +8,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 public class OrderProduct {
 	private String productId;
 
@@ -40,8 +41,18 @@ public class OrderProduct {
 		if (quantity < 1) {
 			throw new IllegalArgumentException();
 		}
-
 		this.quantity = quantity;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof OrderProduct that)) return false;
+		return quantity == that.quantity && Objects.equals(productId, that.productId) && Objects.equals(price, that.price) && Objects.equals(amounts, that.amounts);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(productId, price, quantity, amounts);
+	}
 }

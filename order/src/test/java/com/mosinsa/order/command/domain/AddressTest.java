@@ -17,11 +17,12 @@ class AddressTest {
         AddressDto dto = new AddressDto(zipcode, address1, address2);
         Address actual = Address.of(dto);
         Address expect = Address.of(dto);
-
+        assertThat(actual).isNotNull();
         assertThat(actual.getZipCode()).isEqualTo(zipcode);
         assertThat(actual.getAddress1()).isEqualTo(address1);
         assertThat(actual.getAddress2()).isEqualTo(address2);
         assertThat(actual).isEqualTo(expect).hasSameHashCodeAs(expect);
+
     }
 
 }

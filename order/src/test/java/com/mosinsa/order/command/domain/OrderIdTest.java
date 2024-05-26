@@ -15,17 +15,30 @@ class OrderIdTest {
     }
 
     @Test
-    void createFail(){
-        assertThrows(IllegalArgumentException.class, () -> OrderId.of(""));
+    void idCreateFail(){
         assertThrows(IllegalArgumentException.class, () -> OrderId.of(null));
+        assertThrows(IllegalArgumentException.class, () -> OrderId.of(""));
     }
 
     @Test
-    void equalsAndHashCode(){
-        OrderId id1 = OrderId.of("id");
-        OrderId id2 = OrderId.of("id");
-        assertThat(id1).isEqualTo(id2)
-				.hasSameHashCodeAs(id2);
+    void idCreateSuccess(){
+        String value = "id";
+        OrderId id = OrderId.of(value);
+        assertThat(id.getId()).isEqualTo(value);
+    }
+
+
+    @Test
+    void idEqualsAndHashCode(){
+        String value = "id";
+        OrderId idA = OrderId.of(value);
+        OrderId idB = OrderId.of(value);
+
+        assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
+                .isNotEqualTo(null).isNotEqualTo(new TestClass());
+    }
+    static class TestClass{
+
     }
 
 }

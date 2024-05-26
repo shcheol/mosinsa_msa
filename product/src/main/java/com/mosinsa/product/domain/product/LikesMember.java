@@ -35,8 +35,8 @@ public class LikesMember {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		LikesMember id = (LikesMember) o;
-		return Objects.equals(this.id, id.id);
+		LikesMember likesMember = (LikesMember) o;
+		return Objects.equals(this.id, likesMember.id);
 	}
 
 	@Override

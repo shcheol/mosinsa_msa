@@ -25,6 +25,17 @@ class OrderRepositoryTest {
 	OrderRepository repository;
 
 	@Test
+	void equalsAndHashCode(){
+		Order orderA = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
+		Order orderB = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
+
+		assertThat(orderA).isEqualTo(orderB).hasSameHashCodeAs(orderB);
+		OrderProduct orderProductA = orderA.getOrderProducts().get(0);
+		OrderProduct orderProductB = orderA.getOrderProducts().get(0);
+		assertThat(orderProductA).isEqualTo(orderProductB).hasSameHashCodeAs(orderProductB);
+	}
+
+	@Test
 	void create() {
 		ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
 		Order order = Order.create("customerId",

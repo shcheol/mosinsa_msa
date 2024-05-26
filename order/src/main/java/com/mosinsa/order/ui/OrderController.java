@@ -1,9 +1,9 @@
 package com.mosinsa.order.ui;
 
+import com.hcs.idempotencyapi.aop.IdempotencyApi;
 import com.mosinsa.order.command.application.OrderTemplate;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.infra.feignclient.HeaderConst;
-import com.mosinsa.order.infra.redis.IdempotentEnum;
 import com.mosinsa.order.infra.redis.RedisIdempotentRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
@@ -39,30 +39,17 @@ public class OrderController {
 
 		OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(authMap, orderConfirmRequest);
 
-		// 주문 확인서 return
-        // 멱등키 추가 전달해서 멱등성보장 + 데이터 변조 검사 용도
-        String idempotentKeyAndSetData = idempotentRepository.setData(orderConfirmDto);
-        response.addHeader(IdempotentEnum.ORDER_IDEMPOTENT_KEY.name(), idempotentKeyAndSetData);
-
         return GlobalResponseEntity.success(orderConfirmDto);
 
     }
 
     @PostMapping("/order")
+    @IdempotencyApi(storeType = "redisIdempotentRepository")
     public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
-
-        Enumeration<String> headerNames = request.getHeaderNames();
-        for (Iterator<String> it = headerNames.asIterator(); it.hasNext(); ) {
-            Object headerName = it.next();
-            log.info("headerName {}", headerName);
-        }
-        String idempotentKey = request.getHeader(IdempotentEnum.ORDER_IDEMPOTENT_KEY.name());
-        log.info("idempotentKey {}", idempotentKey);
-        idempotentRepository.verifyIdempotent(idempotentKey, orderRequest.orderConfirm());
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
 
-		OrderDetail orderDto = orderTemplate.order(authMap, idempotentKey, orderRequest);
+		OrderDetail orderDto = orderTemplate.order(authMap, orderRequest);
 		return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
     }
 

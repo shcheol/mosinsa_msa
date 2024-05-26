@@ -8,10 +8,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 public class Address {
 
     @Column(name = "zip_code")
@@ -29,5 +30,17 @@ public class Address {
         address.address1 = addressDto.address1();
         address.address2 = addressDto.address2();
         return address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address address)) return false;
+        return Objects.equals(zipCode, address.zipCode) && Objects.equals(address1, address.address1) && Objects.equals(address2, address.address2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(zipCode, address1, address2);
     }
 }

@@ -3,14 +3,14 @@ package com.mosinsa.order.command.domain;
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 public class ShippingInfo {
 
     @Embedded
@@ -35,4 +35,15 @@ public class ShippingInfo {
         return shippingInfo;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ShippingInfo that)) return false;
+        return Objects.equals(address, that.address) && Objects.equals(message, that.message) && Objects.equals(receiver, that.receiver);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, message, receiver);
+    }
 }

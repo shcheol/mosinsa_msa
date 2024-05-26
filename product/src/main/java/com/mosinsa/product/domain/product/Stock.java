@@ -60,8 +60,8 @@ public class Stock {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Stock id = (Stock) o;
-		return Objects.equals(this.id, id.id);
+		Stock stock = (Stock) o;
+		return Objects.equals(this.id, stock.id);
 	}
 
 	@Override

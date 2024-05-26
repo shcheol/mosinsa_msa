@@ -17,9 +17,11 @@ class ReceiverTest {
         Receiver actual = Receiver.of(dto);
         Receiver expect = Receiver.of(dto);
 
+        assertThat(actual).isNotNull();
         assertThat(actual.getName()).isEqualTo(name);
         assertThat(actual.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(actual).isEqualTo(expect).hasSameHashCodeAs(expect);
+
     }
 
 }

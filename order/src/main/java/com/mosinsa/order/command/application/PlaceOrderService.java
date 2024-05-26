@@ -18,31 +18,24 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PlaceOrderService {
-	private final OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-	@Transactional
-	public OrderDetail order(String idempotentKey, CreateOrderRequest orderRequest) {
+    @Transactional
+    public OrderDetail order(CreateOrderRequest orderRequest) {
 
-		Optional<Order> byId = orderRepository.findOrderDetailsById(OrderId.of(idempotentKey));
-		if (byId.isPresent()){
-			log.info("duplicate order request, return origin data");
-			return new OrderDetail(byId.get());
-		}
+        Order order = orderRepository.save(
+                Order.create(orderRequest.orderConfirm().customerId(),
+                        orderRequest.orderConfirm().couponId(),
+                        orderRequest.orderConfirm().orderProducts().stream().map(
+                                orderProduct -> OrderProduct.create(
+                                        orderProduct.productId(),
+                                        orderProduct.price(),
+                                        orderProduct.quantity())
+                        ).toList(),
+                        ShippingInfo.of(orderRequest.orderConfirm().shippingInfo()),
+                        orderRequest.orderConfirm().totalAmount()));
 
-		Order order = orderRepository.save(
-				Order.create(idempotentKey,
-						orderRequest.orderConfirm().customerId(),
-						orderRequest.orderConfirm().couponId(),
-						orderRequest.orderConfirm().orderProducts().stream().map(
-								orderProduct -> OrderProduct.create(
-										orderProduct.productId(),
-										orderProduct.price(),
-										orderProduct.quantity())
-						).toList(),
-						ShippingInfo.of(orderRequest.orderConfirm().shippingInfo()),
-						orderRequest.orderConfirm().totalAmount()));
-
-		return new OrderDetail(order);
-	}
+        return new OrderDetail(order);
+    }
 
 }

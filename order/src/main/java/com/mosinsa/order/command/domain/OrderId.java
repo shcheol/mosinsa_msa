@@ -27,13 +27,13 @@ public class OrderId implements Serializable {
     }
 
     public static OrderId of(String id) {
-        if (!StringUtils.hasText(id)){
-            throw new IllegalArgumentException();
-        }
         return new OrderId(id);
     }
 
     private OrderId(String id){
+        if (!StringUtils.hasText(id)){
+            throw new IllegalArgumentException();
+        }
         this.id = id;
     }
 
