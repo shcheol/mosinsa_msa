@@ -1,14 +1,10 @@
 package com.mosinsa.order.command.domain;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.util.Objects;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Money {
 
-    private int value;
+    private final int value;
 
 	public int getValue(){
 		return value;

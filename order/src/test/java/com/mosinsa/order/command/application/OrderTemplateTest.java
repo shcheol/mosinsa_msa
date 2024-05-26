@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,6 +60,9 @@ class OrderTemplateTest {
 	OrderConfirmRequest orderConfirmRequestWithCoupon;
 	OrderConfirmRequest orderConfirmRequestWithoutCoupon;
 
+	Map<String, Collection<String>> header = Map.of();
+
+
 	@Test
 	void orderConfirmSuccessWithCoupon() {
 
@@ -69,7 +73,7 @@ class OrderTemplateTest {
 		when(couponQueryService.couponCheck(any(),any()))
 				.thenReturn(ResponseResult.execute(()->new CouponResponse("couponId","TEN_PERCENTAGE","promotionId", LocalDateTime.MIN, "customerId",LocalDateTime.MAX, true)));
 
-		OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(Map.of(), orderConfirmRequestWithCoupon);
+		OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(header, orderConfirmRequestWithCoupon);
         assertThat(orderConfirmDto.orderProducts()).hasSize(1);
         assertThat(orderConfirmDto.customerId()).isEqualTo("customerId");
         assertThat(orderConfirmDto.shippingInfo()).isEqualTo(orderConfirmRequestWithCoupon.shippingInfo());
@@ -77,12 +81,25 @@ class OrderTemplateTest {
         assertThat(orderConfirmDto.totalAmount()).isEqualTo(5400);
 	}
 
+	@Test
+	void orderConfirmNotEnoughStock() {
+
+		when(customerQueryService.customerCheck(any(),any()))
+				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
+		when(productQueryService.productCheck(any(),any()))
+				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,1,2)));
+		when(couponQueryService.couponCheck(any(),any()))
+				.thenReturn(ResponseResult.execute(()->new CouponResponse("couponId","TEN_PERCENTAGE","promotionId", LocalDateTime.MIN, "customerId",LocalDateTime.MAX, true)));
+
+		assertThrows(NotEnoughProductStockException.class, () -> orderTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
+	}
+
     @Test
     void orderConfirmCustomerServiceError() {
 
         when(customerQueryService.customerCheck(any(),any()))
                 .thenThrow(ExternalServerException.class);
-        assertThrows(ExternalServerException.class, () -> orderTemplate.orderConfirm(Map.of(), orderConfirmRequestWithCoupon));
+		assertThrows(ExternalServerException.class, () -> orderTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
     }
 
     @Test
@@ -91,7 +108,7 @@ class OrderTemplateTest {
                 .thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
         when(productQueryService.productCheck(any(),any()))
                 .thenThrow(ExternalServerException.class);
-        assertThrows(ExternalServerException.class, () -> orderTemplate.orderConfirm(Map.of(), orderConfirmRequestWithCoupon));
+		assertThrows(ExternalServerException.class, () -> orderTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
     }
 
     @Test
@@ -102,7 +119,7 @@ class OrderTemplateTest {
                 .thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,10,2)));
         when(couponQueryService.couponCheck(any(),any()))
                 .thenThrow(ExternalServerException.class);
-        assertThrows(ExternalServerException.class, () -> orderTemplate.orderConfirm(Map.of(), orderConfirmRequestWithCoupon));
+		assertThrows(ExternalServerException.class, () -> orderTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
     }
 
     @Test
@@ -113,7 +130,7 @@ class OrderTemplateTest {
                 .thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,10,2)));
         when(couponQueryService.couponCheck(any(),any()))
                 .thenThrow(ExternalServerException.class);
-        OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(Map.of(), orderConfirmRequestWithoutCoupon);
+        OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(header, orderConfirmRequestWithoutCoupon);
         assertThat(orderConfirmDto.orderProducts()).hasSize(1);
         assertThat(orderConfirmDto.customerId()).isEqualTo("customerId");
         assertThat(orderConfirmDto.shippingInfo()).isEqualTo(orderConfirmRequestWithCoupon.shippingInfo());

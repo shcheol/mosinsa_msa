@@ -1,7 +1,5 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.domain.InvalidMoneyException;
-import com.mosinsa.order.command.domain.Money;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,9 +46,17 @@ class MoneyTest {
     }
 
     @Test
-    void equalsAndHashCode(){
-        Money actual = Money.of(2);
-        Money expect = Money.of(2);
-        assertThat(actual).isEqualTo(expect).hasSameHashCodeAs(expect);
+    void idEqualsAndHashCode(){
+        int value = 100;
+        Money moneyA = Money.of(value);
+        Money moneyB = Money.of(value);
+
+        assertThat(moneyA).isEqualTo(moneyA).isEqualTo(moneyB).hasSameHashCodeAs(moneyB)
+                .isNotEqualTo(null).isNotEqualTo(new TestClass());
+        Money moneyC = Money.of(333);
+        assertThat(moneyA).isNotEqualTo(moneyC);
+    }
+    static class TestClass{
+
     }
 }

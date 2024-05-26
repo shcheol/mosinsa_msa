@@ -1,16 +1,13 @@
 package com.mosinsa.product.domain.product;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Money {
 
-	private int value;
+	private final int value;
 
 	public static Money of(int value) {
 		inputValidCheck(value);
