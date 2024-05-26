@@ -23,10 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,23 +52,23 @@ public class OrderTemplate {
                 .myOrderProducts().stream()
                 .map(myOrderProduct -> productQueryService.productCheck(authMap, myOrderProduct).orElseThrow()).toList();
 
-        List<MyOrderProduct> myOrderProducts = orderConfirmRequest.myOrderProducts();
-        List<OrderProductDto> confirmOrderProducts = new ArrayList<>();
-        for (int i = 0; i < myOrderProducts.size(); i++) {
-            ProductResponse productResponse = productResponses.get(i);
-            MyOrderProduct myOrderProduct = myOrderProducts.get(i);
-            log.info("productResponse {}", productResponse.toString());
-            if (myOrderProduct.quantity() > productResponse.stock()) {
-                log.info("order quantity {}, product stock {}", myOrderProduct.quantity(), productResponse.stock());
-                throw new NotEnoughProductStockException();
-            }
-            confirmOrderProducts.add(OrderProductDto.builder()
-                    .price(productResponse.price())
-                    .productId(productResponse.productId())
-                    .quantity(myOrderProduct.quantity())
-                    .amounts(productResponse.price() * myOrderProduct.quantity())
-                    .build());
-        }
+        Map<String, Integer> myOrderProductMap = orderConfirmRequest.myOrderProducts().stream()
+                .collect(Collectors.toMap(MyOrderProduct::productId, MyOrderProduct::quantity));
+
+        List<OrderProductDto> confirmOrderProducts = productResponses.stream()
+                .map(productResponse -> {
+                    Integer orderStock = myOrderProductMap.getOrDefault(productResponse.productId(), Integer.MAX_VALUE);
+                    if (productResponse.stock() < orderStock) {
+                        log.info("product stock is not enough {}/{}", orderStock, productResponse.stock());
+                        throw new NotEnoughProductStockException();
+                    }
+                    return OrderProductDto.builder()
+                            .price(productResponse.price())
+                            .productId(productResponse.productId())
+                            .quantity(orderStock)
+                            .amounts(productResponse.price() * orderStock)
+                            .build();
+                }).toList();
 
         int sum = confirmOrderProducts.stream().mapToInt(OrderProductDto::amounts).sum();
 

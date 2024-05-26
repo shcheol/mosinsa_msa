@@ -1,11 +1,10 @@
-package com.mosinsa.order.infra.feignclient;
+package com.mosinsa.order.ui;
 
 import lombok.Getter;
 
 @Getter
 public enum HeaderConst {
 
-    CUSTOMER_ID("CustomerId"),
     ACCESS_TOKEN("Access-Token"),
     REFRESH_TOKEN("Refresh-Token")
     ;

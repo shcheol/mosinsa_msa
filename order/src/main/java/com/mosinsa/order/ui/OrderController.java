@@ -3,8 +3,6 @@ package com.mosinsa.order.ui;
 import com.hcs.idempotencyapi.aop.IdempotencyApi;
 import com.mosinsa.order.command.application.OrderTemplate;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.infra.feignclient.HeaderConst;
-import com.mosinsa.order.infra.redis.RedisIdempotentRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
@@ -29,8 +27,6 @@ import java.util.*;
 public class OrderController {
 
 	private final OrderTemplate orderTemplate;
-
-    private final RedisIdempotentRepository idempotentRepository;
 
     @PostMapping("/orderConfirm")
     public ResponseEntity<BaseResponse> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest, HttpServletRequest request, HttpServletResponse response) {
