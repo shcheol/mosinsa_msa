@@ -36,9 +36,8 @@ class MoneyTest {
         Money moneyA = Money.of(value);
         Money moneyB = Money.of(value);
 
-        assertThat(moneyA).isEqualTo(moneyB).hasSameHashCodeAs(moneyB);
-
-        assertThat(moneyA).isNotEqualTo(null).isNotEqualTo(new TestClass());
+        assertThat(moneyA).isEqualTo(moneyA).isEqualTo(moneyB).hasSameHashCodeAs(moneyB)
+                .isNotEqualTo(null).isNotEqualTo(new TestClass());
     }
     static class TestClass{
 

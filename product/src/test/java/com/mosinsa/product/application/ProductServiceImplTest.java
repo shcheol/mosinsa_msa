@@ -1,7 +1,12 @@
 package com.mosinsa.product.application;
 
+import com.mosinsa.product.application.dto.ProductDetailDto;
+import com.mosinsa.product.common.ex.CategoryException;
 import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.product.domain.category.Category;
+import com.mosinsa.product.domain.product.Product;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
+import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +31,21 @@ class ProductServiceImplTest {
 	@Autowired
 	ProductCommandService productCommandService;
 
+	@Test
+	void registerProduct(){
+		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 10);
+		ProductDetailDto product = productCommandService.createProduct(createProductRequest);
+		assertThat(product.getName()).isEqualTo("product");
+		assertThat(product.getPrice()).isEqualTo(3000);
+		assertThat(product.getLikes()).isEqualTo(0);
+		assertThat(product.getStock()).isEqualTo(10);
+	}
+
+	@Test
+	void registerProductNotExistsCategory(){
+		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1xxx", 10);
+		assertThrows(CategoryException.class, () -> productCommandService.createProduct(createProductRequest));
+	}
 
 	@Test
 	void orderProduct() {

@@ -38,5 +38,23 @@ class CustomProductRepositoryImplTest {
 
 	}
 
+	@Test
+	void testNull(){
+
+		SearchCondition searchCondition = new SearchCondition(null);
+		Page<ProductQueryDto> byCondition = repository.findByCondition(searchCondition, PageRequest.of(0,3));
+		int size = byCondition.getContent().size();
+		assertThat(size).isEqualTo(3);
+
+		List<ProductQueryDto> content = byCondition.getContent();
+
+		int idx=0;
+		List<String> answers = List.of("productId4", "productId3", "productId2");
+		for (ProductQueryDto productQueryDto : content) {
+			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
+		}
+
+	}
+
 
 }

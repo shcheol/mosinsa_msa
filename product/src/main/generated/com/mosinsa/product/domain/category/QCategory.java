@@ -26,8 +26,6 @@ public class QCategory extends EntityPathBase<Category> {
 
     public final StringPath name = createString("name");
 
-    public final ListPath<com.mosinsa.product.domain.product.Product, com.mosinsa.product.domain.product.QProduct> products = this.<com.mosinsa.product.domain.product.Product, com.mosinsa.product.domain.product.QProduct>createList("products", com.mosinsa.product.domain.product.Product.class, com.mosinsa.product.domain.product.QProduct.class, PathInits.DIRECT2);
-
     public QCategory(String variable) {
         this(Category.class, forVariable(variable), INITS);
     }

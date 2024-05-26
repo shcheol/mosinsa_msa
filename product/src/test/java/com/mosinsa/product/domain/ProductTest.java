@@ -33,7 +33,8 @@ class ProductTest {
 		Product productA = Product
 				.create("name", 100, Category.of("category1"), 10);
 
-		assertThat(productA).isNotEqualTo(null).isNotEqualTo(new TestClass());
+		assertThat(productA).isEqualTo(productA)
+				.isNotEqualTo(null).isNotEqualTo(new TestClass());
 	}
 	static class TestClass{
 
