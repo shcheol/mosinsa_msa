@@ -6,7 +6,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 insert into orders
 (order_id, customer_id, coupon_id,status, total_price, created_date, last_modified_date,
  shipping_zip_code, shipping_addr1, shipping_addr2, shipping_message, receiver_name, receiver_phone )
-values ( 'orderId1', 'customer1', 'couponId1', 'PAYMENT_WAITING', 10000, '2023-12-13 17:09:39.114218'
+values ( 'orderId1', 'customer1', 'couponId1', 'PAYMENT_WAITING', 10000, '2023-12-12 17:09:39.114218'
        , '2023-12-13 17:09:39.115218',
         'zipcode','address1','address2','fast','myName','010-1111-1111');
 insert into order_product (order_id, product_id, amounts, price, quantity)
@@ -26,7 +26,7 @@ values ('orderId2', 'productId2', 20000, 2000, 10);
 insert into orders
 (order_id, customer_id, status, total_price, created_date, last_modified_date,
  shipping_zip_code, shipping_addr1, shipping_addr2, shipping_message, receiver_name, receiver_phone )
-values ('orderId3', 'customer1', 'DELIVERY_COMPLETED', 45000, '2023-12-13 17:09:39.114218',
+values ('orderId3', 'customer2', 'DELIVERY_COMPLETED', 45000, '2023-12-14 17:09:39.114218',
         '2023-12-13 17:09:39.115218',
         'zipcode','address1','address2','fast','myName','010-1111-1111');
 insert into order_product (order_id, product_id, amounts, price, quantity)

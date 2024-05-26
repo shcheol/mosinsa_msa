@@ -6,6 +6,7 @@ import com.mosinsa.order.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -22,8 +23,8 @@ class OrderQueryServiceTest {
 
     @Test
     void findMyOrdersByConditionEx() {
-        SearchCondition searchCondition = new SearchCondition();
-		Pageable pageable = Pageable.ofSize(2);
+        SearchCondition searchCondition = new SearchCondition("", null);
+        PageRequest pageable = PageRequest.of(0, 3);
         assertThrows(OrderException.class, () -> orderQueryService.findMyOrdersByCondition(searchCondition, pageable));
     }
 

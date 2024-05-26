@@ -23,7 +23,7 @@ public class OrderQueryService {
     private final OrderRepository orderRepository;
 
     public Page<OrderSummary> findMyOrdersByCondition(SearchCondition condition, Pageable pageable) {
-        if (!StringUtils.hasText(condition.getCustomerId())) {
+        if (!StringUtils.hasText(condition.customerId())) {
             throw new OrderException(OrderError.VALIDATION_ERROR);
         }
         return orderRepository.findOrdersByCondition(condition, pageable).map(OrderSummary::new);

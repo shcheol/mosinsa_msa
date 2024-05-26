@@ -26,9 +26,8 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 
 		List<Order> fetch = factory.selectFrom(order)
 				.where(
-						customer(condition.getCustomerId()),
-						dateBetween(condition.getStartDate(), condition.getEndDate()),
-						status(condition.getStatus())
+						customer(condition.customerId()),
+						status(condition.status())
 				)
 				.orderBy(order.createdDate.desc())
 				.offset(pageable.getOffset())
@@ -40,17 +39,9 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 								.select(order.count())
 								.from(order)
 								.where(
-										customer(condition.getCustomerId()),
-										dateBetween(condition.getStartDate(), condition.getEndDate()),
-										status(condition.getStatus())
+										customer(condition.customerId()),
+										status(condition.status())
 								).orderBy(order.createdDate.desc())::fetchOne);
-	}
-
-	private BooleanExpression dateBetween(LocalDateTime startDate, LocalDateTime endDate) {
-		if (startDate == null && endDate == null) {
-			return null;
-		}
-		return order.createdDate.between(startDate, endDate);
 	}
 
 	private BooleanExpression customer(String customerId) {

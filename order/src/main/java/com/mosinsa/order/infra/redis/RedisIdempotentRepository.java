@@ -33,7 +33,7 @@ public class RedisIdempotentRepository implements IdempotencyKeyStore {
             String s = om.writeValueAsString(value);
             redisStore.setIfAbsent(key, s, 300, TimeUnit.SECONDS);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException();
+            throw new InvalidJsonFormatException(e);
         }
     }
 
