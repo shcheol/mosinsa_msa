@@ -4,9 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.UUID;
 
 @Slf4j
 public class KafkaEvents {
@@ -17,43 +16,23 @@ public class KafkaEvents {
 		KafkaEvents.kafkaTemplate = kafkaTemplate;
 	}
 
-	public static Boolean raise(Object event) {
-		if (kafkaTemplate == null) {
-			log.info("kafkaTemplate is null");
-			return false;
-		}
-		String topic = findTopic(event);
-		log.info("publish event topic {}", topic);
-		try {
-			CompletableFuture<SendResult<String, String>> send = kafkaTemplate.send(topic, new ObjectMapper().writeValueAsString(event));
-			return send.isDone();
-		} catch (JsonProcessingException e) {
-			throw new IllegalStateException(e);
-		}
-	}
-
-	public static void raise(String key, Object event) {
+	public static void raise(String topic, Object event) {
 		if (kafkaTemplate == null) {
 			log.info("kafkaTemplate is null");
 			return;
 		}
-		String topic = findTopic(event);
-		log.info("publish event topic {}", topic);
+
+		String key = UUID.randomUUID().toString();
+		log.info("publish {}, key {}", topic, key);
+		kafkaTemplate.send(topic, key, getPayloadFromObject(event));
+	}
+
+	public static String getPayloadFromObject(Object event){
 		try {
-			kafkaTemplate.send(topic, key, new ObjectMapper().writeValueAsString(event));
+			return new ObjectMapper().writeValueAsString(event);
 		} catch (JsonProcessingException e) {
 			throw new IllegalStateException(e);
 		}
-	}
-
-	private static String findTopic(Object event) {
-		if (event instanceof OrderCreatedEvent) {
-			return "mosinsa-order-create";
-		}
-		if (event instanceof OrderCanceledEvent) {
-			return "mosinsa-order-cancel";
-		}
-		throw new IllegalArgumentException("not found topic");
 	}
 
 	private KafkaEvents() {

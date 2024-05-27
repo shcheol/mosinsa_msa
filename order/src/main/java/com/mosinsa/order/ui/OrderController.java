@@ -1,6 +1,8 @@
 package com.mosinsa.order.ui;
 
 import com.hcs.idempotencyapi.aop.IdempotencyApi;
+import com.mosinsa.order.command.application.OrderCancelTemplate;
+import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.command.application.OrderTemplate;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.query.application.dto.OrderDetail;
@@ -26,14 +28,19 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderController {
 
+	private final OrderConfirmTemplate orderConfirmTemplate;
 	private final OrderTemplate orderTemplate;
+	private final OrderCancelTemplate orderCancelTemplate;
+
+
+
 
     @PostMapping("/orderConfirm")
     public ResponseEntity<BaseResponse> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest, HttpServletRequest request, HttpServletResponse response) {
 
 		Map<String, Collection<String>> authMap = getAuthMap(request);
 
-		OrderConfirmDto orderConfirmDto = orderTemplate.orderConfirm(authMap, orderConfirmRequest);
+		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap, orderConfirmRequest);
 
         return GlobalResponseEntity.success(orderConfirmDto);
 
@@ -53,7 +60,7 @@ public class OrderController {
     public ResponseEntity<BaseResponse> cancelOrders(@PathVariable String orderId, HttpServletRequest request) {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
-		OrderDetail cancelOrder = orderTemplate.cancelOrder(authMap,orderId);
+		OrderDetail cancelOrder = orderCancelTemplate.cancelOrder(authMap,orderId);
         return GlobalResponseEntity.success(cancelOrder);
     }
 

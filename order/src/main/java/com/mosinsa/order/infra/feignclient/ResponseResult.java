@@ -28,13 +28,28 @@ public class ResponseResult<T> {
         log.info("execute");
         try {
             T t = supplier.get();
+			log.info("execute {}", t);
             return new ResponseResult<>(200, t, "");
         } catch (FeignException ex) {
-            return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
+			return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
         } catch (Exception e) {
+			e.printStackTrace();
             return ResponseResult.empty();
         }
     }
+
+	public static <T> ResponseResult<T> execute(Runnable runnable) {
+		log.info("execute");
+		try {
+			runnable.run();
+			return new ResponseResult<>(200, null, "");
+		} catch (FeignException ex) {
+			return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseResult.empty();
+		}
+	}
 
     public ResponseResult<T> onSuccess(Runnable runnable) {
         if (this.isSuccess()) {
