@@ -1,5 +1,4 @@
-package com.mosinsa.coupon.infra.kafka;
-
+package com.mosinsa.product.infra.kafka;
 
 import java.util.List;
 

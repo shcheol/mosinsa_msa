@@ -8,7 +8,6 @@ import lombok.*;
 public class ProductDetailDto {
     String productId;
     String name;
-
     int price;
     long stock;
     long likes;
