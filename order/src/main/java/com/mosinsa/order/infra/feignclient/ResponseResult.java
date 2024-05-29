@@ -33,8 +33,7 @@ public class ResponseResult<T> {
         } catch (FeignException ex) {
 			return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
         } catch (Exception e) {
-			e.printStackTrace();
-            return ResponseResult.empty();
+			return new ResponseResult<>(500, null, e.getMessage());
         }
     }
 
@@ -46,8 +45,7 @@ public class ResponseResult<T> {
 		} catch (FeignException ex) {
 			return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseResult.empty();
+			return new ResponseResult<>(500, null, e.getMessage());
 		}
 	}
 

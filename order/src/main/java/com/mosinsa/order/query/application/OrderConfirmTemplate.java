@@ -47,7 +47,7 @@ public class OrderConfirmTemplate {
 					Integer orderStock = myOrderProductMap.getOrDefault(productResponse.productId(), Integer.MAX_VALUE);
 					if (productResponse.stock() < orderStock) {
 						log.info("product stock is not enough {}/{}", orderStock, productResponse.stock());
-						throw new NotEnoughProductStockException();
+						throw new NotEnoughProductStockException("상품수량이 부족합니다.");
 					}
 					return OrderProductDto.builder()
 							.price(productResponse.price())

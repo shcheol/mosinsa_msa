@@ -66,13 +66,13 @@ public class Coupon {
 
 	private void verifyUsedCoupon() {
 		if (this.state != CouponState.USED) {
-			throw new InvalidCouponStateException();
+			throw new InvalidCouponStateException("사용하지 않은 쿠폰");
 		}
 	}
 
 	private void verifyCanUseState() {
 		if (this.state != CouponState.ISSUED) {
-			throw new InvalidCouponStateException();
+			throw new InvalidCouponStateException("이미 사용한 쿠폰입니다.");
 		}
 	}
 

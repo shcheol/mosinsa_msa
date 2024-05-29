@@ -61,7 +61,7 @@ public class PromotionController {
 	private void validateLogin(String memberId) {
 		if(!StringUtils.hasText(memberId)){
 			log.warn("login before join promotion request: {}", memberId);
-			throw new NotLoginRequestException();
+			throw new NotLoginRequestException("로그인 후 재요청해주세요.");
 		}
 	}
 

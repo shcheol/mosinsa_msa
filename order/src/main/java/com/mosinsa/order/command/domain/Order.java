@@ -90,7 +90,7 @@ public class Order extends AuditingEntity {
 
 	private void verifyNotYetShipped() {
 		if(!isNotYetShipped()){
-			throw new AlreadyShippedException();
+			throw new AlreadyShippedException("이미 배송중입니다.");
 		}
 	}
 
