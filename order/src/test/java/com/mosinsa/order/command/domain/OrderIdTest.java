@@ -36,6 +36,8 @@ class OrderIdTest {
 
         assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
                 .isNotEqualTo(null).isNotEqualTo(new TestClass());
+        OrderId idC = OrderId.of("idxx");
+        assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
     }
     static class TestClass{
 

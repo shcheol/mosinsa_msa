@@ -8,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Map;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,7 +18,7 @@ public class OrderCancelTemplate {
 	@Value("${mosinsa.topic.order.cancel}")
 	public String orderCancelTopic;
 
-	public OrderDetail cancelOrder(Map<String, Collection<String>> authMap, String orderId) {
+	public OrderDetail cancelOrder(String orderId) {
 
 		OrderDetail cancelOrder = cancelOrderService.cancelOrder(orderId);
 

@@ -47,12 +47,12 @@ class ResponseResultTest {
     @Test
     void executeFail(){
         ResponseResult<Object> executeFail = ResponseResult.execute(() -> {
-            throw new RuntimeException();
+            throw new RuntimeException("error message");
         });
 
         assertThat(executeFail.get()).isNull();
-        assertThat(executeFail.getStatus()).isZero();
-        assertThat(executeFail.getMessage()).isEqualTo("empty");
+        assertThat(executeFail.getStatus()).isEqualTo(500);
+        assertThat(executeFail.getMessage()).isEqualTo("error message");
     }
 
     @Test

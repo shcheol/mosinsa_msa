@@ -40,7 +40,7 @@ class OrderCancelTemplateTest {
 	void cancelOrder() {
 
 		String orderId = "orderId1";
-		OrderDetail canceledOrder = orderCancelTemplate.cancelOrder(header, orderId);
+		OrderDetail canceledOrder = orderCancelTemplate.cancelOrder(orderId);
 		assertThat(canceledOrder.getOrderId()).isEqualTo(orderId);
 		assertThat(canceledOrder.getStatus()).isEqualTo(OrderStatus.CANCELED);
 	}
@@ -48,7 +48,7 @@ class OrderCancelTemplateTest {
 	@Test
 	void cancelOrderExternalApiFail() {
 		String orderId = "orderId3";
-		assertThrows(AlreadyShippedException.class, () -> orderCancelTemplate.cancelOrder(header, orderId));
+		assertThrows(AlreadyShippedException.class, () -> orderCancelTemplate.cancelOrder(orderId));
 
 	}
 
