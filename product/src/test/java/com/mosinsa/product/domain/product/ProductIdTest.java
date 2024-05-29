@@ -29,6 +29,9 @@ class ProductIdTest {
 
 		assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
 				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+
+		ProductId idC = ProductId.of("idxx");
+		assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
 	}
 	static class TestClass{
 

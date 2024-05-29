@@ -21,7 +21,7 @@ public class OrderCanceledEventHandler {
 		OrderCanceledEvent orderCanceledEvent = new ObjectMapper().readValue(message, OrderCanceledEvent.class);
 
 		String couponId = orderCanceledEvent.couponId();
-		if (StringUtils.hasText(couponId)){
+		if (!StringUtils.hasText(couponId)){
 			log.debug("event {} has no coupon to cancel", orderCanceledEvent);
 			return;
 		}

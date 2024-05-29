@@ -2,9 +2,9 @@ package com.mosinsa.order.ui;
 
 import com.hcs.idempotencyapi.aop.IdempotencyApi;
 import com.mosinsa.order.command.application.OrderCancelTemplate;
-import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.command.application.OrderTemplate;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
+import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
@@ -20,7 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -28,19 +31,17 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-	private final OrderConfirmTemplate orderConfirmTemplate;
-	private final OrderTemplate orderTemplate;
-	private final OrderCancelTemplate orderCancelTemplate;
-
-
+    private final OrderConfirmTemplate orderConfirmTemplate;
+    private final OrderTemplate orderTemplate;
+    private final OrderCancelTemplate orderCancelTemplate;
 
 
     @PostMapping("/orderConfirm")
     public ResponseEntity<BaseResponse> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest, HttpServletRequest request, HttpServletResponse response) {
 
-		Map<String, Collection<String>> authMap = getAuthMap(request);
+        Map<String, Collection<String>> authMap = getAuthMap(request);
 
-		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap, orderConfirmRequest);
+        OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap, orderConfirmRequest);
 
         return GlobalResponseEntity.success(orderConfirmDto);
 
@@ -52,15 +53,14 @@ public class OrderController {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);
 
-		OrderDetail orderDto = orderTemplate.order(authMap, orderRequest);
-		return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
+        OrderDetail orderDto = orderTemplate.order(authMap, orderRequest);
+        return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
     }
 
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<BaseResponse> cancelOrders(@PathVariable String orderId, HttpServletRequest request) {
+    public ResponseEntity<BaseResponse> cancelOrders(@PathVariable String orderId) {
 
-        Map<String, Collection<String>> authMap = getAuthMap(request);
-		OrderDetail cancelOrder = orderCancelTemplate.cancelOrder(authMap,orderId);
+        OrderDetail cancelOrder = orderCancelTemplate.cancelOrder(orderId);
         return GlobalResponseEntity.success(cancelOrder);
     }
 

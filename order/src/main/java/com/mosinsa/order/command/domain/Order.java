@@ -79,9 +79,17 @@ public class Order extends AuditingEntity {
 	}
 
 	public void cancelOrder() {
+		verifyAlreadyCanceled();
 		verifyNotYetShipped();
 		this.status = OrderStatus.CANCELED;
 	}
+
+	private void verifyAlreadyCanceled() {
+		if(status == OrderStatus.CANCELED){
+			throw new AlreadyCanceledException("이미 취소된 주문입니다.");
+		}
+	}
+
 	private void verifyAtLeastOneOrderProducts(List<OrderProduct> orderProducts) {
 		if (orderProducts == null || orderProducts.isEmpty()){
 			throw new OrderException(OrderError.ORDER_AT_LEAST_ONE_OR_MORE_PRODUCTS);
