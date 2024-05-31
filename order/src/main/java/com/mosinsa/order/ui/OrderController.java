@@ -48,7 +48,7 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    @IdempotencyApi(storeType = "redisIdempotentRepository")
+    @IdempotencyApi(storeType = "redisIdempotentKeyStore")
     public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, HttpServletRequest request) {
 
         Map<String, Collection<String>> authMap = getAuthMap(request);

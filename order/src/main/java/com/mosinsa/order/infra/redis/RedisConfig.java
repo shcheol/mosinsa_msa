@@ -1,4 +1,4 @@
-package com.mosinsa.order.common.config;
+package com.mosinsa.order.infra.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
