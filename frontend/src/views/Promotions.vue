@@ -3,7 +3,7 @@
     <h2>프로모션 목록</h2>
 
     <div v-for="(promotion) in promotions" :key="promotion">
-      <table>
+      <table class="table">
         <tbody>
         <tr>
           <td>프로모션 번호</td>

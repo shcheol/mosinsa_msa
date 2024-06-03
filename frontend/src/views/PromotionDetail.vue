@@ -31,8 +31,7 @@
       </tbody>
     </table>
 
-    <button @click="joinPromotion(promotion.promotionId)">참여하기</button>
-    <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
+    <button @click="joinPromotion(promotion.promotionId)" class="btn btn-dark">참여하기</button>
   </div>
 </template>
 

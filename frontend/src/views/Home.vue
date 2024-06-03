@@ -4,10 +4,10 @@
     <h2>카테고리</h2>
     <div>
       <ul>
-        <li class="category" v-for="category in categories" :key="category"
-            @click="setCategoryId(category.categoryId)">
+        <li v-for="category in categories" :key="category"
+            @click="setCategoryId(category.categoryId)" style="display: inline-block">
           <div v-if="category.categoryId===-1">{{ category.name }}</div>
-          <div v-else>|{{ category.name }}</div>
+          <div v-else>  | {{ category.name }} </div>
         </li>
       </ul>
 
@@ -107,10 +107,6 @@ div {
   padding: 20px 80px;
   /*color: white;*/
   background-color: white;
-}
-
-.category {
-  display: inline-block;
 }
 
 </style>

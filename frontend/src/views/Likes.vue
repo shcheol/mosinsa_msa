@@ -8,11 +8,11 @@
     <table class="table">
       <tbody>
       <tr>
-        <td>쿠폰번호</td>
+        <td>상품번호</td>
         <td v-if="product!=null">{{product.productId}}</td>
       </tr>
       <tr>
-        <td>이름</td>
+        <td>상품명</td>
         <td v-if="product!=null">{{product.name}}</td>
       </tr>
       <tr>
