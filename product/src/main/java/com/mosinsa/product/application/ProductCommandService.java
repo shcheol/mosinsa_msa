@@ -1,9 +1,9 @@
 package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.ProductDetailDto;
-import com.mosinsa.product.common.aop.RedissonLock;
-import com.mosinsa.product.common.ex.ProductError;
-import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.common.aop.RedissonLock;
+import com.mosinsa.common.ex.ProductError;
+import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.domain.product.Product;
 import com.mosinsa.product.domain.product.ProductId;

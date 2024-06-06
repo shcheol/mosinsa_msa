@@ -2,7 +2,7 @@ package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.ProductDetailDto;
 import com.mosinsa.product.application.dto.ProductQueryDto;
-import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

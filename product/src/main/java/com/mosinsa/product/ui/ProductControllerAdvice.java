@@ -2,7 +2,7 @@ package com.mosinsa.product.ui;
 
 import com.mosinsa.product.ui.response.BaseResponse;
 import com.mosinsa.product.ui.response.GlobalResponseEntity;
-import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.common.ex.ProductException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

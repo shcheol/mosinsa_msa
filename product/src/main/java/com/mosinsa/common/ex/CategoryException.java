@@ -1,4 +1,4 @@
-package com.mosinsa.product.common.ex;
+package com.mosinsa.common.ex;
 
 import lombok.Getter;
 

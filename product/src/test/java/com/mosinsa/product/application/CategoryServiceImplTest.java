@@ -1,7 +1,7 @@
 package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.CategoryDto;
-import com.mosinsa.product.common.ex.CategoryException;
+import com.mosinsa.common.ex.CategoryException;
 import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.ui.request.CreateCategoryRequest;
 import org.junit.jupiter.api.Test;

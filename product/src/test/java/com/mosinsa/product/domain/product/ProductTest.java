@@ -1,4 +1,4 @@
-package com.mosinsa.product.domain;
+package com.mosinsa.product.domain.product;
 
 import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.domain.product.*;

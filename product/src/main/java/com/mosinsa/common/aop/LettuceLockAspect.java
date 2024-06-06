@@ -1,4 +1,4 @@
-package com.mosinsa.product.common.aop;
+package com.mosinsa.common.aop;
 
 import com.mosinsa.product.infra.redis.RedisLockRepository;
 import lombok.RequiredArgsConstructor;

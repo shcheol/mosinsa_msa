@@ -1,7 +1,7 @@
 package com.mosinsa.product.application;
 
-import com.mosinsa.product.common.ex.ProductError;
-import com.mosinsa.product.common.ex.ProductException;
+import com.mosinsa.common.ex.ProductError;
+import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.domain.product.LikesMember;
 import com.mosinsa.product.domain.product.Product;
 import com.mosinsa.product.domain.product.ProductId;

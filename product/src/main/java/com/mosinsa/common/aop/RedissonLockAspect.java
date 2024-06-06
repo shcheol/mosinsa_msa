@@ -1,4 +1,4 @@
-package com.mosinsa.product.common.aop;
+package com.mosinsa.common.aop;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;

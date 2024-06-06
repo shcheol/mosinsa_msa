@@ -1,8 +1,8 @@
 package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.CategoryDto;
-import com.mosinsa.product.common.ex.CategoryError;
-import com.mosinsa.product.common.ex.CategoryException;
+import com.mosinsa.common.ex.CategoryError;
+import com.mosinsa.common.ex.CategoryException;
 import com.mosinsa.product.domain.category.Category;
 import com.mosinsa.product.domain.category.CategoryId;
 import com.mosinsa.product.infra.repository.CategoryRepository;

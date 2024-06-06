@@ -24,5 +24,14 @@ export default {
 
 </script>
 <style>
+html, body, #app {
+  height: 100vh;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
 
 </style>

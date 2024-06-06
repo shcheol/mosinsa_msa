@@ -1,10 +1,7 @@
 package com.mosinsa.product.application;
 
 import com.mosinsa.product.application.dto.ProductDetailDto;
-import com.mosinsa.product.common.ex.CategoryException;
-import com.mosinsa.product.common.ex.ProductException;
-import com.mosinsa.product.domain.category.Category;
-import com.mosinsa.product.domain.product.Product;
+import com.mosinsa.common.ex.CategoryException;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;

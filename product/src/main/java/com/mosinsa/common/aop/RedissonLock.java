@@ -1,4 +1,4 @@
-package com.mosinsa.product.common.aop;
+package com.mosinsa.common.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
