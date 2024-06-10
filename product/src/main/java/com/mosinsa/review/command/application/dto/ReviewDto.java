@@ -1,4 +1,4 @@
-package com.mosinsa.review.command.application;
+package com.mosinsa.review.command.application.dto;
 
 public record ReviewDto(WriterDto writer, String contents) {
 }

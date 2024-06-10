@@ -34,7 +34,7 @@ public class Review {
     @Convert(converter = BooleanConverter.class)
     private boolean deleted;
 
-    public static Review write(Writer writer, String productId, String contents) {
+    public static Review of(Writer writer, String productId, String contents) {
         Review review = new Review();
         review.reviewId = ReviewId.newId();
         review.writer = writer;
