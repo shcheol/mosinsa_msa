@@ -40,22 +40,67 @@
     <div>
       <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
     </div>
+
+    <br/>
+
+    <h3>상품 리뷰</h3>
+
+    <div class="comment-list">
+      <ul>
+        <li v-for="(review) in reviews" :key="review">
+          <div>
+            <span class="nickname">{{review.writer}}</span>
+            <br/>
+            <span class="date">{{ dateFormatting(review.createdAt) }}</span>
+            <p>{{review.contents}}</p>
+            <button class="replyBtn" @click="showComments(review.reviewId)">답글</button>
+            <div>
+              <ul>
+                <li v-for="(comment) in commentsMap.get(review.reviewId)" :key="comment">
+                  <div>
+                    <span class="nickname">{{comment.writer}}</span>
+                    <br/>
+                    <span class="date">{{ dateFormatting(comment.createdAt) }}</span>
+                    <p>{{comment.contents}}</p>
+<!--                    <button class="replyBtn" @click="showComments(review.reviewId)">답글</button>-->
+                    <div>
+
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <textarea v-model="reviewContent" placeholder="리뷰를 작성해주세요" class="reviewArea"></textarea>
+      <button class="btn btn-dark" @click="postReview()">등록</button>
+
+    </div>
+
+
   </div>
 </template>
 
 <script>
 import apiBoard from '@/api/board'
+import dayjs from "dayjs";
 
 export default {
   data() {
     return {
+      productId: null,
       product: null,
       modalState: false,
-      quantity: null
+      quantity: null,
+      reviews: null,
+      reviewContent: null,
+      commentsMap: new Map(),
     }
   },
   mounted() {
-    apiBoard.getProductDetails(this.$route.params.id)
+    this.productId = this.$route.params.id;
+    apiBoard.getProductDetails(this.productId)
         .then((response) => {
           console.log(response);
           this.product = response.data.response;
@@ -63,8 +108,22 @@ export default {
         .catch(function (e) {
           console.log(e);
         });
+    apiBoard.getProductReviews(this.productId)
+        .then((response) => {
+          console.log(response);
+          this.reviews = response.data.content;
+        })
+        .catch(function (e) {
+          console.log(e);
+        });
   },
   methods: {
+    dateFormatting(date){
+      const day=  dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+      console.log(day);
+      return day;
+    }
+    ,
     orders(productId, price, quantity) {
       this.modalState = false;
 
@@ -92,6 +151,20 @@ export default {
           .catch(function (e) {
             console.log(e);
           });
+    },
+    postReview(){
+
+    },
+    showComments(reviewId){
+      apiBoard.getReviewComments(reviewId)
+          .then((response) => {
+            console.log(response);
+            this.commentsMap.set(reviewId, response.data.content);
+
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
     }
   }
 
@@ -103,7 +176,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  position: fixed;
+  position: relative;
   padding: 20px;
 }
 
@@ -112,5 +185,37 @@ export default {
   background: white;
   border-radius: 8px;
   padding: 20px;
+}
+.comment-list {
+  margin-bottom: 60px;
+  border-top: 1px solid #eee;
+}
+ul li {
+  list-style: none;
+}
+li {
+  text-align: -webkit-match-parent;
+}
+
+.replyBtn {
+  border: none;
+  background: none;
+  font-size: 15px;
+  color: blue;
+}
+.nickname {
+  border: none;
+  background: none;
+  font-size: 18px;
+  font-weight : bold;
+}
+.date {
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: gray;
+}
+.reviewArea{
+  width: 100%;
 }
 </style>

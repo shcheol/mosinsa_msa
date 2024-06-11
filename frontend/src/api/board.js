@@ -10,6 +10,12 @@ export default{
     getProducts: function (){
         return axios.get(BASE_URL + 'product-service/products')
     },
+    getProductReviews: function (productId){
+        return axios.get(BASE_URL + 'product-service/reviews?productId='+productId)
+    },
+    getReviewComments: function (reviewId){
+        return axios.get(BASE_URL + `product-service/reviews/${reviewId}/comments`)
+    },
     getProductsInCategory: function (categoryId){
         return axios.get(BASE_URL + 'product-service/products?categoryId='+categoryId)
     },
