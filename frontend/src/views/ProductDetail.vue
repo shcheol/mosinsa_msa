@@ -49,32 +49,34 @@
       <ul>
         <li v-for="(review) in reviews" :key="review">
           <div>
-            <span class="nickname">{{review.writer}}</span>
+            <span class="nickname">{{ review.writer }}</span>
             <br/>
             <span class="date">{{ dateFormatting(review.createdAt) }}</span>
-            <p>{{review.contents}}</p>
+            <p>{{ review.contents }}</p>
             <button class="replyBtn" @click="showComments(review.reviewId)">답글</button>
-            <div>
+
+            <div v-if="commentStateMap.get(review.reviewId)">
               <ul>
                 <li v-for="(comment) in commentsMap.get(review.reviewId)" :key="comment">
                   <div>
-                    <span class="nickname">{{comment.writer}}</span>
+                    <span class="nickname">{{ comment.writer }}</span>
                     <br/>
                     <span class="date">{{ dateFormatting(comment.createdAt) }}</span>
-                    <p>{{comment.contents}}</p>
-<!--                    <button class="replyBtn" @click="showComments(review.reviewId)">답글</button>-->
-                    <div>
-
-                    </div>
+                    <p>{{ comment.contents }}</p>
                   </div>
                 </li>
               </ul>
+              <div>
+                <textarea v-model="commentContent" placeholder="댓글을 작성해주세요" class="commentArea"></textarea>
+                <button class="btn btn-dark" @click="postComment(review.reviewId)">등록</button>
+
+              </div>
             </div>
           </div>
         </li>
       </ul>
       <textarea v-model="reviewContent" placeholder="리뷰를 작성해주세요" class="reviewArea"></textarea>
-      <button class="btn btn-dark" @click="postReview()">등록</button>
+      <button class="btn btn-dark" @click="postReview(product.productId)">등록</button>
 
     </div>
 
@@ -95,7 +97,9 @@ export default {
       quantity: null,
       reviews: null,
       reviewContent: null,
+      commentContent: null,
       commentsMap: new Map(),
+      commentStateMap: new Map(),
     }
   },
   mounted() {
@@ -108,18 +112,21 @@ export default {
         .catch(function (e) {
           console.log(e);
         });
-    apiBoard.getProductReviews(this.productId)
-        .then((response) => {
-          console.log(response);
-          this.reviews = response.data.content;
-        })
-        .catch(function (e) {
-          console.log(e);
-        });
+    this.getReview(this.productId);
   },
   methods: {
-    dateFormatting(date){
-      const day=  dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+    getReview(productId){
+      apiBoard.getProductReviews(productId)
+          .then((response) => {
+            console.log(response);
+            this.reviews = response.data.content;
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
+    },
+    dateFormatting(date) {
+      const day = dayjs(date).format('YYYY-MM-DD HH:mm:ss');
       console.log(day);
       return day;
     }
@@ -136,7 +143,7 @@ export default {
       this.$store.dispatch("addCart", product);
     },
     likes(productId) {
-      apiBoard.postLikesProduct(localStorage.getItem("customerId"),productId)
+      apiBoard.postLikesProduct(localStorage.getItem("customerId"), productId)
           .then((response) => {
             console.log(response);
             apiBoard.getProductDetails(productId)
@@ -152,19 +159,49 @@ export default {
             console.log(e);
           });
     },
-    postReview(){
-
-    },
-    showComments(reviewId){
-      apiBoard.getReviewComments(reviewId)
+    postReview(productId) {
+      apiBoard.postProductReviews(localStorage.getItem("customerId"), "name", productId, this.reviewContent)
           .then((response) => {
             console.log(response);
-            this.commentsMap.set(reviewId, response.data.content);
-
+            this.getReview(productId);
           })
           .catch(function (e) {
             console.log(e);
           });
+    },
+    postComment(reviewId) {
+      apiBoard.postReviewComments(localStorage.getItem("customerId"), "name", reviewId, this.reviewContent)
+          .then((response) => {
+            console.log(response);
+            apiBoard.getReviewComments(reviewId)
+                .then((response) => {
+                  console.log(response);
+                  this.commentsMap.set(reviewId, response.data.content);
+                })
+                .catch(function (e) {
+                  console.log(e);
+                });
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
+    },
+    showComments(reviewId) {
+      if (this.commentStateMap.get(reviewId) === null) {
+        this.commentStateMap.set(reviewId, true);
+      } else {
+        this.commentStateMap.set(reviewId, !this.commentStateMap.get(reviewId));
+      }
+      if (this.commentsMap.get(reviewId) == null) {
+        apiBoard.getReviewComments(reviewId)
+            .then((response) => {
+              console.log(response);
+              this.commentsMap.set(reviewId, response.data.content);
+            })
+            .catch(function (e) {
+              console.log(e);
+            });
+      }
     }
   }
 
@@ -186,13 +223,16 @@ export default {
   border-radius: 8px;
   padding: 20px;
 }
+
 .comment-list {
   margin-bottom: 60px;
   border-top: 1px solid #eee;
 }
+
 ul li {
   list-style: none;
 }
+
 li {
   text-align: -webkit-match-parent;
 }
@@ -203,19 +243,26 @@ li {
   font-size: 15px;
   color: blue;
 }
+
 .nickname {
   border: none;
   background: none;
   font-size: 18px;
-  font-weight : bold;
+  font-weight: bold;
 }
+
 .date {
   border: none;
   background: none;
   font-size: 12px;
   color: gray;
 }
-.reviewArea{
+
+.reviewArea {
+  width: 100%;
+}
+
+.commentArea {
   width: 100%;
 }
 </style>

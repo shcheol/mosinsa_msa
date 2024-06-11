@@ -13,8 +13,35 @@ export default{
     getProductReviews: function (productId){
         return axios.get(BASE_URL + 'product-service/reviews?productId='+productId)
     },
+    postProductReviews: function (writerId, writerName, productId, contents){
+        return axios.post(BASE_URL + 'product-service/reviews',{
+                "writerId" : writerId,
+                "writerName":writerName,
+                "productId" : productId,
+                "content":contents
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
     getReviewComments: function (reviewId){
         return axios.get(BASE_URL + `product-service/reviews/${reviewId}/comments`)
+    },
+    postReviewComments: function (writerId, writerName, reviewId, contents){
+        return axios.post(BASE_URL + `product-service/reviews/${reviewId}/comments`,{
+                "writerId" : writerId,
+                "writerName":writerName,
+                "content":contents
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
     },
     getProductsInCategory: function (categoryId){
         return axios.get(BASE_URL + 'product-service/products?categoryId='+categoryId)
