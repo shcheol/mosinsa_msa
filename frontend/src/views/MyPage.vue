@@ -44,11 +44,5 @@ export default {
 
 <style scoped>
 
-body {
-  margin: 0
-}
 
-div {
-  box-sizing: border-box;
-}
 </style>

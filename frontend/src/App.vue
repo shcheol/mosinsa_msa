@@ -1,7 +1,8 @@
 <template>
   <Header/>
-
-  <router-view/>
+  <div id="wrapper">
+    <router-view/>
+  </div>
   <Footer/>
 </template>
 
@@ -33,5 +34,7 @@ html, body, #app {
   justify-content: space-between;
   height: 100vh;
 }
-
+#wrapper{
+  flex: 1;
+}
 </style>

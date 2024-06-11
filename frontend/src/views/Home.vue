@@ -7,17 +7,17 @@
         <li v-for="category in categories" :key="category"
             @click="setCategoryId(category.categoryId)" style="display: inline-block">
           <div v-if="category.categoryId===-1">{{ category.name }}</div>
-          <div v-else>  | {{ category.name }} </div>
+          <div v-else> | {{ category.name }}</div>
         </li>
       </ul>
 
     </div>
-    <ul v-for="(product, i) in products" :key="product">
-          <li class="item">
-            <p @click="productDetails(i)">{{ product.name }}</p>
-            <p>가격 : {{ product.price }} 원</p>
-          </li>
-    </ul>
+    <div class="main__container">
+      <div class="item" v-for="(product, i) in products" :key="product">
+          <p @click="productDetails(i)">{{ product.name }}</p>
+          <p>가격 : {{ product.price }} 원</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -90,23 +90,5 @@ export default {
 </script>
 
 <style scoped>
-
-
-div {
-  box-sizing: border-box;
-}
-
-.item {
-  /* 테투리 css */
-  border: 4px dotted #009688;
-  border-radius: 20px;
-
-  /* 기본 css */
-  display: inline-block;
-  text-align: center;
-  padding: 20px 80px;
-  /*color: white;*/
-  background-color: white;
-}
 
 </style>
