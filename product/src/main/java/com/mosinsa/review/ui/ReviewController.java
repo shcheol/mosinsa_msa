@@ -31,13 +31,13 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{reviewId}/comment")
+    @PostMapping("/{reviewId}/comments")
     public ResponseEntity<Void> writeRComment(@PathVariable("reviewId") String reviewId,
                                               @RequestBody WriteCommentRequest request) {
         reviewService.writeComment(reviewId, request);
         return ResponseEntity.ok().build();
     }
-    @PostMapping("/{reviewId}/comment/{commentId}/delete")
+    @PostMapping("/{reviewId}/comments/{commentId}/delete")
     public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") String reviewId,
                                              @PathVariable("commentId") String commentId,
                                              @RequestBody DeleteCommentRequest request) {
