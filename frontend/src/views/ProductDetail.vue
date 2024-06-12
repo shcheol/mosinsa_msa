@@ -128,16 +128,14 @@ export default {
           });
     },
     dateFormatting(date) {
-      const day = dayjs(date).format('YYYY-MM-DD HH:mm:ss');
-      console.log(day);
-      return day;
+      return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
     }
     ,
     orders(productId, price, quantity) {
       this.modalState = false;
 
       this.$router.push({
-        name: 'orderPage',
+        name: 'orderConfirm',
         state: {orderProduct: [{productId: productId, price: price, quantity: quantity}]}
       })
     },

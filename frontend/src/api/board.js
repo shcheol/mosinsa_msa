@@ -58,26 +58,25 @@ export default{
             "memberId": customerId
         })
     },
-    postOrders: function (customerId, myOrderProducts, couponId){
-        return axios.post(BASE_URL + 'order-service/orders/order',{
-                "orderConfirm": {
+    postOrderConfirm: function (customerId, myOrderProducts, couponId, shippingInfo){
+        return axios.post(BASE_URL + 'order-service/orders/orderConfirm',{
                     "customerId": customerId,
-                    "orderProducts": myOrderProducts,
+                    "myOrderProducts":
+                        myOrderProducts
+                        ,
                     "couponId": couponId,
-                    "shippingInfo": {
-                        "message": "home",
-                        "address": {
-                            "zipCode": "zipcode",
-                            "address1": "address1",
-                            "address2": "address2"
-                        },
-                        "receiver": {
-                            "name": "myname",
-                            "phoneNumber": "010-1111-1111"
-                        }
-                    },
-                    "totalAmount": 125820
+                    "shippingInfo": shippingInfo,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
+            })
+    },
+    postOrders: function (orderConfirm){
+        return axios.post(BASE_URL + 'order-service/orders/order',{
+                "orderConfirm": orderConfirm
             },
             {
                 headers: {
