@@ -16,10 +16,15 @@ const routes = [
         props: true
     },
     {
+        path: '/orderConfirm',
+        name: 'orderConfirm',
+        component: () => import('../views/OrderConfirmPage.vue'),
+        props: true
+    },
+    {
         path: '/orderPage',
         name: 'orderPage',
         component: () => import('../views/OrderPage.vue'),
-        props: true
     },
     {
         path: '/promotions',

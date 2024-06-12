@@ -56,7 +56,7 @@ export default {
         return;
       }
       this.$router.push({
-        name: 'orderPage',
+        name: 'orderConfirm',
         state: {orderProduct: orderProduct}
       })
     },
