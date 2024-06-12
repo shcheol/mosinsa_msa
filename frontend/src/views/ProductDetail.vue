@@ -43,7 +43,7 @@
 
     <br/>
 
-    <h3>상품 리뷰</h3>
+    <h3>상품 리뷰 ({{reviewsNumberOfElements}})</h3>
 
     <div class="comment-list">
       <ul>
@@ -95,6 +95,7 @@ export default {
       product: null,
       modalState: false,
       quantity: null,
+      reviewsNumberOfElements: 0,
       reviews: null,
       reviewContent: null,
       commentContent: null,
@@ -120,6 +121,7 @@ export default {
           .then((response) => {
             console.log(response);
             this.reviews = response.data.content;
+            this.reviewsNumberOfElements = response.data.numberOfElements;
           })
           .catch(function (e) {
             console.log(e);

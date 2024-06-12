@@ -59,10 +59,25 @@ export default{
         })
     },
     postOrders: function (customerId, myOrderProducts, couponId){
-        return axios.post(BASE_URL + 'order-service/orders',{
-                "customerId" : customerId,
-                "myOrderProducts":myOrderProducts,
-                "couponId" : couponId
+        return axios.post(BASE_URL + 'order-service/orders/order',{
+                "orderConfirm": {
+                    "customerId": customerId,
+                    "orderProducts": myOrderProducts,
+                    "couponId": couponId,
+                    "shippingInfo": {
+                        "message": "home",
+                        "address": {
+                            "zipCode": "zipcode",
+                            "address1": "address1",
+                            "address2": "address2"
+                        },
+                        "receiver": {
+                            "name": "myname",
+                            "phoneNumber": "010-1111-1111"
+                        }
+                    },
+                    "totalAmount": 125820
+                }
             },
             {
                 headers: {

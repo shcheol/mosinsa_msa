@@ -15,15 +15,20 @@
           <td>수량</td>
           <td v-if="op!=null">{{ op.quantity }}</td>
         </tr>
+        <tr>
+          <td>쿠폰</td>
+          <td>
+            <p v-if="couponId!=null"> {{ couponId }}</p>
+            <button style="float: right" class="btn btn-dark" @click="myCoupons">쿠폰</button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
+
+    <br/>
     <div>
-      <button class="btn btn-primary" @click="myCoupons">쿠폰</button>
-      <p v-if="couponId!=null"> {{ couponId }}</p>
-    </div>
-    <div>
-      <button class="btn btn-primary" @click="orders(myOrderProducts)">주문하기</button>
+      <button style="float: right" class="btn btn-dark" @click="orders(myOrderProducts)">주문하기</button>
     </div>
   </div>
   <div class="black-bg" v-if="modalState">
@@ -76,10 +81,9 @@ export default {
           params: {id: response.data.response.orderId}
         })
         this.$state.clear();
-      })
-          .catch(function (e) {
-            console.log(e);
-          });
+      }).catch(function (e) {
+        console.log(e);
+      });
     },
     myCoupons() {
       this.modalState = true;
@@ -101,7 +105,7 @@ export default {
     },
     useCoupon(id) {
       this.modalState = false;
-      this.couponId =id;
+      this.couponId = id;
     }
   }
 }

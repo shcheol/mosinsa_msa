@@ -9,7 +9,7 @@
         <td v-if="order!=null">{{ order.orderId }}</td>
       </tr>
       <tr>
-        <td v-if="order!=null && order.couponId!=null">쿠폰</td>
+        <td>쿠폰</td>
         <td v-if="order!=null && order.couponId!=null">{{ order.couponId }}</td>
       </tr>
       <tr>
@@ -25,8 +25,7 @@
     <h3>상품 목록</h3>
     <div v-if="order!=null">
       <table class="table">
-        <div v-for="op in order.orderProducts" :key="op">
-          <tbody>
+          <tbody v-for="op in order.orderProducts" :key="op">
           <tr>
             <td>상품아이디</td>
             <td>{{ op.productId }}</td>
@@ -44,10 +43,9 @@
             <td>{{ op.amounts }}</td>
           </tr>
           </tbody>
-        </div>
       </table>
     </div>
-    <button class="btn btn-dark" @click="cancelOrder(order.orderId)">취소</button>
+    <button class="btn btn-dark" @click="cancelOrder(order.orderId)">주문취소</button>
   </div>
 </template>
 

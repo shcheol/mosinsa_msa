@@ -26,8 +26,8 @@ create table likes
 create table likes_member
 (
     likes_member_id varchar(255) not null,
-    member_id       varchar(255),
-    likes_id        varchar(255),
+    member_id       varchar(255) not null,
+    likes_id        varchar(255) not null,
     UNIQUE INDEX likes_member_index (likes_id, member_id),
     primary key (likes_member_id)
 ) engine = InnoDB;
