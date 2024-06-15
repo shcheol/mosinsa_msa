@@ -1,7 +1,7 @@
 <template>
   <div class="container">
       <div class="mb-3">
-        <p>logout {{userInfo}}</p>
+        <p>logout: {{userInfo}}</p>
       </div>
   </div>
 </template>
@@ -15,7 +15,8 @@ export default {
     }
   },
   mounted(){
-    this.userInfo = localStorage.getItem("customerId")
+    this.userInfo = localStorage.getItem("customerId");
+    this.$store.getters.getLoginState;
     localStorage.clear();
   }
 }

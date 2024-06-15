@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -13,13 +14,22 @@ import java.util.Objects;
 public class CommentDislikes {
 
 	@Id
-	private String commentDislikesId;
+	@Column(name = "comment_dislike_id")
+	private String id;
 
 	private String memberId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "comment_id")
 	private Comment comment;
+
+	public static CommentDislikes create(String memberId, Comment comment){
+		CommentDislikes commentDislikes = new CommentDislikes();
+		commentDislikes.id = UUID.randomUUID().toString();
+		commentDislikes.memberId = memberId;
+		commentDislikes.comment = comment;
+		return commentDislikes;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -28,11 +38,11 @@ public class CommentDislikes {
 
 		CommentDislikes that = (CommentDislikes) o;
 
-		return Objects.equals(commentDislikesId, that.commentDislikesId);
+		return Objects.equals(id, that.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return commentDislikesId != null ? commentDislikesId.hashCode() : 0;
+		return id != null ? id.hashCode() : 0;
 	}
 }

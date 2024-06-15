@@ -44,4 +44,20 @@ public class ReviewController {
         reviewService.deleteComment(reviewId, commentId, request);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{reviewId}/comments/{commentId}/likes")
+    public ResponseEntity<Void> likesComment(@PathVariable("reviewId") String reviewId,
+                                             @PathVariable("commentId") String commentId,
+                                             @RequestBody DeleteCommentRequest request) {
+        reviewService.deleteComment(reviewId, commentId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{reviewId}/comments/{commentId}/dislikes")
+    public ResponseEntity<Void> dislikesComment(@PathVariable("reviewId") String reviewId,
+                                             @PathVariable("commentId") String commentId,
+                                             @RequestBody DeleteCommentRequest request) {
+        reviewService.deleteComment(reviewId, commentId, request);
+        return ResponseEntity.ok().build();
+    }
 }
