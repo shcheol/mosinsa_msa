@@ -5,7 +5,7 @@ import com.mosinsa.customer.common.ex.CustomerError;
 import com.mosinsa.customer.common.ex.CustomerException;
 import com.mosinsa.customer.application.CustomerService;
 import com.mosinsa.customer.common.jwt.Token;
-import com.mosinsa.customer.common.jwt.TokenConst;
+import com.mosinsa.customer.common.jwt.TokenMapEnums;
 import com.mosinsa.customer.ui.request.LoginRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,13 +22,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.mosinsa.customer.ui.filter.HeaderConst.*;
+
 
 @Slf4j
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final ObjectMapper om = new ObjectMapper();
     private final CustomerService customerService;
-
     private final Map<String, Token> tokenUtilMap;
 
 
@@ -39,10 +40,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             LoginRequest credentials = om.readValue(request.getInputStream(), LoginRequest.class);
 
-            UsernamePasswordAuthenticationToken authentication
-                    = new UsernamePasswordAuthenticationToken(credentials.getLoginId(), credentials.getPassword(), new ArrayList<>());
-            return getAuthenticationManager().authenticate(
-                    authentication);
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            credentials.getLoginId(),
+                            credentials.getPassword(),
+                            new ArrayList<>()
+                    );
+
+            return getAuthenticationManager().authenticate(authentication);
         } catch (IOException e) {
             throw new CustomerException(CustomerError.WRONG_ID_OR_PASSWORD, e);
         }
@@ -55,10 +60,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) {
         String id = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername()).getId().getId();
 
-        response.addHeader(HeaderConst.CUSTOMER_ID.getValue(), id);
-        response.addHeader(HeaderConst.ACCESS_TOKEN.getValue(),
-                tokenUtilMap.get(TokenConst.ACCESS_TOKEN.getValue()).create(id));
-        response.addHeader(HeaderConst.REFRESH_TOKEN.getValue(),
-                tokenUtilMap.get(TokenConst.REFRESH_TOKEN.getValue()).create(id));
+        response.addHeader(CUSTOMER_ID.key(), id);
+        response.addHeader(ACCESS_TOKEN.key(), tokenUtilMap.get(TokenMapEnums.ACCESS_TOKEN.key()).create(id));
+        response.addHeader(REFRESH_TOKEN.key(), tokenUtilMap.get(TokenMapEnums.REFRESH_TOKEN.key()).create(id));
     }
 }

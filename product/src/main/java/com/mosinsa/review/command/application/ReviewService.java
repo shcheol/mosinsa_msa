@@ -22,6 +22,8 @@ public class ReviewService {
 
     private final CommentRepository commentRepository;
 
+	private final LikesService likesService;
+
     @Transactional
     public String writeReview(WriteReviewRequest request) {
 
@@ -54,4 +56,17 @@ public class ReviewService {
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
         comment.delete(request.writerId());
     }
+
+	@Transactional
+	public void likesComment(String reviewId, String commentId) {
+		Comment comment = commentRepository.findById(commentId)
+				.orElseThrow(() -> new IllegalArgumentException("not found"));
+		likesService.likesComment(commentId);
+	}
+
+	@Transactional
+	public void dislikesComment(String reviewId, String commentId) {
+		likesService.dislikesComment(commentId);
+	}
+
 }

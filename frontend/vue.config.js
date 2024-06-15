@@ -4,6 +4,7 @@ module.exports = defineConfig({
     outputDir: '../gateway/src/main/resources/static',
     devServer: {
       proxy: 'http://152.67.205.195:8000',
+      // proxy: 'http://localhost:8000',
         client: {
           overlay: false
         }

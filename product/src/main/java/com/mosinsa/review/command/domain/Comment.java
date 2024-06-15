@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -30,8 +32,17 @@ public class Comment {
 
     private LocalDateTime createdDate;
 
+	@OneToMany(mappedBy = "comment")
+	private List<CommentLikes> commentLikes = new ArrayList<>();
+
+	private Long likesCount;
+
+	@OneToMany(mappedBy = "comment")
+	private List<CommentDislikes> commentDislikes = new ArrayList<>();
+	private Long dislikesCount;
+
     @Convert(converter = BooleanConverter.class)
-    @ColumnDefault(value = "N")
+//    @ColumnDefault(value = "N")
     private boolean deleted;
 
     public static Comment of(Writer writer, Review review, String contents) {
@@ -41,6 +52,8 @@ public class Comment {
         comment.contents = contents;
         comment.createdDate = LocalDateTime.now();
         comment.deleted = false;
+		comment.likesCount = 0L;
+		comment.dislikesCount = 0L;
         comment.setReview(review);
 
         return comment;

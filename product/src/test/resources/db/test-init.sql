@@ -38,7 +38,7 @@ insert into product values ('productId5', '검정반팔', 2000,'categoryId1', 'l
 
 insert into review values ('reviewId1', 'good', '2024-02-25 15:21:35', 'N','writer1','writerId1','productId1');
 insert into review values ('reviewId2', 'good', '2024-02-25 15:22:35', 'Y','writer2','writerId2','productId1');
-insert into comment values ('commentId1', 'good', '2024-02-25 16:21:35', 'N','writer3','writerId3','reviewId1');
-insert into comment values ('commentId2', 'good', '2024-02-25 16:22:35', 'N','writer1','writerId1','reviewId1');
-insert into comment values ('commentId3', 'good', '2024-02-25 16:23:35', 'Y','writer2','writerId2','reviewId1');
-insert into comment values ('commentId4', 'good', '2024-02-25 16:24:35', 'N','writer1','writerId1','reviewId1');
+insert into comment values ('commentId1', 'good', '2024-02-25 16:21:35', 'N',0,0,'writer3','writerId3','reviewId1');
+insert into comment values ('commentId2', 'good', '2024-02-25 16:22:35', 'N',0,0,'writer1','writerId1','reviewId1');
+insert into comment values ('commentId3', 'good', '2024-02-25 16:23:35', 'Y',0,0,'writer2','writerId2','reviewId1');
+insert into comment values ('commentId4', 'good', '2024-02-25 16:24:35', 'N',0,0,'writer1','writerId1','reviewId1');

@@ -1,7 +1,7 @@
 package com.mosinsa.customer.ui.filter;
 
 import com.mosinsa.customer.common.jwt.Token;
-import com.mosinsa.customer.common.jwt.TokenConst;
+import com.mosinsa.customer.common.jwt.TokenMapEnums;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class JwtLogoutHandler implements LogoutHandler {
 
         String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("access Token {}", accessToken);
-        tokenUtilMap.get(TokenConst.ACCESS_TOKEN.getValue())
+        tokenUtilMap.get(TokenMapEnums.ACCESS_TOKEN.key())
                 .remove(accessToken);
 
-        String refreshToken = request.getHeader(HeaderConst.REFRESH_TOKEN.getValue());
+        String refreshToken = request.getHeader(HeaderConst.REFRESH_TOKEN.key());
         log.info("refresh Token {}", refreshToken);
-        tokenUtilMap.get(TokenConst.REFRESH_TOKEN.getValue())
+        tokenUtilMap.get(TokenMapEnums.REFRESH_TOKEN.key())
                 .remove(refreshToken);
     }
 }

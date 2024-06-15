@@ -163,6 +163,7 @@ export default {
       apiBoard.postProductReviews(localStorage.getItem("customerId"), "name", productId, this.reviewContent)
           .then((response) => {
             console.log(response);
+            this.reviewContent="";
             this.getReview(productId);
           })
           .catch(function (e) {
@@ -170,9 +171,10 @@ export default {
           });
     },
     postComment(reviewId) {
-      apiBoard.postReviewComments(localStorage.getItem("customerId"), "name", reviewId, this.reviewContent)
+      apiBoard.postReviewComments(localStorage.getItem("customerId"), "name", reviewId, this.commentContent)
           .then((response) => {
             console.log(response);
+            this.commentContent="";
             apiBoard.getReviewComments(reviewId)
                 .then((response) => {
                   console.log(response);

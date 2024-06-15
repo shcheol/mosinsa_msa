@@ -26,10 +26,11 @@ export default {
   methods : {
     login(username, password) {
       apiBoard.postLogin(username, password)
-          .then(function (response) {
-            console.log(response);
+          .then((response) => {
             localStorage.setItem('access-token', response.headers.get("access-token"));
+            localStorage.setItem('refresh-token', response.headers.get("refresh-token"));
             localStorage.setItem('customerId', response.headers.get("customerId"));
+            this.$store.getters.getLoginState;
             router.push("/");
           })
           .catch(function (e) {

@@ -12,14 +12,6 @@ import Footer from "@/components/Footer";
 
 export default {
   name: 'App',
-  data() {
-    return {
-      isLogin : false
-    }
-  },
-  mounted() {
-    this.isLogin = localStorage.getItem("customerId")!=null
-  },
   components: {Header, Footer}
 }
 

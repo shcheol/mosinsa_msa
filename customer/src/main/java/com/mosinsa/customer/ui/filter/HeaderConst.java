@@ -11,7 +11,7 @@ public enum HeaderConst {
         this.value = value;
     }
 
-    public String getValue(){
+    public String key(){
         return this.value;
     }
 

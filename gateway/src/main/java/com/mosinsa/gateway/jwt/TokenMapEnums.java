@@ -1,16 +1,16 @@
 package com.mosinsa.gateway.jwt;
 
-public enum TokenConst {
+public enum TokenMapEnums {
     ACCESS_TOKEN("accessToken"),
     REFRESH_TOKEN("refreshToken")
     ;
 
     final String value;
-    TokenConst(String value){
+    TokenMapEnums(String value){
         this.value = value;
     }
 
-    public String getValue(){
+    public String key(){
         return this.value;
     }
 }
