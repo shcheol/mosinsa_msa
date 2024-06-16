@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     cancelOrder() {
-      apiBoard.cancelOrders(localStorage.getItem("customerId"), this.order.orderId).then((response) => {
+      apiBoard.cancelOrders(this.order.orderId).then((response) => {
         console.log(response);
         if (response.status === 200){
           alert("주문이 취소되었습니다.")

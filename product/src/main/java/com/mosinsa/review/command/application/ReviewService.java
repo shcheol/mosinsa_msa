@@ -6,11 +6,13 @@ import com.mosinsa.review.command.domain.ReviewId;
 import com.mosinsa.review.command.domain.Writer;
 import com.mosinsa.review.infra.jpa.CommentRepository;
 import com.mosinsa.review.infra.jpa.ReviewRepository;
+import com.mosinsa.review.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.review.ui.reqeust.DeleteCommentRequest;
 import com.mosinsa.review.ui.reqeust.DeleteReviewRequest;
 import com.mosinsa.review.ui.reqeust.WriteCommentRequest;
 import com.mosinsa.review.ui.reqeust.WriteReviewRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,28 +47,40 @@ public class ReviewService {
         Review review = reviewRepository.findById(ReviewId.of(reviewId))
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
         Writer writer = Writer.of(request.writerId(), request.writerName());
-        Comment savedComment = commentRepository.save(Comment.of(writer, review, request.content()));
-        return savedComment.getId();
+        Comment comment = Comment.of(writer, review, request.content());
+        review.writeComment(comment);
+
+        return comment.getId();
     }
 
     @Transactional
     public void deleteComment(String reviewId, String commentId, DeleteCommentRequest request) {
-
+        Review review = reviewRepository.findById(ReviewId.of(reviewId))
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+        review.deleteComment();
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
         comment.delete(request.writerId());
     }
 
 	@Transactional
-	public void likesComment(String reviewId, String commentId) {
-		Comment comment = commentRepository.findById(commentId)
-				.orElseThrow(() -> new IllegalArgumentException("not found"));
-		likesService.likesComment(commentId);
+	public void likesComment(String reviewId, String commentId, CustomerInfo customerInfo) {
+
+        try {
+            likesService.likesComment(commentId, customerInfo.id());
+        }catch (DataIntegrityViolationException e){
+            likesService.likesCommentCancel(commentId, customerInfo.id());
+        }
 	}
 
 	@Transactional
-	public void dislikesComment(String reviewId, String commentId) {
-		likesService.dislikesComment(commentId);
+	public void dislikesComment(String reviewId, String commentId, CustomerInfo customerInfo) {
+
+        try {
+            likesService.dislikesComment(commentId, customerInfo.id());
+        }catch (DataIntegrityViolationException e){
+            likesService.dislikesCommentCancel(commentId, customerInfo.id());
+        }
 	}
 
 }

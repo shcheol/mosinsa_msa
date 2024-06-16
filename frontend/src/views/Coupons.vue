@@ -38,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    apiBoard.getCoupons(localStorage.getItem("customerId"))
+    apiBoard.getCoupons()
         .then((response) => {
           console.log(response);
           this.coupons = response.data;

@@ -35,15 +35,22 @@
               </router-link>
             </li>
             <li>
-              <router-link v-if="loginState" to="/login" class="nav-link text-white">
+              <router-link to="/login" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
-                </svg>Login</router-link>
-              <router-link v-if="!loginState" to="/logout" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                  <use xlink:href="#speedometer2"/>
-                </svg>Logout</router-link>
+                </svg>
+                Login
+              </router-link>
             </li>
+            <li>
+              <router-link to="/logout" class="nav-link text-white">
+                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
+                  <use xlink:href="#speedometer2"/>
+                </svg>
+                Logout
+              </router-link>
+            </li>
+
           </ul>
         </div>
       </div>
@@ -74,20 +81,6 @@
 
 export default {
   name: "Header",
-  data() {
-    return {
-      // isLogin: null
-
-    }
-  },
-  mounted() {
-
-  },
-  computed: {
-    loginState(){
-      return localStorage.getItem("customerId")
-    }
-  }
 }
 </script>
 

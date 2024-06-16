@@ -91,5 +91,6 @@ create table review
     writer_name  varchar(255),
     writer_id    varchar(255),
     product_id   varchar(255),
+    comments_count bigint,
     primary key (review_id)
 ) engine = InnoDB;

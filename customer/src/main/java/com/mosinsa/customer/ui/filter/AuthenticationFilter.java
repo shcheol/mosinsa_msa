@@ -6,6 +6,7 @@ import com.mosinsa.customer.common.ex.CustomerException;
 import com.mosinsa.customer.application.CustomerService;
 import com.mosinsa.customer.common.jwt.Token;
 import com.mosinsa.customer.common.jwt.TokenMapEnums;
+import com.mosinsa.customer.domain.Customer;
 import com.mosinsa.customer.ui.request.LoginRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,9 +59,19 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) {
-        String id = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername()).getId().getId();
 
-        response.addHeader(CUSTOMER_ID.key(), id);
+        Customer customerDetail = customerService.findByLoginId(((User) authResult.getPrincipal()).getUsername());
+        String id = customerDetail.getId().getId();
+        String name = customerDetail.getName();
+
+        Map<String, String> customerInfo = Map.of("id",id,"name",name);
+        String infoJson = "";
+        try {
+            infoJson = om.writeValueAsString(customerInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        response.addHeader(CUSTOMER_INFO.key(), infoJson);
         response.addHeader(ACCESS_TOKEN.key(), tokenUtilMap.get(TokenMapEnums.ACCESS_TOKEN.key()).create(id));
         response.addHeader(REFRESH_TOKEN.key(), tokenUtilMap.get(TokenMapEnums.REFRESH_TOKEN.key()).create(id));
     }

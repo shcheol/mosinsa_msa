@@ -46,7 +46,7 @@ export default {
     }
   },
   mounted() {
-    apiBoard.getLikesProducts(localStorage.getItem("customerId"))
+    apiBoard.getLikesProducts()
         .then((response) => {
           console.log(response);
           this.products = response.data.response;
@@ -57,10 +57,10 @@ export default {
   },
   methods: {
     likes(productId){
-      apiBoard.postLikesProduct(localStorage.getItem("customerId"), productId)
+      apiBoard.postLikesProduct(productId)
           .then((response) => {
             console.log(response);
-            apiBoard.getLikesProducts(localStorage.getItem("customerId"))
+            apiBoard.getLikesProducts()
                 .then((response) => {
                   console.log(response);
                   this.products = response.data.response;

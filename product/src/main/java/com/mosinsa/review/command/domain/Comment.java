@@ -59,6 +59,19 @@ public class Comment {
         return comment;
     }
 
+    public void likes(){
+        this.likesCount+=1;
+    }
+    public void likesCancel(){
+        this.likesCount-=1;
+    }
+    public void dislikes(){
+        this.dislikesCount+=1;
+    }
+    public void dislikesCancel(){
+        this.dislikesCount-=1;
+    }
+
     private void setReview(Review review){
         this.review = review;
         this.review.getComments().add(this);

@@ -25,8 +25,10 @@ public class Review {
 
     private String contents;
 
-    @OneToMany(mappedBy = "review")
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    private Long commentsCount;
 
     @Column(updatable = false)
     private LocalDateTime createdDate;
@@ -40,11 +42,20 @@ public class Review {
         review.writer = writer;
         review.productId = productId;
         review.contents = contents;
+        review.commentsCount = 0L;
         review.createdDate = LocalDateTime.now();
         review.deleted = false;
         return review;
     }
 
+    public void writeComment(Comment comment){
+        this.getComments().add(comment);
+        this.commentsCount+=1;
+    }
+
+    public void deleteComment(){
+        this.commentsCount-=1;
+    }
     public ReviewId delete(String writerId) {
         if (!writerId.equals(this.writer.getWriterId())){
             throw new IllegalStateException("자신이 작성한 글만 삭제 할 수 있습니다.");

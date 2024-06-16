@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 const store = new Vuex.Store({
     state: {
         cart: [],
-        isLogin: null
     },
     actions: {
         addCart({state, commit}, product) {
@@ -45,9 +44,6 @@ const store = new Vuex.Store({
         },
     },
     getters: {
-        getLoginState(state){
-            return state.isLogin = localStorage.getItem("customerId") !== null;
-        },
         getCartProducts(state) {
             return state.cart.map(cartItem => {
                     const product = state.cart.find(product => product.productId === cartItem.productId);

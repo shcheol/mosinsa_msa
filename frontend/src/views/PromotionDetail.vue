@@ -58,11 +58,11 @@ export default {
   },
   methods: {
     joinPromotion(promotionId) {
-      if (localStorage.getItem("customerId") == null) {
+      if (localStorage.getItem("customer-info") == null) {
         alert('login이 필요합니다.')
         this.$router.push({name: "login"})
       }
-      apiBoard.joinPromotions(localStorage.getItem("customerId"), promotionId)
+      apiBoard.joinPromotions(promotionId)
           .then((response) => {
             alert(response.data.result);
           }).catch(function (e) {

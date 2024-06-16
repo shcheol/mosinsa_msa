@@ -104,7 +104,7 @@ export default {
     }
   },
   beforeCreate() {
-    if (localStorage.getItem("customerId") == null) {
+    if (localStorage.getItem("customer-info") == null) {
       alert('login이 필요합니다.')
       this.$router.push({name: "login"})
     }
@@ -116,7 +116,7 @@ export default {
   methods: {
     orderConfirm(myOrderProducts) {
       this.modalState = false;
-      apiBoard.postOrderConfirm(localStorage.getItem("customerId"), myOrderProducts, this.couponId, this.shippingInfo).then((response) => {
+      apiBoard.postOrderConfirm(myOrderProducts, this.couponId, this.shippingInfo).then((response) => {
         console.log(response);
         this.$router.push({
           name: 'orderPage',
@@ -128,7 +128,7 @@ export default {
     },
     myCoupons() {
       this.modalState = true;
-      apiBoard.getCoupons(localStorage.getItem("customerId"))
+      apiBoard.getCoupons()
           .then((response) => {
             console.log(response);
             this.coupons = response.data.filter(c => c.state === "ISSUED")
