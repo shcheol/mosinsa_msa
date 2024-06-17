@@ -9,6 +9,8 @@ drop table if exists comment_likes;
 drop table if exists comment_dislikes;
 drop table if exists comment;
 drop table if exists review;
+drop table if exists review_likes;
+drop table if exists review_dislikes;
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table category

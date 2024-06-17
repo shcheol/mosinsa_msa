@@ -14,11 +14,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
-class ProductCommentLikesServiceTest {
+class ProductCommandLikesServiceTest {
 
     @Autowired
     ProductQueryService productQueryService;
@@ -76,8 +75,11 @@ class ProductCommentLikesServiceTest {
         long start = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
             es.execute(() -> {
-                productCommandService.likes(new LikesProductRequest(productId, UUID.randomUUID().toString()));
-                countDownLatch.countDown();
+				try {
+					productCommandService.likes(new LikesProductRequest(productId, UUID.randomUUID().toString()));
+				}finally {
+					countDownLatch.countDown();
+				}
             });
         }
 
