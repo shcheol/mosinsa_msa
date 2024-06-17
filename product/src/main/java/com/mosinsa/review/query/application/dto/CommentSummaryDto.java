@@ -13,6 +13,10 @@ public class CommentSummaryDto {
 		String contents;
 		LocalDateTime createdDate;
 
+		Long likesCount;
+
+		Long dislikesCount;
+
 		@QueryProjection
 		public CommentSummaryDto(Comment comment) {
 			this.commentId = comment.getId();
@@ -20,5 +24,7 @@ public class CommentSummaryDto {
 			this.writer = comment.getWriter().getName();
 			this.contents = comment.isDeleted() ? "삭제된 댓글입니다." : comment.getContents();
 			this.createdDate = comment.getCreatedDate();
+			this.likesCount = comment.getLikesCount();
+			this.dislikesCount = comment.getDislikesCount();
 		}
 	}

@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum HeaderConst {
 
-    CUSTOMER_ID("CustomerId"),
+    CUSTOMER_INFO("Customer-Info"),
     ACCESS_TOKEN("Access-Token"),
     REFRESH_TOKEN("Refresh-Token");
     private final String value;

@@ -1,6 +1,8 @@
 package com.mosinsa.review.ui;
 
 import com.mosinsa.review.command.application.ReviewService;
+import com.mosinsa.review.ui.argumentresolver.CustomerInfo;
+import com.mosinsa.review.ui.argumentresolver.Login;
 import com.mosinsa.review.ui.reqeust.DeleteCommentRequest;
 import com.mosinsa.review.ui.reqeust.DeleteReviewRequest;
 import com.mosinsa.review.ui.reqeust.WriteCommentRequest;
@@ -19,10 +21,24 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<Void> writeReview(@RequestBody WriteReviewRequest request) {
-        reviewService.writeReview(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<String> writeReview(@RequestBody WriteReviewRequest request) {
+		String reviewId = reviewService.writeReview(request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
+
+	@PostMapping("/{reviewId}/likes")
+	public ResponseEntity<Void> likesReview(@PathVariable("reviewId") String reviewId,
+											@Login CustomerInfo customerInfo) {
+		reviewService.likesReview(reviewId, customerInfo);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/{reviewId}/dislikes")
+	public ResponseEntity<Void> dislikesReview(@PathVariable("reviewId") String reviewId,
+											   @Login CustomerInfo customerInfo) {
+		reviewService.dislikesReview(reviewId, customerInfo);
+		return ResponseEntity.ok().build();
+	}
 
     @PostMapping("/{reviewId}/delete")
     public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") String reviewId,
@@ -32,11 +48,12 @@ public class ReviewController {
     }
 
     @PostMapping("/{reviewId}/comments")
-    public ResponseEntity<Void> writeRComment(@PathVariable("reviewId") String reviewId,
-                                              @RequestBody WriteCommentRequest request) {
-        reviewService.writeComment(reviewId, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> writeComment(@PathVariable("reviewId") String reviewId,
+                                             @RequestBody WriteCommentRequest request) {
+		String commentId = reviewService.writeComment(reviewId, request);
+		return ResponseEntity.ok().body(commentId);
     }
+
     @PostMapping("/{reviewId}/comments/{commentId}/delete")
     public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") String reviewId,
                                              @PathVariable("commentId") String commentId,
@@ -48,16 +65,16 @@ public class ReviewController {
     @PostMapping("/{reviewId}/comments/{commentId}/likes")
     public ResponseEntity<Void> likesComment(@PathVariable("reviewId") String reviewId,
                                              @PathVariable("commentId") String commentId,
-                                             @RequestBody DeleteCommentRequest request) {
-        reviewService.deleteComment(reviewId, commentId, request);
+                                             @Login CustomerInfo customerInfo) {
+        reviewService.likesComment(reviewId, commentId, customerInfo);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{reviewId}/comments/{commentId}/dislikes")
     public ResponseEntity<Void> dislikesComment(@PathVariable("reviewId") String reviewId,
-                                             @PathVariable("commentId") String commentId,
-                                             @RequestBody DeleteCommentRequest request) {
-        reviewService.deleteComment(reviewId, commentId, request);
+                                                @PathVariable("commentId") String commentId,
+                                                @Login CustomerInfo customerInfo) {
+        reviewService.dislikesComment(reviewId, commentId, customerInfo);
         return ResponseEntity.ok().build();
     }
 }

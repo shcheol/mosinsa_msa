@@ -38,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    apiBoard.getOrders(localStorage.getItem("customerId"))
+    apiBoard.getOrders()
         .then((response) => {
           console.log(response);
           this.orders = response.data.response.content;

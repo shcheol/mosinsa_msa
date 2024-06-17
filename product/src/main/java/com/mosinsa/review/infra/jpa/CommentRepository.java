@@ -12,8 +12,6 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, String> {
 
-	@Query("select c from Comment c where c.id = :commentId and c.deleted = false")
-	Optional<Comment> findByIdNotDeleted(@Param("commentId") String commentId);
 	@Query("select c from Comment c where c.review.reviewId.id = :reviewId order by c.createdDate desc")
 	Page<CommentSummaryDto> findCommentsByReviewId(@Param("reviewId") String reviewId, Pageable pageable);
 }

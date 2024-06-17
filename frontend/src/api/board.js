@@ -27,12 +27,10 @@ instance.interceptors.response.use(
 )
 instance.interceptors.request.use(
     (config) => {
-        let item = localStorage.getItem("access-token");
-        console.log(item)
         config.headers = {
             "Authorization": "Bearer "+localStorage.getItem("access-token"),
             "Refresh-Token": localStorage.getItem("refresh-token"),
-            "CustomerId": localStorage.getItem("customerId")
+            "Customer-Info": JSON.stringify(localStorage.getItem("customer-info"))
         }
         return config;
     },
@@ -52,12 +50,43 @@ export default {
     getProductReviews: function (productId) {
         return instance.get(BASE_URL + 'product-service/reviews?productId=' + productId)
     },
-    postProductReviews: function (writerId, writerName, productId, contents) {
+    postProductReviews: function (productId, contents) {
         return instance.post(BASE_URL + 'product-service/reviews', {
-                "writerId": writerId,
-                "writerName": writerName,
+                "writerId": JSON.parse(localStorage.getItem("customer-info")).id,
+                "writerName": JSON.parse(localStorage.getItem("customer-info")).name,
                 "productId": productId,
                 "content": contents
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    deleteProductReviews: function (reviewId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/delete`, {
+                "writerId": JSON.parse(localStorage.getItem("customer-info")).id
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    postReviewLikes: function (reviewId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/likes`, {
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    postReviewDislikes: function (reviewId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/dislikes`, {
             },
             {
                 headers: {
@@ -69,11 +98,42 @@ export default {
     getReviewComments: function (reviewId) {
         return instance.get(BASE_URL + `product-service/reviews/${reviewId}/comments`)
     },
-    postReviewComments: function (writerId, writerName, reviewId, contents) {
+    postReviewComments: function (reviewId, contents) {
         return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments`, {
-                "writerId": writerId,
-                "writerName": writerName,
+                "writerId": JSON.parse(localStorage.getItem("customer-info")).id,
+                "writerName": JSON.parse(localStorage.getItem("customer-info")).name,
                 "content": contents
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    deleteReviewComments: function (reviewId, commentId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/delete`, {
+                "writerId": JSON.parse(localStorage.getItem("customer-info")).id
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    postCommentLikes: function (reviewId, commentId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/likes`, {
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    postCommentDislikes: function (reviewId, commentId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/dislikes`, {
             },
             {
                 headers: {
@@ -85,21 +145,21 @@ export default {
     getProductsInCategory: function (categoryId) {
         return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
     },
-    getLikesProducts: function (customerId) {
-        return instance.get(BASE_URL + 'product-service/products/likes?customer=' + customerId)
+    getLikesProducts: function () {
+        return instance.get(BASE_URL + `product-service/products/likes?customer=${JSON.parse(localStorage.getItem("customer-info")).id}`)
     },
     getProductDetails: function (id) {
         return instance.get(BASE_URL + 'product-service/products/' + id)
     },
-    postLikesProduct: function (customerId, productId) {
+    postLikesProduct: function (productId) {
         return instance.post(BASE_URL + 'product-service/products/' + productId + '/likes', {
             "productId": productId,
-            "memberId": customerId
+            "memberId": JSON.parse(localStorage.getItem("customer-info")).id
         })
     },
-    postOrderConfirm: function (customerId, myOrderProducts, couponId, shippingInfo) {
+    postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
-                "customerId": customerId,
+                "customerId": JSON.parse(localStorage.getItem("customer-info")).id,
                 "myOrderProducts":
                 myOrderProducts
                 ,
@@ -124,9 +184,9 @@ export default {
                 }
             })
     },
-    cancelOrders: function (customerId, orderId) {
+    cancelOrders: function (orderId) {
         return instance.post(BASE_URL + 'order-service/orders/' + orderId + '/cancel', {
-                "customerId": customerId
+                "customerId": JSON.parse(localStorage.getItem("customer-info")).id
             },
             {
                 headers: {
@@ -135,14 +195,14 @@ export default {
                 }
             })
     },
-    getOrders: function (id) {
-        return instance.get(BASE_URL + 'order-service/orders?customerId=' + id)
+    getOrders: function () {
+        return instance.get(BASE_URL + 'order-service/orders?customerId=' + JSON.parse(localStorage.getItem("customer-info")).id)
     },
     getOrderDetails: function (id) {
         return instance.get(BASE_URL + 'order-service/orders/' + id)
     },
-    getCoupons: function (id) {
-        return instance.get(BASE_URL + 'coupon-service/coupons/my/' + id)
+    getCoupons: function () {
+        return instance.get(BASE_URL + `coupon-service/coupons/my/${JSON.parse(localStorage.getItem("customer-info")).id}`)
     },
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)
@@ -150,10 +210,10 @@ export default {
     getPromotions: function () {
         return instance.get(BASE_URL + 'coupon-service/promotions')
     },
-    joinPromotions: function (memberId, promotionId) {
+    joinPromotions: function (promotionId) {
         return instance.post(BASE_URL + 'coupon-service/promotions/' + promotionId + '/join',
             {
-                "memberId": memberId
+                "memberId": JSON.parse(localStorage.getItem("customer-info")).id
             },
             {
                 headers: {

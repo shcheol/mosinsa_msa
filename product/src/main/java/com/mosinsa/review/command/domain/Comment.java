@@ -42,7 +42,6 @@ public class Comment {
 	private Long dislikesCount;
 
     @Convert(converter = BooleanConverter.class)
-//    @ColumnDefault(value = "N")
     private boolean deleted;
 
     public static Comment of(Writer writer, Review review, String contents) {
@@ -57,6 +56,19 @@ public class Comment {
         comment.setReview(review);
 
         return comment;
+    }
+
+    public void likes(){
+        this.likesCount+=1;
+    }
+    public void likesCancel(){
+        this.likesCount-=1;
+    }
+    public void dislikes(){
+        this.dislikesCount+=1;
+    }
+    public void dislikesCancel(){
+        this.dislikesCount-=1;
     }
 
     private void setReview(Review review){

@@ -11,24 +11,24 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentDislikes {
+public class ReviewLikes {
 
 	@Id
-	@Column(name = "comment_dislikes_id")
+	@Column(name = "review_likes_id")
 	private String id;
 
 	private String memberId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "comment_id")
-	private Comment comment;
+	@JoinColumn(name = "review_id")
+	private Review review;
 
-	public static CommentDislikes create(String memberId, Comment comment){
-		CommentDislikes commentDislikes = new CommentDislikes();
-		commentDislikes.id = UUID.randomUUID().toString();
-		commentDislikes.memberId = memberId;
-		commentDislikes.comment = comment;
-		return commentDislikes;
+	public static ReviewLikes create(String memberId, Review review){
+		ReviewLikes reviewLikes = new ReviewLikes();
+		reviewLikes.id = UUID.randomUUID().toString();
+		reviewLikes.memberId = memberId;
+		reviewLikes.review = review;
+		return reviewLikes;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class CommentDislikes {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		CommentDislikes that = (CommentDislikes) o;
+		ReviewLikes that = (ReviewLikes) o;
 
 		return Objects.equals(id, that.id);
 	}

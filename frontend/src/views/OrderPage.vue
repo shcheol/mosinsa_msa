@@ -68,7 +68,7 @@ export default {
     }
   },
   beforeCreate() {
-    if (localStorage.getItem("customerId") == null) {
+    if (localStorage.getItem("customer-info") == null) {
       alert('login이 필요합니다.')
       this.$router.push({name: "login"})
     }

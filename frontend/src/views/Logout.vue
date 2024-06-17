@@ -1,7 +1,8 @@
 <template>
   <div class="container">
       <div class="mb-3">
-        <p>logout: {{userInfo}}</p>
+        <p v-if="userInfo!=null" >logout: {{userInfo.name}}</p>
+        <p v-else >login한 상태가 아닙니다.</p>
       </div>
   </div>
 </template>
@@ -15,8 +16,7 @@ export default {
     }
   },
   mounted(){
-    this.userInfo = localStorage.getItem("customerId");
-    this.$store.getters.getLoginState;
+    this.userInfo = JSON.parse(localStorage.getItem("customer-info"));
     localStorage.clear();
   }
 }

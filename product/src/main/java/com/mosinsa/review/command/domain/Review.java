@@ -25,11 +25,22 @@ public class Review {
 
     private String contents;
 
-    @OneToMany(mappedBy = "review")
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    private Long commentsCount;
 
     @Column(updatable = false)
     private LocalDateTime createdDate;
+
+	@OneToMany(mappedBy = "review")
+	private List<ReviewLikes> reviewLikes = new ArrayList<>();
+
+	private Long likesCount;
+
+	@OneToMany(mappedBy = "review")
+	private List<ReviewDislikes> reviewDislikes = new ArrayList<>();
+	private Long dislikesCount;
 
     @Convert(converter = BooleanConverter.class)
     private boolean deleted;
@@ -40,11 +51,35 @@ public class Review {
         review.writer = writer;
         review.productId = productId;
         review.contents = contents;
+        review.commentsCount = 0L;
         review.createdDate = LocalDateTime.now();
+		review.likesCount = 0L;
+		review.dislikesCount = 0L;
         review.deleted = false;
         return review;
     }
 
+	public void likes(){
+		this.likesCount+=1;
+	}
+	public void likesCancel(){
+		this.likesCount-=1;
+	}
+	public void dislikes(){
+		this.dislikesCount+=1;
+	}
+	public void dislikesCancel(){
+		this.dislikesCount-=1;
+	}
+
+    public void writeComment(Comment comment){
+        this.getComments().add(comment);
+        this.commentsCount+=1;
+    }
+
+    public void deleteComment(){
+        this.commentsCount-=1;
+    }
     public ReviewId delete(String writerId) {
         if (!writerId.equals(this.writer.getWriterId())){
             throw new IllegalStateException("자신이 작성한 글만 삭제 할 수 있습니다.");
