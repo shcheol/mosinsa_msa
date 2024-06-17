@@ -1,5 +1,6 @@
 package com.mosinsa.review.command.application;
 
+import com.mosinsa.common.aop.RedissonLock;
 import com.mosinsa.common.ex.ReviewError;
 import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.review.command.domain.Comment;
@@ -27,6 +28,9 @@ public class ReviewService {
 	private final CommentLikesService commentLikesService;
 	private final ReviewLikesService reviewLikesService;
 
+	private static final String REVIEW_LIKES_LOCK_KEY = "review_likes_lock_key";
+	private static final String COMMENT_LIKES_LOCK_KEY = "comment_likes_lock_key";
+
 	@Transactional
 	public String writeReview(WriteReviewRequest request) {
 
@@ -44,6 +48,7 @@ public class ReviewService {
 	}
 
 	@Transactional
+	@RedissonLock(value = REVIEW_LIKES_LOCK_KEY)
 	public void likesReview(String reviewId, CustomerInfo customerInfo) {
 		try {
 			reviewLikesService.likesReview(reviewId, customerInfo.id());
@@ -53,6 +58,7 @@ public class ReviewService {
 	}
 
 	@Transactional
+	@RedissonLock(value = REVIEW_LIKES_LOCK_KEY)
 	public void dislikesReview(String reviewId, CustomerInfo customerInfo) {
 		try {
 			reviewLikesService.dislikesReview(reviewId, customerInfo.id());
@@ -83,6 +89,7 @@ public class ReviewService {
 	}
 
 	@Transactional
+	@RedissonLock(value = COMMENT_LIKES_LOCK_KEY)
 	public void likesComment(String reviewId, String commentId, CustomerInfo customerInfo) {
 
 		try {
@@ -93,6 +100,7 @@ public class ReviewService {
 	}
 
 	@Transactional
+	@RedissonLock(value = COMMENT_LIKES_LOCK_KEY)
 	public void dislikesComment(String reviewId, String commentId, CustomerInfo customerInfo) {
 
 		try {

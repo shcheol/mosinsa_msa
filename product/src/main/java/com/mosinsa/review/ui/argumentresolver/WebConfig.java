@@ -1,6 +1,5 @@
 package com.mosinsa.review.ui.argumentresolver;
 
-import com.mosinsa.review.ui.argumentresolver.LoginUserArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
