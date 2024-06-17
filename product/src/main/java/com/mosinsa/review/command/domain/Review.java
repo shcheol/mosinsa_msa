@@ -33,6 +33,15 @@ public class Review {
     @Column(updatable = false)
     private LocalDateTime createdDate;
 
+	@OneToMany(mappedBy = "review")
+	private List<ReviewLikes> reviewLikes = new ArrayList<>();
+
+	private Long likesCount;
+
+	@OneToMany(mappedBy = "review")
+	private List<ReviewDislikes> reviewDislikes = new ArrayList<>();
+	private Long dislikesCount;
+
     @Convert(converter = BooleanConverter.class)
     private boolean deleted;
 
@@ -44,9 +53,24 @@ public class Review {
         review.contents = contents;
         review.commentsCount = 0L;
         review.createdDate = LocalDateTime.now();
+		review.likesCount = 0L;
+		review.dislikesCount = 0L;
         review.deleted = false;
         return review;
     }
+
+	public void likes(){
+		this.likesCount+=1;
+	}
+	public void likesCancel(){
+		this.likesCount-=1;
+	}
+	public void dislikes(){
+		this.dislikesCount+=1;
+	}
+	public void dislikesCancel(){
+		this.dislikesCount-=1;
+	}
 
     public void writeComment(Comment comment){
         this.getComments().add(comment);

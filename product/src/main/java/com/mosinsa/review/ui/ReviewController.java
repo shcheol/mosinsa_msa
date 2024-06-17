@@ -21,10 +21,24 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<Void> writeReview(@RequestBody WriteReviewRequest request) {
-        reviewService.writeReview(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<String> writeReview(@RequestBody WriteReviewRequest request) {
+		String reviewId = reviewService.writeReview(request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(reviewId);
     }
+
+	@PostMapping("/{reviewId}/likes")
+	public ResponseEntity<Void> likesReview(@PathVariable("reviewId") String reviewId,
+											@Login CustomerInfo customerInfo) {
+		reviewService.likesReview(reviewId, customerInfo);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/{reviewId}/dislikes")
+	public ResponseEntity<Void> dislikesReview(@PathVariable("reviewId") String reviewId,
+											   @Login CustomerInfo customerInfo) {
+		reviewService.dislikesReview(reviewId, customerInfo);
+		return ResponseEntity.ok().build();
+	}
 
     @PostMapping("/{reviewId}/delete")
     public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") String reviewId,
@@ -34,10 +48,10 @@ public class ReviewController {
     }
 
     @PostMapping("/{reviewId}/comments")
-    public ResponseEntity<Void> writeComment(@PathVariable("reviewId") String reviewId,
+    public ResponseEntity<String> writeComment(@PathVariable("reviewId") String reviewId,
                                              @RequestBody WriteCommentRequest request) {
-        reviewService.writeComment(reviewId, request);
-        return ResponseEntity.ok().build();
+		String commentId = reviewService.writeComment(reviewId, request);
+		return ResponseEntity.ok().body(commentId);
     }
 
     @PostMapping("/{reviewId}/comments/{commentId}/delete")

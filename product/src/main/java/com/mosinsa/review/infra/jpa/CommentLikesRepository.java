@@ -9,10 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentLikesRepository extends JpaRepository<CommentLikes, String> {
 
-    @Query(value = "select cl from CommentLikes cl where cl.comment = :comment and cl.memberId = :memberId")
-    void findCommentLikesByMemberIdAndComment(@Param("memberId") String memberId, @Param("likes") CommentLikes likes);
-
     @Modifying
-    @Query(value = "delete from CommentLikes cl where cl.comment = :likes and cl.memberId = :memberId")
-    void deleteCommentLikesByMemberId(@Param("memberId") String memberId, @Param("likes") Comment likes);
+    @Query(value = "delete from CommentLikes cl where cl.comment = :comment and cl.memberId = :memberId")
+    void deleteCommentLikesByMemberId(@Param("memberId") String memberId, @Param("comment") Comment comment);
 }

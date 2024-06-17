@@ -75,6 +75,26 @@ export default {
                 }
             })
     },
+    postReviewLikes: function (reviewId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/likes`, {
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
+    postReviewDislikes: function (reviewId) {
+        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/dislikes`, {
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+    },
     getReviewComments: function (reviewId) {
         return instance.get(BASE_URL + `product-service/reviews/${reviewId}/comments`)
     },

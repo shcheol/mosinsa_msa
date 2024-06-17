@@ -84,13 +84,31 @@ create table comment_likes
 ) engine = InnoDB;
 create table review
 (
-    review_id    varchar(255) not null,
-    contents     varchar(255),
-    created_date datetime(6),
-    deleted      varchar(255),
-    writer_name  varchar(255),
-    writer_id    varchar(255),
-    product_id   varchar(255),
+    review_id      varchar(255) not null,
+    contents       varchar(255),
+    created_date   datetime(6),
+    deleted        varchar(255),
+    writer_name    varchar(255),
+    writer_id      varchar(255),
+    product_id     varchar(255),
     comments_count bigint,
+    dislikes_count bigint,
+    likes_count    bigint,
     primary key (review_id)
+) engine = InnoDB;
+create table review_dislikes
+(
+    review_dislikes_id varchar(255) not null,
+    member_id          varchar(255) not null,
+    review_id          varchar(255) not null,
+    UNIQUE INDEX dislikes_review_member_index (review_id, member_id),
+    primary key (review_dislikes_id)
+) engine = InnoDB;
+create table review_likes
+(
+    review_likes_id varchar(255) not null,
+    member_id       varchar(255) not null,
+    review_id       varchar(255) not null,
+    UNIQUE INDEX likes_review_member_index (review_id, member_id),
+    primary key (review_likes_id)
 ) engine = InnoDB;

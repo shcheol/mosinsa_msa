@@ -15,6 +15,10 @@ public class ReviewSummaryDto {
 	LocalDateTime createdDate;
 	Long commentsCount;
 
+	Long likesCount;
+
+	Long dislikesCount;
+
 	@QueryProjection
 	public ReviewSummaryDto(Review review) {
 		this.reviewId = review.getReviewId().getId();
@@ -23,5 +27,7 @@ public class ReviewSummaryDto {
 		this.contents = review.isDeleted() ? "삭제된 리뷰입니다." : review.getContents();
 		this.createdDate = review.getCreatedDate();
 		this.commentsCount = review.getCommentsCount();
+		this.likesCount = review.getLikesCount();
+		this.dislikesCount = review.getDislikesCount();
 	}
 }

@@ -42,7 +42,6 @@ public class Comment {
 	private Long dislikesCount;
 
     @Convert(converter = BooleanConverter.class)
-//    @ColumnDefault(value = "N")
     private boolean deleted;
 
     public static Comment of(Writer writer, Review review, String contents) {

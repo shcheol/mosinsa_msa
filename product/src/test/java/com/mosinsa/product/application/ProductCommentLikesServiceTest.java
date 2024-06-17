@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
-class ProductLikesServiceTest {
+class ProductCommentLikesServiceTest {
 
     @Autowired
     ProductQueryService productQueryService;

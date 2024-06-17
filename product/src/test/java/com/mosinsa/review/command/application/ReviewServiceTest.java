@@ -1,5 +1,6 @@
 package com.mosinsa.review.command.application;
 
+import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.review.command.domain.Comment;
 import com.mosinsa.review.command.domain.Review;
 import com.mosinsa.review.command.domain.ReviewId;
@@ -86,7 +87,7 @@ class ReviewServiceTest {
         assertThat(before.isDeleted()).isFalse();
 
         DeleteCommentRequest request = new DeleteCommentRequest("writerId3");
-        reviewService.deleteComment("reviewId", id, request);
+        reviewService.deleteComment("reviewId1", id, request);
 
         Comment after = commentRepository.findById(id).get();
         assertThat(after.isDeleted()).isTrue();
@@ -100,6 +101,6 @@ class ReviewServiceTest {
 
         DeleteCommentRequest request = new DeleteCommentRequest("writerId1");
         ;
-        assertThrows(IllegalStateException.class, () -> reviewService.deleteComment("reviewId", id, request));
+        assertThrows(ReviewException.class, () -> reviewService.deleteComment("reviewId", id, request));
     }
 }

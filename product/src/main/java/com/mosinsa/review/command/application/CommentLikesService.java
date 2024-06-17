@@ -1,5 +1,7 @@
 package com.mosinsa.review.command.application;
 
+import com.mosinsa.common.ex.ReviewError;
+import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.review.command.domain.Comment;
 import com.mosinsa.review.command.domain.CommentDislikes;
 import com.mosinsa.review.command.domain.CommentLikes;
@@ -11,9 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
-public class LikesService {
+public class CommentLikesService {
 
 	private final CommentLikesRepository commentLikesRepository;
 
@@ -23,7 +26,8 @@ public class LikesService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void likesComment(String commentId, String customerId){
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
+		Comment comment = commentRepository.findById(commentId)
+				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_COMMENT));
 		CommentLikes commentLikes = CommentLikes.create(customerId, comment);
 		commentLikesRepository.save(commentLikes);
 		comment.likes();
@@ -31,15 +35,16 @@ public class LikesService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void likesCommentCancel(String commentId, String customerId){
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
-//		CommentLikes commentLikes = CommentLikes.create(customerId, comment);
+		Comment comment = commentRepository.findById(commentId)
+				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_COMMENT));
 		commentLikesRepository.deleteCommentLikesByMemberId(customerId, comment);
 		comment.likesCancel();
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void dislikesComment(String commentId, String customerId){
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
+		Comment comment = commentRepository.findById(commentId)
+				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_COMMENT));
 		CommentDislikes commentDislikes = CommentDislikes.create(customerId, comment);
 		commentDislikesRepository.save(commentDislikes);
 		comment.dislikes();
@@ -47,9 +52,9 @@ public class LikesService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void dislikesCommentCancel(String commentId, String customerId){
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
-		CommentDislikes commentDislikes = CommentDislikes.create(customerId, comment);
-		commentDislikesRepository.save(commentDislikes);
+		Comment comment = commentRepository.findById(commentId)
+				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_COMMENT));
+		commentDislikesRepository.deleteCommentDislikesByMemberId(customerId, comment);
 		comment.dislikesCancel();
 	}
 }

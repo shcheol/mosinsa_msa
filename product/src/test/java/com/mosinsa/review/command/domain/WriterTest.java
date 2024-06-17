@@ -13,7 +13,6 @@ class WriterTest {
 		Writer a = Writer.of("id", "name");
 		Writer b = Writer.of("id", "name");
 		assertThat(a).isEqualTo(b).hasSameHashCodeAs(b);
-
 	}
 
 }
