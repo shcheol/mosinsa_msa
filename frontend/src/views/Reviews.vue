@@ -77,6 +77,8 @@
 <script>
 import apiBoard from "@/api/board";
 import dayjs from "dayjs";
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
 
 export default {
   name: "Reviews",
@@ -92,7 +94,8 @@ export default {
       commentContent: null,
       commentsMap: new Map(),
       commentStateMap: new Map(),
-      customerInfo: JSON.parse(localStorage.getItem("customer-info"))
+      customerInfo: JSON.parse(localStorage.getItem("customer-info")),
+      websocketClient: null,
     }
   },
   watch : {
@@ -101,7 +104,35 @@ export default {
       this.getReview(this.productId);
     }
   },
+  mounted() {
+    this.connect();
+  },
+  beforeUnmount() {
+    this.disconnect();
+  },
   methods: {
+    connect() {
+      const serverURL = "http://localhost:8000/product-service/register"
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      this.stompClient.connect(
+          {},
+          frame => {
+            console.log('소켓 연결 성공', frame);
+            this.stompClient.subscribe(`/product-service/topic/product/${this.productId}`, res => {
+              console.log('구독으로 받은 메시지 입니다.', res.body);
+
+            });
+          },
+          error => {
+            console.log('소켓 연결 실패', error);
+          }
+      );
+    },
+    disconnect() {
+      this.stompClient.disconnect();
+    },
     commentLikes(reviewId, commentId){
       apiBoard.postCommentLikes(reviewId, commentId)
           .then(() => {
