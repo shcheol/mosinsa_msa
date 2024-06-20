@@ -49,7 +49,7 @@ public class ReviewKafkaConfig {
 
 		Map<String, Object> properties = new HashMap<>();
 		properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "reviewGroup"+ UUID.randomUUID());
+		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "reviewGroup");
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
