@@ -46,7 +46,9 @@
                       <img src="../assets/thumbsup.png" width="16" height="16"
                            style="display: inline; position: relative; left: 4px;" alt="likes"/>
                       <span
-                          style="display: inline; position: relative;left: 10px;color: red">{{ comment.likesCount }}</span>
+                          style="display: inline; position: relative;left: 10px;color: red">{{
+                          comment.likesCount
+                        }}</span>
                     </div>
 
                     <div class="commentDislikes" style="display: inline;"
@@ -54,7 +56,9 @@
                       <img src="../assets/thumbsdown.png" width="16" height="16"
                            style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
                       <span
-                          style="display: inline; position: relative;left: 30px;color: blue">{{ comment.dislikesCount }}</span>
+                          style="display: inline; position: relative;left: 30px;color: blue">{{
+                          comment.dislikesCount
+                        }}</span>
                     </div>
                   </div>
                 </li>
@@ -77,6 +81,8 @@
 <script>
 import apiBoard from "@/api/board";
 import dayjs from "dayjs";
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
 
 export default {
   name: "Reviews",
@@ -92,45 +98,115 @@ export default {
       commentContent: null,
       commentsMap: new Map(),
       commentStateMap: new Map(),
-      customerInfo: JSON.parse(localStorage.getItem("customer-info"))
+      customerInfo: JSON.parse(localStorage.getItem("customer-info")),
+      websocketClient: null,
     }
   },
-  watch : {
-    propsValue(){
+  watch: {
+    propsValue() {
       this.productId = this.propsValue;
       this.getReview(this.productId);
     }
   },
+  mounted() {
+    this.connect();
+  },
+  beforeUnmount() {
+    this.disconnect();
+  },
   methods: {
-    commentLikes(reviewId, commentId){
+    connect() {
+      const serverURL = "http://localhost:8000/product-service/register"
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      this.stompClient.connect(
+          {},
+          frame => {
+            console.log('소켓 연결 성공', frame);
+            this.stompClient.subscribe(`/topic/product/${this.productId}`, response => {
+              console.log('구독으로 받은 메시지 입니다.', response.body);
+              const message = JSON.parse(response.body);
+              console.log(message)
+              this.processSubscribedMessage(message);
+            });
+          },
+          error => {
+            console.log('소켓 연결 실패', error);
+          }
+      );
+    },
+    processSubscribedMessage(message) {
+      if (message.type === "REVIEW") {
+        this.reviews.filter(review => review.reviewId === message.reviewId)
+            .map(findReview => {
+                  if (message.likesType === "LIKES") {
+                    if (message.canceled) {
+                      findReview.likesCount -= 1;
+                    } else {
+                      findReview.likesCount += 1;
+                    }
+                  } else {
+                    if (message.canceled) {
+                      findReview.dislikesCount -= 1;
+                    } else {
+                      findReview.dislikesCount += 1;
+                    }
+                  }
+                }
+            );
+      } else{
+        this.commentsMap.get(message.reviewId)
+            .filter(comment => comment.commentId === message.commentId)
+            .map(findComment => {
+              if (message.likesType === "LIKES") {
+                if (message.canceled) {
+                  findComment.likesCount -= 1;
+                } else {
+                  findComment.likesCount += 1;
+                }
+              } else {
+                if (message.canceled) {
+                  findComment.dislikesCount -= 1;
+                } else {
+                  findComment.dislikesCount += 1;
+                }
+              }
+            });
+      }
+    },
+    disconnect() {
+      this.stompClient.disconnect();
+    },
+    commentLikes(reviewId, commentId) {
       apiBoard.postCommentLikes(reviewId, commentId)
-          .then(() => {
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.commentsMap.set(reviewId, response.data.content);
-                });
-          });
+          // .then(() => {
+          //   apiBoard.getReviewComments(reviewId)
+          //       .then((response) => {
+          //         this.commentsMap.set(reviewId, response.data.content);
+          //       });
+          // });
     },
-    commentDislikes(reviewId, commentId){
+    commentDislikes(reviewId, commentId) {
       apiBoard.postCommentDislikes(reviewId, commentId)
-          .then(() => {
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.commentsMap.set(reviewId, response.data.content);
-                });
-          });
+          // .then(() => {
+          //   apiBoard.getReviewComments(reviewId)
+          //       .then((response) => {
+          //         this.commentsMap.set(reviewId, response.data.content);
+          //       });
+          // });
     },
-    reviewLikes(reviewId){
+    reviewLikes(reviewId) {
       apiBoard.postReviewLikes(reviewId)
-          .then(() => {
-            this.getReview(this.productId);
-          });
+          // .then(() => {
+          //   this.getReview(this.productId);
+          // });
     },
-    reviewDislikes(reviewId){
+    reviewDislikes(reviewId) {
       apiBoard.postReviewDislikes(reviewId)
-          .then(() => {
-            this.getReview(this.productId);
-          });
+          // .then(() => {
+          //   this.getReview(this.productId);
+          // });
     },
     getReview(productId) {
       apiBoard.getProductReviews(productId)

@@ -9,6 +9,7 @@ import com.mosinsa.review.command.domain.ReviewId;
 import com.mosinsa.review.command.domain.Writer;
 import com.mosinsa.review.infra.jpa.CommentRepository;
 import com.mosinsa.review.infra.jpa.ReviewRepository;
+import com.mosinsa.review.infra.kafka.*;
 import com.mosinsa.review.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.review.ui.reqeust.DeleteCommentRequest;
 import com.mosinsa.review.ui.reqeust.DeleteReviewRequest;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +55,10 @@ public class ReviewService {
 	public void likesReview(String reviewId, CustomerInfo customerInfo) {
 		try {
 			reviewLikesService.likesReview(reviewId, customerInfo.id());
+			KafkaEvents.raise("review-likes-topic", new ReviewLikesEvent(reviewId, false));
 		} catch (DataIntegrityViolationException e) {
 			reviewLikesService.likesReviewCancel(reviewId, customerInfo.id());
+			KafkaEvents.raise("review-likes-topic", new ReviewLikesEvent(reviewId, true));
 		}
 	}
 
@@ -62,8 +67,10 @@ public class ReviewService {
 	public void dislikesReview(String reviewId, CustomerInfo customerInfo) {
 		try {
 			reviewLikesService.dislikesReview(reviewId, customerInfo.id());
+			KafkaEvents.raise("review-dislikes-topic", new ReviewDislikesEvent(reviewId, false));
 		} catch (DataIntegrityViolationException e) {
 			reviewLikesService.dislikesReviewCancel(reviewId, customerInfo.id());
+			KafkaEvents.raise("review-dislikes-topic", new ReviewDislikesEvent(reviewId, true));
 		}
 	}
 
@@ -94,8 +101,10 @@ public class ReviewService {
 
 		try {
 			commentLikesService.likesComment(commentId, customerInfo.id());
+			KafkaEvents.raise("comment-likes-topic", new CommentLikesEvent(reviewId, commentId, false));
 		} catch (DataIntegrityViolationException e) {
 			commentLikesService.likesCommentCancel(commentId, customerInfo.id());
+			KafkaEvents.raise("comment-likes-topic", new CommentLikesEvent(reviewId, commentId, true));
 		}
 	}
 
@@ -105,8 +114,10 @@ public class ReviewService {
 
 		try {
 			commentLikesService.dislikesComment(commentId, customerInfo.id());
+			KafkaEvents.raise("comment-dislikes-topic", new CommentDislikesEvent(reviewId, commentId, false));
 		} catch (DataIntegrityViolationException e) {
 			commentLikesService.dislikesCommentCancel(commentId, customerInfo.id());
+			KafkaEvents.raise("comment-dislikes-topic", new CommentDislikesEvent(reviewId, commentId, true));
 		}
 	}
 

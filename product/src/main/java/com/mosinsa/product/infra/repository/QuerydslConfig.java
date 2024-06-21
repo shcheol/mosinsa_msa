@@ -1,4 +1,4 @@
-package com.mosinsa.common.config;
+package com.mosinsa.product.infra.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
