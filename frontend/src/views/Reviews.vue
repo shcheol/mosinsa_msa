@@ -7,7 +7,8 @@
         <li v-for="(review) in reviews" :key="review">
           <div>
             <span class="nickname">{{ review.writer }}</span>
-            <button class="deleteBtn" @click="deleteReview(review.reviewId)" v-if="review.writerId === customerInfo.id">
+            <button class="deleteBtn" @click="deleteReview(review.reviewId)"
+                    v-if="customerInfo!==null && review.writerId === customerInfo.id">
               삭제
             </button>
             <br/>
@@ -35,7 +36,8 @@
                     <span class="nickname">{{ comment.writer }}</span>
                     <button class="deleteBtn"
                             @click="deleteComment(review.reviewId, comment.commentId)"
-                            v-if="(comment.writerId === customerInfo.id) && comment.contents !== '삭제된 댓글입니다.'">삭제
+                            v-if="customerInfo!==null && (comment.writerId === customerInfo.id) && comment.contents !== '삭제된 댓글입니다.'">
+                      삭제
                     </button>
                     <br/>
                     <span class="date">{{ dateFormatting(comment.createdDate) }}</span>
@@ -55,8 +57,7 @@
                          @click="commentDislikes(review.reviewId, comment.commentId)">
                       <img src="../assets/thumbsdown.png" width="16" height="16"
                            style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
-                      <span
-                          style="display: inline; position: relative;left: 30px;color: blue">{{
+                      <span style="display: inline; position: relative;left: 30px;color: blue">{{
                           comment.dislikesCount
                         }}</span>
                     </div>
@@ -116,7 +117,7 @@ export default {
   },
   methods: {
     connect() {
-      const serverURL = "/product-service/register"
+      const serverURL = "/websocket-service/register"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
@@ -155,7 +156,7 @@ export default {
                   }
                 }
             );
-      } else{
+      } else {
         this.commentsMap.get(message.reviewId)
             .filter(comment => comment.commentId === message.commentId)
             .map(findComment => {
@@ -180,33 +181,33 @@ export default {
     },
     commentLikes(reviewId, commentId) {
       apiBoard.postCommentLikes(reviewId, commentId)
-          // .then(() => {
-          //   apiBoard.getReviewComments(reviewId)
-          //       .then((response) => {
-          //         this.commentsMap.set(reviewId, response.data.content);
-          //       });
-          // });
+      // .then(() => {
+      //   apiBoard.getReviewComments(reviewId)
+      //       .then((response) => {
+      //         this.commentsMap.set(reviewId, response.data.content);
+      //       });
+      // });
     },
     commentDislikes(reviewId, commentId) {
       apiBoard.postCommentDislikes(reviewId, commentId)
-          // .then(() => {
-          //   apiBoard.getReviewComments(reviewId)
-          //       .then((response) => {
-          //         this.commentsMap.set(reviewId, response.data.content);
-          //       });
-          // });
+      // .then(() => {
+      //   apiBoard.getReviewComments(reviewId)
+      //       .then((response) => {
+      //         this.commentsMap.set(reviewId, response.data.content);
+      //       });
+      // });
     },
     reviewLikes(reviewId) {
       apiBoard.postReviewLikes(reviewId)
-          // .then(() => {
-          //   this.getReview(this.productId);
-          // });
+      // .then(() => {
+      //   this.getReview(this.productId);
+      // });
     },
     reviewDislikes(reviewId) {
       apiBoard.postReviewDislikes(reviewId)
-          // .then(() => {
-          //   this.getReview(this.productId);
-          // });
+      // .then(() => {
+      //   this.getReview(this.productId);
+      // });
     },
     getReview(productId) {
       apiBoard.getProductReviews(productId)

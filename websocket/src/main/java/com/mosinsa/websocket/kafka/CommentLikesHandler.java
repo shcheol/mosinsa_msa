@@ -2,13 +2,8 @@ package com.mosinsa.websocket.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.common.ex.ReviewError;
-import com.mosinsa.common.ex.ReviewException;
-import com.mosinsa.review.infra.jpa.CommentRepository;
-import com.mosinsa.review.infra.redis.BroadcastMessagePublisher;
-import com.mosinsa.review.infra.redis.ReviewMessage;
 import com.mosinsa.websocket.redis.BroadcastMessagePublisher;
-import com.mosinsa.websocket.redis.ReviewMessage;
+import com.mosinsa.websocket.redis.WebsocketMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,7 +14,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CommentLikesHandler {
 
-	private final CommentRepository commentRepository;
 	private final BroadcastMessagePublisher broadcastMessagePublisher;
 	private final ObjectMapper om;
 
@@ -28,9 +22,9 @@ public class CommentLikesHandler {
 		CommentLikesEvent event = om.readValue(message, CommentLikesEvent.class);
 		log.info("consume message {}", event);
 
-		String productId = findChanel(event.commentId());
-		ReviewMessage reviewMessage = ReviewMessage.commentLikes(event.reviewId(), event.commentId(), event.canceled());
-		broadcastMessagePublisher.publish(productId, om.writeValueAsString(reviewMessage));
+		String productId = event.productId();
+		WebsocketMessage websocketMessage = WebsocketMessage.commentLikes(event.reviewId(), event.commentId(), event.canceled());
+		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
 
 	@KafkaListener(topics = "comment-dislikes-topic")
@@ -38,14 +32,8 @@ public class CommentLikesHandler {
 		CommentDislikesEvent event = om.readValue(message, CommentDislikesEvent.class);
 		log.info("consume message {}", event);
 
-		String productId = findChanel(event.commentId());
-		ReviewMessage reviewMessage = ReviewMessage.commentDislikes(event.reviewId(),event.commentId(), event.canceled());
-		broadcastMessagePublisher.publish(productId, om.writeValueAsString(reviewMessage));
+		String productId = event.productId();
+		WebsocketMessage websocketMessage = WebsocketMessage.commentDislikes(event.reviewId(),event.commentId(), event.canceled());
+		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
-
-	private String findChanel(String commentId) {
-		return commentRepository.findProductId(commentId)
-				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_COMMENT));
-	}
-
 }

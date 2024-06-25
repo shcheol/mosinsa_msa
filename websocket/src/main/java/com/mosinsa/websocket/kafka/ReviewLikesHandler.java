@@ -2,12 +2,8 @@ package com.mosinsa.websocket.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.common.ex.ReviewError;
-import com.mosinsa.common.ex.ReviewException;
-import com.mosinsa.review.command.domain.ReviewId;
-import com.mosinsa.review.infra.jpa.ReviewRepository;
-import com.mosinsa.review.infra.redis.BroadcastMessagePublisher;
-import com.mosinsa.review.infra.redis.ReviewMessage;
+import com.mosinsa.websocket.redis.BroadcastMessagePublisher;
+import com.mosinsa.websocket.redis.WebsocketMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,33 +14,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReviewLikesHandler {
 
-	private final ReviewRepository reviewRepository;
 	private final BroadcastMessagePublisher broadcastMessagePublisher;
 	private final ObjectMapper om;
 
 	@KafkaListener(topics = "review-likes-topic")
 	public void reviewLikedEvent(String message) throws JsonProcessingException {
-		ReviewLikesEvent reviewLikesEvent = om.readValue(message, ReviewLikesEvent.class);
-		log.info("consume message {}", reviewLikesEvent);
+		ReviewLikesEvent event = om.readValue(message, ReviewLikesEvent.class);
+		log.info("consume message {}", event);
 
-		String productId = findChanel(reviewLikesEvent.reviewId());
-		ReviewMessage reviewMessage = ReviewMessage.reviewLikes(reviewLikesEvent.reviewId(), reviewLikesEvent.canceled());
-		broadcastMessagePublisher.publish(productId, om.writeValueAsString(reviewMessage));
+		String productId = event.productId();
+		WebsocketMessage websocketMessage = WebsocketMessage.reviewLikes(event.reviewId(), event.canceled());
+		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
 
 	@KafkaListener(topics = "review-dislikes-topic")
 	public void reviewDislikedEvent(String message) throws JsonProcessingException {
-		ReviewDislikesEvent reviewDislikesEvent = om.readValue(message, ReviewDislikesEvent.class);
-		log.info("consume message {}", reviewDislikesEvent);
+		ReviewDislikesEvent event = om.readValue(message, ReviewDislikesEvent.class);
+		log.info("consume message {}", event);
 
-		String productId = findChanel(reviewDislikesEvent.reviewId());
-		ReviewMessage reviewMessage = ReviewMessage.reviewDislikes(reviewDislikesEvent.reviewId(), reviewDislikesEvent.canceled());
-		broadcastMessagePublisher.publish(productId, om.writeValueAsString(reviewMessage));
+		String productId = event.productId();
+		WebsocketMessage websocketMessage = WebsocketMessage.reviewDislikes(event.reviewId(), event.canceled());
+		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
-
-	private String findChanel(String reviewId) {
-		return reviewRepository.findById(ReviewId.of(reviewId))
-				.orElseThrow(()-> new ReviewException(ReviewError.NOT_FOUNT_REVIEW)).getProductId();
-	}
-
 }
