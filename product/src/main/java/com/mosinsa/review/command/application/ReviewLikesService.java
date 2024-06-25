@@ -22,36 +22,40 @@ public class ReviewLikesService {
 
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void likesReview(String reviewId, String customerId) {
+	public Review likesReview(String reviewId, String customerId) {
 		Review review = reviewRepository.findById(ReviewId.of(reviewId))
 				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_REVIEW));
 		ReviewLikes commentLikes = ReviewLikes.create(customerId, review);
 		reviewLikesRepository.save(commentLikes);
 		review.likes();
+		return review;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void likesReviewCancel(String reviewId, String customerId) {
+	public Review likesReviewCancel(String reviewId, String customerId) {
 		Review review = reviewRepository.findById(ReviewId.of(reviewId))
 				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_REVIEW));
 		reviewLikesRepository.deleteReviewLikesByMemberId(customerId, review);
 		review.likesCancel();
+		return review;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void dislikesReview(String reviewId, String customerId) {
+	public Review dislikesReview(String reviewId, String customerId) {
 		Review review = reviewRepository.findById(ReviewId.of(reviewId))
 				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_REVIEW));
 		ReviewDislikes commentDislikes = ReviewDislikes.create(customerId, review);
 		reviewDislikesRepository.save(commentDislikes);
 		review.dislikes();
+		return review;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void dislikesReviewCancel(String reviewId, String customerId) {
+	public Review dislikesReviewCancel(String reviewId, String customerId) {
 		Review review = reviewRepository.findById(ReviewId.of(reviewId))
 				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_REVIEW));
 		reviewDislikesRepository.deleteReviewDislikesByMemberId(customerId, review);
 		review.dislikesCancel();
+		return review;
 	}
 }

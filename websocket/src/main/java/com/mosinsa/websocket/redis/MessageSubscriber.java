@@ -1,4 +1,4 @@
-package com.mosinsa.review.infra.redis;
+package com.mosinsa.websocket.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

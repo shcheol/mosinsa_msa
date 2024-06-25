@@ -1,4 +1,4 @@
-package com.mosinsa.review.infra.redis;
+package com.mosinsa.websocket.redis;
 
 public enum DomainType {
     REVIEW, COMMENT

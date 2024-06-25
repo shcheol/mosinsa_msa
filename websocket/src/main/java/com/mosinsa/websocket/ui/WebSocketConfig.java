@@ -1,4 +1,4 @@
-package com.mosinsa.review.ui.websocket;
+package com.mosinsa.websocket.ui;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
