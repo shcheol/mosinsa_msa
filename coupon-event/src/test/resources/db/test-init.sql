@@ -1,4 +1,3 @@
-truncate table member;
 truncate table promotion;
 truncate table coupon;
 
@@ -22,6 +21,3 @@ insert into coupon values ('coupon13', 'promotion4', null, 'TEN_PERCENTAGE', '20
 insert into coupon values ('coupon14', 'promotion4', null, 'TEN_PERCENTAGE', '2024-12-31', null, 'CREATED');
 insert into coupon values ('coupon15', 'promotion4', null, 'TEN_PERCENTAGE', '2024-12-31', null, 'CREATED');
 insert into coupon values ('coupon16', 'promotion4', null, 'TEN_PERCENTAGE', '2024-12-31', null, 'CREATED');
-insert into member values ('1');
-insert into member values ('2');
-insert into member values ('3');
