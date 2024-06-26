@@ -1,3 +1,8 @@
+SET FOREIGN_KEY_CHECKS = 0;
+drop table if exists promotion;
+drop table if exists coupon;
+SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE IF NOT EXISTS promotion (
   promotion_id VARCHAR(255) NOT NULL PRIMARY KEY,
   title VARCHAR(100),
@@ -15,10 +20,6 @@ CREATE TABLE IF NOT EXISTS coupon (
   during_date DATE,
   member_id VARCHAR(255),
   state VARCHAR(100),
-  INDEX coupon_promotion_member_idx(promotion_id, member_id),
+  UNIQUE INDEX coupon_promotion_member_idx(promotion_id, member_id),
   INDEX coupon_member_idx(member_id)
-) engine=InnoDB;
-
-CREATE TABLE IF NOT EXISTS member (
- member_id VARCHAR(255) NOT NULL PRIMARY KEY
 ) engine=InnoDB;

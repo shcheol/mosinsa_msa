@@ -61,7 +61,7 @@ public class CouponService {
         log.info("coupon issue event {}", event);
         CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
 
-        duplicateParticipationCheck(condition);
+//        duplicateParticipationCheck(condition);
 
         Coupon coupon = couponRepository.findNotIssuedCoupon(condition)
                 .orElseThrow(() -> {
