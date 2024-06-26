@@ -12,6 +12,7 @@ import com.mosinsa.order.infra.feignclient.customer.CustomerResponse;
 import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
 import com.mosinsa.order.infra.feignclient.product.ProductResponse;
 import com.mosinsa.order.query.application.OrderConfirmTemplate;
+import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,98 +39,99 @@ class OrderConfirmTemplateTest {
 	CustomerQueryService customerQueryService;
 	@MockBean
 	CouponQueryService couponQueryService;
-    @MockBean
-    ProductQueryService productQueryService;
+	@MockBean
+	ProductQueryService productQueryService;
 	ObjectMapper om;
 	@Autowired
 	OrderConfirmTemplate orderConfirmTemplate;
 	OrderConfirmRequest orderConfirmRequestWithCoupon;
 	OrderConfirmRequest orderConfirmRequestWithoutCoupon;
 
+	CustomerInfo customerInfo = new CustomerInfo("customerId", "name");
 	Map<String, Collection<String>> header = Map.of();
 
 
 	@Test
 	void orderConfirmSuccessWithCoupon() {
 
-		when(customerQueryService.customerCheck(any(),any()))
+		when(customerQueryService.customerCheck(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
-		when(productQueryService.productCheck(any(),any()))
-				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,10,2)));
-		when(couponQueryService.couponCheck(any(),any()))
-				.thenReturn(ResponseResult.execute(()->new CouponResponse("couponId","TEN_PERCENTAGE","promotionId", LocalDateTime.MIN, "customerId",LocalDateTime.MAX, true)));
+		when(productQueryService.productCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
+		when(couponQueryService.couponCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CouponResponse("couponId", "TEN_PERCENTAGE", "promotionId", LocalDateTime.MIN, "customerId", LocalDateTime.MAX, true)));
 
-		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(header, orderConfirmRequestWithCoupon);
-        assertThat(orderConfirmDto.orderProducts()).hasSize(1);
-        assertThat(orderConfirmDto.customerId()).isEqualTo("customerId");
-        assertThat(orderConfirmDto.shippingInfo()).isEqualTo(orderConfirmRequestWithCoupon.shippingInfo());
-        assertThat(orderConfirmDto.couponId()).isEqualTo("couponId");
-        assertThat(orderConfirmDto.totalAmount()).isEqualTo(5400);
+
+		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon);
+		assertThat(orderConfirmDto.orderProducts()).hasSize(1);
+		assertThat(orderConfirmDto.customerId()).isEqualTo("customerId");
+		assertThat(orderConfirmDto.shippingInfo()).isEqualTo(orderConfirmRequestWithCoupon.shippingInfo());
+		assertThat(orderConfirmDto.couponId()).isEqualTo("couponId");
+		assertThat(orderConfirmDto.totalAmount()).isEqualTo(5400);
 	}
 
 	@Test
 	void orderConfirmNotEnoughStock() {
 
-		when(customerQueryService.customerCheck(any(),any()))
+		when(customerQueryService.customerCheck(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
-		when(productQueryService.productCheck(any(),any()))
-				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,1,2)));
-		when(couponQueryService.couponCheck(any(),any()))
-				.thenReturn(ResponseResult.execute(()->new CouponResponse("couponId","TEN_PERCENTAGE","promotionId", LocalDateTime.MIN, "customerId",LocalDateTime.MAX, true)));
+		when(productQueryService.productCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 1, 2)));
+		when(couponQueryService.couponCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CouponResponse("couponId", "TEN_PERCENTAGE", "promotionId", LocalDateTime.MIN, "customerId", LocalDateTime.MAX, true)));
 
-		assertThrows(NotEnoughProductStockException.class, () -> orderConfirmTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
+		assertThrows(NotEnoughProductStockException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
 	}
 
-    @Test
-    void orderConfirmCustomerServiceError() {
+	@Test
+	void orderConfirmCustomerServiceError() {
 
-        when(customerQueryService.customerCheck(any(),any()))
-                .thenThrow(ExternalServerException.class);
-		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
-    }
+		when(customerQueryService.customerCheck(any(), any()))
+				.thenThrow(ExternalServerException.class);
+		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
+	}
 
-    @Test
-    void orderConfirmProductServiceError() {
-        when(customerQueryService.customerCheck(any(),any()))
-                .thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
-        when(productQueryService.productCheck(any(),any()))
-                .thenThrow(ExternalServerException.class);
-		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
-    }
+	@Test
+	void orderConfirmProductServiceError() {
+		when(customerQueryService.customerCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
+		when(productQueryService.productCheck(any(), any()))
+				.thenThrow(ExternalServerException.class);
+		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
+	}
 
-    @Test
-    void orderConfirmCouponServiceErrorOrderWithCoupon() {
-        when(customerQueryService.customerCheck(any(),any()))
-                .thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
-        when(productQueryService.productCheck(any(),any()))
-                .thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,10,2)));
-        when(couponQueryService.couponCheck(any(),any()))
-                .thenThrow(ExternalServerException.class);
-		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, orderConfirmRequestWithCoupon));
-    }
+	@Test
+	void orderConfirmCouponServiceErrorOrderWithCoupon() {
+		when(customerQueryService.customerCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
+		when(productQueryService.productCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
+		when(couponQueryService.couponCheck(any(), any()))
+				.thenThrow(ExternalServerException.class);
+		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
+	}
 
-    @Test
-    void orderConfirmCouponServiceErrorOrderWithoutCoupon() {
-        when(customerQueryService.customerCheck(any(),any()))
-                .thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
-        when(productQueryService.productCheck(any(),any()))
-                .thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name",3000,10,2)));
-        when(couponQueryService.couponCheck(any(),any()))
-                .thenThrow(ExternalServerException.class);
-        OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(header, orderConfirmRequestWithoutCoupon);
-        assertThat(orderConfirmDto.orderProducts()).hasSize(1);
-        assertThat(orderConfirmDto.customerId()).isEqualTo("customerId");
-        assertThat(orderConfirmDto.shippingInfo()).isEqualTo(orderConfirmRequestWithCoupon.shippingInfo());
-        assertThat(orderConfirmDto.couponId()).isNull();
-        assertThat(orderConfirmDto.totalAmount()).isEqualTo(6000);
-    }
+	@Test
+	void orderConfirmCouponServiceErrorOrderWithoutCoupon() {
+		when(customerQueryService.customerCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
+		when(productQueryService.productCheck(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
+		when(couponQueryService.couponCheck(any(), any()))
+				.thenThrow(ExternalServerException.class);
+		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithoutCoupon);
+		assertThat(orderConfirmDto.orderProducts()).hasSize(1);
+		assertThat(orderConfirmDto.customerId()).isEqualTo("customerId");
+		assertThat(orderConfirmDto.shippingInfo()).isEqualTo(orderConfirmRequestWithCoupon.shippingInfo());
+		assertThat(orderConfirmDto.couponId()).isNull();
+		assertThat(orderConfirmDto.totalAmount()).isEqualTo(6000);
+	}
 
 	@BeforeEach
 	void init() throws JsonProcessingException {
 		om = new ObjectMapper();
 		String s = """
 				{
-				    "customerId":"customerId",
 				    "couponId":"couponId",
 				    "myOrderProducts":[
 				        {
@@ -153,9 +155,8 @@ class OrderConfirmTemplateTest {
 				""";
 		orderConfirmRequestWithCoupon = om.readValue(s, OrderConfirmRequest.class);
 
-        String noCoupon = """
+		String noCoupon = """
 				{
-				    "customerId":"customerId",
 				    "myOrderProducts":[
 				        {
 				            "productId":"productId",
@@ -176,6 +177,6 @@ class OrderConfirmTemplateTest {
 				        }
 				}
 				""";
-        orderConfirmRequestWithoutCoupon = om.readValue(noCoupon, OrderConfirmRequest.class);
+		orderConfirmRequestWithoutCoupon = om.readValue(noCoupon, OrderConfirmRequest.class);
 	}
 }

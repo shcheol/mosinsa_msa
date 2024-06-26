@@ -159,7 +159,6 @@ export default {
     },
     postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
-                "customerId": JSON.parse(localStorage.getItem("customer-info")).id,
                 "myOrderProducts":
                 myOrderProducts
                 ,

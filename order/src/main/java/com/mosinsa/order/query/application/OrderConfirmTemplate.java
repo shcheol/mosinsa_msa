@@ -9,6 +9,7 @@ import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
 import com.mosinsa.order.infra.feignclient.customer.CustomerQueryService;
 import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
 import com.mosinsa.order.infra.feignclient.product.ProductResponse;
+import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.MyOrderProduct;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,10 @@ public class OrderConfirmTemplate {
 	private final CustomerQueryService customerQueryService;
 	private final CouponQueryService couponQueryService;
 	private final ProductQueryService productQueryService;
-	public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, OrderConfirmRequest orderConfirmRequest) {
+	public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, CustomerInfo customerInfo, OrderConfirmRequest orderConfirmRequest) {
 
 		// 유저 조회
-		customerQueryService.customerCheck(authMap, orderConfirmRequest.customerId())
+		customerQueryService.customerCheck(authMap, customerInfo.id())
 				.orElseThrow();
 
 		// 상품 조회
@@ -68,7 +69,7 @@ public class OrderConfirmTemplate {
 		}
 
 		return OrderConfirmDto.builder()
-				.customerId(orderConfirmRequest.customerId())
+				.customerId(customerInfo.id())
 				.couponId(orderConfirmRequest.couponId())
 				.orderProducts(confirmOrderProducts)
 				.totalAmount(sum)

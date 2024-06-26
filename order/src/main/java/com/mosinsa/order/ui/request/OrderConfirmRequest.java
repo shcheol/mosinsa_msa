@@ -4,6 +4,6 @@ import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 
 import java.util.List;
 
-public record OrderConfirmRequest(String customerId, String couponId, ShippingInfoDto shippingInfo,
+public record OrderConfirmRequest(String couponId, ShippingInfoDto shippingInfo,
 								  List<MyOrderProduct> myOrderProducts) {
 }
