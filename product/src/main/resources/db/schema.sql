@@ -11,6 +11,7 @@ drop table if exists comment;
 drop table if exists review;
 drop table if exists review_likes;
 drop table if exists review_dislikes;
+drop table if exists reaction;
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table category
@@ -113,4 +114,17 @@ create table review_likes
     review_id       varchar(255) not null,
     UNIQUE INDEX likes_review_member_index (review_id, member_id),
     primary key (review_likes_id)
+) engine = InnoDB;
+
+create table reaction
+(
+    reaction_id        varchar(255) not null,
+    active             varchar(255) not null,
+    created_date       datetime,
+    last_modified_date datetime,
+    member_id          varchar(255),
+    reaction_type      varchar(255),
+    target_id          varchar(255),
+    target_type        varchar(255),
+    primary key (reaction_id)
 ) engine = InnoDB;
