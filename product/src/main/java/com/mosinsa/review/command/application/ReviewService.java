@@ -10,7 +10,7 @@ import com.mosinsa.review.command.domain.Writer;
 import com.mosinsa.review.infra.jpa.CommentRepository;
 import com.mosinsa.review.infra.jpa.ReviewRepository;
 import com.mosinsa.review.infra.kafka.*;
-import com.mosinsa.review.ui.argumentresolver.CustomerInfo;
+import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.review.ui.reqeust.DeleteCommentRequest;
 import com.mosinsa.review.ui.reqeust.DeleteReviewRequest;
 import com.mosinsa.review.ui.reqeust.WriteCommentRequest;

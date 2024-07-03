@@ -6,7 +6,7 @@ import com.mosinsa.review.command.domain.Review;
 import com.mosinsa.review.command.domain.ReviewId;
 import com.mosinsa.review.infra.jpa.CommentRepository;
 import com.mosinsa.review.infra.jpa.ReviewRepository;
-import com.mosinsa.review.ui.argumentresolver.CustomerInfo;
+import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.review.ui.reqeust.DeleteCommentRequest;
 import com.mosinsa.review.ui.reqeust.DeleteReviewRequest;
 import com.mosinsa.review.ui.reqeust.WriteCommentRequest;

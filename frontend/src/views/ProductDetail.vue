@@ -30,7 +30,8 @@
       </tr>
       <tr>
         <td>좋아요</td>
-        <td v-if="product!=null">{{ product.likes }}</td>
+        <td v-if="product!=null">{{reactionCntInfo.reactionCnt}}</td>
+<!--        <td v-else>0</td>-->
         <button @click="likes(product.productId)">좋아요</button>
       </tr>
       </tbody>
@@ -62,7 +63,8 @@ export default {
       product: null,
       modalState: false,
       quantity: null,
-      customerInfo: JSON.parse(localStorage.getItem("customer-info"))
+      customerInfo: JSON.parse(localStorage.getItem("customer-info")),
+      reactionCntInfo: null,
     }
   },
   mounted() {
@@ -71,10 +73,9 @@ export default {
         .then((response) => {
           console.log(response);
           this.product = response.data.response;
-        })
-        .catch(function (e) {
-          console.log(e);
         });
+    this.totalReaction(this.productId);
+
   },
   methods: {
 
@@ -90,22 +91,25 @@ export default {
       this.$store.dispatch("addCart", product);
     },
     likes(productId) {
-      apiBoard.postLikesProduct(productId)
+      apiBoard.postReaction('PRODUCT', productId, 'LIKES')
           .then((response) => {
             console.log(response);
-            apiBoard.getProductDetails(productId)
-                .then((response) => {
-                  console.log(response);
-                  this.product = response.data.response;
-                })
-                .catch(function (e) {
-                  console.log(e);
-                });
+            this.totalReaction(productId)
           })
           .catch(function (e) {
             console.log(e);
           });
     },
+    totalReaction(productId){
+      apiBoard.getReactionCount('PRODUCT', productId, 'LIKES')
+          .then((response) => {
+            console.log(response);
+            this.reactionCntInfo = response.data;
+          })
+          .catch(function (e) {
+            console.log(e);
+          });
+    }
 
   }
 

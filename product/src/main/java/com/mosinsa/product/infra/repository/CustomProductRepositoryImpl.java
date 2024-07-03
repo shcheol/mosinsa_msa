@@ -1,7 +1,7 @@
 package com.mosinsa.product.infra.repository;
 
-import com.mosinsa.product.application.dto.ProductQueryDto;
-import com.mosinsa.product.application.dto.QProductQueryDto;
+import com.mosinsa.product.command.application.dto.ProductQueryDto;
+import com.mosinsa.product.command.application.dto.QProductQueryDto;
 import com.mosinsa.product.ui.request.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,7 +12,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
-import static com.mosinsa.product.domain.product.QProduct.product;
+import static com.mosinsa.product.command.domain.QProduct.product;
+
 
 @RequiredArgsConstructor
 public class CustomProductRepositoryImpl implements CustomProductRepository {

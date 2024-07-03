@@ -1,8 +1,8 @@
 package com.mosinsa.review.ui;
 
 import com.mosinsa.review.command.application.ReviewService;
-import com.mosinsa.review.ui.argumentresolver.CustomerInfo;
-import com.mosinsa.review.ui.argumentresolver.Login;
+import com.mosinsa.common.argumentresolver.CustomerInfo;
+import com.mosinsa.common.argumentresolver.Login;
 import com.mosinsa.review.ui.reqeust.DeleteCommentRequest;
 import com.mosinsa.review.ui.reqeust.DeleteReviewRequest;
 import com.mosinsa.review.ui.reqeust.WriteCommentRequest;

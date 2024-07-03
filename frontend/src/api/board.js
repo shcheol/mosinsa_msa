@@ -151,10 +151,14 @@ export default {
     getProductDetails: function (id) {
         return instance.get(BASE_URL + 'product-service/products/' + id)
     },
-    postLikesProduct: function (productId) {
-        return instance.post(BASE_URL + 'product-service/products/' + productId + '/likes', {
-            "productId": productId,
-            "memberId": JSON.parse(localStorage.getItem("customer-info")).id
+    getReactionCount: function (target, id, reactionType) {
+        return instance.get(BASE_URL + `product-service/reactions/total?target=${target}&targetId=${id}&reactionType=${reactionType}`)
+    },
+    postReaction: function (target, id, reactionType) {
+        return instance.post(BASE_URL + 'product-service/reactions', {
+            "target": target,
+            "targetId": id,
+            "reactionType": reactionType,
         })
     },
     postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {

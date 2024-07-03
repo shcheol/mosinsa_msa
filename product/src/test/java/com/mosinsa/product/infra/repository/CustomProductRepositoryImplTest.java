@@ -1,6 +1,6 @@
 package com.mosinsa.product.infra.repository;
 
-import com.mosinsa.product.application.dto.ProductQueryDto;
+import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

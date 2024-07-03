@@ -1,6 +1,5 @@
 package com.mosinsa.review.query.application;
 
-import com.mosinsa.review.infra.jpa.ReviewRepository;
 import com.mosinsa.review.query.application.dto.CommentSummaryDto;
 import com.mosinsa.review.query.application.dto.ReviewSummaryDto;
 import com.mosinsa.review.ui.reqeust.ReviewSummaryRequest;
@@ -14,7 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")

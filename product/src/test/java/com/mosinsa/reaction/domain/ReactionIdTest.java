@@ -1,5 +1,6 @@
 package com.mosinsa.reaction.domain;
 
+import com.mosinsa.reaction.command.domain.ReactionId;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
