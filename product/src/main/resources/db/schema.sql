@@ -3,12 +3,8 @@ drop table if exists product;
 drop table if exists stock;
 drop table if exists product;
 drop table if exists category;
-drop table if exists comment_likes;
-drop table if exists comment_dislikes;
 drop table if exists comment;
 drop table if exists review;
-drop table if exists review_likes;
-drop table if exists review_dislikes;
 drop table if exists reaction;
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -43,28 +39,10 @@ create table comment
     contents       varchar(255),
     created_date   datetime(6),
     deleted        varchar(255) not null,
-    dislikes_count bigint,
-    likes_count    bigint,
     writer_name    varchar(255),
     writer_id      varchar(255),
     review_id      varchar(255),
     primary key (comment_id)
-) engine = InnoDB;
-create table comment_dislikes
-(
-    comment_dislikes_id varchar(255) not null,
-    member_id           varchar(255) not null,
-    comment_id          varchar(255) not null,
-    UNIQUE INDEX dislikes_comment_member_index (comment_id, member_id),
-    primary key (comment_dislikes_id)
-) engine = InnoDB;
-create table comment_likes
-(
-    comment_likes_id varchar(255) not null,
-    member_id        varchar(255) not null,
-    comment_id       varchar(255) not null,
-    UNIQUE INDEX likes_comment_member_index (comment_id, member_id),
-    primary key (comment_likes_id)
 ) engine = InnoDB;
 create table review
 (
@@ -76,25 +54,7 @@ create table review
     writer_id      varchar(255),
     product_id     varchar(255),
     comments_count bigint,
-    dislikes_count bigint,
-    likes_count    bigint,
     primary key (review_id)
-) engine = InnoDB;
-create table review_dislikes
-(
-    review_dislikes_id varchar(255) not null,
-    member_id          varchar(255) not null,
-    review_id          varchar(255) not null,
-    UNIQUE INDEX dislikes_review_member_index (review_id, member_id),
-    primary key (review_dislikes_id)
-) engine = InnoDB;
-create table review_likes
-(
-    review_likes_id varchar(255) not null,
-    member_id       varchar(255) not null,
-    review_id       varchar(255) not null,
-    UNIQUE INDEX likes_review_member_index (review_id, member_id),
-    primary key (review_likes_id)
 ) engine = InnoDB;
 
 create table reaction

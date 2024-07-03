@@ -161,6 +161,13 @@ export default {
             "reactionType": reactionType,
         })
     },
+    postReactionCancel: function (target, id, reactionType) {
+        return instance.post(BASE_URL + 'product-service/reactions/cancel', {
+            "target": target,
+            "targetId": id,
+            "reactionType": reactionType,
+        })
+    },
     postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
                 "myOrderProducts":

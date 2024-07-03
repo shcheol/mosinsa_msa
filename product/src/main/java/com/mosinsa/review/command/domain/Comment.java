@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,15 +29,6 @@ public class Comment {
 
 	private LocalDateTime createdDate;
 
-	@OneToMany(mappedBy = "comment")
-	private List<CommentLikes> commentLikes = new ArrayList<>();
-
-	private Long likesCount;
-
-	@OneToMany(mappedBy = "comment")
-	private List<CommentDislikes> commentDislikes = new ArrayList<>();
-	private Long dislikesCount;
-
 	@Convert(converter = BooleanConverter.class)
 	private boolean deleted;
 
@@ -50,27 +39,9 @@ public class Comment {
 		comment.contents = contents;
 		comment.createdDate = LocalDateTime.now();
 		comment.deleted = false;
-		comment.likesCount = 0L;
-		comment.dislikesCount = 0L;
 		comment.setReview(review);
 
 		return comment;
-	}
-
-	public void likes() {
-		this.likesCount += 1;
-	}
-
-	public void likesCancel() {
-		this.likesCount -= 1;
-	}
-
-	public void dislikes() {
-		this.dislikesCount += 1;
-	}
-
-	public void dislikesCancel() {
-		this.dislikesCount -= 1;
 	}
 
 	private void setReview(Review review) {

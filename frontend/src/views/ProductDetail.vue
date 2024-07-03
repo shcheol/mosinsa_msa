@@ -28,12 +28,19 @@
         <td>가격</td>
         <td v-if="product!=null">{{ product.price }}</td>
       </tr>
-      <tr>
-        <td>좋아요</td>
-        <td v-if="product!=null">{{reactionCntInfo.reactionCnt}}</td>
-<!--        <td v-else>0</td>-->
-        <button @click="likes(product.productId)">좋아요</button>
-      </tr>
+      <!--      <tr>-->
+      <!--        <td>좋아요</td>-->
+      <!--        <td v-if="reactionCntInfo!=null">{{ reactionCntInfo.reactionCnt }}</td>-->
+      <!--        <td v-else>0</td>-->
+      <!--        <button @click="likes(product.productId)">좋아요</button>-->
+      <!--      </tr>-->
+      <div v-if="reactionCntInfo!=null" class="likes" style="display: inline;" @click="likes(product.productId)">
+        <img v-if="!reactionCntInfo.hasReacted" src="../assets/likes.png" width="50" height="50"
+             style="display: inline; position: relative; left: 4px;" alt="likes"/>
+        <img v-else src="../assets/mylikes.png" width="50" height="50"
+             style="display: inline; position: relative; left: 4px;" alt="likes"/>
+        <span style="display: inline; position: relative;left: 10px">{{ reactionCntInfo.reactionCnt }}</span>
+      </div>
       </tbody>
     </table>
     <button @click="addCart(product)">담기</button>
@@ -43,7 +50,7 @@
     </div>
 
     <br/>
-    <Reviews :props-value="productId" />
+    <Reviews :props-value="productId"/>
 
 
   </div>
@@ -91,16 +98,23 @@ export default {
       this.$store.dispatch("addCart", product);
     },
     likes(productId) {
-      apiBoard.postReaction('PRODUCT', productId, 'LIKES')
-          .then((response) => {
-            console.log(response);
-            this.totalReaction(productId)
-          })
-          .catch(function (e) {
-            console.log(e);
-          });
+      if (this.reactionCntInfo != null) {
+        if (!this.reactionCntInfo.hasReacted) {
+          apiBoard.postReaction('PRODUCT', productId, 'LIKES')
+              .then((response) => {
+                console.log(response);
+                this.totalReaction(productId)
+              });
+        } else {
+          apiBoard.postReactionCancel('PRODUCT', productId, 'LIKES')
+              .then((response) => {
+                console.log(response);
+                this.totalReaction(productId)
+              });
+        }
+      }
     },
-    totalReaction(productId){
+    totalReaction(productId) {
       apiBoard.getReactionCount('PRODUCT', productId, 'LIKES')
           .then((response) => {
             console.log(response);
