@@ -1,4 +1,4 @@
-package com.mosinsa.review.infra.kafka;
+package com.mosinsa.reaction.infra.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

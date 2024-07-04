@@ -17,23 +17,23 @@ public class CommentLikesHandler {
 	private final BroadcastMessagePublisher broadcastMessagePublisher;
 	private final ObjectMapper om;
 
-	@KafkaListener(topics = "comment-likes-topic")
+	@KafkaListener(topics = "mosinsa-comment-likes")
 	public void commentLikedEvent(String message) throws JsonProcessingException {
 		CommentLikesEvent event = om.readValue(message, CommentLikesEvent.class);
 		log.info("consume message {}", event);
 
 		String productId = event.productId();
-		WebsocketMessage websocketMessage = WebsocketMessage.commentLikes(event.reviewId(), event.commentId(), event.canceled());
+		WebsocketMessage websocketMessage = WebsocketMessage.commentLikes(event.commentId(), event.canceled());
 		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
 
-	@KafkaListener(topics = "comment-dislikes-topic")
+	@KafkaListener(topics = "mosinsa-comment-dislikes")
 	public void commentDislikedEvent(String message) throws JsonProcessingException {
 		CommentDislikesEvent event = om.readValue(message, CommentDislikesEvent.class);
 		log.info("consume message {}", event);
 
 		String productId = event.productId();
-		WebsocketMessage websocketMessage = WebsocketMessage.commentDislikes(event.reviewId(),event.commentId(), event.canceled());
+		WebsocketMessage websocketMessage = WebsocketMessage.commentDislikes(event.commentId(), event.canceled());
 		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
 }

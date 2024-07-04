@@ -1,7 +1,7 @@
 package com.mosinsa.reaction.command.application;
 
 import com.mosinsa.reaction.command.domain.Reaction;
-import com.mosinsa.reaction.jpa.ReactionRepository;
+import com.mosinsa.reaction.infra.jpa.ReactionRepository;
 import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,9 @@ public class ReactionProcessor {
 
 		Reaction reaction = repository.findReactionByCondition(condition)
 				.orElseGet(() -> repository.save(Reaction.of(condition.target(), condition.targetId(), condition.reactionType(), condition.memberId())));
+		if (reaction.isActive()) {
+			throw new AlreadySameStateException();
+		}
 		reaction.active();
 		return reaction.getId().getId();
 	}
@@ -24,6 +27,9 @@ public class ReactionProcessor {
 	@Transactional
 	public String cancel(ReactionSearchCondition condition){
 		Reaction reaction = repository.findReactionByCondition(condition).orElseThrow();
+		if (!reaction.isActive()) {
+			throw new AlreadySameStateException();
+		}
 		reaction.delete();
 		return reaction.getId().getId();
 	}

@@ -25,7 +25,7 @@ public class BaseEntity {
 	private LocalDateTime lastModifiedDate;
 
 	@Convert(converter = BooleanConverter.class)
-	private boolean active = true;
+	private boolean active = false;
 
 	public void active(){
 		this.active = true;

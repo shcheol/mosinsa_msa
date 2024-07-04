@@ -1,4 +1,4 @@
-package com.mosinsa.reaction.jpa;
+package com.mosinsa.reaction.infra.jpa;
 
 import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
 import com.mosinsa.reaction.command.domain.Reaction;

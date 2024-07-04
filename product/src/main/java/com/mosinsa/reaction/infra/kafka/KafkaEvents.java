@@ -1,4 +1,4 @@
-package com.mosinsa.review.infra.kafka;
+package com.mosinsa.reaction.infra.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

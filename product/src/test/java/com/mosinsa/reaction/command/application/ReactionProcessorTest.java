@@ -4,7 +4,7 @@ import com.mosinsa.reaction.command.domain.Reaction;
 import com.mosinsa.reaction.command.domain.ReactionId;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
-import com.mosinsa.reaction.jpa.ReactionRepository;
+import com.mosinsa.reaction.infra.jpa.ReactionRepository;
 import com.mosinsa.reaction.qeury.application.ReactionReader;
 import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
 import org.junit.jupiter.api.Test;
@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -24,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReactionProcessorTest {
 
 	@Autowired
-	ReactionProcessor service;
+	ReactionProcessor processor;
 
 	@Autowired
 	ReactionReader reader;
@@ -34,21 +36,21 @@ class ReactionProcessorTest {
 
 	@Test
 	void reaction() {
-		ReactionSearchCondition condition = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1", ReactionType.LIKES, "memberId1");
+		ReactionSearchCondition condition = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1xx", ReactionType.LIKES, "memberId1");
 
-		String id = service.reaction(condition);
+		String id = processor.reaction(condition);
 
 		Reaction reaction = repository.findById(ReactionId.of(id)).get();
 		assertThat(reaction.getReactionType()).isEqualTo(ReactionType.LIKES);
 		assertThat(reaction.getTargetType()).isEqualTo(TargetEntity.PRODUCT);
-		assertThat(reaction.getTargetId()).isEqualTo("productId1");
+		assertThat(reaction.getTargetId()).isEqualTo("productId1xx");
 		assertThat(reaction.isActive()).isTrue();
 	}
 	@Test
 	void reactionCancel() {
 		ReactionSearchCondition condition = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1", ReactionType.LIKES, "memberId2");
 
-		String id = service.cancel(condition);
+		String id = processor.cancel(condition);
 
 		Reaction reaction = repository.findById(ReactionId.of(id)).get();
 		assertThat(reaction.getReactionType()).isEqualTo(ReactionType.LIKES);
@@ -72,7 +74,7 @@ class ReactionProcessorTest {
 		for (int i = 0; i < size; i++) {
 			es.execute(() -> {
 				try {
-					service.reaction(new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, UUID.randomUUID().toString()));
+					processor.reaction(new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, UUID.randomUUID().toString()));
 				}finally {
 					countDownLatch.countDown();
 				}

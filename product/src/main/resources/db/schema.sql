@@ -35,13 +35,13 @@ create table stock
 
 create table comment
 (
-    comment_id     varchar(255) not null,
-    contents       varchar(255),
-    created_date   datetime(6),
-    deleted        varchar(255) not null,
-    writer_name    varchar(255),
-    writer_id      varchar(255),
-    review_id      varchar(255),
+    comment_id   varchar(255) not null,
+    contents     varchar(255),
+    created_date datetime(6),
+    deleted      varchar(255) not null,
+    writer_name  varchar(255),
+    writer_id    varchar(255),
+    review_id    varchar(255),
     primary key (comment_id)
 ) engine = InnoDB;
 create table review
@@ -68,4 +68,14 @@ create table reaction
     target_id          varchar(255),
     target_type        varchar(255),
     primary key (reaction_id)
+) engine = InnoDB;
+
+create table reaction_info
+(
+    reaction_info_id varchar(255) not null,
+    reaction_type    varchar(255),
+    target_id        varchar(255),
+    target_type      varchar(255),
+    total            bigint,
+    primary key (reaction_info_id)
 ) engine = InnoDB;

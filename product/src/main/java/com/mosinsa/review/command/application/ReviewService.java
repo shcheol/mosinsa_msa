@@ -39,7 +39,7 @@ public class ReviewService {
 				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_REVIEW));
 		review.delete(request.writerId());
 	}
-//
+
 //	@Transactional
 //	@RedissonLock(value = REVIEW_LIKES_LOCK_KEY)
 //	public void likesReview(String reviewId, CustomerInfo customerInfo) {

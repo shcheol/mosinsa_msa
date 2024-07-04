@@ -71,7 +71,7 @@
                     <div class="commentDislikes" style="display: inline;"
                          @click="commentDislikes(review.reviewId, comment.commentId)"
                          v-if="commentDislikesReactionInfoMap.has(review.reviewId) && commentDislikesReactionInfoMap.get(review.reviewId).has(comment.commentId)">
-                      <img v-if="commentDislikesReactionInfoMap.get(review.reviewId).get(comment.commentId).hasReacted" src="../assets/thumbsdown.png" width="16" height="16"
+                      <img v-if="commentDislikesReactionInfoMap.get(review.reviewId).get(comment.commentId).hasReacted" src="../assets/mythumbsdown.png" width="16" height="16"
                            style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
                       <img v-else src="../assets/thumbsdown.png" width="16" height="16"
                            style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
@@ -161,25 +161,22 @@ export default {
     },
     processSubscribedMessage(message) {
       if (message.type === "REVIEW") {
-        this.reviews.filter(review => review.reviewId === message.reviewId)
-            .map(findReview => {
-                  if (message.likesType === "LIKES") {
-                    if (message.canceled) {
-                      findReview.likesCount -= 1;
-                    } else {
-                      findReview.likesCount += 1;
-                    }
-                  } else {
-                    if (message.canceled) {
-                      findReview.dislikesCount -= 1;
-                    } else {
-                      findReview.dislikesCount += 1;
-                    }
-                  }
-                }
-            );
+        if (message.likesType === "LIKES") {
+          if (message.canceled) {
+            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+          } else {
+            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+          }
+        } else {
+          if (message.canceled) {
+            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+          } else {
+            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+          }
+        }
       } else {
-        this.commentsMap.get(message.reviewId)
+//TODO
+        this.commentsMap.forEach(review => review.reviewId)
             .filter(comment => comment.commentId === message.commentId)
             .map(findComment => {
               if (message.likesType === "LIKES") {
@@ -204,18 +201,18 @@ export default {
     commentLikes(reviewId, commentId) {
       if (this.commentLikesReactionInfoMap.get(reviewId).has(commentId)) {
         if (!this.commentLikesReactionInfoMap.get(reviewId).get(commentId).hasReacted) {
-          apiBoard.postReaction('COMMENT', commentId, 'LIKES');
+          apiBoard.postReaction('COMMENT', commentId, 'LIKES').then(() => this.commentLikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=true);
         } else {
-          apiBoard.postReactionCancel('COMMENT', commentId, 'LIKES');
+          apiBoard.postReactionCancel('COMMENT', commentId, 'LIKES').then(() => this.commentLikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=false);
         }
       }
     },
     commentDislikes(reviewId, commentId) {
       if (this.commentDislikesReactionInfoMap.get(reviewId).has(commentId)) {
         if (!this.commentDislikesReactionInfoMap.get(reviewId).get(commentId).hasReacted) {
-          apiBoard.postReaction('COMMENT', commentId, 'DISLIKES');
+          apiBoard.postReaction('COMMENT', commentId, 'DISLIKES').then(() => this.commentDislikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=true);
         } else {
-          apiBoard.postReactionCancel('COMMENT', commentId, 'DISLIKES');
+          apiBoard.postReactionCancel('COMMENT', commentId, 'DISLIKES').then(() => this.commentDislikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=false);
         }
       }
     },
@@ -249,18 +246,18 @@ export default {
     reviewLikes(reviewId) {
       if (this.reviewLikesReactionInfoMap.has(reviewId)) {
         if (!this.reviewLikesReactionInfoMap.get(reviewId).hasReacted) {
-          apiBoard.postReaction('REVIEW', reviewId, 'LIKES');
+          apiBoard.postReaction('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted=true);
         } else {
-          apiBoard.postReactionCancel('REVIEW', reviewId, 'LIKES');
+          apiBoard.postReactionCancel('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted=false);
         }
       }
     },
     reviewDislikes(reviewId) {
       if (this.reviewDislikesReactionInfoMap.has(reviewId)) {
         if (!this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted) {
-          apiBoard.postReaction('REVIEW', reviewId, 'DISLIKES');
+          apiBoard.postReaction('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted=true);
         } else {
-          apiBoard.postReactionCancel('REVIEW', reviewId, 'DISLIKES');
+          apiBoard.postReactionCancel('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted = false);
         }
       }
     },
