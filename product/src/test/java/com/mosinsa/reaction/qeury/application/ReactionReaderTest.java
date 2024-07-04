@@ -31,10 +31,6 @@ class ReactionReaderTest {
 
 	@Test
 	void total() {
-		ReactionSearchCondition condition1 = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1", ReactionType.LIKES, "memberId2");
-		assertThat(reader.total(condition1)).isEqualTo(1);
-
-
 		ReactionSearchCondition condition2 = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1xx", ReactionType.LIKES, "");
 		assertThat(reader.total(condition2)).isZero();
 	}

@@ -39,54 +39,8 @@
                 }}</span>
             </div>
             <br/>
-            <button class="replyBtn" @click="showComments(review.reviewId)">답글 ({{ review.commentsCount }})</button>
+            <button class="replyBtn" @click="showComments(review.reviewId, review)">답글 ({{ review.commentsCount }})</button>
 
-            <div v-if="commentStateMap.get(review.reviewId)">
-              <ul>
-                <li v-for="(comment) in commentsMap.get(review.reviewId)" :key="comment">
-                  <div>
-                    <span class="nickname">{{ comment.writer }}</span>
-                    <button class="deleteBtn"
-                            @click="deleteComment(review.reviewId, comment.commentId)"
-                            v-if="customerInfo!==null && (comment.writerId === customerInfo.id) && comment.contents !== '삭제된 댓글입니다.'">
-                      삭제
-                    </button>
-                    <br/>
-                    <span class="date">{{ dateFormatting(comment.createdDate) }}</span>
-                    <p>{{ comment.contents }}</p>
-
-                    <div class="commentLikes" style="display: inline;"
-                         @click="commentLikes(review.reviewId, comment.commentId)"
-                         v-if="commentLikesReactionInfoMap.has(review.reviewId) && commentLikesReactionInfoMap.get(review.reviewId).has(comment.commentId)">
-                      <img v-if="commentLikesReactionInfoMap.get(review.reviewId).get(comment.commentId).hasReacted" src="../assets/mythumbsup.png" width="16" height="16"
-                           style="display: inline; position: relative; left: 4px;" alt="likes"/>
-                      <img v-else src="../assets/thumbsup.png" width="16" height="16"
-                           style="display: inline; position: relative; left: 4px;" alt="likes"/>
-                      <span
-                          style="display: inline; position: relative;left: 10px;color: red">{{
-                          commentLikesReactionInfoMap.get(review.reviewId).get(comment.commentId).reactionCnt
-                        }}</span>
-                    </div>
-
-                    <div class="commentDislikes" style="display: inline;"
-                         @click="commentDislikes(review.reviewId, comment.commentId)"
-                         v-if="commentDislikesReactionInfoMap.has(review.reviewId) && commentDislikesReactionInfoMap.get(review.reviewId).has(comment.commentId)">
-                      <img v-if="commentDislikesReactionInfoMap.get(review.reviewId).get(comment.commentId).hasReacted" src="../assets/mythumbsdown.png" width="16" height="16"
-                           style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
-                      <img v-else src="../assets/thumbsdown.png" width="16" height="16"
-                           style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
-                      <span style="display: inline; position: relative;left: 30px;color: blue">{{
-                          commentDislikesReactionInfoMap.get(review.reviewId).get(comment.commentId).reactionCnt
-                        }}</span>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-              <div>
-                <textarea v-model="commentContent" placeholder="댓글을 작성해주세요" class="commentArea"></textarea>
-                <button class="btn btn-dark" @click="postComment(review.reviewId)">등록</button>
-              </div>
-            </div>
           </div>
         </li>
       </ul>
@@ -116,13 +70,8 @@ export default {
       reviewContent: null,
       reviewLikesReactionInfoMap: new Map(),
       reviewDislikesReactionInfoMap: new Map(),
-      commentContent: null,
-      commentsMap: new Map(),
-      commentStateMap: new Map(),
       customerInfo: JSON.parse(localStorage.getItem("customer-info")),
       websocketClient: null,
-      commentLikesReactionInfoMap: new Map(),
-      commentDislikesReactionInfoMap: new Map(),
     }
   },
   watch: {
@@ -174,64 +123,11 @@ export default {
             this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
           }
         }
-      } else {
-//TODO
-        this.commentsMap.forEach(review => review.reviewId)
-            .filter(comment => comment.commentId === message.commentId)
-            .map(findComment => {
-              if (message.likesType === "LIKES") {
-                if (message.canceled) {
-                  findComment.likesCount -= 1;
-                } else {
-                  findComment.likesCount += 1;
-                }
-              } else {
-                if (message.canceled) {
-                  findComment.dislikesCount -= 1;
-                } else {
-                  findComment.dislikesCount += 1;
-                }
-              }
-            });
       }
+
     },
     disconnect() {
       this.stompClient.disconnect();
-    },
-    commentLikes(reviewId, commentId) {
-      if (this.commentLikesReactionInfoMap.get(reviewId).has(commentId)) {
-        if (!this.commentLikesReactionInfoMap.get(reviewId).get(commentId).hasReacted) {
-          apiBoard.postReaction('COMMENT', commentId, 'LIKES').then(() => this.commentLikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=true);
-        } else {
-          apiBoard.postReactionCancel('COMMENT', commentId, 'LIKES').then(() => this.commentLikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=false);
-        }
-      }
-    },
-    commentDislikes(reviewId, commentId) {
-      if (this.commentDislikesReactionInfoMap.get(reviewId).has(commentId)) {
-        if (!this.commentDislikesReactionInfoMap.get(reviewId).get(commentId).hasReacted) {
-          apiBoard.postReaction('COMMENT', commentId, 'DISLIKES').then(() => this.commentDislikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=true);
-        } else {
-          apiBoard.postReactionCancel('COMMENT', commentId, 'DISLIKES').then(() => this.commentDislikesReactionInfoMap.get(reviewId).get(commentId).hasReacted=false);
-        }
-      }
-    },
-    totalCommentReaction(reviewId, commentId) {
-      if( !this.commentLikesReactionInfoMap.has(reviewId)){
-        this.commentLikesReactionInfoMap.set(reviewId, new Map());
-        console.log(this.commentLikesReactionInfoMap.get(reviewId))
-      }
-      apiBoard.getReactionCount('COMMENT', commentId, 'LIKES')
-          .then((response) => {
-            this.commentLikesReactionInfoMap.get(reviewId).set(commentId, response.data);
-          });
-      if( !this.commentDislikesReactionInfoMap.has(reviewId)){
-        this.commentDislikesReactionInfoMap.set(reviewId, new Map());
-      }
-      apiBoard.getReactionCount('COMMENT', commentId, 'DISLIKES')
-          .then((response) => {
-            this.commentDislikesReactionInfoMap.get(reviewId).set(commentId, response.data);
-          });
     },
     totalReviewReaction(reviewId) {
       apiBoard.getReactionCount('REVIEW', reviewId, 'LIKES')
@@ -246,16 +142,16 @@ export default {
     reviewLikes(reviewId) {
       if (this.reviewLikesReactionInfoMap.has(reviewId)) {
         if (!this.reviewLikesReactionInfoMap.get(reviewId).hasReacted) {
-          apiBoard.postReaction('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted=true);
+          apiBoard.postReaction('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted = true);
         } else {
-          apiBoard.postReactionCancel('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted=false);
+          apiBoard.postReactionCancel('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted = false);
         }
       }
     },
     reviewDislikes(reviewId) {
       if (this.reviewDislikesReactionInfoMap.has(reviewId)) {
         if (!this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted) {
-          apiBoard.postReaction('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted=true);
+          apiBoard.postReaction('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted = true);
         } else {
           apiBoard.postReactionCancel('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted = false);
         }
@@ -276,15 +172,6 @@ export default {
             this.getReview(this.productId);
           });
     },
-    deleteComment(reviewId, commentId) {
-      apiBoard.deleteReviewComments(reviewId, commentId)
-          .then(() => {
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.commentsMap.set(reviewId, response.data.content);
-                });
-          });
-    },
     dateFormatting(createdAt) {
       return dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss');
     },
@@ -295,29 +182,16 @@ export default {
             this.getReview(productId);
           });
     },
-    postComment(reviewId) {
-      apiBoard.postReviewComments(reviewId, this.commentContent)
-          .then(() => {
-            this.commentContent = "";
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.commentsMap.set(reviewId, response.data.content);
-                });
-          });
-    },
-    showComments(reviewId) {
-      if (this.commentStateMap.get(reviewId) === null) {
-        this.commentStateMap.set(reviewId, true);
-      } else {
-        this.commentStateMap.set(reviewId, !this.commentStateMap.get(reviewId));
-      }
-      if (this.commentsMap.get(reviewId) == null) {
-        apiBoard.getReviewComments(reviewId)
-            .then((response) => {
-              this.commentsMap.set(reviewId, response.data.content);
-              this.commentsMap.get(reviewId).forEach((c) => this.totalCommentReaction(reviewId, c.commentId))
-            });
-      }
+    showComments(reviewId, review) {
+      this.$router.push({
+        name: 'reviewDetails',
+        params: {id: reviewId},
+        state: {
+          review: JSON.stringify(review),
+          reviewLikesInfo: JSON.stringify(this.reviewLikesReactionInfoMap.get(reviewId)),
+          reviewDislikesInfo: JSON.stringify(this.reviewDislikesReactionInfoMap.get(reviewId)),
+        },
+      })
     }
   }
 }
@@ -359,10 +233,6 @@ export default {
 }
 
 .reviewArea {
-  width: 100%;
-}
-
-.commentArea {
   width: 100%;
 }
 </style>

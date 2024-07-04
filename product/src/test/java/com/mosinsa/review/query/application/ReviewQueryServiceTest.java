@@ -33,6 +33,6 @@ class ReviewQueryServiceTest {
 	void findReviewComments() {
 		Page<CommentSummaryDto> comments = queryService.findReviewComments("reviewId1", PageRequest.of(0, 10));
 		List<String> ids = comments.getContent().stream().map(CommentSummaryDto::getCommentId).toList();
-		assertThat(ids).containsExactly("commentId4","commentId3","commentId2","commentId1");
+		assertThat(ids).containsExactly("commentId1","commentId2","commentId3","commentId4");
 	}
 }

@@ -28,12 +28,6 @@
         <td>가격</td>
         <td v-if="product!=null">{{ product.price }}</td>
       </tr>
-      <!--      <tr>-->
-      <!--        <td>좋아요</td>-->
-      <!--        <td v-if="reactionCntInfo!=null">{{ reactionCntInfo.reactionCnt }}</td>-->
-      <!--        <td v-else>0</td>-->
-      <!--        <button @click="likes(product.productId)">좋아요</button>-->
-      <!--      </tr>-->
       <div v-if="reactionCntInfo!=null" class="likes" style="display: inline;" @click="likes(product.productId)">
         <img v-if="!reactionCntInfo.hasReacted" src="../assets/likes.png" width="50" height="50"
              style="display: inline; position: relative; left: 4px;" alt="likes"/>
@@ -119,12 +113,8 @@ export default {
           .then((response) => {
             console.log(response);
             this.reactionCntInfo = response.data;
-          })
-          .catch(function (e) {
-            console.log(e);
           });
     }
-
   }
 
 }
