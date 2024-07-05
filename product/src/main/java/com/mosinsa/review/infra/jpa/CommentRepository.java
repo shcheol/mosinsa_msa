@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, String> {
 
-	@Query("select c from Comment c where c.review.reviewId.id = :reviewId order by c.createdDate desc")
+	@Query("select c from Comment c where c.review.reviewId.id = :reviewId order by c.createdDate asc")
 	Page<CommentSummaryDto> findCommentsByReviewId(@Param("reviewId") String reviewId, Pageable pageable);
 
 	@Query("select r.productId from Comment c join Review r on c.review = r where c.id = :commentId")

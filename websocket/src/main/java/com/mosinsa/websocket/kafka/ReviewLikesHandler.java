@@ -17,7 +17,7 @@ public class ReviewLikesHandler {
 	private final BroadcastMessagePublisher broadcastMessagePublisher;
 	private final ObjectMapper om;
 
-	@KafkaListener(topics = "review-likes-topic")
+	@KafkaListener(topics = "mosinsa-review-likes")
 	public void reviewLikedEvent(String message) throws JsonProcessingException {
 		ReviewLikesEvent event = om.readValue(message, ReviewLikesEvent.class);
 		log.info("consume message {}", event);
@@ -27,7 +27,7 @@ public class ReviewLikesHandler {
 		broadcastMessagePublisher.publish(productId, om.writeValueAsString(websocketMessage));
 	}
 
-	@KafkaListener(topics = "review-dislikes-topic")
+	@KafkaListener(topics = "mosinsa-review-dislikes")
 	public void reviewDislikedEvent(String message) throws JsonProcessingException {
 		ReviewDislikesEvent event = om.readValue(message, ReviewDislikesEvent.class);
 		log.info("consume message {}", event);

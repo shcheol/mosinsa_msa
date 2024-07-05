@@ -1,11 +1,10 @@
 SET FOREIGN_KEY_CHECKS = 0;
-truncate table likes;
 truncate table stock;
 truncate table product;
 truncate table category;
-truncate table likes_member;
 truncate table review;
 truncate table comment;
+truncate table reaction;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into category (category_id, name) values ('categoryId1','상의');
@@ -22,23 +21,20 @@ insert into stock values ('stockId2',20);
 insert into stock values ('stockId3',30);
 insert into stock values ('stockId4',30);
 insert into stock values ('stockId5',30);
-insert into likes values ('likesId1',0);
-insert into likes values ('likesId2',0);
-insert into likes values ('likesId3',0);
-insert into likes values ('likesId4',1);
-insert into likes values ('likesId5',2);
-insert into likes_member values ('likesMemberId1','customerId1','likesId4');
-insert into likes_member values ('likesMemberId2','customerId1','likesId5');
-insert into likes_member values ('likesMemberId3','customerId2','likesId5');
-insert into product values ('productId1', '반팔', 2000,'categoryId1', 'likesId1', 'stockId1', '2024-05-25 12:20:35');
-insert into product values ('productId2', '청바지', 1000,'categoryId2', 'likesId2', 'stockId2', '2024-05-25 15:20:35');
-insert into product values ('productId3', '코트', 3000,'categoryId3', 'likesId3', 'stockId3','2024-05-25 15:21:35');
-insert into product values ('productId4', '비슬로우', 62910,'categoryId1', 'likesId4', 'stockId4','2024-06-25 15:21:35');
-insert into product values ('productId5', '검정반팔', 2000,'categoryId1', 'likesId5', 'stockId5','2024-02-25 15:21:35');
+insert into product values ('productId1', '반팔', 2000,'categoryId1','stockId1', '2024-05-25 12:20:35');
+insert into product values ('productId2', '청바지', 1000,'categoryId2', 'stockId2', '2024-05-25 15:20:35');
+insert into product values ('productId3', '코트', 3000,'categoryId3', 'stockId3','2024-05-25 15:21:35');
+insert into product values ('productId4', '비슬로우', 62910,'categoryId1', 'stockId4','2024-06-25 15:21:35');
+insert into product values ('productId5', '검정반팔', 2000,'categoryId1', 'stockId5','2024-02-25 15:21:35');
 
-insert into review values ('reviewId1', 'good', '2024-02-25 15:21:35', 'N','writer1','writerId1','productId1',4,0,0);
-insert into review values ('reviewId2', 'good', '2024-02-25 15:22:35', 'Y','writer2','writerId2','productId1',0,0,0);
-insert into comment values ('commentId1', 'good', '2024-02-25 16:21:35', 'N',0,0,'writer3','writerId3','reviewId1');
-insert into comment values ('commentId2', 'good', '2024-02-25 16:22:35', 'N',0,0,'writer1','writerId1','reviewId1');
-insert into comment values ('commentId3', 'good', '2024-02-25 16:23:35', 'Y',0,0,'writer2','writerId2','reviewId1');
-insert into comment values ('commentId4', 'good', '2024-02-25 16:24:35', 'N',0,0,'writer1','writerId1','reviewId1');
+insert into review values ('reviewId1', 'good', '2024-02-25 15:21:35', 'N','writer1','writerId1','productId1',4);
+insert into review values ('reviewId2', 'good', '2024-02-25 15:22:35', 'Y','writer2','writerId2','productId1',0);
+insert into comment values ('commentId1', 'good', '2024-02-25 16:21:35', 'N','writer3','writerId3','reviewId1');
+insert into comment values ('commentId2', 'good', '2024-02-25 16:22:35', 'N','writer1','writerId1','reviewId1');
+insert into comment values ('commentId3', 'good', '2024-02-25 16:23:35', 'Y','writer2','writerId2','reviewId1');
+insert into comment values ('commentId4', 'good', '2024-02-25 16:24:35', 'N','writer1','writerId1','reviewId1');
+
+insert into reaction(reaction_id, active, created_date, last_modified_date, member_id, reaction_type, target_id, target_type)
+    values ('reactionId1','N','2024-02-25 16:24:35','2024-02-25 16:24:35','memberId1', 'LIKES','productId1','PRODUCT');
+insert into reaction(reaction_id, active, created_date, last_modified_date, member_id, reaction_type, target_id, target_type)
+    values ('reactionId2','Y','2024-02-25 16:24:35','2024-02-25 16:24:35','memberId2', 'LIKES','productId1','PRODUCT');

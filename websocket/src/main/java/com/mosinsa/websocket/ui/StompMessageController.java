@@ -12,12 +12,10 @@ import java.util.Map;
 @Controller
 public class StompMessageController {
 
-	@MessageMapping(value = "/product/{productId}")
-	@SendTo("/topic/product/{productId}")
-	public Map<String, String> likesTopic(@DestinationVariable(value = "productId") String productId) throws Exception {
-		Thread.sleep(1000); // simulated delay
-
+	@MessageMapping(value = "/{id}")
+	@SendTo("/topic/{id}")
+	public Map<String, String> likesTopic(@DestinationVariable(value = "id") String id) throws Exception {
 		log.info("likesTopic");
-		return Map.of("productId", productId);
+		return Map.of("id", id);
 	}
 }

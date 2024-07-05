@@ -1,4 +1,4 @@
 package com.mosinsa.websocket.kafka;
 
-public record CommentLikesEvent(String productId, String reviewId, String commentId, boolean canceled) {
+public record CommentLikesEvent(String productId, String commentId, boolean canceled) {
 }

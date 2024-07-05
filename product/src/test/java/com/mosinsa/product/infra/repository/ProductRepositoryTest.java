@@ -1,9 +1,10 @@
 package com.mosinsa.product.infra.repository;
 
-import com.mosinsa.product.domain.category.Category;
-import com.mosinsa.product.domain.product.Product;
-import com.mosinsa.product.domain.product.ProductId;
-import com.mosinsa.product.domain.product.Stock;
+import com.mosinsa.category.CategoryRepository;
+import com.mosinsa.category.Category;
+import com.mosinsa.product.command.domain.Product;
+import com.mosinsa.product.command.domain.ProductId;
+import com.mosinsa.product.command.domain.Stock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,23 +75,6 @@ class ProductRepositoryTest {
         assertThat(product).isEqualTo(saveProduct);
         assertThat(product.getId()).isEqualTo(saveProduct.getId());
         assertThat(product.getName()).isEqualTo(saveProduct.getName());
-//        assertThat(product.getCategory()).isEqualTo(saveProduct.getCategory());
-//        assertThat(product.getStock()).isEqualTo(saveProduct.getStock());
-//        assertThat(product.getLikes().getTotal()).isZero();
     }
-
-	@Test
-	void likes(){
-		Category category = categoryRepository.save(Category.of("category1"));
-		Product product = productRepository.save(Product.create("name", 1000, category, 10));
-
-		assertThat(product.getLikes().getTotal()).isZero();
-
-		product.likes();
-		assertThat(product.getLikes().getTotal()).isEqualTo(1);
-
-		product.likes();
-		assertThat(product.getLikes().getTotal()).isEqualTo(2);
-	}
 
 }

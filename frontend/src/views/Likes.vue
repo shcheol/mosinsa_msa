@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     likes(productId){
-      apiBoard.postLikesProduct(productId)
+      apiBoard.postReaction(productId)
           .then((response) => {
             console.log(response);
             apiBoard.getLikesProducts()

@@ -8,67 +8,39 @@
           <div>
             <span class="nickname">{{ review.writer }}</span>
             <button class="deleteBtn" @click="deleteReview(review.reviewId)"
-                    v-if="customerInfo!==null && review.writerId === customerInfo.id">
-              삭제
+                    v-if="customerInfo!==null && review.writerId === customerInfo.id">삭제
             </button>
             <br/>
             <span class="date">{{ dateFormatting(review.createdDate) }}</span>
             <br/>
             <p>{{ review.contents }}</p>
-            <div class="reviewLikes" style="display: inline;" @click="reviewLikes(review.reviewId)">
-              <img src="../assets/thumbsup.png" width="16" height="16"
+            <div class="reviewLikes" style="display: inline;" @click="reviewLikes(review.reviewId)"
+                 v-if="reviewLikesReactionInfoMap.has(review.reviewId)">
+              <img v-if="reviewLikesReactionInfoMap.get(review.reviewId).hasReacted" src="../assets/mythumbsup.png"
+                   width="16" height="16"
                    style="display: inline; position: relative; left: 4px;" alt="likes"/>
-              <span style="display: inline; position: relative;left: 10px;color: red">{{ review.likesCount }}</span>
+              <img v-else src="../assets/thumbsup.png" width="16" height="16"
+                   style="display: inline; position: relative; left: 4px;" alt="likes"/>
+
+              <span style="display: inline; position: relative;left: 10px;color: red">{{
+                  reviewLikesReactionInfoMap.get(review.reviewId).reactionCnt
+                }}</span>
             </div>
 
-            <div class="reviewDislikes" style="display: inline;" @click="reviewDislikes(review.reviewId)">
-              <img src="../assets/thumbsdown.png" width="16" height="16"
+            <div class="reviewDislikes" style="display: inline;" @click="reviewDislikes(review.reviewId)"
+                 v-if="reviewDislikesReactionInfoMap.has(review.reviewId)">
+              <img v-if="reviewDislikesReactionInfoMap.get(review.reviewId).hasReacted" src="../assets/mythumbsdown.png"
+                   width="16" height="16"
                    style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
-              <span style="display: inline; position: relative;left: 30px;color: blue">{{ review.dislikesCount }}</span>
+              <img v-else src="../assets/thumbsdown.png" width="16" height="16"
+                   style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
+              <span style="display: inline; position: relative;left: 30px;color: blue">{{
+                  reviewDislikesReactionInfoMap.get(review.reviewId).reactionCnt
+                }}</span>
             </div>
             <br/>
-            <button class="replyBtn" @click="showComments(review.reviewId)">답글 ({{ review.commentsCount }})</button>
+            <button class="replyBtn" @click="showComments(review.reviewId, review)">답글 ({{ review.commentsCount }})</button>
 
-            <div v-if="commentStateMap.get(review.reviewId)">
-              <ul>
-                <li v-for="(comment) in commentsMap.get(review.reviewId)" :key="comment">
-                  <div>
-                    <span class="nickname">{{ comment.writer }}</span>
-                    <button class="deleteBtn"
-                            @click="deleteComment(review.reviewId, comment.commentId)"
-                            v-if="customerInfo!==null && (comment.writerId === customerInfo.id) && comment.contents !== '삭제된 댓글입니다.'">
-                      삭제
-                    </button>
-                    <br/>
-                    <span class="date">{{ dateFormatting(comment.createdDate) }}</span>
-                    <p>{{ comment.contents }}</p>
-
-                    <div class="commentLikes" style="display: inline;"
-                         @click="commentLikes(review.reviewId, comment.commentId)">
-                      <img src="../assets/thumbsup.png" width="16" height="16"
-                           style="display: inline; position: relative; left: 4px;" alt="likes"/>
-                      <span
-                          style="display: inline; position: relative;left: 10px;color: red">{{
-                          comment.likesCount
-                        }}</span>
-                    </div>
-
-                    <div class="commentDislikes" style="display: inline;"
-                         @click="commentDislikes(review.reviewId, comment.commentId)">
-                      <img src="../assets/thumbsdown.png" width="16" height="16"
-                           style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
-                      <span style="display: inline; position: relative;left: 30px;color: blue">{{
-                          comment.dislikesCount
-                        }}</span>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-              <div>
-                <textarea v-model="commentContent" placeholder="댓글을 작성해주세요" class="commentArea"></textarea>
-                <button class="btn btn-dark" @click="postComment(review.reviewId)">등록</button>
-              </div>
-            </div>
           </div>
         </li>
       </ul>
@@ -96,9 +68,8 @@ export default {
       reviewsNumberOfElements: 0,
       reviews: null,
       reviewContent: null,
-      commentContent: null,
-      commentsMap: new Map(),
-      commentStateMap: new Map(),
+      reviewLikesReactionInfoMap: new Map(),
+      reviewDislikesReactionInfoMap: new Map(),
       customerInfo: JSON.parse(localStorage.getItem("customer-info")),
       websocketClient: null,
     }
@@ -125,7 +96,7 @@ export default {
           {},
           frame => {
             console.log('소켓 연결 성공', frame);
-            this.stompClient.subscribe(`/topic/product/${this.productId}`, response => {
+            this.stompClient.subscribe(`/topic/${this.productId}`, response => {
               console.log('구독으로 받은 메시지 입니다.', response.body);
               const message = JSON.parse(response.body);
               console.log(message)
@@ -139,81 +110,59 @@ export default {
     },
     processSubscribedMessage(message) {
       if (message.type === "REVIEW") {
-        this.reviews.filter(review => review.reviewId === message.reviewId)
-            .map(findReview => {
-                  if (message.likesType === "LIKES") {
-                    if (message.canceled) {
-                      findReview.likesCount -= 1;
-                    } else {
-                      findReview.likesCount += 1;
-                    }
-                  } else {
-                    if (message.canceled) {
-                      findReview.dislikesCount -= 1;
-                    } else {
-                      findReview.dislikesCount += 1;
-                    }
-                  }
-                }
-            );
-      } else {
-        this.commentsMap.get(message.reviewId)
-            .filter(comment => comment.commentId === message.commentId)
-            .map(findComment => {
-              if (message.likesType === "LIKES") {
-                if (message.canceled) {
-                  findComment.likesCount -= 1;
-                } else {
-                  findComment.likesCount += 1;
-                }
-              } else {
-                if (message.canceled) {
-                  findComment.dislikesCount -= 1;
-                } else {
-                  findComment.dislikesCount += 1;
-                }
-              }
-            });
+        if (message.likesType === "LIKES") {
+          if (message.canceled) {
+            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+          } else {
+            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+          }
+        } else {
+          if (message.canceled) {
+            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+          } else {
+            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+          }
+        }
       }
+
     },
     disconnect() {
       this.stompClient.disconnect();
     },
-    commentLikes(reviewId, commentId) {
-      apiBoard.postCommentLikes(reviewId, commentId)
-      // .then(() => {
-      //   apiBoard.getReviewComments(reviewId)
-      //       .then((response) => {
-      //         this.commentsMap.set(reviewId, response.data.content);
-      //       });
-      // });
-    },
-    commentDislikes(reviewId, commentId) {
-      apiBoard.postCommentDislikes(reviewId, commentId)
-      // .then(() => {
-      //   apiBoard.getReviewComments(reviewId)
-      //       .then((response) => {
-      //         this.commentsMap.set(reviewId, response.data.content);
-      //       });
-      // });
+    totalReviewReaction(reviewId) {
+      apiBoard.getReactionCount('REVIEW', reviewId, 'LIKES')
+          .then((response) => {
+            this.reviewLikesReactionInfoMap.set(reviewId, response.data);
+          });
+      apiBoard.getReactionCount('REVIEW', reviewId, 'DISLIKES')
+          .then((response) => {
+            this.reviewDislikesReactionInfoMap.set(reviewId, response.data);
+          });
     },
     reviewLikes(reviewId) {
-      apiBoard.postReviewLikes(reviewId)
-      // .then(() => {
-      //   this.getReview(this.productId);
-      // });
+      if (this.reviewLikesReactionInfoMap.has(reviewId)) {
+        if (!this.reviewLikesReactionInfoMap.get(reviewId).hasReacted) {
+          apiBoard.postReaction('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted = true);
+        } else {
+          apiBoard.postReactionCancel('REVIEW', reviewId, 'LIKES').then(() => this.reviewLikesReactionInfoMap.get(reviewId).hasReacted = false);
+        }
+      }
     },
     reviewDislikes(reviewId) {
-      apiBoard.postReviewDislikes(reviewId)
-      // .then(() => {
-      //   this.getReview(this.productId);
-      // });
+      if (this.reviewDislikesReactionInfoMap.has(reviewId)) {
+        if (!this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted) {
+          apiBoard.postReaction('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted = true);
+        } else {
+          apiBoard.postReactionCancel('REVIEW', reviewId, 'DISLIKES').then(() => this.reviewDislikesReactionInfoMap.get(reviewId).hasReacted = false);
+        }
+      }
     },
     getReview(productId) {
       apiBoard.getProductReviews(productId)
           .then((response) => {
             console.log(response)
             this.reviews = response.data.content;
+            this.reviews.forEach((r) => this.totalReviewReaction(r.reviewId));
             this.reviewsNumberOfElements = response.data.numberOfElements;
           });
     },
@@ -223,19 +172,9 @@ export default {
             this.getReview(this.productId);
           });
     },
-    deleteComment(reviewId, commentId) {
-      apiBoard.deleteReviewComments(reviewId, commentId)
-          .then(() => {
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.commentsMap.set(reviewId, response.data.content);
-                });
-          });
-    },
     dateFormatting(createdAt) {
       return dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss');
-    }
-    ,
+    },
     postReview(productId) {
       apiBoard.postProductReviews(productId, this.reviewContent)
           .then(() => {
@@ -243,28 +182,16 @@ export default {
             this.getReview(productId);
           });
     },
-    postComment(reviewId) {
-      apiBoard.postReviewComments(reviewId, this.commentContent)
-          .then(() => {
-            this.commentContent = "";
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.commentsMap.set(reviewId, response.data.content);
-                });
-          });
-    },
-    showComments(reviewId) {
-      if (this.commentStateMap.get(reviewId) === null) {
-        this.commentStateMap.set(reviewId, true);
-      } else {
-        this.commentStateMap.set(reviewId, !this.commentStateMap.get(reviewId));
-      }
-      if (this.commentsMap.get(reviewId) == null) {
-        apiBoard.getReviewComments(reviewId)
-            .then((response) => {
-              this.commentsMap.set(reviewId, response.data.content);
-            });
-      }
+    showComments(reviewId, review) {
+      this.$router.push({
+        name: 'reviewDetails',
+        params: {id: reviewId},
+        state: {
+          review: JSON.stringify(review),
+          reviewLikesInfo: JSON.stringify(this.reviewLikesReactionInfoMap.get(reviewId)),
+          reviewDislikesInfo: JSON.stringify(this.reviewDislikesReactionInfoMap.get(reviewId)),
+        },
+      })
     }
   }
 }
@@ -306,10 +233,6 @@ export default {
 }
 
 .reviewArea {
-  width: 100%;
-}
-
-.commentArea {
   width: 100%;
 }
 </style>

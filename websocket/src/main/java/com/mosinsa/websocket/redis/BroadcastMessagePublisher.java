@@ -16,11 +16,11 @@ public class BroadcastMessagePublisher {
 	private final MessageSubscriber redisSubscriber;
 	private final RedisMessageListenerContainer redisMessageListenerContainer;
 
-	public void publish(String productId, Object content) {
+	public void publish(String channel, Object content) {
 
-		redisMessageListenerContainer.addMessageListener(redisSubscriber, new ChannelTopic(productId));
+		redisMessageListenerContainer.addMessageListener(redisSubscriber, new ChannelTopic(channel));
 
 		log.info("broadcast review likes event {}", content);
-		redisTemplate.convertAndSend(productId, content);
+		redisTemplate.convertAndSend(channel, content);
 	}
 }
