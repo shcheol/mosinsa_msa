@@ -1,6 +1,7 @@
 package com.mosinsa.order.command.application;
 
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
+import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.common.ex.OrderRollbackException;
 import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
 import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
@@ -38,11 +39,12 @@ public class OrderTemplate {
 			couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
 		}
 		// 상품 수량 감소
-		productCommandService.orderProduct(authMap, orderRequest).orElseThrow();
+		OrderId orderId = OrderId.newId();
+		productCommandService.orderProduct(authMap, orderId.getId(), orderRequest).orElseThrow();
 
 		try {
 			// 주문 db
-			return placeOrderService.order(orderRequest);
+			return placeOrderService.order(orderId, orderRequest);
 		} catch (Exception e) {
 			log.error("order save fail => rollback product stock, coupon usage");
 			OrderConfirmDto orderConfirmDto = orderRequest.orderConfirm();

@@ -6,6 +6,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 @Entity
 public class Reaction extends BaseEntity {
@@ -42,5 +44,20 @@ public class Reaction extends BaseEntity {
 
 	public void delete(){
 		super.delete();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Reaction reaction = (Reaction) o;
+
+		return Objects.equals(id, reaction.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
 	}
 }

@@ -29,7 +29,7 @@ create table product
 create table stock
 (
     id     varchar(255) not null,
-    remain bigint       not null,
+    total bigint       not null,
     primary key (id)
 ) engine = InnoDB;
 

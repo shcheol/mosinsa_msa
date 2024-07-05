@@ -17,30 +17,30 @@ public class Stock {
 	@Id
 	private String id;
 
-	private long remain;
+	private long total;
 
 	public static Stock of(final long total) {
 		inputValidCheck(total);
 
 		Stock stock = new Stock();
 		stock.id = UUID.randomUUID().toString();
-		stock.remain = total;
+		stock.total = total;
 		return stock;
 	}
 
 	public void increase(final long value) {
 		inputValidCheck(value);
 
-		this.remain = remain + value;
+		this.total = total + value;
 	}
 
 	public void decrease(final long value) {
 		inputValidCheck(value);
 
-		long decreasedRemain = remain - value;
+		long decreasedRemain = total - value;
 		remainValidCheck(decreasedRemain);
 
-		this.remain = decreasedRemain;
+		this.total = decreasedRemain;
 	}
 
 	private static void inputValidCheck(long value) {

@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
@@ -30,7 +30,7 @@ class ProductServiceTest {
 	ProductService productService;
 
 	@Test
-	void registerProduct(){
+	void registerProduct() {
 		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 10);
 		ProductDetailDto product = productService.createProduct(createProductRequest);
 		assertThat(product.getName()).isEqualTo("product");
@@ -39,7 +39,7 @@ class ProductServiceTest {
 	}
 
 	@Test
-	void registerProductNotExistsCategory(){
+	void registerProductNotExistsCategory() {
 		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1xxx", 10);
 		assertThrows(CategoryException.class, () -> productService.createProduct(createProductRequest));
 	}
@@ -51,7 +51,7 @@ class ProductServiceTest {
 		assertThat(beforeStock).isEqualTo(10);
 
 		OrderProductRequest request = new OrderProductRequest("productId1", 3);
-		productService.orderProduct(List.of(request));
+		productService.orderProduct("customerId1", "orderId1", List.of(request));
 
 		long afterStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(afterStock).isEqualTo(7);
@@ -65,7 +65,7 @@ class ProductServiceTest {
 		assertThat(beforeStock).isEqualTo(10);
 		List<OrderProductRequest> products = List.of(new OrderProductRequest("productId1", 11));
 		assertThrows(RuntimeException.class,
-				() -> productService.orderProduct(products));
+				() -> productService.orderProduct("customerId1", "orderId1", products));
 		long afterStock = productQueryService.getProductById("productId1").getStock();
 		assertThat(afterStock).isEqualTo(10);
 	}
@@ -84,7 +84,7 @@ class ProductServiceTest {
 		for (int i = 0; i < size; i++) {
 			es.execute(() -> {
 				try {
-					productService.orderProduct(List.of(new OrderProductRequest(productId, 1)));
+					productService.orderProduct("customerId1", "orderId1", List.of(new OrderProductRequest(productId, 1)));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -104,7 +104,7 @@ class ProductServiceTest {
 		assertThat(beforeStock).isEqualTo(20);
 
 		CancelOrderProductRequest request = new CancelOrderProductRequest("productId2", 3);
-		productService.cancelOrderProduct(List.of(request));
+		productService.cancelOrderProduct("customerId1", "orderId1", List.of(request));
 
 		long afterStock = productQueryService.getProductById("productId2").getStock();
 		assertThat(afterStock).isEqualTo(23);

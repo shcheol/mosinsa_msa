@@ -21,13 +21,13 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository productRepository;
 	private final CategoryService categoryService;
 	private static final String STOCK_LOCK_KEY = "stockLock";
 
+	@Transactional
 	public ProductDetailDto createProduct(CreateProductRequest request) {
 		Category category = categoryService.getCategory(request.category());
 		return new ProductDetailDto(
@@ -38,9 +38,12 @@ public class ProductService {
 								request.stock())));
 	}
 
+	@Transactional
 	@RedissonLock(value = STOCK_LOCK_KEY)
-	public void orderProduct(List<OrderProductRequest> requests) {
+	public void orderProduct(String customerId, String orderId, List<OrderProductRequest> requests) {
 
+
+		//TODO
 		log.info("order: {}", requests);
 		requests.forEach(request ->
 				productRepository.findProductDetailById(ProductId.of(request.productId()))
@@ -50,7 +53,8 @@ public class ProductService {
 	}
 
 	@RedissonLock(value = STOCK_LOCK_KEY)
-	public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
+	@Transactional
+	public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
 		log.info("cancelOrder: {}", requests);
 		requests.forEach(request ->
 				productRepository.findProductDetailById(ProductId.of(request.productId()))

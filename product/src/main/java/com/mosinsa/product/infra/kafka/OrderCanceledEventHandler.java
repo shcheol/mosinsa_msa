@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderCanceledEventHandler {
 
-    private final ProductService couponService;
+	private final ProductService productService;
 
 	@KafkaListener(topics = "${mosinsa.topic.order.cancel}")
 	public void orderCanceledEvent(String message) throws JsonProcessingException {
@@ -24,6 +24,6 @@ public class OrderCanceledEventHandler {
 				.map(orderedProduct -> new CancelOrderProductRequest(orderedProduct.productId(), orderedProduct.quantity()))
 				.toList();
 
-		couponService.cancelOrderProduct(cancelOrderProductRequests);
+		productService.cancelOrderProduct(orderCanceledEvent.customerId(), orderCanceledEvent.orderId(), cancelOrderProductRequests);
 	}
 }

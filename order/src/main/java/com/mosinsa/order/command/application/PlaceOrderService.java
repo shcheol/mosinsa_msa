@@ -1,6 +1,7 @@
 package com.mosinsa.order.command.application;
 
 import com.mosinsa.order.command.domain.Order;
+import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.command.domain.OrderProduct;
 import com.mosinsa.order.command.domain.ShippingInfo;
 import com.mosinsa.order.infra.repository.OrderRepository;
@@ -15,24 +16,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class PlaceOrderService {
-    private final OrderRepository orderRepository;
+	private final OrderRepository orderRepository;
 
-    @Transactional
-    public OrderDetail order(CreateOrderRequest orderRequest) {
+	@Transactional
+	public OrderDetail order(OrderId orderId, CreateOrderRequest orderRequest) {
 
-        Order order = orderRepository.save(
-                Order.create(orderRequest.orderConfirm().customerId(),
-                        orderRequest.orderConfirm().couponId(),
-                        orderRequest.orderConfirm().orderProducts().stream().map(
-                                orderProduct -> OrderProduct.create(
-                                        orderProduct.productId(),
-                                        orderProduct.price(),
-                                        orderProduct.quantity())
-                        ).toList(),
-                        ShippingInfo.of(orderRequest.orderConfirm().shippingInfo()),
-                        orderRequest.orderConfirm().totalAmount()));
+		Order order = orderRepository.save(
+				Order.create(
+						orderId,
+						orderRequest.orderConfirm().customerId(),
+						orderRequest.orderConfirm().couponId(),
+						orderRequest.orderConfirm().orderProducts().stream().map(
+								orderProduct -> OrderProduct.create(
+										orderProduct.productId(),
+										orderProduct.price(),
+										orderProduct.quantity())
+						).toList(),
+						ShippingInfo.of(orderRequest.orderConfirm().shippingInfo()),
+						orderRequest.orderConfirm().totalAmount()
+				)
+		);
 
-        return new OrderDetail(order);
-    }
+		return new OrderDetail(order);
+	}
 
 }

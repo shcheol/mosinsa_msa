@@ -243,10 +243,7 @@ export default {
       apiBoard.postReviewComments(reviewId, this.commentContent)
           .then(() => {
             this.commentContent = "";
-            apiBoard.getReviewComments(reviewId)
-                .then((response) => {
-                  this.comments = response.data.content;
-                });
+            this.getComments(reviewId)
           });
     },
     back(){
