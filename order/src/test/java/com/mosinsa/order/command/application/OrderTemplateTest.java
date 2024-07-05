@@ -56,7 +56,7 @@ class OrderTemplateTest {
 	@Test
 	void orderWithCoupon() {
 
-		when(productCommandService.orderProduct(any(), any()))
+		when(productCommandService.orderProduct(any(), any(), any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
 		when(couponCommandService.useCoupon(any(), any()))
@@ -73,7 +73,7 @@ class OrderTemplateTest {
 	@Test
 	void orderWithoutCoupon() {
 
-		when(productCommandService.orderProduct(any(), any()))
+		when(productCommandService.orderProduct(any(),any(), any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
 

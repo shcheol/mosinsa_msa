@@ -2,11 +2,12 @@ package com.mosinsa.product.command.application;
 
 import com.mosinsa.category.Category;
 import com.mosinsa.category.CategoryService;
-import com.mosinsa.common.aop.RedissonLock;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.ProductId;
+import com.mosinsa.product.command.domain.StockStatus;
+import com.mosinsa.product.infra.redis.StockOperand;
 import com.mosinsa.product.infra.repository.ProductRepository;
 import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
@@ -21,40 +22,89 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ProductService {
-	private final ProductRepository productRepository;
-	private final CategoryService categoryService;
-	private static final String STOCK_LOCK_KEY = "stockLock";
+    private final ProductRepository productRepository;
+    private final CategoryService categoryService;
+    private final StockService stockService;
 
-	public ProductDetailDto createProduct(CreateProductRequest request) {
-		Category category = categoryService.getCategory(request.category());
-		return new ProductDetailDto(
-				productRepository.save(
-						Product.create(request.name(),
-								request.price(),
-								category,
-								request.stock())));
-	}
+    @Transactional
+    public ProductDetailDto createProduct(CreateProductRequest request) {
+        Category category = categoryService.getCategory(request.category());
 
-	@RedissonLock(value = STOCK_LOCK_KEY)
-	public void orderProduct(List<OrderProductRequest> requests) {
+        Product product = productRepository.save(
+                Product.create(request.name(),
+                        request.price(),
+                        category,
+                        request.stock()));
+        stockService.setStock(product.getId().getId(), request.stock());
+        return new ProductDetailDto(product);
+    }
 
-		log.info("order: {}", requests);
-		requests.forEach(request ->
-				productRepository.findProductDetailById(ProductId.of(request.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-						.decreaseStock(request.quantity()));
+    @Transactional
+    public void orderProduct(String customerId, String orderId, List<OrderProductRequest> orderProducts) {
+        log.info("order: {}", orderProducts);
 
-	}
+        List<Product> products = getProducts(orderProducts);
 
-	@RedissonLock(value = STOCK_LOCK_KEY)
-	public void cancelOrderProduct(List<CancelOrderProductRequest> requests) {
-		log.info("cancelOrder: {}", requests);
-		requests.forEach(request ->
-				productRepository.findProductDetailById(ProductId.of(request.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-						.increaseStock(request.quantity()));
+        if(!validateStockStatus(products)){
+            throw new RuntimeException();
+        }
+
+        List<StockOperand> stockOperands = getStockOperands(orderProducts);
+        StockResult stockResult = stockService.tryDecrease(customerId, orderId, stockOperands);
+
+        if (StockResult.SUCCESS.equals(stockResult)){
+            checkSoldOut(products);
+        }
+
+        if (StockResult.FAIL.equals(stockResult)){
+            throw new RuntimeException();
+        }
+    }
+
+    private void checkSoldOut(List<Product> products) {
+        products.stream().filter(product -> stockService.currentStock(product.getId().getId()) == 0)
+                .forEach(p -> p.getStock().updateSoldOut());
+    }
+
+    private List<StockOperand> getStockOperands(List<OrderProductRequest> orderProducts) {
+        return orderProducts.stream().map(op -> new StockOperand(op.productId(), op.quantity())).toList();
+    }
+
+    private List<Product> getProducts(List<OrderProductRequest> orderProducts) {
+        return orderProducts.stream().map(request ->
+                productRepository.findProductDetailById(ProductId.of(request.productId()))
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))).toList();
+    }
+
+    private boolean validateStockStatus(List<Product> products) {
+        return products.stream().allMatch(p -> p.getStock().getStatus().equals(StockStatus.ON));
+    }
+
+    @Transactional
+    public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
+        log.info("cancelOrder: {}", requests);
+		List<Product> products = getProductList(requests);
+
+
+		List<StockOperand> stockOperands = requests.stream().map(r -> new StockOperand(r.productId(), r.quantity())).toList();
+		StockResult stockResult = stockService.tryIncrease(customerId, orderId, stockOperands);
+
+		if (StockResult.SUCCESS.equals(stockResult)){
+			products.forEach(product -> product.getStock().updateAvailable());
+		}
+
+		if (StockResult.FAIL.equals(stockResult)){
+			throw new RuntimeException();
+		}
+    }
+
+	private List<Product> getProductList(List<CancelOrderProductRequest> requests) {
+		return requests.stream().filter(request ->
+						stockService.currentStock(request.productId()) == 0 && request.quantity() > 0)
+				.map(req -> productRepository.findProductDetailById(ProductId.of(req.productId()))
+						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)))
+				.toList();
 	}
 }

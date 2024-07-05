@@ -16,10 +16,10 @@ public class ProductCommandService {
 
 	private final ProductClient productClient;
 
-	public ResponseResult<Void> orderProduct(Map<String, Collection<String>> headers, CreateOrderRequest orderRequest) {
+	public ResponseResult<Void> orderProduct(Map<String, Collection<String>> headers, String orderId, CreateOrderRequest orderRequest) {
 		return ResponseResult.execute(() ->
 				productClient.orderProducts(headers,
-						new OrderProductRequests(orderRequest.orderConfirm().orderProducts().stream()
+						new OrderProductRequests(orderId, orderRequest.orderConfirm().orderProducts().stream()
 								.map(op -> new OrderProductRequest(op.productId(), op.quantity())).toList())));
 	}
 
