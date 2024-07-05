@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 public class MessageSubscriber implements MessageListener {
 
 	private final SimpMessagingTemplate template;
+
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
 		log.info("subscribe");
 
-		template.convertAndSend("/topic/product/" + new String(pattern), message.toString());
+		template.convertAndSend("/topic/" + new String(pattern), message.toString());
 	}
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class ProducerService {
+public class ProduceTemplate {
 
 	private final Map<String, ChannelProvider> channelProviderMap;
 
@@ -24,7 +24,6 @@ public class ProducerService {
 		String topic = TopicGenerator.getTopic(target, reactionType);
 
 		//채널
-
 		String channel = channelProviderMap.get(target.name().toLowerCase() + "ChannelProvider").provide(targetId);
 
 		//payload 생성

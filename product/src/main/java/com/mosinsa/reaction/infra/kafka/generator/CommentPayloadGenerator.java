@@ -1,8 +1,8 @@
 package com.mosinsa.reaction.infra.kafka.generator;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
-import com.mosinsa.reaction.infra.kafka.CommentDislikesEvent;
-import com.mosinsa.reaction.infra.kafka.CommentLikesEvent;
+import com.mosinsa.reaction.infra.kafka.events.CommentDislikesEvent;
+import com.mosinsa.reaction.infra.kafka.events.CommentLikesEvent;
 import org.springframework.stereotype.Component;
 
 @Component

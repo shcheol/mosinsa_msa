@@ -96,7 +96,7 @@ export default {
           {},
           frame => {
             console.log('소켓 연결 성공', frame);
-            this.stompClient.subscribe(`/topic/product/${this.productId}`, response => {
+            this.stompClient.subscribe(`/topic/${this.productId}`, response => {
               console.log('구독으로 받은 메시지 입니다.', response.body);
               const message = JSON.parse(response.body);
               console.log(message)

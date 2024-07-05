@@ -1,8 +1,12 @@
 <template>
   <div class="container">
     <div v-if="review!==null">
-      <h3>답글 ({{ review.commentsCount }})</h3>
-
+      <div>
+      <img @click="back()" src="../assets/back.png"
+           width="20" height="20"
+           style="display: inline; position: relative; left: 4px;" alt="뒤로가기"/>
+      <h3 style="display: inline; position: relative;left: 10px;">답글 ({{ review.commentsCount }})</h3>
+      </div>
       <div class="comment-list">
         <ul>
           <li>
@@ -117,14 +121,14 @@ export default {
     }
   },
   mounted() {
-    // this.connect();
+    this.connect();
     this.review = JSON.parse(history.state.review);
     this.reviewLikesInfo = JSON.parse(history.state.reviewLikesInfo);
     this.reviewDislikesInfo = JSON.parse(history.state.reviewDislikesInfo);
     this.getComments(this.review.reviewId);
   },
   beforeUnmount() {
-    // this.disconnect();
+    this.disconnect();
   },
   methods: {
     connect() {
@@ -136,7 +140,7 @@ export default {
           {},
           frame => {
             console.log('소켓 연결 성공', frame);
-            this.stompClient.subscribe(`/topic/product/${this.productId}`, response => {
+            this.stompClient.subscribe(`/topic/${this.review.reviewId}`, response => {
               console.log('구독으로 받은 메시지 입니다.', response.body);
               const message = JSON.parse(response.body);
               console.log(message)
@@ -150,22 +154,20 @@ export default {
     },
     processSubscribedMessage(message) {
       if (message.type === "COMMENT") {
-
-//TODO
-        this.commentsMap.forEach(review => review.reviewId)
+        this.comments
             .filter(comment => comment.commentId === message.commentId)
             .map(findComment => {
               if (message.likesType === "LIKES") {
                 if (message.canceled) {
-                  findComment.likesCount -= 1;
+                  this.commentLikesReactionInfoMap.get(findComment.commentId).reactionCnt -= 1;
                 } else {
-                  findComment.likesCount += 1;
+                  this.commentLikesReactionInfoMap.get(findComment.commentId).reactionCnt += 1;
                 }
               } else {
                 if (message.canceled) {
-                  findComment.dislikesCount -= 1;
+                  this.commentDislikesReactionInfoMap.get(findComment.commentId).reactionCnt -= 1;
                 } else {
-                  findComment.dislikesCount += 1;
+                  this.commentDislikesReactionInfoMap.get(findComment.commentId).reactionCnt += 1;
                 }
               }
             });
@@ -247,6 +249,9 @@ export default {
                 });
           });
     },
+    back(){
+      this.$router.go(-1);
+    }
   }
 }
 </script>

@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CommentChannelProvider implements ChannelProvider{
+public class CommentChannelProvider implements ChannelProvider {
 
 	private final CommentRepository repository;
 
 	@Override
 	public String provide(String targetId) {
-		return repository.findProductId(targetId)
-				.orElseThrow();
+		return repository.findById(targetId)
+				.orElseThrow()
+				.getReview().getReviewId().getId();
 	}
 }

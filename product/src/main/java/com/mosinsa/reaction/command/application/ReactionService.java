@@ -3,7 +3,6 @@ package com.mosinsa.reaction.command.application;
 import com.mosinsa.common.aop.RedissonLock;
 import com.mosinsa.reaction.command.domain.ReactionInfo;
 import com.mosinsa.reaction.infra.jpa.ReactionInfoRepository;
-import com.mosinsa.reaction.infra.kafka.ProducerService;
 import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +16,6 @@ public class ReactionService {
 
 	private final ReactionInfoRepository repository;
 
-	private final ProducerService producerService;
-
 	private final String REACTION_LOCK_KEY= "reaction_lock_key";
 
 	@RedissonLock(value = REACTION_LOCK_KEY)
@@ -30,7 +27,6 @@ public class ReactionService {
 				.orElseGet(() -> repository.save(ReactionInfo.of(condition.target(), condition.targetId(), condition.reactionType())));
 		reactionInfo.increase();
 
-		producerService.produce(condition.target(), condition.targetId(), condition.reactionType(), false);
 		return reaction;
 	}
 
@@ -42,7 +38,6 @@ public class ReactionService {
 				.orElseGet(() -> repository.save(ReactionInfo.of(condition.target(), condition.targetId(), condition.reactionType())));
 		reactionInfo.decrease();
 
-		producerService.produce(condition.target(), condition.targetId(), condition.reactionType(), true);
 		return cancel;
 	}
 
