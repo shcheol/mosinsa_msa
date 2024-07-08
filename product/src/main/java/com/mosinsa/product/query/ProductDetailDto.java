@@ -10,12 +10,14 @@ public class ProductDetailDto {
     String name;
     int price;
     long stock;
+    long total;
 
 	@QueryProjection
     public ProductDetailDto(Product product) {
         this.productId = product.getId().getId();
         this.name = product.getName();
         this.price = product.getPrice().getValue();
-        this.stock = product.getStock().getTotal();
+        this.stock = product.getStock().getRemain();
+        this.total = product.getStock().getTotal();
     }
 }

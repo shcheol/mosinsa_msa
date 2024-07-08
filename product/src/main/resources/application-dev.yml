@@ -14,7 +14,7 @@ spring:
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
   datasource:
-    url: ENC(pHMxxASZrAc4eZiOR4l3a9bMuqxQW+jp6KBFQmYBM50/pW+ZKwU6fPeCJBueUHS/Q2J7D+1jenE=)
+    url: ENC(AF1grG/tnJIh1T0OPckAAdbwg8juIt5YwYZuqgUHZnzEQdng1XwZp/1EpErrIYulMdLdvFgyN/JtLC2o1CwOWnaIOdXzykzAuwzQA2knHw8=)
     username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
     password: ENC(8AvrvIm/Ria2OTgXu6tsqhToqOb0mI/I)
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -26,6 +26,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
   kafka:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
 #  sql:

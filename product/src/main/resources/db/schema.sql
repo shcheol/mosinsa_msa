@@ -1,11 +1,13 @@
 SET FOREIGN_KEY_CHECKS = 0;
 drop table if exists product;
 drop table if exists stock;
+drop table if exists stock_history;
 drop table if exists product;
 drop table if exists category;
 drop table if exists comment;
 drop table if exists review;
 drop table if exists reaction;
+drop table if exists reaction_info;
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table category
@@ -28,9 +30,22 @@ create table product
 
 create table stock
 (
-    id     varchar(255) not null,
-    total bigint       not null,
-    primary key (id)
+    stock_id varchar(255) not null,
+    total    bigint       not null,
+    remain    bigint       not null,
+    status   varchar(255) not null,
+    primary key (stock_id)
+) engine = InnoDB;
+
+create table stock_history
+(
+    stock_history_id varchar(255) not null,
+    order_num         varchar(255) not null,
+    member_id         varchar(255) not null,
+    product_id        varchar(255) not null,
+    quantity         bigint,
+    type             varchar(255) not null,
+    primary key (stock_history_id)
 ) engine = InnoDB;
 
 create table comment

@@ -29,6 +29,7 @@ public class Product {
     private Category category;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "stock_id")
     private Stock stock;
 
     private LocalDateTime createdDate;

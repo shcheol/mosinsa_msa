@@ -29,6 +29,9 @@ class ProductServiceTest {
 	@Autowired
 	ProductService productService;
 
+	@Autowired
+	StockService stockService;
+
 	@Test
 	void registerProduct() {
 		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 10);
@@ -74,9 +77,16 @@ class ProductServiceTest {
 	@DisplayName("재고감소 - 동시요청")
 	void orderProductConcurrency() throws InterruptedException {
 
-		String productId = "productId3";
-		long beforeStock = productQueryService.getProductById(productId).getStock();
+		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 30);
+		CreateProductRequest createProductRequest2 = new CreateProductRequest("product", 3000, "categoryId1", 30);
+		ProductDetailDto product = productService.createProduct(createProductRequest);
+		ProductDetailDto product2 = productService.createProduct(createProductRequest2);
+		String productId =product.getProductId();
+		long beforeStock = stockService.currentStock(productId);
 		assertThat(beforeStock).isEqualTo(30);
+		String productId2 =product2.getProductId();
+		long beforeStock2 = stockService.currentStock(productId2);
+		assertThat(beforeStock2).isEqualTo(30);
 
 		int size = 10;
 		ExecutorService es = Executors.newFixedThreadPool(size);
@@ -84,7 +94,10 @@ class ProductServiceTest {
 		for (int i = 0; i < size; i++) {
 			es.execute(() -> {
 				try {
-					productService.orderProduct("customerId1", "orderId1", List.of(new OrderProductRequest(productId, 1)));
+					productService.orderProduct("customerId1", "orderId1", List.of(
+							new OrderProductRequest(productId, 1),
+							new OrderProductRequest(productId2, 1)
+							));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -94,8 +107,10 @@ class ProductServiceTest {
 		countDownLatch.await();
 		es.shutdown();
 
-		long afterStock = productQueryService.getProductById(productId).getStock();
+		long afterStock = stockService.currentStock(productId);
 		assertThat(afterStock).isEqualTo(20);
+		long afterStock2 = stockService.currentStock(productId2);
+		assertThat(afterStock2).isEqualTo(20);
 	}
 
 	@Test

@@ -2,7 +2,6 @@ package com.mosinsa.product.command.application;
 
 import com.mosinsa.category.Category;
 import com.mosinsa.category.CategoryService;
-import com.mosinsa.common.aop.RedissonLock;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.Product;
@@ -25,34 +24,34 @@ import java.util.List;
 public class ProductService {
 	private final ProductRepository productRepository;
 	private final CategoryService categoryService;
-	private static final String STOCK_LOCK_KEY = "stockLock";
+	private final StockService stockService;
 
 	@Transactional
 	public ProductDetailDto createProduct(CreateProductRequest request) {
 		Category category = categoryService.getCategory(request.category());
-		return new ProductDetailDto(
-				productRepository.save(
-						Product.create(request.name(),
-								request.price(),
-								category,
-								request.stock())));
+
+		Product product = productRepository.save(
+				Product.create(request.name(),
+						request.price(),
+						category,
+						request.stock()));
+		stockService.setStock(product.getId().getId(), request.stock());
+		return new ProductDetailDto(product);
 	}
 
 	@Transactional
-	@RedissonLock(value = STOCK_LOCK_KEY)
 	public void orderProduct(String customerId, String orderId, List<OrderProductRequest> requests) {
-
-
-		//TODO
 		log.info("order: {}", requests);
-		requests.forEach(request ->
-				productRepository.findProductDetailById(ProductId.of(request.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-						.decreaseStock(request.quantity()));
+		stockService.decreaseStocks(customerId, orderId, requests);
+
+//		//TODO
+//		requests.forEach(request ->
+//				productRepository.findProductDetailById(ProductId.of(request.productId()))
+//						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
+//						.decreaseStock(request.quantity()));
 
 	}
 
-	@RedissonLock(value = STOCK_LOCK_KEY)
 	@Transactional
 	public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
 		log.info("cancelOrder: {}", requests);
