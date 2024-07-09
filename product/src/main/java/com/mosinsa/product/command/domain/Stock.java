@@ -58,6 +58,10 @@ public class Stock {
 		this.remain = value;
 	}
 
+	public void updateSoldOut(){
+		this.status = StockStatus.SOLD_OUT;
+	}
+
 	private static void inputValidCheck(long value) {
 		if (value < 1L) {
 			throw new InvalidStockException("수량은 0보다 큰 값이 필요합니다.");

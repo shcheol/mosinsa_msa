@@ -30,7 +30,7 @@ class ReactionServiceTest {
     void likesConcurrency() throws InterruptedException {
 
         String productId = "xxxx";
-        ReactionSearchCondition reactionSearchCondition = new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, "");
+        ReactionSearchCondition reactionSearchCondition = new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, "memberId");
         assertThat(
                 reader.total(reactionSearchCondition)
         ).isZero();

@@ -49,14 +49,16 @@ class ProductServiceTest {
 
 	@Test
 	void orderProduct() {
-
-		long beforeStock = productQueryService.getProductById("productId1").getStock();
+		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 10);
+		ProductDetailDto product = productService.createProduct(createProductRequest);
+		String productId = product.getProductId();
+		long beforeStock = productQueryService.getProductById(productId).getStock();
 		assertThat(beforeStock).isEqualTo(10);
 
-		OrderProductRequest request = new OrderProductRequest("productId1", 3);
+		OrderProductRequest request = new OrderProductRequest(productId, 3);
 		productService.orderProduct("customerId1", "orderId1", List.of(request));
 
-		long afterStock = productQueryService.getProductById("productId1").getStock();
+		long afterStock = productQueryService.getProductById(productId).getStock();
 		assertThat(afterStock).isEqualTo(7);
 
 	}

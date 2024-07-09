@@ -28,7 +28,9 @@ public class RedissonLockAspect {
 			}
 			return joinPoint.proceed();
 		} finally {
-			lock.unlock();
+			if (lock.isHeldByCurrentThread()){
+				lock.unlock();
+			}
 		}
 	}
 }

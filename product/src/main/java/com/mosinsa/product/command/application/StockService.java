@@ -3,6 +3,8 @@ package com.mosinsa.product.command.application;
 import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.StockHistory;
 import com.mosinsa.product.command.domain.StockHistoryType;
+import com.mosinsa.product.infra.redis.StockOperand;
+import com.mosinsa.product.infra.redis.StockOperation;
 import com.mosinsa.product.infra.repository.StockHistoryRepository;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
@@ -16,58 +18,66 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class StockService {
 
 	private final StockHistoryRepository historyRepository;
-	private final RedisTemplate<String, String> redisTemplate;
+	private final StockOperation operation;
 
 	public long currentStock(String productId) {
+		return operation.get(productId);
+	}
 
-		return Integer.parseInt(Objects.requireNonNull(redisTemplate.opsForValue().get(productId)));
+	public void setStock(String key, long stock) {
+		operation.set(key, stock);
 	}
 
 	@Transactional
-	public void decreaseStocks(String customerId, String orderId, List<OrderProductRequest> requests) {
+	public void decreaseStocks(String customerId, String orderId, List<StockOperand> stocks) {
 
 		// 상품목록 레디스로 현재 수량 감소
-		for (OrderProductRequest request : requests) {
-			Long decrement = redisTemplate.opsForValue().decrement(request.productId(), request.quantity());
+//		for (OrderProductRequest orderProduct : orderProducts) {
+//			Long decrement = redisTemplate.opsForValue().decrement(orderProduct.productId(), orderProduct.quantity());
+//		}
+
+		List<Long> execute = operation.decreaseAndGet(stocks);
+		Optional<Long> any = execute.stream().filter(f -> f < 0).findAny();
+		if (any.isEmpty()) {
+			//정상
+			// 성공
+			// 0인 상품은 stock 상태 sold_out
+
+			List<StockHistory> stockHistories = stocks.stream()
+					.map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.MINUS))
+					.toList();
+			historyRepository.saveAll(stockHistories);
+
+			checkSoldOut(stocks);
+
+		} else {
+
+			operation.increaseAndGet(stocks);
+			throw new RuntimeException();
 		}
+	}
 
-		redisTemplate.execute(new SessionCallback<Object>() {
 
-			@Override
-			public <K, V> Object execute(RedisOperations<K, V> operations) throws DataAccessException {
-				operations.multi();
 
-				operations.exec();
-				return null;
-			}
-		});
-
-		// 성공
-		// 0인 상품은 stock 상태 sold_out
-
-		List<StockHistory> stockHistories = requests.stream()
-				.map(op -> StockHistory.of(orderId, customerId, op.productId(), op.quantity(), StockHistoryType.MINUS))
-				.toList();
-		historyRepository.saveAllAndFlush(stockHistories);
+	private void checkSoldOut(List<StockOperand> stocks) {
+//		orderProducts.stream().forEach();
 	}
 
 	@Transactional
-	public void increaseStocks(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
+	public void increaseStocks(String customerId, String orderId, List<StockOperand> stocks) {
 
-		List<StockHistory> stockHistories = requests.stream()
-				.map(op -> StockHistory.of(orderId, customerId, op.productId(), op.quantity(), StockHistoryType.PLUS))
+		List<StockHistory> stockHistories = stocks.stream()
+				.map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.PLUS))
 				.toList();
 		historyRepository.saveAll(stockHistories);
 	}
 
-	public void setStock(String key, long stock) {
-		redisTemplate.opsForValue().set(key, String.valueOf(stock));
-	}
+
 }
