@@ -28,7 +28,6 @@ class ProductServiceTest {
 	ProductQueryService productQueryService;
 	@Autowired
 	ProductService productService;
-
 	@Autowired
 	StockService stockService;
 
@@ -52,13 +51,13 @@ class ProductServiceTest {
 		CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 10);
 		ProductDetailDto product = productService.createProduct(createProductRequest);
 		String productId = product.getProductId();
-		long beforeStock = productQueryService.getProductById(productId).getStock();
+		long beforeStock = stockService.currentStock(productId);
 		assertThat(beforeStock).isEqualTo(10);
 
 		OrderProductRequest request = new OrderProductRequest(productId, 3);
 		productService.orderProduct("customerId1", "orderId1", List.of(request));
 
-		long afterStock = productQueryService.getProductById(productId).getStock();
+		long afterStock = stockService.currentStock(productId);
 		assertThat(afterStock).isEqualTo(7);
 
 	}

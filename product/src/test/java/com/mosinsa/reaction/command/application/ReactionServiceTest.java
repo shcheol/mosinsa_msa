@@ -31,9 +31,8 @@ class ReactionServiceTest {
 
         String productId = "xxxx";
         ReactionSearchCondition reactionSearchCondition = new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, "memberId");
-        assertThat(
-                reader.total(reactionSearchCondition)
-        ).isZero();
+        assertThat(reader.total(reactionSearchCondition)).isZero();
+
         int size = 10;
         ExecutorService es = Executors.newFixedThreadPool(size);
         CountDownLatch countDownLatch = new CountDownLatch(size);
@@ -42,7 +41,7 @@ class ReactionServiceTest {
             es.execute(() -> {
                 try {
                     service.reaction(new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, UUID.randomUUID().toString()));
-                }finally {
+                } finally {
                     countDownLatch.countDown();
                 }
             });
@@ -53,9 +52,7 @@ class ReactionServiceTest {
         System.out.println("실행 시간: " + (end - start));
 
         es.shutdown();
-        assertThat(
-                reader.total(reactionSearchCondition)
-        ).isEqualTo(size);
+        assertThat(reader.total(reactionSearchCondition)).isEqualTo(size);
     }
 
 }
