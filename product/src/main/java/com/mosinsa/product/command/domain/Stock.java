@@ -58,6 +58,10 @@ public class Stock {
 		this.remain = value;
 	}
 
+	public void updateAvailable(){
+		this.status = StockStatus.ON;
+	}
+
 	public void updateSoldOut(){
 		this.status = StockStatus.SOLD_OUT;
 	}

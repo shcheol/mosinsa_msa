@@ -51,8 +51,8 @@ public class ProductService {
             throw new RuntimeException();
         }
 
-        List<StockOperand> stocks1 = getStockOperands(orderProducts);
-        StockResult stockResult = stockService.tryDecrease(customerId, orderId, stocks1);
+        List<StockOperand> stockOperands = getStockOperands(orderProducts);
+        StockResult stockResult = stockService.tryDecrease(customerId, orderId, stockOperands);
 
         if (StockResult.SUCCESS.equals(stockResult)){
             checkSoldOut(products);
@@ -61,7 +61,6 @@ public class ProductService {
         if (StockResult.FAIL.equals(stockResult)){
             throw new RuntimeException();
         }
-
     }
 
     private void checkSoldOut(List<Product> products) {
@@ -86,9 +85,26 @@ public class ProductService {
     @Transactional
     public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
         log.info("cancelOrder: {}", requests);
-        requests.forEach(request ->
-                productRepository.findProductDetailById(ProductId.of(request.productId()))
-                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))
-                        .increaseStock(request.quantity()));
+		List<Product> products = getProductList(requests);
+
+
+		List<StockOperand> stockOperands = requests.stream().map(r -> new StockOperand(r.productId(), r.quantity())).toList();
+		StockResult stockResult = stockService.tryIncrease(customerId, orderId, stockOperands);
+
+		if (StockResult.SUCCESS.equals(stockResult)){
+			products.forEach(product -> product.getStock().updateAvailable());
+		}
+
+		if (StockResult.FAIL.equals(stockResult)){
+			throw new RuntimeException();
+		}
     }
+
+	private List<Product> getProductList(List<CancelOrderProductRequest> requests) {
+		return requests.stream().filter(request ->
+						stockService.currentStock(request.productId()) == 0 && request.quantity() > 0)
+				.map(req -> productRepository.findProductDetailById(ProductId.of(req.productId()))
+						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)))
+				.toList();
+	}
 }

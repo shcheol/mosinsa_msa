@@ -42,12 +42,17 @@ public class StockService {
     }
 
     @Transactional
-    public void tryIncrease(String customerId, String orderId, List<StockOperand> stocks) {
+    public StockResult tryIncrease(String customerId, String orderId, List<StockOperand> stockOperands) {
 
-        List<StockHistory> stockHistories = stocks.stream()
-                .map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.PLUS))
-                .toList();
-        historyRepository.saveAll(stockHistories);
+		List<Long> execute = operation.increaseAndGet(stockOperands);
+		if (!execute.isEmpty()) {
+			historyRepository.saveAll(stockOperands.stream()
+					.map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.PLUS))
+					.toList());
+
+			return StockResult.SUCCESS;
+		}
+		return StockResult.FAIL;
     }
 
 

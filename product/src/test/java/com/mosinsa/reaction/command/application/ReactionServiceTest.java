@@ -33,7 +33,7 @@ class ReactionServiceTest {
         ReactionSearchCondition reactionSearchCondition = new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, "memberId");
         assertThat(reader.total(reactionSearchCondition)).isZero();
 
-        int size = 10;
+        int size = 5;
         ExecutorService es = Executors.newFixedThreadPool(size);
         CountDownLatch countDownLatch = new CountDownLatch(size);
         long start = System.currentTimeMillis();

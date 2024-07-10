@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class StockOperation {
 
 		return redisTemplate.execute(new SessionCallback<>() {
 			@Override
-			public <K, V> List<Long> execute(RedisOperations<K, V> operations) throws DataAccessException {
+			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
 
 				operations.multi();
 				for (StockOperand stock : stocks) {
@@ -34,7 +35,7 @@ public class StockOperation {
 	public List<Long> increaseAndGet(List<StockOperand> stocks) {
 		return redisTemplate.execute(new SessionCallback<>() {
 			@Override
-			public <K, V> List<Long> execute(RedisOperations<K, V> operations) throws DataAccessException {
+			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
 				operations.multi();
 
 				for (StockOperand stock : stocks) {
@@ -45,11 +46,15 @@ public class StockOperation {
 		});
 	}
 
-	public long get(String key) {
+	public long get(String key){
+		return get(key, 0);
+	}
+
+	public long get(String key, long defaultValue) {
 		try {
 			return Long.parseLong(Objects.requireNonNull(redisTemplate.opsForValue().get(key)));
 		} catch (Exception ignored) {
-			return 0;
+			return defaultValue;
 		}
 	}
 
