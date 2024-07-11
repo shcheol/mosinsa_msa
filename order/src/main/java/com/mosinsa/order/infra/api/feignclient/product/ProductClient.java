@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.feignclient.product;
+package com.mosinsa.order.infra.api.feignclient.product;
 
 import com.mosinsa.order.ui.response.GlobalResponse;
 import org.springframework.cloud.openfeign.FeignClient;

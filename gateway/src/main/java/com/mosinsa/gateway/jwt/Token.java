@@ -15,8 +15,6 @@ public interface Token {
 
     boolean isValid(String token);
 
-    void remove(String token);
-
     default Claims getClaims(String token, String secret) {
         try {
 			Claims claims = Jwts.parser()

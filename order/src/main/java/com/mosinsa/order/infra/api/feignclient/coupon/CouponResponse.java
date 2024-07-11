@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.feignclient.coupon;
+package com.mosinsa.order.infra.api.feignclient.coupon;
 
 import java.time.LocalDateTime;
 

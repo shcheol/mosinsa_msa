@@ -12,8 +12,8 @@ public enum AuthorizationError {
 	;
 
 
-	private String message;
-	private HttpStatus status;
+	private final String message;
+	private final HttpStatus status;
 
 	AuthorizationError(String message, HttpStatus status) {
 		this.message = message;

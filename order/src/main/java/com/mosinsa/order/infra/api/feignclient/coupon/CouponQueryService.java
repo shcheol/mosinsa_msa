@@ -1,6 +1,6 @@
-package com.mosinsa.order.infra.feignclient.coupon;
+package com.mosinsa.order.infra.api.feignclient.coupon;
 
-import com.mosinsa.order.infra.feignclient.ResponseResult;
+import com.mosinsa.order.infra.api.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

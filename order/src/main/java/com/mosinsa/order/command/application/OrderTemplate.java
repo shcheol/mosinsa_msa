@@ -3,8 +3,8 @@ package com.mosinsa.order.command.application;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.common.ex.OrderRollbackException;
-import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
-import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponCommandService;
+import com.mosinsa.order.infra.api.feignclient.product.ProductCommandService;
 import com.mosinsa.order.infra.kafka.KafkaEvents;
 import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
 import com.mosinsa.order.query.application.dto.OrderDetail;
@@ -38,6 +38,7 @@ public class OrderTemplate {
 		if (StringUtils.hasText(couponId)) {
 			couponCommandService.useCoupon(authMap, orderRequest.orderConfirm().couponId()).orElseThrow();
 		}
+
 		// 상품 수량 감소
 		OrderId orderId = OrderId.newId();
 		productCommandService.orderProduct(authMap, orderId.getId(), orderRequest).orElseThrow();

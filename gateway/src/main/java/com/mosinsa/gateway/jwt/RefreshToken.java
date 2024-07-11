@@ -32,7 +32,9 @@ public class RefreshToken implements Token {
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, secret.getBytes(StandardCharsets.UTF_8)).compact();
+
         repository.put(customerId, refreshToken, expiration.getTime());
+
         return refreshToken;
     }
 
@@ -50,11 +52,6 @@ public class RefreshToken implements Token {
 		} catch (Exception e){
 			return false;
 		}
-    }
-
-    @Override
-    public void remove(String token) {
-        repository.remove(getSubject(token));
     }
 
     private void validStoredToken(String storedToken, String refreshToken) {

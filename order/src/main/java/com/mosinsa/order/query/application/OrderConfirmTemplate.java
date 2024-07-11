@@ -4,11 +4,10 @@ import com.mosinsa.order.command.application.NotEnoughProductStockException;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
 import com.mosinsa.order.command.domain.DiscountPolicy;
-import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
-import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
-import com.mosinsa.order.infra.feignclient.customer.CustomerQueryService;
-import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
-import com.mosinsa.order.infra.feignclient.product.ProductResponse;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponQueryService;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponResponse;
+import com.mosinsa.order.infra.api.feignclient.product.ProductQueryService;
+import com.mosinsa.order.infra.api.feignclient.product.ProductResponse;
 import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.MyOrderProduct;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
@@ -26,14 +25,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class OrderConfirmTemplate {
-	private final CustomerQueryService customerQueryService;
+
 	private final CouponQueryService couponQueryService;
 	private final ProductQueryService productQueryService;
 	public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, CustomerInfo customerInfo, OrderConfirmRequest orderConfirmRequest) {
-
-		// 유저 조회
-		customerQueryService.customerCheck(authMap, customerInfo.id())
-				.orElseThrow();
 
 		// 상품 조회
 		List<ProductResponse> productResponses = orderConfirmRequest
@@ -48,7 +43,7 @@ public class OrderConfirmTemplate {
 					Integer orderStock = myOrderProductMap.getOrDefault(productResponse.productId(), Integer.MAX_VALUE);
 					if (productResponse.stock() < orderStock) {
 						log.info("product stock is not enough {}/{}", orderStock, productResponse.stock());
-						throw new NotEnoughProductStockException("상품수량이 부족합니다.");
+						throw new NotEnoughProductStockException();
 					}
 					return OrderProductDto.builder()
 							.price(productResponse.price())

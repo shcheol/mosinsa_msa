@@ -1,5 +1,7 @@
 package com.mosinsa.order.infra.feignclient;
 
+import com.mosinsa.order.infra.api.ExternalServerException;
+import com.mosinsa.order.infra.api.ResponseResult;
 import feign.FeignException;
 import feign.Request;
 import feign.Response;

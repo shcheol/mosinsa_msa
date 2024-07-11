@@ -1,11 +1,9 @@
-package com.mosinsa.order.infra.feignclient;
+package com.mosinsa.order.infra.api;
 
 import feign.FeignException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 

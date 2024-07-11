@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.feignclient;
+package com.mosinsa.order.infra.api.feignclient;
 
 import feign.FeignException;
 import feign.Response;

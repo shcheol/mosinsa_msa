@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.feignclient.coupon;
+package com.mosinsa.order.infra.api.feignclient.coupon;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public interface CouponClient {
 									  @PathVariable(value = "couponId") String couponId);
 
 	@PostMapping("/coupons/{couponId}")
-	CouponResponse useCoupon(@RequestHeader Map<String, Collection<String>> headers,
+	void useCoupon(@RequestHeader Map<String, Collection<String>> headers,
 							 @PathVariable(value = "couponId") String couponId);
 
 	@PostMapping("/coupons/{couponId}/cancel")
