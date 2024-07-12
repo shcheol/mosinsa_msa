@@ -1,7 +1,9 @@
 package com.mosinsa.customer.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.customer.application.CustomerService;
 import com.mosinsa.customer.common.jwt.Token;
+import com.mosinsa.customer.common.jwt.TokenProvider;
 import com.mosinsa.customer.ui.filter.AuthenticationFilter;
 import com.mosinsa.customer.ui.filter.JwtLogoutHandler;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import java.time.Clock;
 import java.util.Map;
 
 @Slf4j
@@ -28,7 +30,8 @@ public class SecurityConfig {
 
     private final CustomerService customerService;
 
-    private final Map<String, Token> tokenUtilMap;
+	private final Map<String, Token> tokenMap;
+
     private static final String[] AUTH_WHITELIST = {
             "/**", "/h2-console/**", "/error"
     };
@@ -67,7 +70,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationFilter getAuthenticationFilter(AuthenticationManager manager) {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(customerService, tokenUtilMap);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(objectMapper(), customerService, tokenProvider());
         authenticationFilter.setAuthenticationManager(manager);
         return authenticationFilter;
     }
@@ -79,6 +82,22 @@ public class SecurityConfig {
 
     @Bean
     public LogoutHandler jwtLogoutHandler() {
-        return new JwtLogoutHandler(tokenUtilMap);
+        return new JwtLogoutHandler(tokenProvider());
     }
+
+
+	@Bean
+	public TokenProvider tokenProvider(){
+		return new TokenProvider(tokenMap, clock());
+	}
+
+	@Bean
+	public ObjectMapper objectMapper(){
+		return new ObjectMapper();
+	}
+
+	@Bean
+	public Clock clock(){
+		return Clock.systemDefaultZone();
+	}
 }

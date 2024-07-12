@@ -2,19 +2,11 @@ package com.mosinsa.order.command.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.order.command.domain.OrderStatus;
-import com.mosinsa.order.infra.feignclient.ResponseResult;
-import com.mosinsa.order.infra.feignclient.coupon.CouponCommandService;
-import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
-import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
-import com.mosinsa.order.infra.feignclient.customer.CustomerQueryService;
-import com.mosinsa.order.infra.feignclient.customer.CustomerResponse;
-import com.mosinsa.order.infra.feignclient.product.ProductCommandService;
-import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
-import com.mosinsa.order.infra.feignclient.product.ProductResponse;
+import com.mosinsa.order.infra.api.ResponseResult;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponCommandService;
+import com.mosinsa.order.infra.api.feignclient.product.ProductCommandService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
-import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

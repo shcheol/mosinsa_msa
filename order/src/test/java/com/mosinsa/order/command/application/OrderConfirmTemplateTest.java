@@ -3,14 +3,12 @@ package com.mosinsa.order.command.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.infra.feignclient.ExternalServerException;
-import com.mosinsa.order.infra.feignclient.ResponseResult;
-import com.mosinsa.order.infra.feignclient.coupon.CouponQueryService;
-import com.mosinsa.order.infra.feignclient.coupon.CouponResponse;
-import com.mosinsa.order.infra.feignclient.customer.CustomerQueryService;
-import com.mosinsa.order.infra.feignclient.customer.CustomerResponse;
-import com.mosinsa.order.infra.feignclient.product.ProductQueryService;
-import com.mosinsa.order.infra.feignclient.product.ProductResponse;
+import com.mosinsa.order.infra.api.ExternalServerException;
+import com.mosinsa.order.infra.api.ResponseResult;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponQueryService;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponResponse;
+import com.mosinsa.order.infra.api.feignclient.product.ProductQueryService;
+import com.mosinsa.order.infra.api.feignclient.product.ProductResponse;
 import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
@@ -36,8 +34,6 @@ import static org.mockito.Mockito.when;
 class OrderConfirmTemplateTest {
 
 	@MockBean
-	CustomerQueryService customerQueryService;
-	@MockBean
 	CouponQueryService couponQueryService;
 	@MockBean
 	ProductQueryService productQueryService;
@@ -54,8 +50,6 @@ class OrderConfirmTemplateTest {
 	@Test
 	void orderConfirmSuccessWithCoupon() {
 
-		when(customerQueryService.customerCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
 		when(productQueryService.productCheck(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
 		when(couponQueryService.couponCheck(any(), any()))
@@ -73,8 +67,6 @@ class OrderConfirmTemplateTest {
 	@Test
 	void orderConfirmNotEnoughStock() {
 
-		when(customerQueryService.customerCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
 		when(productQueryService.productCheck(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 1, 2)));
 		when(couponQueryService.couponCheck(any(), any()))
@@ -84,17 +76,7 @@ class OrderConfirmTemplateTest {
 	}
 
 	@Test
-	void orderConfirmCustomerServiceError() {
-
-		when(customerQueryService.customerCheck(any(), any()))
-				.thenThrow(ExternalServerException.class);
-		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
-	}
-
-	@Test
 	void orderConfirmProductServiceError() {
-		when(customerQueryService.customerCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
 		when(productQueryService.productCheck(any(), any()))
 				.thenThrow(ExternalServerException.class);
 		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
@@ -102,8 +84,6 @@ class OrderConfirmTemplateTest {
 
 	@Test
 	void orderConfirmCouponServiceErrorOrderWithCoupon() {
-		when(customerQueryService.customerCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
 		when(productQueryService.productCheck(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
 		when(couponQueryService.couponCheck(any(), any()))
@@ -113,8 +93,6 @@ class OrderConfirmTemplateTest {
 
 	@Test
 	void orderConfirmCouponServiceErrorOrderWithoutCoupon() {
-		when(customerQueryService.customerCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CustomerResponse("customerId", "name")));
 		when(productQueryService.productCheck(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
 		when(couponQueryService.couponCheck(any(), any()))

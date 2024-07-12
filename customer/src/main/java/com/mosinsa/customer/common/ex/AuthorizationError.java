@@ -1,4 +1,4 @@
-package com.mosinsa.gateway.filter;
+package com.mosinsa.customer.common.ex;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

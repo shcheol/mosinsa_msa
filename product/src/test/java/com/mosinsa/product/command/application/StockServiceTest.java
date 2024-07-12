@@ -152,6 +152,7 @@ class StockServiceTest {
         assertThat(totalQuantity).isEqualTo(current);
         long currentB = stockService.currentStock(productIdB);
         assertThat(totalQuantity).isEqualTo(currentB);
+		System.out.println(stockService.currentStock("b7af3b59-f802-46df-b347-b18de95b4d5f"));
     }
 
 }
