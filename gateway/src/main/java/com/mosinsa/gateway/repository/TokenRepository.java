@@ -13,11 +13,15 @@ public class TokenRepository {
 	private final RedisTemplate<String, String> redisTemplate;
 
 	public void put(String key, String value, Long timeout){
-		redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MICROSECONDS);
+		redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MILLISECONDS);
 	}
 
 	public String get(String key){
 		return redisTemplate.opsForValue().get(key);
+	}
+
+	public boolean remove(String key){
+		return Boolean.TRUE.equals(redisTemplate.delete(key));
 	}
 
 }

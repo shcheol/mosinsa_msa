@@ -1,9 +1,7 @@
 package com.mosinsa.gateway.filter;
 
-import com.mosinsa.gateway.jwt.Token;
-import com.mosinsa.gateway.jwt.TokenDto;
-import com.mosinsa.gateway.jwt.TokenMapEnums;
 import com.mosinsa.gateway.jwt.TokenValidator;
+import com.mosinsa.gateway.jwt.TokenVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -16,7 +14,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -43,8 +40,8 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 				String refreshToken = Optional.ofNullable(request.getHeaders().get(HeaderConst.REFRESH_TOKEN.key()))
 						.orElseGet(Collections::emptyList).stream().findAny().orElse("");
 
-				TokenDto tokenDto = tokenValidator.validateAndGet(new TokenDto(accessToken, refreshToken));
-				exchange.getResponse().getHeaders().add(HeaderConst.ACCESS_TOKEN.key(), tokenDto.accessToken());
+				TokenVo tokenVo = tokenValidator.validateAndGet(new TokenVo(accessToken, refreshToken));
+				exchange.getResponse().getHeaders().add(HeaderConst.ACCESS_TOKEN.key(), tokenVo.accessToken());
 				return chain.filter(exchange);
 			} catch (AuthorizationException ex) {
 				return onError(exchange, ex.getError());

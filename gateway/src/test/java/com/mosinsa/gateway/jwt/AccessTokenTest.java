@@ -1,58 +1,60 @@
 package com.mosinsa.gateway.jwt;
 
-import org.junit.jupiter.api.BeforeEach;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.main.allow-bean-definition-overriding=true")
 @Import({TestConfig.class})
 class AccessTokenTest {
+
+	@Value("${token.access.expiration}")
+	private long tokenExpiration;
+
 
 	@Autowired
 	AccessToken accessToken;
 
+	@Autowired
+	Clock fixedClock;
+
 
 	@Test
-	void create(){
-		Clock fixed = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+	void create() {
 
-//		AccessToken accessToken = new AccessToken(fixed);
+		String token = accessToken.create("customerId", fixedClock);
 
-		String token = accessToken.create("customerId");
-		System.out.println(token);
+		Claims claims = accessToken.getClaims(token);
+		assertThat(claims.getSubject()).isEqualTo("customerId");
+		long expiration = fixedClock.millis() + tokenExpiration;
+		long expected = new Date(expiration).getTime() / 1000 * 1000;
 
-		Date date = new Date(Clock.systemDefaultZone().millis());
-		Date date2 = new Date(System.currentTimeMillis());
-		Date date3 = new Date();
-
-		System.out.println("date = " + date);
-		System.out.println("date2 = " + date2);
-		System.out.println("date3 = " + date3);
+		assertThat(claims.getExpiration().getTime()).isBetween(expected-1000, expected+1000);
 
 	}
 
 	@Test
 	void valid(){
 
-		String token = accessToken.create("customerId",  Clock.fixed(Instant.now().minusMillis(360000-1), ZoneId.systemDefault()));
-		System.out.println(token);
+		String token1 = accessToken.create("customerId",  Clock.fixed(Instant.now().minusMillis(tokenExpiration), ZoneId.systemDefault()));
+		assertThat(accessToken.isValid(token1)).isFalse();
 
-		boolean valid = accessToken.isValid(token);
-		System.out.println(valid);
 
+		String token2 = accessToken.create("customerId",  Clock.fixed(Instant.now().minusMillis(tokenExpiration+1000), ZoneId.systemDefault()));
+		assertThat(accessToken.isValid(token2)).isFalse();
+
+		String token3 = accessToken.create("customerId",  Clock.fixed(Instant.now().minusMillis(tokenExpiration-1000), ZoneId.systemDefault()));
+		assertThat(accessToken.isValid(token3)).isTrue();
 	}
 
 }

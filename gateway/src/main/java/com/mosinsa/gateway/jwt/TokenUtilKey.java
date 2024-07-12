@@ -1,12 +1,12 @@
-package com.mosinsa.customer.common.jwt;
+package com.mosinsa.gateway.jwt;
 
-public enum TokenMapEnums {
+public enum TokenUtilKey {
     ACCESS_TOKEN("accessToken"),
     REFRESH_TOKEN("refreshToken")
     ;
 
     final String value;
-    TokenMapEnums(String value){
+    TokenUtilKey(String value){
         this.value = value;
     }
 
