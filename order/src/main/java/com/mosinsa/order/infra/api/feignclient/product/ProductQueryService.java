@@ -12,11 +12,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProductQueryService {
 
-	private final ProductClient productClient;
+	private final ProductFeignClient productFeignClient;
 
 	public ResponseResult<ProductResponse> productCheck(Map<String, Collection<String>> headers, MyOrderProduct myOrderProduct) {
 
-		return ResponseResult.execute(() -> productClient.getProduct(headers, myOrderProduct.productId()).getResponse());
+		return ResponseResult.execute(() -> productFeignClient.getProduct(headers, myOrderProduct.productId()).getResponse());
 	}
 
 }

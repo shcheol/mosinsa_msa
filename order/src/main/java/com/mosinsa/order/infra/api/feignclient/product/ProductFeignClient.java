@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Component
 @FeignClient(name = "product-service", url = "${feignclient.url.product}")
-public interface ProductClient {
+public interface ProductFeignClient {
 
 	@GetMapping("/products/{productId}")
 	GlobalResponse<ProductResponse> getProduct(@RequestHeader Map<String, Collection<String>> headers,

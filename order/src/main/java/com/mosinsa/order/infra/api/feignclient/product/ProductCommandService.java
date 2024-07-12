@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProductCommandService {
 
-	private final ProductClient productClient;
+	private final ProductFeignClient productFeignClient;
 
 	public ResponseResult<Void> orderProduct(Map<String, Collection<String>> headers, String orderId, CreateOrderRequest orderRequest) {
 //		return ResponseResult.execute(() ->
@@ -51,7 +51,7 @@ public class ProductCommandService {
 
 	public ResponseResult<Void> cancelOrderProduct(Map<String, Collection<String>> headers, List<OrderProductDto> orderProducts) {
 		return ResponseResult
-				.execute(() -> productClient.cancelOrderProducts(headers,
+				.execute(() -> productFeignClient.cancelOrderProducts(headers,
 						new CancelOrderProductRequests(orderProducts.stream()
 								.map(op -> new CancelOrderProductRequest(op.productId(), op.quantity())).toList())));
 	}
