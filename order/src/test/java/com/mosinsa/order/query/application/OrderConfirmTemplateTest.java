@@ -1,15 +1,16 @@
-package com.mosinsa.order.command.application;
+package com.mosinsa.order.query.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.order.command.application.NotEnoughProductStockException;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
+import com.mosinsa.order.command.domain.DiscountPolicy;
 import com.mosinsa.order.infra.api.ExternalServerException;
+import com.mosinsa.order.infra.api.ProductAdaptor;
 import com.mosinsa.order.infra.api.ResponseResult;
-import com.mosinsa.order.infra.api.feignclient.coupon.CouponQueryService;
+import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.infra.api.feignclient.coupon.CouponResponse;
-import com.mosinsa.order.infra.api.feignclient.product.ProductQueryService;
 import com.mosinsa.order.infra.api.feignclient.product.ProductResponse;
-import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +35,9 @@ import static org.mockito.Mockito.when;
 class OrderConfirmTemplateTest {
 
 	@MockBean
-	CouponQueryService couponQueryService;
+	CouponAdapter couponAdapter;
 	@MockBean
-	ProductQueryService productQueryService;
+	ProductAdaptor productAdaptor;
 	ObjectMapper om;
 	@Autowired
 	OrderConfirmTemplate orderConfirmTemplate;
@@ -50,10 +51,10 @@ class OrderConfirmTemplateTest {
 	@Test
 	void orderConfirmSuccessWithCoupon() {
 
-		when(productQueryService.productCheck(any(), any()))
+		when(productAdaptor.getProduct(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
-		when(couponQueryService.couponCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CouponResponse("couponId", "TEN_PERCENTAGE", "promotionId", LocalDateTime.MIN, "customerId", LocalDateTime.MAX, true)));
+		when(couponAdapter.getCoupon(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CouponResponse("couponId", DiscountPolicy.TEN_PERCENTAGE, "promotionId", LocalDateTime.MIN, "customerId", LocalDateTime.MAX, true)));
 
 
 		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon);
@@ -67,35 +68,35 @@ class OrderConfirmTemplateTest {
 	@Test
 	void orderConfirmNotEnoughStock() {
 
-		when(productQueryService.productCheck(any(), any()))
+		when(productAdaptor.getProduct(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 1, 2)));
-		when(couponQueryService.couponCheck(any(), any()))
-				.thenReturn(ResponseResult.execute(() -> new CouponResponse("couponId", "TEN_PERCENTAGE", "promotionId", LocalDateTime.MIN, "customerId", LocalDateTime.MAX, true)));
+		when(couponAdapter.getCoupon(any(), any()))
+				.thenReturn(ResponseResult.execute(() -> new CouponResponse("couponId", DiscountPolicy.TEN_PERCENTAGE, "promotionId", LocalDateTime.MIN, "customerId", LocalDateTime.MAX, true)));
 
 		assertThrows(NotEnoughProductStockException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
 	}
 
 	@Test
 	void orderConfirmProductServiceError() {
-		when(productQueryService.productCheck(any(), any()))
+		when(productAdaptor.getProduct(any(), any()))
 				.thenThrow(ExternalServerException.class);
 		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
 	}
 
 	@Test
 	void orderConfirmCouponServiceErrorOrderWithCoupon() {
-		when(productQueryService.productCheck(any(), any()))
+		when(productAdaptor.getProduct(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
-		when(couponQueryService.couponCheck(any(), any()))
+		when(couponAdapter.getCoupon(any(), any()))
 				.thenThrow(ExternalServerException.class);
 		assertThrows(ExternalServerException.class, () -> orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithCoupon));
 	}
 
 	@Test
 	void orderConfirmCouponServiceErrorOrderWithoutCoupon() {
-		when(productQueryService.productCheck(any(), any()))
+		when(productAdaptor.getProduct(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> new ProductResponse("productId", "name", 3000, 10, 2)));
-		when(couponQueryService.couponCheck(any(), any()))
+		when(couponAdapter.getCoupon(any(), any()))
 				.thenThrow(ExternalServerException.class);
 		OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(header, customerInfo, orderConfirmRequestWithoutCoupon);
 		assertThat(orderConfirmDto.orderProducts()).hasSize(1);

@@ -32,7 +32,7 @@ public class CouponController {
     }
 
 	@PostMapping("/coupons/{couponId}")
-	public ResponseEntity<JoinResult> useCoupon(@PathVariable("couponId") String couponId) {
+	public ResponseEntity<Void> useCoupon(@PathVariable("couponId") String couponId) {
 
 		couponService.usedCoupon(couponId);
 
@@ -40,7 +40,7 @@ public class CouponController {
 	}
 
     @PostMapping("/coupons/{couponId}/cancel")
-    public ResponseEntity<JoinResult> cancelCoupon(@PathVariable("couponId") String couponId) {
+    public ResponseEntity<Void> cancelCoupon(@PathVariable("couponId") String couponId) {
 
         couponService.rollbackCoupon(couponId);
 

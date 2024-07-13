@@ -2,9 +2,9 @@ package com.mosinsa.order.command.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.order.infra.api.ProductAdaptor;
 import com.mosinsa.order.infra.api.ResponseResult;
-import com.mosinsa.order.infra.api.feignclient.coupon.CouponCommandService;
-import com.mosinsa.order.infra.api.feignclient.product.ProductCommandService;
+import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 class OrderTemplateTest {
 
 	@MockBean
-	CouponCommandService couponCommandService;
+	CouponAdapter couponAdapter;
 
 	@MockBean
-	ProductCommandService productCommandService;
+	ProductAdaptor productAdaptor;
 
 	@Autowired
 	PlaceOrderService placeOrderService;
@@ -46,10 +46,10 @@ class OrderTemplateTest {
 	@Test
 	void orderWithCoupon() {
 
-		when(productCommandService.orderProduct(any(), any(), any()))
+		when(productAdaptor.orderProducts(any(), any(), any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
-		when(couponCommandService.useCoupon(any(), any()))
+		when(couponAdapter.useCoupon(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
 
@@ -63,7 +63,7 @@ class OrderTemplateTest {
 	@Test
 	void orderWithoutCoupon() {
 
-		when(productCommandService.orderProduct(any(),any(), any()))
+		when(productAdaptor.orderProducts(any(),any(), any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
 
