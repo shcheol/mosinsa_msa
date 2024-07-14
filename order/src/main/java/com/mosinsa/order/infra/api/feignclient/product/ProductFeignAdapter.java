@@ -1,7 +1,9 @@
-package com.mosinsa.order.infra.api;
+package com.mosinsa.order.infra.api.feignclient.product;
 
 import com.mosinsa.order.command.application.NotEnoughProductStockException;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
+import com.mosinsa.order.infra.api.ProductAdapter;
+import com.mosinsa.order.infra.api.ResponseResult;
 import com.mosinsa.order.infra.api.feignclient.product.OrderProductRequest;
 import com.mosinsa.order.infra.api.feignclient.product.OrderProductRequests;
 import com.mosinsa.order.infra.api.feignclient.product.ProductClient;
@@ -21,10 +23,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ProductAdaptor {
+public class ProductFeignAdapter implements ProductAdapter {
 
     private final ProductClient productClient;
 
+    @Override
     public List<OrderProductDto> confirm(Map<String, Collection<String>> headers, OrderConfirmRequest orderConfirmRequest) {
         Map<String, Integer> orderQuantityMap = getOrderQuantityMap(orderConfirmRequest);
 
@@ -57,10 +60,8 @@ public class ProductAdaptor {
                 ).toList();
     }
 
-    public ResponseResult<ProductResponse> getProduct(Map<String, Collection<String>> headers, String productId) {
-        return ResponseResult.execute(() -> productClient.getProduct(headers, productId));
-    }
 
+    @Override
     public ResponseResult<Void> orderProducts(Map<String, Collection<String>> headers, String orderId, CreateOrderRequest orderRequest) {
 
         OrderProductRequests orderProductRequests = new OrderProductRequests(orderId, orderRequest.orderConfirm().orderProducts().stream()

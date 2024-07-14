@@ -2,9 +2,9 @@ package com.mosinsa.order.command.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.order.infra.api.ProductAdaptor;
+import com.mosinsa.order.infra.api.feignclient.product.ProductFeignAdapter;
 import com.mosinsa.order.infra.api.ResponseResult;
-import com.mosinsa.order.infra.api.CouponAdapter;
+import com.mosinsa.order.infra.api.feignclient.coupon.CouponFeignAdapter;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 class OrderTemplateTest {
 
 	@MockBean
-	CouponAdapter couponAdapter;
+	CouponFeignAdapter couponAdapter;
 
 	@MockBean
-	ProductAdaptor productAdaptor;
+	ProductFeignAdapter productAdaptor;
 
 	@Autowired
 	PlaceOrderService placeOrderService;
