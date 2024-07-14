@@ -30,26 +30,26 @@ public class ProductController {
 	private final ProductService productService;
 
 	@GetMapping
-	public ResponseEntity<BaseResponse> findAllProducts(SearchCondition condition, Pageable pageable) {
+	public ResponseEntity<Page<ProductQueryDto>> findAllProducts(SearchCondition condition, Pageable pageable) {
 
 		Page<ProductQueryDto> allProducts = productQueryService.findProductsByCondition(condition, pageable);
-		return GlobalResponseEntity.ok(allProducts);
+		return ResponseEntity.ok(allProducts);
 	}
 
 	@GetMapping("/{productId}")
-	public ResponseEntity<BaseResponse> productDetails(@PathVariable String productId) {
+	public ResponseEntity<ProductDetailDto> productDetails(@PathVariable String productId) {
 		log.info("getProduct {}", productId);
 
 		ProductDetailDto productDetailDto = productQueryService.getProductById(productId);
-		return GlobalResponseEntity.ok(productDetailDto);
+		return ResponseEntity.ok(productDetailDto);
 	}
 
 	@PostMapping
-	public ResponseEntity<BaseResponse> addProduct(@RequestBody CreateProductRequest request) {
+	public ResponseEntity<ProductDetailDto> addProduct(@RequestBody CreateProductRequest request) {
 
 		ProductDetailDto productDetailDto = productService.createProduct(request);
 
-		return GlobalResponseEntity.success(HttpStatus.CREATED, productDetailDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(productDetailDto);
 	}
 
 	@PostMapping("/order")

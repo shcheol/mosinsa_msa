@@ -22,8 +22,4 @@ public interface CouponClient {
 	void useCoupon(@RequestHeader Map<String, Collection<String>> headers,
 							 @PathVariable(value = "couponId") String couponId);
 
-	@PostMapping("/coupons/{couponId}/cancel")
-	CouponResponse cancelCoupon(@RequestHeader Map<String, Collection<String>> headers,
-							 @PathVariable(value = "couponId") String couponId);
-
 }
