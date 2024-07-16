@@ -41,7 +41,7 @@ export default {
     apiBoard.getOrders()
         .then((response) => {
           console.log(response);
-          this.orders = response.data.response.content;
+          this.orders = response.data.content;
         })
         .catch(function (e) {
           console.log(e);

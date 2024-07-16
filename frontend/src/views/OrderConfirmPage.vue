@@ -120,7 +120,7 @@ export default {
         console.log(response);
         this.$router.push({
           name: 'orderPage',
-          state: {orderConfirmed: response.data.response}
+          state: {orderConfirmed: response.data}
         })
       }).catch(function (e) {
         console.log(e);

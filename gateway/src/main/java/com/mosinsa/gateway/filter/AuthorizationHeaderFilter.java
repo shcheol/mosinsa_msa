@@ -34,7 +34,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 				String accessToken = Optional.ofNullable(request.getHeaders().get(HttpHeaders.AUTHORIZATION))
 						.orElseGet(Collections::emptyList).stream()
 						.filter(f -> f.startsWith("Bearer"))
-						.map(b -> b.replace("Bearer", ""))
+						.map(b -> b.replace("Bearer", "").trim())
 						.findAny().orElseThrow(() -> new AuthorizationException(AuthorizationError.EMPTY_AUTHORIZATION_TOKEN));
 
 				String refreshToken = Optional.ofNullable(request.getHeaders().get(HeaderConst.REFRESH_TOKEN.key()))

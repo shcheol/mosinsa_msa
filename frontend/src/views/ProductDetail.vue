@@ -73,7 +73,7 @@ export default {
     apiBoard.getProductDetails(this.productId)
         .then((response) => {
           console.log(response);
-          this.product = response.data.response;
+          this.product = response.data;
         });
     this.totalReaction(this.productId);
 

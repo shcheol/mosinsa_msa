@@ -49,7 +49,7 @@ export default {
     apiBoard.getLikesProducts()
         .then((response) => {
           console.log(response);
-          this.products = response.data.response;
+          this.products = response.data;
         })
         .catch(function (e) {
           console.log(e);
@@ -63,7 +63,7 @@ export default {
             apiBoard.getLikesProducts()
                 .then((response) => {
                   console.log(response);
-                  this.products = response.data.response;
+                  this.products = response.data;
                 })
                 .catch(function (e) {
                   console.log(e);

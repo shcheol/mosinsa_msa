@@ -83,7 +83,7 @@ export default {
             console.log(response);
             this.$router.push({
               name: 'orderDetails',
-              params: {id: response.data.response.orderId}
+              params: {id: response.data.orderId}
             })
           }).catch(function (e) {
         console.log(e);
