@@ -1,11 +1,8 @@
 <template>
-  <div ref="loading">
+  <div class="vl-parent" ref="loadingRef">
     <h3>상품 리뷰 ({{ reviewsNumberOfElements }})</h3>
 
-<!--    <div class="loading" ref="loading">-->
-
-<!--    </div>-->
-    <div class="comment-list">
+    <div class="comment-list" >
       <ul>
         <li v-for="(review) in reviews" :key="review">
           <div>
@@ -32,7 +29,8 @@
 
             <div class="reviewDislikes" style="display: inline;" @click="reviewDislikes(review.reviewId)"
                  v-if="reviewDislikesReactionInfoMap.has(review.reviewId)">
-              <img v-if="reviewDislikesReactionInfoMap.get(review.reviewId).hasReacted" src="../assets/mythumbsdown.png"
+              <img v-if="reviewDislikesReactionInfoMap.get(review.reviewId).hasReacted"
+                   src="../assets/mythumbsdown.png"
                    width="16" height="16"
                    style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
               <img v-else src="../assets/thumbsdown.png" width="16" height="16"
@@ -57,10 +55,6 @@
 
 </template>
 
-<script setup>
- const loading = ref(null);
-</script>
-
 <script>
 import apiBoard from "@/api/board";
 import dayjs from "dayjs";
@@ -68,10 +62,17 @@ import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import {ref} from 'vue'
 
+
 export default {
   name: "Reviews",
   props: {
     propsValue: String
+  },
+  setup() {
+    const loadingRef = ref(null)
+    return {
+      loadingRef,
+    }
   },
   data() {
     return {
@@ -83,6 +84,7 @@ export default {
       reviewDislikesReactionInfoMap: new Map(),
       customerInfo: JSON.parse(localStorage.getItem("customer-info")),
       websocketClient: null,
+      commentLoader: null,
     }
   },
   watch: {
@@ -92,28 +94,35 @@ export default {
     }
   },
   mounted() {
-    this.showLoadingOverlay();
     this.connect();
     window.addEventListener("beforeunload", function (event) {
       console.log(event);
       this.disconnect()
     });
-    console.log(this.$refs.loading);
+    console.log("mounted " + this.loadingRef);
+
+    this.showLoadingOverlay();
+
   },
   beforeUnmount() {
     this.disconnect();
   },
   methods: {
     showLoadingOverlay() {
-      this.loader = this.$loading.show({
-        container: this.$refs.loading,
-        width: 128,
-        height: 128,
-        loader: "spinner",
-        canCancel: true,
-        zIndex: 1,
-        isFullPage: false,
-      });
+      console.log(this.$refs.loadingRef);
+      let loadingInterval = setInterval(function () {
+        if (this.$refs.loadingRef) {
+          this.commentLoader = this.$loading.show({
+            container: this.$refs.loadingRef,
+            width: 64,
+            height: 64,
+            loader: "spinner",
+            canCancel: true,
+            lockScroll: true,
+          }, {});
+          clearInterval(loadingInterval);
+        }
+      }.bind(this), 1000);
 
     },
     connect() {
@@ -128,7 +137,7 @@ export default {
             console.log('connect success', frame);
             try {
 
-              setTimeout(function () {
+              let connectInterval = setInterval(function () {
                 console.log("timeout")
                 if (this.stompClient.connected) {
                   this.stompClient.subscribe(`/topic/${this.productId}`, response => {
@@ -137,12 +146,13 @@ export default {
                     console.log(message)
                     this.processSubscribedMessage(message);
                   });
+                  clearInterval(connectInterval);
                 }
-              }.bind(this), 500);
+              }.bind(this), 1000);
             } catch (e) {
               console.log(e);
             } finally {
-              this.loader.hide();
+              this.commentLoader.hide();
             }
           },
           error => {
@@ -243,16 +253,6 @@ export default {
 </script>
 
 <style scoped>
-
-.loading {
-  position: relative;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0
-}
 
 .comment-list {
   margin-bottom: 60px;

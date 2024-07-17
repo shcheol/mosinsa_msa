@@ -44,8 +44,9 @@
     </div>
 
     <br/>
-    <Reviews :props-value="productId"/>
-
+    <div>
+      <Reviews :props-value="productId"/>
+    </div>
 
   </div>
 </template>
