@@ -31,7 +31,6 @@ dependencies {
 sonar {
     properties {
         property 'sonar.host.url', 'http://150.230.252.178:9000'
-        property "sonar.token", "squ_a6bae554fae971d2154448dbabde5c4f69e0ed51"
         property "sonar.projectKey", "project:order"
         property 'sonar.projectName', 'order'
         property 'sonar.java.source', 17

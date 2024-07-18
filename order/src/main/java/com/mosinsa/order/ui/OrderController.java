@@ -32,29 +32,29 @@ public class OrderController {
 
 
     @PostMapping("/orderConfirm")
-    public ResponseEntity<BaseResponse> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest,
+    public ResponseEntity<OrderConfirmDto> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest,
 													 @Login CustomerInfo customerInfo,
 													 @AuthMap AuthToken authMap) {
 
         OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap.map(), customerInfo, orderConfirmRequest);
 
-        return GlobalResponseEntity.success(orderConfirmDto);
+        return ResponseEntity.ok(orderConfirmDto);
 
     }
 
     @PostMapping("/order")
     @IdempotencyApi(storeType = "redisIdempotentKeyStore")
-    public ResponseEntity<BaseResponse> orders(@RequestBody CreateOrderRequest orderRequest, @AuthMap AuthToken authMap) {
+    public ResponseEntity<OrderDetail> orders(@RequestBody CreateOrderRequest orderRequest, @AuthMap AuthToken authMap) {
 
         OrderDetail orderDto = orderTemplate.order(authMap.map(), orderRequest);
-        return GlobalResponseEntity.success(HttpStatus.CREATED, orderDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
     }
 
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<BaseResponse> cancelOrders(@PathVariable String orderId) {
+    public ResponseEntity<OrderDetail> cancelOrders(@PathVariable String orderId) {
 
         OrderDetail cancelOrder = orderCancelTemplate.cancelOrder(orderId);
-        return GlobalResponseEntity.success(cancelOrder);
+        return ResponseEntity.ok(cancelOrder);
     }
 
 }

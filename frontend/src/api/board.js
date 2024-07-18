@@ -30,7 +30,8 @@ instance.interceptors.request.use(
         config.headers = {
             "Authorization": "Bearer "+localStorage.getItem("access-token"),
             "Refresh-Token": localStorage.getItem("refresh-token"),
-            "Customer-Info": JSON.stringify(localStorage.getItem("customer-info"))
+            "Customer-Info": JSON.stringify(localStorage.getItem("customer-info")),
+            'Content-Type': 'application/json; charset=utf-8',
         }
         return config;
     },

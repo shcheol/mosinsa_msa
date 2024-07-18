@@ -35,10 +35,14 @@ public class TokenArgumentResolver implements HandlerMethodArgumentResolver {
 		if (StringUtils.hasText(auth)) {
 			authMap.put(HttpHeaders.AUTHORIZATION, List.of(auth));
 		}
-		String token = request.getHeader(HeaderConst.REFRESH_TOKEN.getName());
+		String token = request.getHeader(HeaderConst.REFRESH_TOKEN.key());
 		if (StringUtils.hasText(token)) {
-			authMap.put(HeaderConst.REFRESH_TOKEN.getName(), List.of(token));
+			authMap.put(HeaderConst.REFRESH_TOKEN.key(), List.of(token));
 		}
+        String userInfo = request.getHeader(HeaderConst.CUSTOMER_INFO.key());
+        if (StringUtils.hasText(userInfo)){
+            authMap.put(HeaderConst.CUSTOMER_INFO.key(), List.of(userInfo));
+        }
 		return new AuthToken(authMap);
 
     }

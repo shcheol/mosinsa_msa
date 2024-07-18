@@ -13,21 +13,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderCancelTemplate {
 
-	private final CancelOrderService cancelOrderService;
+    private final CancelOrderService cancelOrderService;
 
-	@Value("${mosinsa.topic.order.cancel}")
-	public String orderCancelTopic;
+    @Value("${mosinsa.topic.order.cancel}")
+    public String orderCancelTopic;
 
-	public OrderDetail cancelOrder(String orderId) {
+    public OrderDetail cancelOrder(String orderId) {
 
-		OrderDetail cancelOrder = cancelOrderService.cancelOrder(orderId);
+        OrderDetail cancelOrder = cancelOrderService.cancelOrder(orderId);
 
-		KafkaEvents.raise(orderCancelTopic,
-				new OrderCanceledEvent(cancelOrder.getOrderId(),
-						cancelOrder.getCustomerId(),
-						cancelOrder.getCouponId(),
-						cancelOrder.getOrderProducts()));
+        KafkaEvents.raise(orderCancelTopic,
+                new OrderCanceledEvent(cancelOrder.getOrderId(),
+                        cancelOrder.getCustomerId(),
+                        cancelOrder.getCouponId(),
+                        cancelOrder.getOrderProducts()));
 
-		return cancelOrder;
-	}
+        return cancelOrder;
+    }
 }

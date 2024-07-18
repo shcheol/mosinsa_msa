@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="vl-parent" ref="loadingRef">
     <h3>상품 리뷰 ({{ reviewsNumberOfElements }})</h3>
 
-    <div class="comment-list">
+    <div class="comment-list" >
       <ul>
         <li v-for="(review) in reviews" :key="review">
           <div>
@@ -29,7 +29,8 @@
 
             <div class="reviewDislikes" style="display: inline;" @click="reviewDislikes(review.reviewId)"
                  v-if="reviewDislikesReactionInfoMap.has(review.reviewId)">
-              <img v-if="reviewDislikesReactionInfoMap.get(review.reviewId).hasReacted" src="../assets/mythumbsdown.png"
+              <img v-if="reviewDislikesReactionInfoMap.get(review.reviewId).hasReacted"
+                   src="../assets/mythumbsdown.png"
                    width="16" height="16"
                    style="display: inline; position: relative; left: 24px;" alt="dislikes"/>
               <img v-else src="../assets/thumbsdown.png" width="16" height="16"
@@ -39,7 +40,10 @@
                 }}</span>
             </div>
             <br/>
-            <button class="replyBtn" @click="showComments(review.reviewId, review)">답글 ({{ review.commentsCount }})</button>
+            <button class="replyBtn" @click="showComments(review.reviewId, review)">답글 ({{
+                review.commentsCount
+              }})
+            </button>
 
           </div>
         </li>
@@ -56,11 +60,19 @@ import apiBoard from "@/api/board";
 import dayjs from "dayjs";
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
+import {ref} from 'vue'
+
 
 export default {
   name: "Reviews",
   props: {
     propsValue: String
+  },
+  setup() {
+    const loadingRef = ref(null)
+    return {
+      loadingRef,
+    }
   },
   data() {
     return {
@@ -72,6 +84,7 @@ export default {
       reviewDislikesReactionInfoMap: new Map(),
       customerInfo: JSON.parse(localStorage.getItem("customer-info")),
       websocketClient: null,
+      commentLoader: null,
     }
   },
   watch: {
@@ -82,31 +95,71 @@ export default {
   },
   mounted() {
     this.connect();
+    window.addEventListener("beforeunload", function (event) {
+      console.log(event);
+      this.disconnect()
+    });
+    console.log("mounted " + this.loadingRef);
+
+    this.showLoadingOverlay();
+
   },
   beforeUnmount() {
     this.disconnect();
   },
   methods: {
+    showLoadingOverlay() {
+      console.log(this.$refs.loadingRef);
+      let loadingInterval = setInterval(function () {
+        if (this.$refs.loadingRef) {
+          this.commentLoader = this.$loading.show({
+            container: this.$refs.loadingRef,
+            width: 64,
+            height: 64,
+            loader: "spinner",
+            canCancel: true,
+            lockScroll: true,
+          }, {});
+          clearInterval(loadingInterval);
+        }
+      }.bind(this), 1000);
+
+    },
     connect() {
       const serverURL = "/websocket-service/register"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      console.log(`try connect socket. url: ${serverURL}`)
+
       this.stompClient.connect(
           {},
           frame => {
-            console.log('소켓 연결 성공', frame);
-            this.stompClient.subscribe(`/topic/${this.productId}`, response => {
-              console.log('구독으로 받은 메시지 입니다.', response.body);
-              const message = JSON.parse(response.body);
-              console.log(message)
-              this.processSubscribedMessage(message);
-            });
+            console.log('connect success', frame);
+            try {
+
+              let connectInterval = setInterval(function () {
+                console.log("timeout")
+                if (this.stompClient.connected) {
+                  this.stompClient.subscribe(`/topic/${this.productId}`, response => {
+                    console.log('subscribe message: ', response.body);
+                    const message = JSON.parse(response.body);
+                    console.log(message)
+                    this.processSubscribedMessage(message);
+                  });
+                  clearInterval(connectInterval);
+                }
+              }.bind(this), 1000);
+            } catch (e) {
+              console.log(e);
+            } finally {
+              this.commentLoader.hide();
+            }
           },
           error => {
-            console.log('소켓 연결 실패', error);
+            console.log('socket connect fail', error);
           }
       );
+
     },
     processSubscribedMessage(message) {
       if (message.type === "REVIEW") {
@@ -127,7 +180,9 @@ export default {
 
     },
     disconnect() {
-      this.stompClient.disconnect();
+      if (this.stompClient.connected) {
+        this.stompClient.disconnect();
+      }
     },
     totalReviewReaction(reviewId) {
       apiBoard.getReactionCount('REVIEW', reviewId, 'LIKES')

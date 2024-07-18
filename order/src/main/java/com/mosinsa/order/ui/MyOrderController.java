@@ -6,8 +6,6 @@ import com.mosinsa.order.query.application.OrderQueryService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.SearchCondition;
-import com.mosinsa.order.ui.response.BaseResponse;
-import com.mosinsa.order.ui.response.GlobalResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,19 +28,19 @@ public class MyOrderController {
 
 
     @GetMapping
-    public ResponseEntity<BaseResponse> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<OrderSummary>> findMyOrders(SearchCondition condition, @PageableDefault Pageable pageable) {
         log.info("condition {}", condition);
         Page<OrderSummary> orderCustomer = orderQueryService.findMyOrdersByCondition(condition, pageable);
-        return GlobalResponseEntity.success(orderCustomer);
+        return ResponseEntity.ok(orderCustomer);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<BaseResponse> orderDetails(@PathVariable String orderId) {
+    public ResponseEntity<OrderDetail> orderDetails(@PathVariable String orderId) {
         if (!StringUtils.hasText(orderId)) {
             throw new OrderException(OrderError.VALIDATION_ERROR);
         }
         OrderDetail orderDto = orderQueryService.getOrderDetails(orderId);
-        return GlobalResponseEntity.success(orderDto);
+        return ResponseEntity.ok(orderDto);
     }
 
 }

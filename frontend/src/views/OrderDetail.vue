@@ -62,7 +62,7 @@ export default {
     apiBoard.getOrderDetails(this.$route.params.id)
         .then((response) => {
           console.log(response);
-          this.order = response.data.response;
+          this.order = response.data;
         })
         .catch(function (e) {
           console.log(e);

@@ -49,7 +49,7 @@ export default {
     apiBoard.getProducts()
         .then((response) => {
           console.log(response.data);
-          this.products = response.data.response.content;
+          this.products = response.data.content;
         })
         .catch(function (e) {
           console.log(e);
@@ -67,7 +67,7 @@ export default {
         apiBoard.getProducts()
             .then((response) => {
               console.log(response.data);
-              this.products = response.data.response.content;
+              this.products = response.data.content;
             })
             .catch(function (e) {
               console.log(e);
@@ -78,7 +78,7 @@ export default {
         apiBoard.getProductsInCategory(id)
             .then((response) => {
               console.log(response.data);
-              this.products = response.data.response.content;
+              this.products = response.data.content;
             })
             .catch(function (e) {
               console.log(e);
