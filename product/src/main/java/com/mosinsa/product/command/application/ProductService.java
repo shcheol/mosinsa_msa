@@ -54,13 +54,10 @@ public class ProductService {
         List<StockOperand> stockOperands = getStockOperands(orderProducts);
         StockResult stockResult = stockService.tryDecrease(customerId, orderId, stockOperands);
 
-        if (StockResult.SUCCESS.equals(stockResult)){
-            checkSoldOut(products);
+        if (stockResult.equals(StockResult.FAIL)){
+			throw new RuntimeException();
         }
-
-        if (StockResult.FAIL.equals(stockResult)){
-            throw new RuntimeException();
-        }
+		checkSoldOut(products);
     }
 
     private void checkSoldOut(List<Product> products) {

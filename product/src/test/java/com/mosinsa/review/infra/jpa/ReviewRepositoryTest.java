@@ -3,17 +3,16 @@ package com.mosinsa.review.infra.jpa;
 import com.mosinsa.review.command.domain.Comment;
 import com.mosinsa.review.command.domain.Review;
 import com.mosinsa.review.command.domain.ReviewId;
-import com.netflix.discovery.converters.Auto;
 import com.querydsl.core.Tuple;
+import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -24,29 +23,24 @@ class ReviewRepositoryTest {
 	ReviewRepository repository;
 
 	@Test
-	@Transactional
-	void lazyLoading(){
+	void throwLazyInitializationException() {
 		Review reviewId1 = repository.findById(ReviewId.of("reviewId1")).get();
 		List<Comment> comments = reviewId1.getComments();
-		for (Comment comment : comments) {
-			System.out.println(comment);
-		}
+
+		assertThrows(LazyInitializationException.class, () -> comments.size());
 	}
 
 	@Test
-	void joinFetch(){
+	void joinFetch() {
 		Review review = repository.findReviewByIdAndCommentsJoinFetch(ReviewId.of("reviewId1"));
-		List<Comment> comments = review.getComments();
-		for (Comment comment : comments) {
-			System.out.println(comment);
-		}
+		assertThat(review.getComments().size()).isEqualTo(4);
 	}
 
 	@Test
-	void join(){
+	void join() {
 		List<Tuple> review = repository.findReviewByIdAndComments(ReviewId.of("reviewId1"));
 
-		System.out.println(review.size());
+		assertThat(review.size()).isEqualTo(4);
 
 	}
 

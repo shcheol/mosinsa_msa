@@ -1,13 +1,11 @@
 package com.mosinsa.product.infra.repository;
 
-import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.ProductId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, ProductId>, CustomProductRepository {
