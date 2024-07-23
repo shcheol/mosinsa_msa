@@ -28,13 +28,13 @@ public class ProductId implements Serializable {
 
 
 	public static ProductId of(String id) {
+		if (!StringUtils.hasText(id)){
+			throw new IllegalArgumentException("invalid Id value");
+		}
 		return new ProductId(id);
 	}
 
 	private ProductId(String id){
-		if (!StringUtils.hasText(id)){
-			throw new IllegalArgumentException("invalid Id value");
-		}
 		this.id = id;
 	}
 

@@ -4,6 +4,7 @@ import com.mosinsa.category.Category;
 import com.mosinsa.category.CategoryService;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
+import com.mosinsa.product.command.domain.InvalidStockException;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.StockStatus;
@@ -47,17 +48,17 @@ public class ProductService {
 
         List<Product> products = getProducts(orderProducts);
 
-        if(!validateStockStatus(products)){
+        if (!validateStockStatus(products)) {
             throw new RuntimeException();
         }
 
         List<StockOperand> stockOperands = getStockOperands(orderProducts);
         StockResult stockResult = stockService.tryDecrease(customerId, orderId, stockOperands);
 
-        if (stockResult.equals(StockResult.FAIL)){
-			throw new RuntimeException();
+        if (StockResult.FAIL.equals(stockResult)) {
+            throw new InvalidStockException();
         }
-		checkSoldOut(products);
+        checkSoldOut(products);
     }
 
     private void checkSoldOut(List<Product> products) {
@@ -82,26 +83,24 @@ public class ProductService {
     @Transactional
     public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
         log.info("cancelOrder: {}", requests);
-		List<Product> products = getProductList(requests);
+        List<Product> products = getProductList(requests);
 
 
-		List<StockOperand> stockOperands = requests.stream().map(r -> new StockOperand(r.productId(), r.quantity())).toList();
-		StockResult stockResult = stockService.tryIncrease(customerId, orderId, stockOperands);
+        List<StockOperand> stockOperands = requests.stream().map(r -> new StockOperand(r.productId(), r.quantity())).toList();
+        StockResult stockResult = stockService.tryIncrease(customerId, orderId, stockOperands);
 
-		if (StockResult.SUCCESS.equals(stockResult)){
-			products.forEach(product -> product.getStock().updateAvailable());
-		}
+        if (StockResult.FAIL.equals(stockResult)) {
+            throw new InvalidStockException();
+        }
 
-		if (StockResult.FAIL.equals(stockResult)){
-			throw new RuntimeException();
-		}
+        products.forEach(product -> product.getStock().updateAvailable());
     }
 
-	private List<Product> getProductList(List<CancelOrderProductRequest> requests) {
-		return requests.stream().filter(request ->
-						stockService.currentStock(request.productId()) == 0 && request.quantity() > 0)
-				.map(req -> productRepository.findProductDetailById(ProductId.of(req.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)))
-				.toList();
-	}
+    private List<Product> getProductList(List<CancelOrderProductRequest> requests) {
+        return requests.stream().filter(request ->
+                        stockService.currentStock(request.productId()) == 0 && request.quantity() > 0)
+                .map(req -> productRepository.findProductDetailById(ProductId.of(req.productId()))
+                        .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)))
+                .toList();
+    }
 }

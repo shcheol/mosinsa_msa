@@ -6,17 +6,17 @@ import com.mosinsa.reaction.infra.kafka.events.CommentLikesEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentPayloadGenerator implements PayloadGenerator{
+public class CommentPayloadGenerator implements PayloadGenerator {
 
-	@Override
-	public Object generate(String channel, String targetId, ReactionType reactionType, boolean canceled) {
+    @Override
+    public Object generate(String channel, String targetId, ReactionType reactionType, boolean canceled) {
 
-		if (reactionType.equals(ReactionType.LIKES)) {
-			return new CommentLikesEvent(channel, targetId, canceled);
-		}
-		if (reactionType.equals(ReactionType.DISLIKES)){
-			return new CommentDislikesEvent(channel, targetId, canceled);
-		}
-		throw new RuntimeException();
-	}
+        if (ReactionType.LIKES.equals(reactionType)) {
+            return new CommentLikesEvent(channel, targetId, canceled);
+        }
+        if (ReactionType.DISLIKES.equals(reactionType)) {
+            return new CommentDislikesEvent(channel, targetId, canceled);
+        }
+        throw new PayloadGenerateFailException();
+    }
 }

@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewPayloadGenerator implements PayloadGenerator {
-	@Override
-	public Object generate(String channel, String targetId, ReactionType reactionType, boolean canceled) {
-		if (reactionType.equals(ReactionType.LIKES)) {
-			return new ReviewLikesEvent(channel, targetId, canceled);
-		}
-		if (reactionType.equals(ReactionType.DISLIKES)) {
-			return new ReviewDislikesEvent(channel, targetId, canceled);
-		}
-		throw new RuntimeException();
-	}
+    @Override
+    public Object generate(String channel, String targetId, ReactionType reactionType, boolean canceled) {
+        if (ReactionType.LIKES.equals(reactionType)) {
+            return new ReviewLikesEvent(channel, targetId, canceled);
+        }
+        if (ReactionType.DISLIKES.equals(reactionType)) {
+            return new ReviewDislikesEvent(channel, targetId, canceled);
+        }
+        throw new PayloadGenerateFailException();
+    }
 }

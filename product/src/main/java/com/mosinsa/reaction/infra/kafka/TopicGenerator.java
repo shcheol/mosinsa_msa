@@ -10,7 +10,10 @@ public class TopicGenerator {
 	private TopicGenerator() {
 	}
 
-	public static String getTopic(TargetEntity target, ReactionType reactionType){
+	public static String generate(TargetEntity target, ReactionType reactionType){
+		if (target == null || reactionType == null){
+			throw new TopicGenerateFailException();
+		}
 		return PREFIX +target.name().toLowerCase() + "-"+reactionType.name().toLowerCase();
 	}
 }

@@ -21,7 +21,7 @@ public class ProduceTemplate {
 	public void produce(TargetEntity target, String targetId, ReactionType reactionType, boolean canceled) {
 
 		// topic 생성
-		String topic = TopicGenerator.getTopic(target, reactionType);
+		String topic = TopicGenerator.generate(target, reactionType);
 
 		//채널
 		String channel = channelProviderMap.get(target.name().toLowerCase() + "ChannelProvider").provide(targetId);

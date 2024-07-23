@@ -28,13 +28,13 @@ public class ReactionId implements Serializable {
 
 
 	public static ReactionId of(String id) {
-		return new ReactionId(id);
-	}
-
-	public ReactionId(String id) {
 		if (!StringUtils.hasText(id)){
 			throw new IllegalArgumentException("invalid Id value");
 		}
+		return new ReactionId(id);
+	}
+
+	private ReactionId(String id) {
 		this.id = id;
 	}
 

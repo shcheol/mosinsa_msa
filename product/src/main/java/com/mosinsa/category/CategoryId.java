@@ -27,13 +27,13 @@ public class CategoryId implements Serializable {
 
 
     public static CategoryId of(String id) {
+        if (!StringUtils.hasText(id)){
+            throw new IllegalArgumentException("invalid Id value");
+        }
         return new CategoryId(id);
     }
 
     private CategoryId(String id){
-		if (!StringUtils.hasText(id)){
-			throw new IllegalArgumentException("invalid Id value");
-		}
 		this.id = id;
     }
 
