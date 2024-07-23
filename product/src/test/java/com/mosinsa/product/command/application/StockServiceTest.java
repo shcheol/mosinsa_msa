@@ -87,9 +87,9 @@ class StockServiceTest {
         es.shutdown();
 
         long afterStock = stockService.currentStock(productIdA);
-        assertThat(afterStock).isEqualTo(0);
+        assertThat(afterStock).isZero();
         long afterStock2 = stockService.currentStock(productIdB);
-        assertThat(afterStock2).isEqualTo(0);
+        assertThat(afterStock2).isZero();
     }
 
     @Test

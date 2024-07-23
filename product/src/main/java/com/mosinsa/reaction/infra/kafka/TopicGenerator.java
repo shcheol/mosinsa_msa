@@ -7,8 +7,10 @@ public class TopicGenerator {
 
 	private static final String PREFIX = "mosinsa-";
 
-	public static String getTopic(TargetEntity target, ReactionType reactionType){
+	private TopicGenerator() {
+	}
 
+	public static String getTopic(TargetEntity target, ReactionType reactionType){
 		return PREFIX +target.name().toLowerCase() + "-"+reactionType.name().toLowerCase();
 	}
 }

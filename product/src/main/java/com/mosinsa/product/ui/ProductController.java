@@ -6,12 +6,9 @@ import com.mosinsa.product.command.application.ProductService;
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.query.ProductQueryService;
-import com.mosinsa.product.ui.request.CancelOrderProductRequests;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequests;
 import com.mosinsa.product.ui.request.SearchCondition;
-import com.mosinsa.product.ui.response.BaseResponse;
-import com.mosinsa.product.ui.response.GlobalResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -57,15 +54,6 @@ public class ProductController {
 
 		log.info("orderProductRequests {}", request);
 		productService.orderProduct(customerInfo.id(), request.orderId(), request.orderProductRequests());
-
-		return ResponseEntity.ok().build();
-	}
-
-	@Deprecated
-	@PostMapping("/cancel")
-	public ResponseEntity<Void> cancelOrderProducts(@RequestBody CancelOrderProductRequests request, @Login CustomerInfo customerInfo) {
-
-		productService.cancelOrderProduct(customerInfo.id(), "", request.cancelOrderProductRequests());
 
 		return ResponseEntity.ok().build();
 	}

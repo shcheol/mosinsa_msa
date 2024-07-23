@@ -38,14 +38,6 @@ public class Reaction extends BaseEntity {
 		return reaction;
 	}
 
-	public void active(){
-		super.active();
-	}
-
-	public void delete(){
-		super.delete();
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

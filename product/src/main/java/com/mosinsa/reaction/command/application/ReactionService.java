@@ -16,7 +16,7 @@ public class ReactionService {
 
 	private final ReactionInfoRepository repository;
 
-	private final String REACTION_LOCK_KEY= "reaction_lock_key";
+	private static final String REACTION_LOCK_KEY= "reaction_lock_key";
 
 	@RedissonLock(value = REACTION_LOCK_KEY)
 	@Transactional
