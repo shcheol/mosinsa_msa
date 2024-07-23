@@ -68,13 +68,13 @@ public class Stock {
 
 	private static void inputValidCheck(long value) {
 		if (value < 1L) {
-			throw new InvalidStockException("수량은 0보다 큰 값이 필요합니다.");
+			throw new IllegalArgumentException("수량은 0보다 큰 값이 필요합니다.");
 		}
 	}
 
 	private static void remainValidCheck(long value) {
 		if (value < 0L) {
-			throw new InvalidStockException("수량이 부족합니다.");
+			throw new InvalidStockException();
 		}
 	}
 

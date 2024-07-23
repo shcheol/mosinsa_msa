@@ -22,7 +22,7 @@ class ProductIdTest {
 
 
 	@Test
-	void idEqualsAndHashCode(){
+	void idEqualsAndHashCode() {
 		String value = "id";
 		ProductId idA = ProductId.of(value);
 		ProductId idB = ProductId.of(value);
@@ -32,6 +32,9 @@ class ProductIdTest {
 
 		ProductId idC = ProductId.of("idxx");
 		assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
+
+		ProductId protectedConstructor = new ProductId();
+		assertThat(protectedConstructor.hashCode()).isZero();
 	}
 	static class TestClass{
 

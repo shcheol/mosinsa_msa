@@ -33,15 +33,14 @@ class ReviewRepositoryTest {
 	@Test
 	void joinFetch() {
 		Review review = repository.findReviewByIdAndCommentsJoinFetch(ReviewId.of("reviewId1"));
-		assertThat(review.getComments().size()).isEqualTo(4);
+		assertThat(review.getComments()).hasSize(4);
 	}
 
 	@Test
 	void join() {
 		List<Tuple> review = repository.findReviewByIdAndComments(ReviewId.of("reviewId1"));
 
-		assertThat(review.size()).isEqualTo(4);
-
+		assertThat(review).hasSize(4);
 	}
 
 }

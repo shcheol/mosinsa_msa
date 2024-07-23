@@ -27,13 +27,13 @@ public class ReviewId implements Serializable {
 
 
     public static ReviewId of(String id) {
+        if (!StringUtils.hasText(id)){
+            throw new IllegalArgumentException("invalid Id value");
+        }
         return new ReviewId(id);
     }
 
     private ReviewId(String id){
-        if (!StringUtils.hasText(id)){
-            throw new IllegalArgumentException("invalid Id value");
-        }
         this.id = id;
     }
 

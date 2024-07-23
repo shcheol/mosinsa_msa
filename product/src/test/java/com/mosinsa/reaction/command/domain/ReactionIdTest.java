@@ -1,5 +1,6 @@
-package com.mosinsa.reaction.domain;
+package com.mosinsa.reaction.command.domain;
 
+import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.reaction.command.domain.ReactionId;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,9 @@ class ReactionIdTest {
 
 		ReactionId idC = ReactionId.of("idxx");
 		assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
+
+		ReactionId protectedConstructor = new ReactionId();
+		assertThat(protectedConstructor.hashCode()).isZero();
 	}
 	static class TestClass{
 

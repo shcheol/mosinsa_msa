@@ -5,9 +5,12 @@ import com.mosinsa.reaction.infra.kafka.events.ProductLikesEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductPayloadGenerator implements PayloadGenerator{
-	@Override
-	public Object generate(String channel, String targetId, ReactionType reactionType, boolean canceled) {
-		return new ProductLikesEvent(channel, canceled);
-	}
+public class ProductPayloadGenerator implements PayloadGenerator {
+    @Override
+    public Object generate(String channel, String targetId, ReactionType reactionType, boolean canceled) {
+        if (ReactionType.LIKES.equals(reactionType)) {
+            return new ProductLikesEvent(channel, canceled);
+        }
+        throw new PayloadGenerateFailException();
+    }
 }

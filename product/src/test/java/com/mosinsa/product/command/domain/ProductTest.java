@@ -24,7 +24,7 @@ class ProductTest {
 	@Test
 	void invalidStockException(){
 		Category of = Category.of("category1");
-		assertThrows(InvalidStockException.class, () -> Product.create("name", 100, of, 0));
+		assertThrows(IllegalArgumentException.class, () -> Product.create("name", 100, of, 0));
 	}
 
 	@Test
