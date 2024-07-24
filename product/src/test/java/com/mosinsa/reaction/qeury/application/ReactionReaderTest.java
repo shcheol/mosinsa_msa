@@ -21,12 +21,13 @@ class ReactionReaderTest {
 	@Test
 	void hasReacted() {
 		ReactionSearchCondition condition1 = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1", ReactionType.LIKES, "memberId1");
-		boolean b = reader.hasReacted(condition1);
-		assertThat(b).isFalse();
+		assertThat(reader.hasReacted(condition1)).isFalse();
 
 		ReactionSearchCondition condition2 = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId1", ReactionType.LIKES, "memberId2");
-		boolean a = reader.hasReacted(condition2);
-		assertThat(a).isTrue();
+		assertThat(reader.hasReacted(condition2)).isTrue();
+
+		ReactionSearchCondition condition3 = new ReactionSearchCondition(TargetEntity.PRODUCT, "productId11234132423", ReactionType.LIKES, "memberId2");
+		assertThat(reader.hasReacted(condition3)).isFalse();
 	}
 
 	@Test

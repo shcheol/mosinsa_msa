@@ -2,7 +2,9 @@ package com.mosinsa.product.command.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -24,6 +26,10 @@ public class StockHistory {
 
 	@Enumerated(EnumType.STRING)
 	private StockHistoryType type;
+
+	@CreatedDate
+	@Column(updatable = false)
+	private LocalDateTime createdDate;
 
 	protected StockHistory() {
 	}

@@ -25,7 +25,8 @@ class CategoryRepositoryTest {
 		Category testxxxx = Category.of("testxxxx");
 		Category protectedConstructor = new Category();
 
-		assertThat(test).isNotEqualTo(testxxxx).isNotEqualTo(protectedConstructor);
+		assertThat(test).isNotEqualTo(testxxxx);
+		assertThat(protectedConstructor).isNotEqualTo(test);
 
 	}
 }
