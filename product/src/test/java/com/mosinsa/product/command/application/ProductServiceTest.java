@@ -2,7 +2,6 @@ package com.mosinsa.product.command.application;
 
 import com.mosinsa.common.ex.CategoryException;
 import com.mosinsa.product.command.domain.StockStatus;
-import com.mosinsa.product.infra.kafka.OrderCanceledEvent;
 import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.query.ProductQueryService;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
@@ -40,7 +39,7 @@ class ProductServiceTest {
 		ProductDetailDto product = productService.createProduct(createProductRequest);
 		assertThat(product.getName()).isEqualTo("product");
 		assertThat(product.getPrice()).isEqualTo(3000);
-		assertThat(product.getStock()).isEqualTo(10);
+		assertThat(product.getTotalStock()).isEqualTo(10);
 		assertThat(stockService.currentStock(product.getProductId())).isEqualTo(10);
 	}
 
@@ -179,5 +178,6 @@ class ProductServiceTest {
 		assertThat(stockService.currentStock(productId)).isEqualTo(10);
 		assertThat(productQueryService.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.ON);
 	}
+
 
 }

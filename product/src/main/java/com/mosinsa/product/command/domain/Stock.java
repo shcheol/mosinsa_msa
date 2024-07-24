@@ -18,7 +18,6 @@ public class Stock {
 	private String id;
 
 	private long total;
-	private long remain;
 
 	@Enumerated(EnumType.STRING)
 	private StockStatus status;
@@ -29,33 +28,8 @@ public class Stock {
 		Stock stock = new Stock();
 		stock.id = UUID.randomUUID().toString();
 		stock.total = total;
-		stock.remain = total;
 		stock.status = StockStatus.ON;
 		return stock;
-	}
-
-	public void increase(final long value) {
-		inputValidCheck(value);
-
-		this.total = total + value;
-		this.remain = remain + value;
-	}
-
-	public void decrease(final long value) {
-		inputValidCheck(value);
-
-		long decreaseTotal = total - value;
-		long decreaseRemain = remain - value;
-		remainValidCheck(decreaseTotal);
-		remainValidCheck(decreaseRemain);
-
-		this.total = decreaseTotal;
-		this.remain = decreaseRemain;
-	}
-
-	public void syncCurrent(final long value) {
-		inputValidCheck(value);
-		this.remain = value;
 	}
 
 	public void updateAvailable(){
@@ -69,12 +43,6 @@ public class Stock {
 	private static void inputValidCheck(long value) {
 		if (value < 1L) {
 			throw new IllegalArgumentException("수량은 0보다 큰 값이 필요합니다.");
-		}
-	}
-
-	private static void remainValidCheck(long value) {
-		if (value < 0L) {
-			throw new InvalidStockException();
 		}
 	}
 

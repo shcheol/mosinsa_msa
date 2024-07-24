@@ -32,7 +32,6 @@ create table stock
 (
     stock_id varchar(255) not null,
     total    bigint       not null,
-    remain    bigint       not null,
     status   varchar(255) not null,
     primary key (stock_id)
 ) engine = InnoDB;
@@ -40,11 +39,12 @@ create table stock
 create table stock_history
 (
     stock_history_id varchar(255) not null,
-    order_num         varchar(255) not null,
-    member_id         varchar(255) not null,
-    product_id        varchar(255) not null,
+    order_num        varchar(255) not null,
+    member_id        varchar(255) not null,
+    product_id       varchar(255) not null,
     quantity         bigint,
     type             varchar(255) not null,
+    created_date     datetime(6),
     primary key (stock_history_id)
 ) engine = InnoDB;
 

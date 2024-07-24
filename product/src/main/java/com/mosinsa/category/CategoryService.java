@@ -9,18 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class CategoryService {
+@Transactional(readOnly = true)
+public class CategoryService implements CategoryPort {
 
 	private final CategoryRepository repository;
 
 	@Transactional
 	public CategoryDto createCategory(CreateCategoryRequest request) {
-		return CategoryDto.convert(
-				repository.save(Category.of(request.name()))
-		);
+		return CategoryDto.convert(repository.save(Category.of(request.name())));
 	}
 
 	public Category getCategory(String categoryId) {

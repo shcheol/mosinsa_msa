@@ -23,13 +23,12 @@ public class RedissonLockAspect {
 
 		RLock lock = redissonClient.getLock(redissonLock.value());
 		try {
-			boolean lockAvailable = lock.tryLock(redissonLock.waitTime(), redissonLock.leaseTime(), redissonLock.timeUnit());
-			if (!lockAvailable) {
+			if (!lock.tryLock(redissonLock.waitTime(), redissonLock.leaseTime(), redissonLock.timeUnit())) {
 				throw new TryLockFailException();
 			}
 			return joinPoint.proceed();
 		} finally {
-			if (lock.isHeldByCurrentThread()) {
+			if (lock.isLocked() && lock.isHeldByCurrentThread()) {
 				lock.unlock();
 			}
 		}

@@ -35,6 +35,9 @@ class ProductTest {
 
 		assertThat(productA).isEqualTo(productA)
 				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+
+		Product protectedConstructor = new Product();
+		assertThat(protectedConstructor).isNotEqualTo(productA);
 	}
 
 }

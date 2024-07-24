@@ -1,7 +1,7 @@
 package com.mosinsa.product.command.application;
 
 import com.mosinsa.category.Category;
-import com.mosinsa.category.CategoryService;
+import com.mosinsa.category.CategoryPort;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.InvalidStockException;
@@ -26,19 +26,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
-    private final StockService stockService;
+    private final CategoryPort categoryPort;
+    private final StockPort stockPort;
 
     @Transactional
     public ProductDetailDto createProduct(CreateProductRequest request) {
-        Category category = categoryService.getCategory(request.category());
+        Category category = categoryPort.getCategory(request.category());
 
         Product product = productRepository.save(
                 Product.create(request.name(),
                         request.price(),
                         category,
                         request.stock()));
-        stockService.setStock(product.getId().getId(), request.stock());
+        stockPort.setStock(product.getId().getId(), request.stock());
         return new ProductDetailDto(product);
     }
 
@@ -53,7 +53,7 @@ public class ProductService {
         }
 
         List<StockOperand> stockOperands = getStockOperands(orderProducts);
-        StockResult stockResult = stockService.tryDecrease(customerId, orderId, stockOperands);
+        StockResult stockResult = stockPort.tryDecrease(customerId, orderId, stockOperands);
 
         if (StockResult.FAIL.equals(stockResult)) {
             throw new InvalidStockException();
@@ -62,7 +62,7 @@ public class ProductService {
     }
 
     private void checkSoldOut(List<Product> products) {
-        products.stream().filter(product -> stockService.currentStock(product.getId().getId()) == 0)
+        products.stream().filter(product -> stockPort.currentStock(product.getId().getId()) == 0)
                 .forEach(p -> p.getStock().updateSoldOut());
     }
 
@@ -87,7 +87,7 @@ public class ProductService {
 
 
         List<StockOperand> stockOperands = requests.stream().map(r -> new StockOperand(r.productId(), r.quantity())).toList();
-        StockResult stockResult = stockService.tryIncrease(customerId, orderId, stockOperands);
+        StockResult stockResult = stockPort.tryIncrease(customerId, orderId, stockOperands);
 
         if (StockResult.FAIL.equals(stockResult)) {
             throw new InvalidStockException();
@@ -98,7 +98,7 @@ public class ProductService {
 
     private List<Product> getProductList(List<CancelOrderProductRequest> requests) {
         return requests.stream().filter(request ->
-                        stockService.currentStock(request.productId()) == 0 && request.quantity() > 0)
+                        stockPort.currentStock(request.productId()) == 0 && request.quantity() > 0)
                 .map(req -> productRepository.findProductDetailById(ProductId.of(req.productId()))
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)))
                 .toList();

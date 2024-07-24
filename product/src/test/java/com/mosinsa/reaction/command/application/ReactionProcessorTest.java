@@ -42,6 +42,7 @@ class ReactionProcessorTest {
         assertThat(reaction.getReactionType()).isEqualTo(ReactionType.LIKES);
         assertThat(reaction.getTargetType()).isEqualTo(TargetEntity.PRODUCT);
         assertThat(reaction.getTargetId()).isEqualTo("productId1xx");
+		assertThat(reaction.getMemberId()).isEqualTo("memberId1");
         assertThat(reaction.isActive()).isTrue();
     }
 

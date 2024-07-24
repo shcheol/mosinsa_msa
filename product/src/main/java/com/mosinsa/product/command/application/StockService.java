@@ -13,19 +13,22 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class StockService {
+public class StockService implements StockPort {
 
     private final StockHistoryRepository historyRepository;
     private final StockOperation operation;
 
+	@Override
     public long currentStock(String productId) {
         return operation.get(productId);
     }
 
+	@Override
     public void setStock(String key, long stock) {
         operation.set(key, stock);
     }
 
+	@Override
     @Transactional
     public StockResult tryDecrease(String customerId, String orderId, List<StockOperand> stockOperands) {
 
@@ -41,6 +44,7 @@ public class StockService {
         return StockResult.FAIL;
     }
 
+	@Override
     @Transactional
     public StockResult tryIncrease(String customerId, String orderId, List<StockOperand> stockOperands) {
 

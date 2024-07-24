@@ -46,14 +46,6 @@ public class Product {
         return product;
     }
 
-    public void increaseStock(long stock) {
-        this.stock.increase(stock);
-    }
-
-    public void decreaseStock(long stock) {
-        this.stock.decrease(stock);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
