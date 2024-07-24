@@ -35,7 +35,7 @@ sonar {
         property 'sonar.java.source', 17
         property 'encoding', 'UTF-8'
         property 'charSet', 'UTF-8'
-        property 'sonar.exclusions', '**/dto/**,**/ex/**,**/request/**,**/response/**,**/config/**,**/event/**,**/*Exception.java, ' +
+        property 'sonar.exclusions', '**/dto/**,**/ex/**,**/request/**,**/response/**,**/config/**,**/event/**,**/*Exception.java, **/*Info.java,' +
                 '**/*Dto.java, **/*Dtos.java, **/*Form.java, **/*Request.java,  **/*Requests.java, **/*Response.java, **/*Responses.java, **/*Event.java, **/*Application.java'
     }
 }

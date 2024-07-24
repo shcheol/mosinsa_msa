@@ -1,7 +1,6 @@
 package com.mosinsa.reaction.command.domain;
 
-import com.mosinsa.product.command.domain.ProductId;
-import com.mosinsa.reaction.command.domain.ReactionId;
+import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,8 +35,5 @@ class ReactionIdTest {
 
 		ReactionId protectedConstructor = new ReactionId();
 		assertThat(protectedConstructor.hashCode()).isZero();
-	}
-	static class TestClass{
-
 	}
 }

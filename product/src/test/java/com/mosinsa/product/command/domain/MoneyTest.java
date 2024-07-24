@@ -1,5 +1,6 @@
 package com.mosinsa.product.command.domain;
 
+import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +41,5 @@ class MoneyTest {
                 .isNotEqualTo(null).isNotEqualTo(new TestClass());
         Money moneyC = Money.of(333);
         assertThat(moneyA).isNotEqualTo(moneyC);
-    }
-    static class TestClass{
-
     }
 }
