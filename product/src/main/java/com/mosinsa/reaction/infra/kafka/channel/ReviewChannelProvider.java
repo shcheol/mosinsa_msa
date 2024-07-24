@@ -1,5 +1,7 @@
 package com.mosinsa.reaction.infra.kafka.channel;
 
+import com.mosinsa.common.ex.ReviewError;
+import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.review.command.domain.ReviewId;
 import com.mosinsa.review.infra.jpa.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,7 @@ public class ReviewChannelProvider implements ChannelProvider{
 	@Override
 	public String provide(String targetId) {
 		return repository.findById(ReviewId.of(targetId))
-				.orElseThrow()
+				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_REVIEW))
 				.getProductId();
 	}
 }

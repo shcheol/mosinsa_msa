@@ -1,5 +1,7 @@
 package com.mosinsa.reaction.infra.kafka.channel;
 
+import com.mosinsa.common.ex.ReviewError;
+import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.review.infra.jpa.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,7 +15,7 @@ public class CommentChannelProvider implements ChannelProvider {
 	@Override
 	public String provide(String targetId) {
 		return repository.findById(targetId)
-				.orElseThrow()
+				.orElseThrow(() -> new ReviewException(ReviewError.NOT_FOUNT_COMMENT))
 				.getReview().getReviewId().getId();
 	}
 }

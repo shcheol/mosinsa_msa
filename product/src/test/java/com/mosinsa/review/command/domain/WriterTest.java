@@ -20,8 +20,11 @@ class WriterTest {
 		Writer protectedConstructor = new Writer();
 		assertThat(protectedConstructor).isNotEqualTo(a).doesNotHaveSameHashCodeAs(a);
 
-		Writer c = Writer.of("idxxx", "namexxx");
+		Writer c = Writer.of("idxxx", "name");
 		assertThat(a).isNotEqualTo(c).doesNotHaveSameHashCodeAs(c);
+
+		Writer d = Writer.of("id", "namexxx");
+		assertThat(a).isNotEqualTo(d).doesNotHaveSameHashCodeAs(d);
 	}
 
 }

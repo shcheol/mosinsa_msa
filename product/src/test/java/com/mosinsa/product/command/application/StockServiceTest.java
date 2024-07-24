@@ -1,12 +1,15 @@
 package com.mosinsa.product.command.application;
 
+import com.mosinsa.product.command.domain.StockHistory;
 import com.mosinsa.product.infra.redis.StockOperand;
 import com.mosinsa.product.infra.repository.StockHistoryRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -51,7 +54,8 @@ class StockServiceTest {
 		assertThat(stockService.currentStock(productIdA)).isEqualTo(totalQuantity - 1);
 		assertThat(stockService.currentStock(productIdB)).isEqualTo(totalQuantity - 3);
 
-		assertThat(repository.findStockHistoriesByOrderNum(orderId)).hasSize(2);
+		List<StockHistory> stockHistoriesByOrderNum = repository.findStockHistoriesByOrderNum(orderId);
+		assertThat(stockHistoriesByOrderNum).hasSize(2);
 	}
 
 	@Test

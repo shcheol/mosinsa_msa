@@ -118,7 +118,7 @@ class ReviewServiceTest {
 		Review a = reviewRepository.findById(ReviewId.of(id)).get();
 		Review b = reviewRepository.findById(ReviewId.of(id)).get();
 
-		assertThat(a).isEqualTo(b).hasSameHashCodeAs(b)
+		assertThat(a).isEqualTo(a).isEqualTo(b).hasSameHashCodeAs(b)
 				.isNotEqualTo(null).isNotEqualTo(new TestClass());
 
 		Review c = reviewRepository.findById(ReviewId.of("reviewId2")).get();
@@ -127,7 +127,7 @@ class ReviewServiceTest {
 
 		Comment d = commentRepository.findById("commentId1").get();
 		Comment e = commentRepository.findById("commentId1").get();
-		assertThat(d).isEqualTo(e).hasSameHashCodeAs(e)
+		assertThat(d).isEqualTo(d).isEqualTo(e).hasSameHashCodeAs(e)
 				.isNotEqualTo(null).isNotEqualTo(new TestClass());
 
 		Comment f = commentRepository.findById("commentId2").get();

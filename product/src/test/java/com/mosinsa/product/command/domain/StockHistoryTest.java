@@ -26,8 +26,8 @@ class StockHistoryTest {
 
 		StockHistory a = repository.findById(of.getId()).get();
 		StockHistory b = repository.findById(of.getId()).get();
-		assertThat(a).isEqualTo(b).hasSameHashCodeAs(b)
-				.isNotEqualTo(null).doesNotHaveSameHashCodeAs(new TestClass());
+		assertThat(a).isEqualTo(a).isEqualTo(b).hasSameHashCodeAs(b)
+				.isNotEqualTo(null).isNotEqualTo(new TestClass());
 
 		StockHistory c = repository.findById(of1.getId()).get();
 		assertThat(a).isNotEqualTo(c).doesNotHaveSameHashCodeAs(c);

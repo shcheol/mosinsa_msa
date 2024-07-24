@@ -42,6 +42,7 @@ public class StockHistory {
 		stockHistory.productId = productId;
 		stockHistory.quantity = quantity;
 		stockHistory.type = type;
+		stockHistory.createdDate = LocalDateTime.now();
 		return stockHistory;
 	}
 

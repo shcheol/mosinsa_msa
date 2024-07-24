@@ -32,7 +32,7 @@ class StockHistoryRepositoryTest {
 		assertThat(find.getProductId()).isEqualTo("productId");
 		assertThat(find.getQuantity()).isEqualTo(10);
 		assertThat(find.getType()).isEqualTo(StockHistoryType.MINUS);
-//		assertThat(find.getCreatedDate()).isBefore(LocalDateTime.now());
+		assertThat(find.getCreatedDate()).isBefore(LocalDateTime.now());
 
 	}
 
