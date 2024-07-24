@@ -1,5 +1,6 @@
 package com.mosinsa.review.command.domain;
 
+import com.mosinsa.code.TestClass;
 import com.mosinsa.product.command.domain.ProductId;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class ReviewIdTest {
 
 
     @Test
-    void idEqualsAndHashCode() throws IOException {
+    void idEqualsAndHashCode() {
         String value = "id";
         ReviewId idA = ReviewId.of(value);
         ReviewId idB = ReviewId.of(value);
@@ -39,9 +40,6 @@ class ReviewIdTest {
 
         ReviewId protectedConstructor = new ReviewId();
         assertThat(protectedConstructor.hashCode()).isZero();
-    }
-    static class TestClass{
-
     }
 
 }

@@ -14,11 +14,14 @@ class WriterTest {
 
 		Writer a = Writer.of("id", "name");
 		Writer b = Writer.of("id", "name");
-		assertThat(a).isEqualTo(b).hasSameHashCodeAs(b)
+
+		assertThat(a).isEqualTo(a).isEqualTo(b).hasSameHashCodeAs(b)
 				.isNotEqualTo(null).isNotEqualTo(new TestClass());
 		Writer protectedConstructor = new Writer();
 		assertThat(protectedConstructor).isNotEqualTo(a).doesNotHaveSameHashCodeAs(a);
 
+		Writer c = Writer.of("idxxx", "namexxx");
+		assertThat(a).isNotEqualTo(c).doesNotHaveSameHashCodeAs(c);
 	}
 
 }
