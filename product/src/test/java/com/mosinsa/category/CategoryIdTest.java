@@ -1,5 +1,6 @@
 package com.mosinsa.category;
 
+import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,10 +33,6 @@ class CategoryIdTest {
                 .isNotEqualTo(null).isNotEqualTo(new TestClass())
                 .doesNotHaveSameHashCodeAs(protectedConstructor);
         assertThat(protectedConstructor.hashCode()).isZero();
-
-    }
-
-    static class TestClass {
 
     }
 }

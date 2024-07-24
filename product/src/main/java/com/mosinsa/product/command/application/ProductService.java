@@ -49,7 +49,7 @@ public class ProductService {
         List<Product> products = getProducts(orderProducts);
 
         if (!validateStockStatus(products)) {
-            throw new RuntimeException();
+            throw new AlreadySoldOutException();
         }
 
         List<StockOperand> stockOperands = getStockOperands(orderProducts);

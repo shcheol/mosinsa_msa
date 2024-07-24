@@ -1,6 +1,7 @@
 package com.mosinsa.product.command.domain;
 
 import com.mosinsa.category.Category;
+import com.mosinsa.code.TestClass;
 import com.mosinsa.product.infra.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,6 @@ class ProductTest {
 
 		assertThat(productA).isEqualTo(productA)
 				.isNotEqualTo(null).isNotEqualTo(new TestClass());
-	}
-	static class TestClass{
-
 	}
 
 }

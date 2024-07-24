@@ -1,5 +1,6 @@
 package com.mosinsa.product.command.domain;
 
+import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,9 +36,6 @@ class ProductIdTest {
 
 		ProductId protectedConstructor = new ProductId();
 		assertThat(protectedConstructor.hashCode()).isZero();
-	}
-	static class TestClass{
-
 	}
 
 }
