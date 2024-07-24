@@ -1,5 +1,6 @@
 package com.mosinsa.review.command.application;
 
+import com.mosinsa.code.TestClass;
 import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.review.command.domain.Comment;
 import com.mosinsa.review.command.domain.Review;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -92,6 +94,7 @@ class ReviewServiceTest {
 
 		Comment after = commentRepository.findById(id).get();
 		assertThat(after.isDeleted()).isTrue();
+		assertThat(after.isDeleted()).isTrue();
 	}
 
 	@Test
@@ -100,7 +103,34 @@ class ReviewServiceTest {
 		Comment before = commentRepository.findById(id).get();
 		assertThat(before.isDeleted()).isFalse();
 
-		DeleteCommentRequest request = new DeleteCommentRequest("writerId1");
-		assertThrows(ReviewException.class, () -> reviewService.deleteComment("reviewId", id, request));
+		DeleteCommentRequest request = new DeleteCommentRequest("writerId1xxx");
+		assertThrows(ReviewException.class, () -> reviewService.deleteComment("reviewIdxxxx", id, request));
+
+		assertThrows(ReviewException.class, () -> reviewService.deleteComment("reviewId1", "commentId1xxx", request));
+
+		assertThrows(IllegalStateException.class, () -> reviewService.deleteComment("reviewId1", "commentId1", request));
+
+	}
+
+	@Test
+	void equalsAndHashcode(){
+		String id = "reviewId1";
+		Review a = reviewRepository.findById(ReviewId.of(id)).get();
+		Review b = reviewRepository.findById(ReviewId.of(id)).get();
+
+		assertThat(a).isEqualTo(b).hasSameHashCodeAs(b)
+				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+
+		Review c = reviewRepository.findById(ReviewId.of("reviewId2")).get();
+		assertThat(a).isNotEqualTo(c).doesNotHaveSameHashCodeAs(c);
+
+
+		Comment d = commentRepository.findById("commentId1").get();
+		Comment e = commentRepository.findById("commentId1").get();
+		assertThat(d).isEqualTo(e).hasSameHashCodeAs(e)
+				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+
+		Comment f = commentRepository.findById("commentId2").get();
+		assertThat(d).isNotEqualTo(f).doesNotHaveSameHashCodeAs(f);
 	}
 }
