@@ -2,7 +2,7 @@ package com.mosinsa.product.infra.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.product.command.application.ProductService;
+import com.mosinsa.product.command.application.ProductServiceImpl;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderCanceledEventHandler {
 
-	private final ProductService productService;
+	private final ProductServiceImpl productServiceImpl;
 
 	@KafkaListener(topics = "${mosinsa.topic.order.cancel}")
 	public void orderCanceledEvent(String message) throws JsonProcessingException {
@@ -24,6 +24,6 @@ public class OrderCanceledEventHandler {
 				.map(orderedProduct -> new CancelOrderProductRequest(orderedProduct.productId(), orderedProduct.quantity()))
 				.toList();
 
-		productService.cancelOrderProduct(orderCanceledEvent.customerId(), orderCanceledEvent.orderId(), cancelOrderProductRequests);
+		productServiceImpl.cancelOrderProduct(orderCanceledEvent.customerId(), orderCanceledEvent.orderId(), cancelOrderProductRequests);
 	}
 }

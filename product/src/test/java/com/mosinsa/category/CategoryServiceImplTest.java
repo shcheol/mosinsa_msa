@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
-class CategoryServiceTest {
+class CategoryServiceImplTest {
 
 	@Autowired
-	CategoryService service;
+	CategoryServiceImpl service;
 
 	@Test
 	void createCategory() {

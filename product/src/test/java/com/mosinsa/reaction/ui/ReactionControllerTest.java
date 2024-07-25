@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ReactionController.class)
 @Import(ReactionTestObjectFactory.class)
-@ExtendWith(MockitoExtension.class)
 class ReactionControllerTest {
 
     @Autowired
