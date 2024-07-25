@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReviewQueryServiceTest {
 
 	@Autowired
-	ReviewQueryService queryService;
+	ReviewQueryServiceImpl queryService;
 
 	@Test
 	void findProductReviews() {

@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ReviewServiceTest {
 
 	@Autowired
-	ReviewService reviewService;
+	ReviewServiceImpl reviewService;
 	@Autowired
 	ReviewRepository reviewRepository;
 	@Autowired

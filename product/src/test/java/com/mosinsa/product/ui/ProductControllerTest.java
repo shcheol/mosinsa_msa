@@ -40,4 +40,23 @@ class ProductControllerTest {
 				.andDo(print());
 	}
 
+	@Test
+	void orderProducts() throws Exception {
+		mockMvc.perform(post("/products/order")
+						.header("customer-info", """
+								"{"name":"name","id":"id"}"
+								""")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content("""
+								{
+								    "name":"test",
+								    "price":1000,
+								    "stock": 10
+								}
+								""")
+				)
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
+
 }

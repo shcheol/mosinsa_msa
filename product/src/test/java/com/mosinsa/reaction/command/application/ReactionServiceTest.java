@@ -15,14 +15,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
 class ReactionServiceTest {
 
     @Autowired
-    ReactionService service;
+	ReactionServiceImpl service;
     @Autowired
     ReactionReader reader;
 

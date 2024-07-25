@@ -1,7 +1,7 @@
 package com.mosinsa.review.ui;
 
-import com.mosinsa.review.query.application.dto.CommentSummaryDto;
 import com.mosinsa.review.query.application.ReviewQueryService;
+import com.mosinsa.review.query.application.dto.CommentSummaryDto;
 import com.mosinsa.review.query.application.dto.ReviewSummaryDto;
 import com.mosinsa.review.ui.reqeust.ReviewSummaryRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,16 +1,17 @@
-package com.mosinsa.reaction;
+package com.mosinsa.reaction.ui;
 
+import com.mosinsa.reaction.ProduceTemplateStub;
 import com.mosinsa.reaction.command.application.ReactionService;
 import com.mosinsa.reaction.infra.kafka.ProduceTemplate;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
 @TestConfiguration
-public class ReactionTestObjectFactory {
+public class ReactionPresentationObjectFactory {
 
     @Bean
     public ReactionService reactionService(){
-        return new ReactionServiceStub(null, null);
+        return new ReactionServiceStub();
     }
 
     @Bean

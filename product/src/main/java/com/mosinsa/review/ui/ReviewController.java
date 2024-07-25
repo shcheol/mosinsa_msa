@@ -35,11 +35,11 @@ public class ReviewController {
     public ResponseEntity<String> writeComment(@PathVariable("reviewId") String reviewId,
                                              @RequestBody WriteCommentRequest request) {
 		String commentId = reviewService.writeComment(reviewId, request);
-		return ResponseEntity.ok().body(commentId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(commentId);
     }
 
     @PostMapping("/{reviewId}/comments/{commentId}/delete")
-    public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") String reviewId,
+    public ResponseEntity<Void> deleteComment(@PathVariable("reviewId") String reviewId,
                                              @PathVariable("commentId") String commentId,
                                              @RequestBody DeleteCommentRequest request) {
         reviewService.deleteComment(reviewId, commentId, request);
