@@ -55,4 +55,35 @@ class ReactionServiceTest {
         assertThat(reader.total(reactionSearchCondition)).isEqualTo(size);
     }
 
+	@Test
+	void cancelConcurrency() throws InterruptedException {
+
+		String productId = "xxxx";
+		ReactionSearchCondition reactionSearchCondition = new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, "");
+		assertThat(reader.total(reactionSearchCondition)).isZero();
+
+		int size = 5;
+		ExecutorService es = Executors.newFixedThreadPool(size);
+		CountDownLatch countDownLatch = new CountDownLatch(size);
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < size; i++) {
+			es.execute(() -> {
+				try {
+					ReactionSearchCondition condition = new ReactionSearchCondition(TargetEntity.PRODUCT, productId, ReactionType.LIKES, UUID.randomUUID().toString());
+					service.reaction(condition);
+					service.cancel(condition);
+				} finally {
+					countDownLatch.countDown();
+				}
+			});
+		}
+
+		countDownLatch.await();
+		long end = System.currentTimeMillis();
+		System.out.println("실행 시간: " + (end - start));
+
+		es.shutdown();
+		assertThat(reader.total(reactionSearchCondition)).isZero();
+	}
+
 }

@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
@@ -44,6 +45,8 @@ class ReactionProcessorTest {
         assertThat(reaction.getTargetId()).isEqualTo("productId1xx");
 		assertThat(reaction.getMemberId()).isEqualTo("memberId1");
         assertThat(reaction.isActive()).isTrue();
+
+		assertThrows(AlreadySameStateException.class, ()->processor.reaction(condition));
     }
 
     @Test
@@ -57,5 +60,8 @@ class ReactionProcessorTest {
         assertThat(reaction.getTargetType()).isEqualTo(TargetEntity.PRODUCT);
         assertThat(reaction.getTargetId()).isEqualTo("productId1");
         assertThat(reaction.isActive()).isFalse();
+
+		assertThrows(AlreadySameStateException.class, ()->processor.cancel(condition));
+
     }
 }

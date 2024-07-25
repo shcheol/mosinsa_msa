@@ -7,31 +7,31 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProductController.class)
+@WebMvcTest(ViewProductController.class)
 @Import(ProductPresentationObjectFactory.class)
-class ProductControllerTest {
+class ViewProductControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
 
 	@Test
-	void addProduct() throws Exception {
-		mockMvc.perform(post("/products")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content("""
-								{
-								    "name":"test",
-								    "price":1000,
-								    "stock": 10,
-								    "category":"categoryId"
-								}
-								""")
-				)
-				.andExpect(status().isCreated())
+	void findAllProducts() throws Exception {
+		mockMvc.perform(get("/products"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("size").value(2))
+				.andDo(print());
+	}
+
+	@Test
+	void productDetails() throws Exception {
+		mockMvc.perform(get("/products/productId1"))
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("name").value("test"))
 				.andExpect(jsonPath("price").value(1000))
 				.andExpect(jsonPath("totalStock").value(10))

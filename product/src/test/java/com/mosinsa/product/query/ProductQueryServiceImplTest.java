@@ -17,22 +17,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
-class ProductQueryServiceTest {
+class ProductQueryServiceImplTest {
 	@Autowired
-	ProductQueryService productQueryService;
+	ProductQueryServiceImpl productQueryServiceImpl;
 
 	@Test
 	void getProductEx() {
 		String productId = "productId1xxx";
 
 		assertThrows(ProductException.class, () ->
-				productQueryService.getProductById(productId));
+				productQueryServiceImpl.getProductById(productId));
 	}
 
 	@Test
 	void findByCondition(){
 		SearchCondition searchCondition = new SearchCondition("categoryId1");
-		Page<ProductQueryDto> byCondition = productQueryService.findProductsByCondition(searchCondition, PageRequest.of(0,3));
+		Page<ProductQueryDto> byCondition = productQueryServiceImpl.findProductsByCondition(searchCondition, PageRequest.of(0,3));
 		int size = byCondition.getContent().size();
 		assertThat(size).isEqualTo(3);
 

@@ -3,7 +3,7 @@ package com.mosinsa.product.command.application;
 import com.mosinsa.common.ex.CategoryException;
 import com.mosinsa.product.command.domain.StockStatus;
 import com.mosinsa.product.query.ProductDetailDto;
-import com.mosinsa.product.query.ProductQueryService;
+import com.mosinsa.product.query.ProductQueryServiceImpl;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ProductServiceImplTest {
 
 	@Autowired
-	ProductQueryService productQueryService;
+	ProductQueryServiceImpl productQueryServiceImpl;
 	@Autowired
 	ProductServiceImpl productServiceImpl;
 	@Autowired
@@ -89,7 +89,7 @@ class ProductServiceImplTest {
 		long afterStock = stockService.currentStock(productId);
 		assertThat(afterStock).isZero();
 
-		assertThat(productQueryService.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+		assertThat(productQueryServiceImpl.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
 	}
 
 	@Test
@@ -172,11 +172,11 @@ class ProductServiceImplTest {
 		productServiceImpl.orderProduct("customerId1", "orderId1", List.of(request));
 
 		assertThat(stockService.currentStock(productId)).isZero();
-		assertThat(productQueryService.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+		assertThat(productQueryServiceImpl.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
 
 		productServiceImpl.cancelOrderProduct("customerId1","orderId1", List.of(new CancelOrderProductRequest(productId, 10)));
 		assertThat(stockService.currentStock(productId)).isEqualTo(10);
-		assertThat(productQueryService.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.ON);
+		assertThat(productQueryServiceImpl.getProductById(productId).getStockStatus()).isEqualTo(StockStatus.ON);
 	}
 
 
