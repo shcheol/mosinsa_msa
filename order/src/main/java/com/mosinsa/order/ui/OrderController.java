@@ -12,8 +12,6 @@ import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.argumentresolver.Login;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
-import com.mosinsa.order.ui.response.BaseResponse;
-import com.mosinsa.order.ui.response.GlobalResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

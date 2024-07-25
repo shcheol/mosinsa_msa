@@ -1,7 +1,10 @@
 package com.mosinsa.order.command.domain;
 
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
-import jakarta.persistence.*;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +17,9 @@ import java.util.Objects;
 public class ShippingInfo {
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "zipCode", column = @Column(name = "shipping_zip_code")),
-            @AttributeOverride(name = "address1", column = @Column(name = "shipping_addr1")),
-            @AttributeOverride(name = "address2", column = @Column(name = "shipping_addr2"))
-    })
+    @AttributeOverride(name = "zipCode", column = @Column(name = "shipping_zip_code"))
+    @AttributeOverride(name = "address1", column = @Column(name = "shipping_addr1"))
+    @AttributeOverride(name = "address2", column = @Column(name = "shipping_addr2"))
     private Address address;
 
     @Column(name = "shipping_message")
@@ -27,7 +28,7 @@ public class ShippingInfo {
     @Embedded
     private Receiver receiver;
 
-    public static ShippingInfo of(ShippingInfoDto shippingInfoDto){
+    public static ShippingInfo of(ShippingInfoDto shippingInfoDto) {
         ShippingInfo shippingInfo = new ShippingInfo();
         shippingInfo.address = Address.of(shippingInfoDto.address());
         shippingInfo.message = shippingInfoDto.message();

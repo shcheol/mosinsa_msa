@@ -1,6 +1,7 @@
 package com.mosinsa.order.command.domain;
 
 import com.mosinsa.order.command.application.dto.AddressDto;
+import com.mosinsa.order.command.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,10 +23,6 @@ class AddressTest {
         assertThat(actual.getAddress2()).isEqualTo(address2);
         assertThat(actual).isEqualTo(expect).hasSameHashCodeAs(expect)
                 .isNotEqualTo(null).isNotEqualTo(new TestClass());
-    }
-
-    static class TestClass {
-
     }
 
 }

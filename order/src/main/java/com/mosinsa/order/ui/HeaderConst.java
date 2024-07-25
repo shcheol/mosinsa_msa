@@ -1,7 +1,5 @@
 package com.mosinsa.order.ui;
 
-import lombok.Getter;
-
 public enum HeaderConst {
 
     ACCESS_TOKEN("Access-Token"),

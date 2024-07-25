@@ -1,7 +1,6 @@
 package com.mosinsa.order.infra.api;
 
 import com.mosinsa.order.command.application.dto.OrderProductDto;
-import com.mosinsa.order.infra.api.feignclient.product.ProductResponse;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 

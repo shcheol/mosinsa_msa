@@ -2,8 +2,6 @@ package com.mosinsa.order.infra.api.feignclient.coupon;
 
 import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.infra.api.ResponseResult;
-import com.mosinsa.order.infra.api.feignclient.coupon.CouponClient;
-import com.mosinsa.order.infra.api.feignclient.coupon.CouponResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
