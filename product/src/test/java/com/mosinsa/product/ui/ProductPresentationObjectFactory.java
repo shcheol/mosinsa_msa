@@ -23,53 +23,29 @@ import java.util.List;
 @TestConfiguration
 public class ProductPresentationObjectFactory {
 
-	@Bean
-	public ProductService productService() {
-		return new ProductService() {
-			@Override
-			public ProductDetailDto createProduct(CreateProductRequest request) {
-				if(request.name().equals("error")){
-					throw new RuntimeException();
-				}
-				if (request.name().equals("productException4xx")){
-					throw new ProductException(ProductError.NOT_FOUNT_PRODUCT);
-				}
-				if (request.name().equals("productException5xx")){
-					throw new ProductException(ProductError.INTERNAL_SERVER_ERROR);
-				}
-				return new ProductDetailDto(Product.create(request.name(), request.price(), Category.of(request.category()), request.stock()));
-			}
-
-			@Override
-			public void orderProduct(String customerId, String orderId, List<OrderProductRequest> orderProducts) {
-
-			}
-
-			@Override
-			public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
-
-			}
-		};
-	}
+    @Bean
+    public ProductService productService() {
+        return new ProductServiceStub();
+    }
 
 
-	@Bean
-	public ProductQueryService productQueryService() {
-		return new ProductQueryService() {
-			@Override
-			public ProductDetailDto getProductById(String productId) {
-				return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10));
-			}
+    @Bean
+    public ProductQueryService productQueryService() {
+        return new ProductQueryService() {
+            @Override
+            public ProductDetailDto getProductById(String productId) {
+                return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10));
+            }
 
-			@Override
-			public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
-				return new PageImpl<>(
-						List.of(
-								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
-								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
-						)
-				);
-			}
-		};
-	}
+            @Override
+            public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
+                return new PageImpl<>(
+                        List.of(
+                                new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
+                                new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
+                        )
+                );
+            }
+        };
+    }
 }

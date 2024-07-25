@@ -27,7 +27,7 @@ public class KafkaEvents {
 		kafkaTemplate.send(topic, key, getPayloadFromObject(event));
 	}
 
-	public static String getPayloadFromObject(Object event){
+	private static String getPayloadFromObject(Object event){
 		try {
 			return new ObjectMapper().writeValueAsString(event);
 		} catch (JsonProcessingException e) {

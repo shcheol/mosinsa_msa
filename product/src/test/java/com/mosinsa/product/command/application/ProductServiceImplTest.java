@@ -9,8 +9,6 @@ import com.mosinsa.product.query.ProductQueryService;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,9 +30,6 @@ class ProductServiceImplTest {
     ProductQueryService productQueryService;
     @Autowired
     ProductService productService;
-
-    @Autowired
-    StockService stockService;
 
     @Test
     @DisplayName(value = "상품등록")
@@ -61,8 +53,9 @@ class ProductServiceImplTest {
     void orderAlreadySoldOutProduct() {
 
         OrderProductRequest request = new OrderProductRequest("productId2", 3);
+        List<OrderProductRequest> list = List.of(request);
         assertThrows(AlreadySoldOutException.class,
-                () -> productService.orderProduct("customerId1", "orderId1", List.of(request)));
+                () -> productService.orderProduct("customerId1", "orderId1", list));
     }
 
     @Test
@@ -97,8 +90,9 @@ class ProductServiceImplTest {
         String productId = "productId1";
 
         CancelOrderProductRequest request = new CancelOrderProductRequest(productId, 3);
+        List<CancelOrderProductRequest> list = List.of(request);
         assertThrows(InvalidStockException.class,
-                () -> productService.cancelOrderProduct("customerId1", "fail", List.of(request)));
+                () -> productService.cancelOrderProduct("customerId1", "fail", list));
     }
 
     @Test
@@ -107,8 +101,9 @@ class ProductServiceImplTest {
         String productId = "productIdxxxx";
 
         CancelOrderProductRequest request = new CancelOrderProductRequest(productId, 3);
+        List<CancelOrderProductRequest> list = List.of(request);
         assertThrows(ProductException.class,
-                () -> productService.cancelOrderProduct("customerId1", "orderId", List.of(request)));
+                () -> productService.cancelOrderProduct("customerId1", "orderId", list));
     }
 
     @Test
@@ -123,7 +118,17 @@ class ProductServiceImplTest {
                 List.of(new CancelOrderProductRequest(productId2, 10)));
         assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.ON);
         assertThat(productQueryService.getProductById(productId4).getStockStatus()).isEqualTo(StockStatus.ON);
+    }
 
+    @Test
+    @DisplayName(value = "취소 수량이 이상하면 상태가 변경되지 않음")
+    void cancelOrderProductWhenInvalidValue() {
+        String productId2 = "productId2";
+        assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+
+        productService.cancelOrderProduct("customerId1", "orderId1",
+                List.of(new CancelOrderProductRequest(productId2, 0)));
+        assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
     }
 
 
