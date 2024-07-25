@@ -2,7 +2,7 @@ package com.mosinsa.reaction.command.application;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
-import com.mosinsa.reaction.qeury.application.ReactionReader;
+import com.mosinsa.reaction.qeury.application.ReactionReaderImpl;
 import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class ReactionServiceTest {
     @Autowired
 	ReactionServiceImpl service;
     @Autowired
-    ReactionReader reader;
+    ReactionReaderImpl reader;
 
     @Test
     void likesConcurrency() throws InterruptedException {

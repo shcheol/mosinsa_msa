@@ -19,7 +19,7 @@ insert into category (category_id, name) values ('categoryId7','원피스');
 insert into category (category_id, name) values ('categoryId8','치마');
 insert into category (category_id, name) values ('categoryId9','모자');
 insert into stock values ('stockId1',10,'ON');
-insert into stock values ('stockId2',20,'ON');
+insert into stock values ('stockId2',20,'SOLD_OUT');
 insert into stock values ('stockId3',30,'ON');
 insert into stock values ('stockId4',30,'ON');
 insert into stock values ('stockId5',30,'ON');

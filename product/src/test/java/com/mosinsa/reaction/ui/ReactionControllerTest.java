@@ -34,7 +34,7 @@ class ReactionControllerTest {
 
 	@Test
 	void cancelUserReaction() throws Exception {
-		mockMvc.perform(post("/reactions")
+		mockMvc.perform(post("/reactions/cancel")
 						.header("customer-info", """
 								"{"name":"name","id":"id"}"
 								""")

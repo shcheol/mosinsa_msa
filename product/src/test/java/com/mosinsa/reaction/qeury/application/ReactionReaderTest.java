@@ -9,14 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
 class ReactionReaderTest {
 
 	@Autowired
-	ReactionReader reader;
+    ReactionReaderImpl reader;
 
 	@Test
 	void hasReacted() {

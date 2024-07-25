@@ -5,17 +5,12 @@ import com.mosinsa.reaction.command.domain.ReactionId;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.mosinsa.reaction.infra.jpa.ReactionRepository;
-import com.mosinsa.reaction.qeury.application.ReactionReader;
+import com.mosinsa.reaction.qeury.application.ReactionReaderImpl;
 import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,7 +23,7 @@ class ReactionProcessorTest {
     ReactionProcessor processor;
 
     @Autowired
-    ReactionReader reader;
+    ReactionReaderImpl reader;
 
     @Autowired
     ReactionRepository repository;
