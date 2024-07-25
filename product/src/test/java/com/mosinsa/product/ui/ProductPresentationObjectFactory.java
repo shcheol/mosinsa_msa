@@ -1,6 +1,8 @@
 package com.mosinsa.product.ui;
 
 import com.mosinsa.category.Category;
+import com.mosinsa.common.ex.ProductError;
+import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.application.ProductService;
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.command.domain.Product;
@@ -26,6 +28,15 @@ public class ProductPresentationObjectFactory {
 		return new ProductService() {
 			@Override
 			public ProductDetailDto createProduct(CreateProductRequest request) {
+				if(request.name().equals("error")){
+					throw new RuntimeException();
+				}
+				if (request.name().equals("productException4xx")){
+					throw new ProductException(ProductError.NOT_FOUNT_PRODUCT);
+				}
+				if (request.name().equals("productException5xx")){
+					throw new ProductException(ProductError.INTERNAL_SERVER_ERROR);
+				}
 				return new ProductDetailDto(Product.create(request.name(), request.price(), Category.of(request.category()), request.stock()));
 			}
 

@@ -1,5 +1,6 @@
 package com.mosinsa.product.ui;
 
+import com.mosinsa.common.ex.ProductError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -59,4 +60,58 @@ class ProductControllerTest {
 				.andDo(print());
 	}
 
+	@Test
+	void globalException() throws Exception {
+		mockMvc.perform(post("/products")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content("""
+								{
+								    "name":"error",
+								    "price":1000,
+								    "stock": 10,
+								    "category":"categoryId"
+								}
+								""")
+				)
+				.andExpect(status().is5xxServerError())
+				.andDo(print());
+	}
+
+	@Test
+	void globalProductException5xx() throws Exception {
+		mockMvc.perform(post("/products")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content("""
+								{
+								    "name":"productException5xx",
+								    "price":1000,
+								    "stock": 10,
+								    "category":"categoryId"
+								}
+								""")
+				)
+				.andExpect(status().is5xxServerError())
+				.andExpect(jsonPath("result").value("error"))
+				.andExpect(jsonPath("message").value(ProductError.INTERNAL_SERVER_ERROR.getMessage()))
+				.andDo(print());
+	}
+
+	@Test
+	void globalProductException4xx() throws Exception {
+		mockMvc.perform(post("/products")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content("""
+								{
+								    "name":"productException4xx",
+								    "price":1000,
+								    "stock": 10,
+								    "category":"categoryId"
+								}
+								""")
+				)
+				.andExpect(status().is4xxClientError())
+				.andExpect(jsonPath("result").value("error"))
+				.andExpect(jsonPath("message").value(ProductError.NOT_FOUNT_PRODUCT.getMessage()))
+				.andDo(print());
+	}
 }
