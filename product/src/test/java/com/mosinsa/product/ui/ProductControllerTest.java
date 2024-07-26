@@ -50,9 +50,7 @@ class ProductControllerTest {
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content("""
 								{
-								    "name":"test",
-								    "price":1000,
-								    "stock": 10
+								    "orderId":"test"
 								}
 								""")
 				)

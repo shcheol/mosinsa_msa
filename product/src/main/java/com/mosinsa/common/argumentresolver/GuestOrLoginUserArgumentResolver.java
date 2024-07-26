@@ -11,7 +11,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class GuestOrLoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Override
+	private final ObjectMapper om;
+
+	public GuestOrLoginUserArgumentResolver(ObjectMapper om) {
+		this.om = om;
+	}
+
+	@Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasGuestOrLoginAnnotation = parameter.hasParameterAnnotation(GuestOrLogin.class);
         boolean hasCustomerInfoType = CustomerInfo.class.isAssignableFrom(parameter.getParameterType());
@@ -24,7 +30,7 @@ public class GuestOrLoginUserArgumentResolver implements HandlerMethodArgumentRe
         String customerInfoJson = request.getHeader("customer-info");
         String customerInfoJsonForJava = StringEscapeUtils.unescapeJava(customerInfoJson.substring(1, customerInfoJson.length() - 1));
         try {
-            return new ObjectMapper().readValue(customerInfoJsonForJava, CustomerInfo.class);
+            return om.readValue(customerInfoJsonForJava, CustomerInfo.class);
         }catch (Exception e){
             return new CustomerInfo("","guest");
 

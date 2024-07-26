@@ -12,6 +12,7 @@ public enum ProductError {
 
 	VALIDATION_ERROR("값 검증 에러", HttpStatus.INTERNAL_SERVER_ERROR),
 
+	UNAUTHORIZED_ERROR("인증 실패", HttpStatus.UNAUTHORIZED)
 	;
 
 

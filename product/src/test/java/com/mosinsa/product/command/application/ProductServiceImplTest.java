@@ -63,13 +63,13 @@ class ProductServiceImplTest {
     void orderProductSoldOut() {
 
         String productId1 = "productId1";
-        String productId3 = "productId3";
+        String productId4 = "productId4";
         OrderProductRequest request = new OrderProductRequest(productId1, 10);
-        OrderProductRequest request2 = new OrderProductRequest(productId3, 5);
+        OrderProductRequest request2 = new OrderProductRequest(productId4, 5);
         productService.orderProduct("customerId1", "orderId1", List.of(request, request2));
 
         assertThat(productQueryService.getProductById(productId1).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
-        assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.ON);
+        assertThat(productQueryService.getProductById(productId4).getStockStatus()).isEqualTo(StockStatus.ON);
     }
 
 
@@ -126,7 +126,7 @@ class ProductServiceImplTest {
         String productId2 = "productId2";
         assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
 		String productId3 = "productId3";
-		assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.ON);
+		assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
 
         productService.cancelOrderProduct("customerId1", "orderId1",
                 List.of(
@@ -134,7 +134,7 @@ class ProductServiceImplTest {
 						new CancelOrderProductRequest(productId3, 0)
 						));
         assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.ON);
-        assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.ON);
+        assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
     }
 
 

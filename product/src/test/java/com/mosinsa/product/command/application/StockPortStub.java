@@ -14,7 +14,7 @@ public class StockPortStub implements StockPort{
         this.stockMap = new HashMap<>();
         stockMap.put("productId1", 0L);
         stockMap.put("productId2", 0L);
-        stockMap.put("productId3", 30L);
+        stockMap.put("productId3", 0L);
         stockMap.put("productId4", 40L);
         stockMap.put("productId5", 50L);
     }

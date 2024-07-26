@@ -20,7 +20,7 @@ insert into category (category_id, name) values ('categoryId8','치마');
 insert into category (category_id, name) values ('categoryId9','모자');
 insert into stock values ('stockId1',10,'ON');
 insert into stock values ('stockId2',20,'SOLD_OUT');
-insert into stock values ('stockId3',30,'ON');
+insert into stock values ('stockId3',30,'SOLD_OUT');
 insert into stock values ('stockId4',30,'ON');
 insert into stock values ('stockId5',30,'ON');
 insert into product values ('productId1', '반팔', 2000,'categoryId1','stockId1', '2024-05-25 12:20:35');
