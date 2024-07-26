@@ -1,22 +1,53 @@
 package com.mosinsa.product.infra.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.product.command.application.ProductService;
-import com.mosinsa.product.query.ProductDetailDto;
+import com.mosinsa.product.ui.ProductPresentationObjectFactory;
 import com.mosinsa.product.ui.ProductServiceStub;
-import com.mosinsa.product.ui.request.CancelOrderProductRequest;
-import com.mosinsa.product.ui.request.CreateProductRequest;
-import com.mosinsa.product.ui.request.OrderProductRequest;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
+@SpringBootTest
+@Import(ProductPresentationObjectFactory.class)
 class OrderCanceledEventHandlerTest {
+
+	@Autowired
+	ProductService productService;
+
+
+	@Test
+	void orderCanceled() throws JsonProcessingException {
+		String data = """
+				{
+					"orderId": "orderId",
+					"customerId": "customer1",
+					"couponId": "couponId1",
+					"orderProducts": [
+						{
+							"productId": "productId1",
+							"price": 1000,
+							"quantity": 10,
+							"amounts": 10000
+						}
+					]
+				}
+				""";
+		ProductServiceStub productServiceStub = (ProductServiceStub) productService;
+		assertThat(productServiceStub.isCalled()).isFalse();
+
+		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(new ProductServiceStub());
+		orderCanceledEventHandler.orderCanceledEvent(data);
+
+		assertThat(productServiceStub.isCalled()).isTrue();
+
+
+	}
 
 	@Test
 	void jsonParsing() throws JsonProcessingException {

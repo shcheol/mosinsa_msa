@@ -13,6 +13,7 @@ import com.mosinsa.product.ui.request.OrderProductRequest;
 import java.util.List;
 
 public class ProductServiceStub implements ProductService {
+	private static boolean called = false;
     @Override
     public ProductDetailDto createProduct(CreateProductRequest request) {
         if (request.name().equals("error")) {
@@ -37,5 +38,10 @@ public class ProductServiceStub implements ProductService {
         if (orderId.equals("fail")) {
             throw new IllegalStateException();
         }
+		called=true;
     }
+
+	public boolean isCalled() {
+		return called;
+	}
 }

@@ -121,14 +121,20 @@ class ProductServiceImplTest {
     }
 
     @Test
-    @DisplayName(value = "취소 수량이 이상하면 상태가 변경되지 않음")
+    @DisplayName(value = "취소 수량이 0이하면 상태가 변경되지 않음")
     void cancelOrderProductWhenInvalidValue() {
         String productId2 = "productId2";
         assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+		String productId3 = "productId3";
+		assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.ON);
 
         productService.cancelOrderProduct("customerId1", "orderId1",
-                List.of(new CancelOrderProductRequest(productId2, 0)));
-        assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+                List.of(
+						new CancelOrderProductRequest(productId2, 2),
+						new CancelOrderProductRequest(productId3, 0)
+						));
+        assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.ON);
+        assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.ON);
     }
 
 
