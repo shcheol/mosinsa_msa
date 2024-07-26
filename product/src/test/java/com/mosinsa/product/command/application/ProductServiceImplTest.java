@@ -9,6 +9,7 @@ import com.mosinsa.product.query.ProductQueryService;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,15 @@ class ProductServiceImplTest {
     ProductQueryService productQueryService;
     @Autowired
     ProductService productService;
+
+	@Autowired
+	StockPort stockPort;
+
+	@BeforeEach
+	void setup(){
+		StockPortStub stockPort1 = (StockPortStub) stockPort;
+		stockPort1.init();
+	}
 
     @Test
     @DisplayName(value = "상품등록")
@@ -127,14 +137,23 @@ class ProductServiceImplTest {
         assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
 		String productId3 = "productId3";
 		assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+		String productId4 = "productId4";
+		assertThat(productQueryService.getProductById(productId4).getStockStatus()).isEqualTo(StockStatus.ON);
+		String productId5 = "productId5";
+		assertThat(productQueryService.getProductById(productId5).getStockStatus()).isEqualTo(StockStatus.ON);
 
         productService.cancelOrderProduct("customerId1", "orderId1",
                 List.of(
 						new CancelOrderProductRequest(productId2, 2),
-						new CancelOrderProductRequest(productId3, 0)
+						new CancelOrderProductRequest(productId3, 0),
+						new CancelOrderProductRequest(productId4, 3),
+						new CancelOrderProductRequest(productId4, 0)
+
 						));
         assertThat(productQueryService.getProductById(productId2).getStockStatus()).isEqualTo(StockStatus.ON);
-        assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+		assertThat(productQueryService.getProductById(productId3).getStockStatus()).isEqualTo(StockStatus.SOLD_OUT);
+		assertThat(productQueryService.getProductById(productId4).getStockStatus()).isEqualTo(StockStatus.ON);
+        assertThat(productQueryService.getProductById(productId5).getStockStatus()).isEqualTo(StockStatus.ON);
     }
 
 

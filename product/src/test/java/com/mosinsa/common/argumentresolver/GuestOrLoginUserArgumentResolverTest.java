@@ -10,17 +10,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TestController.class)
-class LoginUserArgumentResolverTest {
-
+class GuestOrLoginUserArgumentResolverTest {
 	@Autowired
 	MockMvc mockMvc;
 
 	@Test
 	void normalRequestSupportsParameter() throws Exception {
-		mockMvc.perform(get("/test/success")
+		mockMvc.perform(get("/test/success2")
 						.header("customer-info", """
 								"{"name":"name","id":"id"}"
 								"""))
@@ -32,7 +31,7 @@ class LoginUserArgumentResolverTest {
 
 	@Test
 	void badControllerSupportsParameter() throws Exception {
-		mockMvc.perform(get("/test/fail")
+		mockMvc.perform(get("/test/fail2")
 						.header("customer-info", """
 								"{"name":"name","id":"id"}"
 								"""))
@@ -43,17 +42,21 @@ class LoginUserArgumentResolverTest {
 
 	@Test
 	void resolveArgumentEmptyHeaderValue() throws Exception {
-		mockMvc.perform(get("/test/success")
+		mockMvc.perform(get("/test/success2")
 						.header("customer-info", """
 								"""))
-				.andExpect(status().is4xxClientError())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("id").value("-1"))
+				.andExpect(jsonPath("name").value("guest"))
 				.andDo(print());
 	}
 
 	@Test
 	void resolveArgumentEmptyHeader() throws Exception {
-		mockMvc.perform(get("/test/success"))
-				.andExpect(status().is4xxClientError())
+		mockMvc.perform(get("/test/success2"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("id").value("-1"))
+				.andExpect(jsonPath("name").value("guest"))
 				.andDo(print());
 	}
 }

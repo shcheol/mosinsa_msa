@@ -36,8 +36,16 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         String customerInfoJson = Optional.ofNullable(request.getHeader("customer-info"))
 				.orElseThrow(() -> new ProductException(ProductError.UNAUTHORIZED_ERROR));
 
-        String customerInfoJsonForJava = StringEscapeUtils.unescapeJava(customerInfoJson.substring(1, customerInfoJson.length() - 1));
+        String customerInfoJsonForJava = getCustomerInfoJsonForJava(customerInfoJson);
 
         return om.readValue(customerInfoJsonForJava, CustomerInfo.class);
     }
+
+	private String getCustomerInfoJsonForJava(String customerInfoJson) {
+		try {
+			return StringEscapeUtils.unescapeJava(customerInfoJson.substring(1, customerInfoJson.length() - 1));
+		}catch (Exception e){
+			throw new ProductException(ProductError.UNAUTHORIZED_ERROR);
+		}
+	}
 }

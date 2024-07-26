@@ -18,22 +18,24 @@ public class GuestOrLoginUserArgumentResolver implements HandlerMethodArgumentRe
 	}
 
 	@Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasGuestOrLoginAnnotation = parameter.hasParameterAnnotation(GuestOrLogin.class);
-        boolean hasCustomerInfoType = CustomerInfo.class.isAssignableFrom(parameter.getParameterType());
-        return hasGuestOrLoginAnnotation && hasCustomerInfoType;
-    }
+	public boolean supportsParameter(MethodParameter parameter) {
+		boolean hasGuestOrLoginAnnotation = parameter.hasParameterAnnotation(GuestOrLogin.class);
+		boolean hasCustomerInfoType = CustomerInfo.class.isAssignableFrom(parameter.getParameterType());
+		return hasGuestOrLoginAnnotation && hasCustomerInfoType;
+	}
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String customerInfoJson = request.getHeader("customer-info");
-        String customerInfoJsonForJava = StringEscapeUtils.unescapeJava(customerInfoJson.substring(1, customerInfoJson.length() - 1));
-        try {
-            return om.readValue(customerInfoJsonForJava, CustomerInfo.class);
-        }catch (Exception e){
-            return new CustomerInfo("","guest");
+	@Override
+	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        }
-    }
+		String customerInfoJson = request.getHeader("customer-info");
+		try {
+			String customerInfoJsonForJava = StringEscapeUtils.unescapeJava(customerInfoJson.substring(1, customerInfoJson.length() - 1));
+			return om.readValue(customerInfoJsonForJava, CustomerInfo.class);
+		} catch (Exception e) {
+			return new CustomerInfo("-1", "guest");
+		}
+
+	}
+
 }

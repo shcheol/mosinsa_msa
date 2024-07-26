@@ -20,8 +20,9 @@ public class ReviewKafkaConfig {
 
 	@Value("${spring.kafka.bootstrap-servers}")
 	private String bootstrapAddress;
+
 	@Bean
-	public ProducerFactory<String, String> producerFactory(){
+	public ProducerFactory<String, String> producerFactory() {
 
 		Map<String, Object> properties = new HashMap<>();
 		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
@@ -30,14 +31,10 @@ public class ReviewKafkaConfig {
 
 		return new DefaultKafkaProducerFactory<>(properties);
 	}
-	@Bean
-	public KafkaTemplate<String, String> kafkaTemplate(){
-		return new KafkaTemplate<>(producerFactory());
-	}
 
 	@Bean
-	public InitializingBean eventInitializer() {
-		return () -> KafkaEvents.setKafkaTemplate(kafkaTemplate());
+	public KafkaTemplate<String, String> kafkaTemplate() {
+		return new KafkaTemplate<>(producerFactory());
 	}
 
 }

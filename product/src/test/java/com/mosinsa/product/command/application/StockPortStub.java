@@ -10,14 +10,14 @@ public class StockPortStub implements StockPort{
 
     private Map<String, Long> stockMap;
 
-    public StockPortStub() {
-        this.stockMap = new HashMap<>();
-        stockMap.put("productId1", 0L);
-        stockMap.put("productId2", 0L);
-        stockMap.put("productId3", 0L);
-        stockMap.put("productId4", 40L);
-        stockMap.put("productId5", 50L);
-    }
+	public void init(){
+		this.stockMap = new HashMap<>();
+		stockMap.put("productId1", 0L);
+		stockMap.put("productId2", 0L);
+		stockMap.put("productId3", 0L);
+		stockMap.put("productId4", 40L);
+		stockMap.put("productId5", 50L);
+	}
 
     @Override
     public long currentStock(String key) {
