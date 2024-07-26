@@ -11,7 +11,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import javax.security.auth.login.LoginException;
 import java.util.Optional;
 
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
