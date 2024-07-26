@@ -25,6 +25,7 @@ public class ProduceTemplate {
 
 	private final KafkaTemplate<String, String> kafkaTemplate;
 
+	private final ObjectMapper om;
 
 	public void produce(TargetEntity target, String targetId, ReactionType reactionType, boolean canceled) {
 
@@ -45,7 +46,7 @@ public class ProduceTemplate {
 
 	private String getPayloadFromObject(Object event){
 		try {
-			return new ObjectMapper().writeValueAsString(event);
+			return om.writeValueAsString(event);
 		} catch (JsonProcessingException e) {
 			throw new IllegalStateException(e);
 		}
