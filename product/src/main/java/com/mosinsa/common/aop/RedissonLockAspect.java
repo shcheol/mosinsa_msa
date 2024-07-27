@@ -27,9 +27,7 @@ public class RedissonLockAspect {
                 throw new TryLockFailException();
             }
             return joinPoint.proceed();
-        } catch (Exception e){
-            throw e;
-        }finally {
+        } finally {
             lock.unlock();
         }
     }

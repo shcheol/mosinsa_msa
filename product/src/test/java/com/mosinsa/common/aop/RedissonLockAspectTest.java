@@ -1,22 +1,22 @@
 package com.mosinsa.common.aop;
 
-import com.mosinsa.code.LockTest;
+import com.mosinsa.code.LockTestClass;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Import;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Import(LockConfig.class)
 class RedissonLockAspectTest {
 
     @Autowired
-    LockTest lockTest;
+    LockTestClass lockTestClass;
 
     @Test
     void test() throws InterruptedException {
@@ -24,7 +24,7 @@ class RedissonLockAspectTest {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         CompletableFuture.runAsync(() -> {
             try {
-                lockTest.method();
+                lockTestClass.method();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }finally {
@@ -34,7 +34,7 @@ class RedissonLockAspectTest {
 
         CompletableFuture.runAsync(() -> {
             try {
-                assertThrows(TryLockFailException.class, () -> lockTest.method());
+                assertThrows(TryLockFailException.class, () -> lockTestClass.method());
             } finally {
                 countDownLatch.countDown();
             }
