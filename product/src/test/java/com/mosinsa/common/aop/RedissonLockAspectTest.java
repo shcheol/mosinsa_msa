@@ -27,23 +27,22 @@ class RedissonLockAspectTest {
                 lockTestClass.method();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }finally {
-                countDownLatch.countDown();
-            }
-        });
-
-        CompletableFuture.runAsync(() -> {
-            try {
-                assertThrows(TryLockFailException.class, () -> lockTestClass.method());
             } finally {
                 countDownLatch.countDown();
             }
         });
 
+        try {
+            assertThrows(TryLockFailException.class, () -> lockTestClass.method());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            countDownLatch.countDown();
+        }
+
         countDownLatch.await();
 
     }
-
 
 
 }

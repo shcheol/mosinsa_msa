@@ -1,6 +1,7 @@
 package com.mosinsa.common.aop;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Order(1)
+@Slf4j
 @RequiredArgsConstructor
 public class RedissonLockAspect {
 
@@ -28,7 +30,11 @@ public class RedissonLockAspect {
             }
             return joinPoint.proceed();
         } finally {
-            lock.unlock();
+            try {
+                lock.unlock();
+            } catch (IllegalMonitorStateException e) {
+                log.info("Redisson Lock Already UnLock {}", redissonLock.value());
+            }
         }
     }
 }
