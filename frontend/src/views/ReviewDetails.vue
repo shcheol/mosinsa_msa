@@ -151,17 +151,17 @@ export default {
           frame => {
             console.log('connect success', frame);
             try {
-            setTimeout(function () {
-              console.log("timeout")
-              if (this.stompClient.connected) {
-                this.stompClient.subscribe(`/topic/${this.review.reviewId}`, response => {
-                  console.log('구독으로 받은 메시지 입니다.', response.body);
-                  const message = JSON.parse(response.body);
-                  console.log(message)
-                  this.processSubscribedMessage(message);
-                });
-              }
-            }.bind(this), 500);
+              setInterval(function () {
+                console.log("timeout")
+                if (this.stompClient.connected) {
+                  this.stompClient.subscribe(`/topic/${this.review.reviewId}`, response => {
+                    console.log('구독으로 받은 메시지 입니다.', response.body);
+                    const message = JSON.parse(response.body);
+                    console.log(message)
+                    this.processSubscribedMessage(message);
+                  });
+                }
+              }.bind(this), 500);
             } catch (e) {
               console.log(e);
             } finally {
@@ -195,7 +195,7 @@ export default {
       }
     },
     disconnect() {
-      if(this.stompClient.connected) {
+      if (this.stompClient.connected) {
         this.stompClient.disconnect();
       }
     },

@@ -15,22 +15,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RedissonLockAspect {
 
-	private final RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
 
-	@Around("@annotation(redissonLock)")
-	public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) throws Throwable {
+    @Around("@annotation(redissonLock)")
+    public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) throws Throwable {
 
-		RLock lock = redissonClient.getLock(redissonLock.value());
-		try {
-			if (!lock.tryLock(redissonLock.waitTime(), redissonLock.leaseTime(), redissonLock.timeUnit())) {
-				throw new TryLockFailException();
-			}
-			return joinPoint.proceed();
-		} finally {
-			if (lock.isLocked() && lock.isHeldByCurrentThread()) {
-				lock.unlock();
-			}
-		}
-	}
+        RLock lock = redissonClient.getLock(redissonLock.value());
+        try {
+            if (!lock.tryLock(redissonLock.waitTime(), redissonLock.leaseTime(), redissonLock.timeUnit())) {
+                throw new TryLockFailException();
+            }
+            return joinPoint.proceed();
+        } catch (Exception e){
+            throw e;
+        }finally {
+            lock.unlock();
+        }
+    }
 }

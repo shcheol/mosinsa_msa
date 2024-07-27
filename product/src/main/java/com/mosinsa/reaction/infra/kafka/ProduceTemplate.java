@@ -1,6 +1,5 @@
 package com.mosinsa.reaction.infra.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
@@ -44,10 +43,10 @@ public class ProduceTemplate {
 		kafkaTemplate.send(topic, key, getPayloadFromObject(payload));
 	}
 
-	private String getPayloadFromObject(Object event){
+	protected String getPayloadFromObject(Object event){
 		try {
 			return om.writeValueAsString(event);
-		} catch (JsonProcessingException e) {
+		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
 	}
