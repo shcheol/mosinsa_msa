@@ -15,7 +15,7 @@ class OrderProductTest {
         OrderProduct expect = OrderProduct.create("productId", 1000, 10);
         assertThat(actual).isEqualTo(actual).isEqualTo(expect).hasSameHashCodeAs(expect)
                 .isNotEqualTo(null).isNotEqualTo(new TestClass());
-        OrderProduct a = OrderProduct.create("productIdxxx", 1000, 10);
+        OrderProduct a = OrderProduct.create("productIdxxxxxx", 1000, 10);
         Assertions.assertThat(actual).isNotEqualTo(a).doesNotHaveSameHashCodeAs(a);
         OrderProduct b = OrderProduct.create("productIdxxx", 1012300, 10);
         Assertions.assertThat(actual).isNotEqualTo(b).doesNotHaveSameHashCodeAs(b);

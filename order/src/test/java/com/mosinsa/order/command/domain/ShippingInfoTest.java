@@ -15,7 +15,7 @@ class ShippingInfoTest {
         ShippingInfoDto shippingInfoDto = new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx"));
         ShippingInfo shippingInfoA = ShippingInfo.of(shippingInfoDto);
         ShippingInfo shippingInfoB = ShippingInfo.of(shippingInfoDto);
-        assertThat(shippingInfoA).isEqualTo(shippingInfoB).hasSameHashCodeAs(shippingInfoB)
+        assertThat(shippingInfoA).isEqualTo(shippingInfoA).isEqualTo(shippingInfoB).hasSameHashCodeAs(shippingInfoB)
                 .isNotNull().isNotEqualTo(new TestClass());
         ShippingInfo shippingInfoC = ShippingInfo.of(new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("mynamexxx", "010-xxx-xxxx")));
         assertThat(shippingInfoA).isNotEqualTo(shippingInfoC).doesNotHaveSameHashCodeAs(shippingInfoC);

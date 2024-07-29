@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
@@ -20,10 +20,14 @@ class CancelOrderServiceTest {
 
 	@Test
 	void cancelOrder() {
-
 		OrderDetail orderId1 = service.cancelOrder("orderId1");
-		OrderStatus status = orderId1.getStatus();
-		assertThat(status).isEqualTo(OrderStatus.CANCELED);
+		OrderStatus status1 = orderId1.getStatus();
+		assertThat(status1).isEqualTo(OrderStatus.CANCELED);
+
+		OrderDetail orderId2 = service.cancelOrder("orderId2");
+		OrderStatus status2 = orderId2.getStatus();
+		assertThat(status2).isEqualTo(OrderStatus.CANCELED);
+
 	}
 
 	@Test

@@ -8,22 +8,32 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OrderTest {
 
-    private final ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
+	private final ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
 
+	@Test
+	void equalsAndHashCode() {
+		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		Order order1 = Order.create("cId", "couponId", orderProducts, shippingInfo, 10000);
 
-    @Test
-    void create_상품_empty() {
-        List<OrderProduct> orderProducts = List.of();
+		Order protectedConstructor = new Order();
+		assertThat(protectedConstructor).isNotEqualTo(order1);
+	}
+
+	@Test
+	void create_상품_empty() {
+		List<OrderProduct> orderProducts = List.of();
 		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
 		assertThrows(OrderException.class,
-                () -> Order.create("customerId", "couponId", orderProducts,
-                        shippingInfo, 10000));
-    }
+				() -> Order.create("customerId", "couponId", orderProducts,
+						shippingInfo, 10000));
+	}
 
 	@Test
 	void create_상품_null() {
@@ -34,16 +44,25 @@ class OrderTest {
 						shippingInfo, 10000));
 	}
 
-    @Test
-    void create_주문자x() {
-        List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
+	@Test
+	void create_주문자x() {
+		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
 		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
-        assertThrows(OrderException.class,
+		assertThrows(OrderException.class,
 				() -> Order.create("", "couponId", orderProducts,
 						shippingInfo, 10000));
-    }
+	}
 
 
+	@Test
+	void cancelOrder() {
+		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		Order order = Order.create("cId", "couponId", orderProducts, shippingInfo, 10000);
+		order.cancelOrder();
+		assertThrows(AlreadyCanceledException.class, order::cancelOrder);
+
+	}
 
 //    @Test
 //    void 쿠폰사용() {

@@ -31,3 +31,21 @@ values ('orderId3', 'customer2', 'DELIVERY_COMPLETED', 45000, '2023-12-14 17:09:
         'zipcode','address1','address2','fast','myName','010-1111-1111');
 insert into order_product (order_id, product_id, amounts, price, quantity)
 values ('orderId3', 'productId3', 45000, 4500, 10);
+
+insert into orders
+(order_id, customer_id, coupon_id,status, total_price, created_date, last_modified_date,
+ shipping_zip_code, shipping_addr1, shipping_addr2, shipping_message, receiver_name, receiver_phone )
+values ( 'orderId4', 'customer3', 'couponId1', 'SHIPPED', 10000, '2023-12-12 17:09:39.114218'
+           , '2023-12-13 17:09:39.115218',
+         'zipcode','address1','address2','fast','myName','010-1111-1111');
+insert into order_product (order_id, product_id, amounts, price, quantity)
+values ('orderId4', 'productId1', 10000, 1000, 10);
+
+insert into orders
+(order_id, customer_id, coupon_id,status, total_price, created_date, last_modified_date,
+ shipping_zip_code, shipping_addr1, shipping_addr2, shipping_message, receiver_name, receiver_phone )
+values ( 'orderId5', 'customer3', 'couponId1', 'DELIVERING', 10000, '2023-12-12 17:09:39.114218'
+           , '2023-12-13 17:09:39.115218',
+         'zipcode','address1','address2','fast','myName','010-1111-1111');
+insert into order_product (order_id, product_id, amounts, price, quantity)
+values ('orderId5', 'productId1', 10000, 1000, 10);

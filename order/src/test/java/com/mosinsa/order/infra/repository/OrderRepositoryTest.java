@@ -3,6 +3,7 @@ package com.mosinsa.order.infra.repository;
 import com.mosinsa.order.command.application.dto.AddressDto;
 import com.mosinsa.order.command.application.dto.ReceiverDto;
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
+import com.mosinsa.order.command.code.TestClass;
 import com.mosinsa.order.command.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,10 +28,11 @@ class OrderRepositoryTest {
 		Order orderA = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
 		Order orderB = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
 
-		assertThat(orderA).isEqualTo(orderB).hasSameHashCodeAs(orderB);
-		OrderProduct orderProductA = orderA.getOrderProducts().get(0);
-		OrderProduct orderProductB = orderA.getOrderProducts().get(0);
-		assertThat(orderProductA).isEqualTo(orderProductB).hasSameHashCodeAs(orderProductB);
+		assertThat(orderA).isEqualTo(orderA).isEqualTo(orderB).hasSameHashCodeAs(orderB)
+				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+
+		Order orderC = repository.findOrderDetailsById(OrderId.of("orderId2")).get();
+		assertThat(orderA).isNotEqualTo(orderC).doesNotHaveSameHashCodeAs(orderC);
 	}
 
 	@Test
@@ -49,9 +52,9 @@ class OrderRepositoryTest {
 
 	@Test
 	void cancelFail(){
-		Order findOrder = repository.findById(OrderId.of("orderId3")).get();
-		assertThat(findOrder.getStatus()).isNotEqualTo(OrderStatus.CANCELED);
+		Order findOrder3 = repository.findById(OrderId.of("orderId3")).get();
+		assertThat(findOrder3.getStatus()).isNotEqualTo(OrderStatus.CANCELED);
 
-		assertThrows(AlreadyShippedException.class, findOrder::cancelOrder);
+		assertThrows(AlreadyShippedException.class, findOrder3::cancelOrder);
 	}
 }
