@@ -47,7 +47,7 @@ public class OrderProduct {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof OrderProduct that)) return false;
-		return quantity == that.quantity && Objects.equals(productId, that.productId) && Objects.equals(price, that.price) && Objects.equals(amounts, that.amounts);
+		return quantity == that.quantity && Objects.equals(productId, that.productId) && Objects.equals(price, that.price);
 	}
 
 	@Override
