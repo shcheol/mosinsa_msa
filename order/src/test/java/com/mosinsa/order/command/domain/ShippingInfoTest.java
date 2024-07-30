@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ShippingInfoTest {
 
     @Test
-    void of() {
+    void equalsAndHashCode() {
         ShippingInfoDto shippingInfoDto1 = new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx"));
         ShippingInfoDto shippingInfoDto2 = new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx"));
         ShippingInfo shippingInfoA = ShippingInfo.of(shippingInfoDto1);

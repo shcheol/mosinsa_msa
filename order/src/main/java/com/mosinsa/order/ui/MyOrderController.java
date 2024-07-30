@@ -2,7 +2,7 @@ package com.mosinsa.order.ui;
 
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.query.application.OrderQueryService;
+import com.mosinsa.order.query.application.OrderQueryServiceImpl;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MyOrderController {
 
-    private final OrderQueryService orderQueryService;
+    private final OrderQueryServiceImpl orderQueryService;
 
 
     @GetMapping
