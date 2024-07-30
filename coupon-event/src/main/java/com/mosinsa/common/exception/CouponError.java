@@ -11,11 +11,13 @@ public enum CouponError {
     NOT_FOUND("찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     EMPTY_STOCK("남은 수량이 없습니다.", HttpStatus.NOT_FOUND),
     DUPLICATE_PARTICIPATION("중복 참여입니다.", HttpStatus.NOT_FOUND),
+    UNAUTHORIZED_ERROR("인증 실패", HttpStatus.UNAUTHORIZED),
+    INTERNAL_SERVER_ERROR("서버 오류", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
-    private String message;
+    private final String message;
 
-    private HttpStatus status;
+    private final HttpStatus status;
 
     CouponError(String message, HttpStatus status) {
         this.message = message;

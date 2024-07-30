@@ -23,11 +23,14 @@ public class StockOperation {
 			@Override
 			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
 
-				operations.multi();
-				for (StockOperand stock : stocks) {
-					operations.opsForValue().decrement((K) stock.key(), stock.quantity());
+				try {
+					operations.multi();
+					stocks.forEach(stock -> operations.opsForValue().decrement((K) stock.key(), stock.quantity()));
+					return operations.exec().stream().mapToLong(Long.class::cast).boxed().toList();
+				} catch (Exception e) {
+					operations.discard();
+					throw e;
 				}
-				return operations.exec().stream().mapToLong(Long.class::cast).boxed().toList();
 			}
 		});
 	}
@@ -36,17 +39,19 @@ public class StockOperation {
 		return redisTemplate.execute(new SessionCallback<>() {
 			@Override
 			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
-				operations.multi();
-
-				for (StockOperand stock : stocks) {
-					operations.opsForValue().increment((K) stock.key(), stock.quantity());
+				try {
+					operations.multi();
+					stocks.forEach(stock -> operations.opsForValue().increment((K) stock.key(), stock.quantity()));
+					return operations.exec().stream().mapToLong(Long.class::cast).boxed().toList();
+				} catch (Exception e) {
+					operations.discard();
+					throw e;
 				}
-				return operations.exec().stream().mapToLong(Long.class::cast).boxed().toList();
 			}
 		});
 	}
 
-	public long get(String key){
+	public long get(String key) {
 		return get(key, 0);
 	}
 

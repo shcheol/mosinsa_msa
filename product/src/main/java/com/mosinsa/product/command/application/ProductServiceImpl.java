@@ -10,7 +10,6 @@ import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.StockStatus;
 import com.mosinsa.product.infra.redis.StockOperand;
 import com.mosinsa.product.infra.repository.ProductRepository;
-import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
@@ -31,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
     @Transactional
-    public ProductDetailDto createProduct(CreateProductRequest request) {
+    public ProductId createProduct(CreateProductRequest request) {
         Category category = categoryService.getCategory(request.category());
 
         Product product = productRepository.save(
@@ -40,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
                         category,
                         request.stock()));
         stockPort.setStock(product.getId().getId(), request.stock());
-        return new ProductDetailDto(product);
+        return product.getId();
     }
 
 	@Override
@@ -50,13 +49,10 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> products = getProducts(orderProducts);
 
-        if (!validateStockStatus(products)) {
-            throw new AlreadySoldOutException();
-        }
+        validateStockStatus(products);
 
         List<StockOperand> stockOperands = getStockOperands(orderProducts);
         StockResult stockResult = stockPort.tryDecrease(customerId, orderId, stockOperands);
-
         if (StockResult.FAIL.equals(stockResult)) {
             throw new InvalidStockException();
         }
@@ -78,8 +74,10 @@ public class ProductServiceImpl implements ProductService {
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))).toList();
     }
 
-    private boolean validateStockStatus(List<Product> products) {
-        return products.stream().allMatch(p -> p.getStock().getStatus().equals(StockStatus.ON));
+    private void validateStockStatus(List<Product> products) {
+        if(!products.stream().allMatch(p -> p.getStock().getStatus().equals(StockStatus.ON))){
+            throw new AlreadySoldOutException();
+        }
     }
 
 	@Override

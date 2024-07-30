@@ -10,4 +10,5 @@ public interface ProductQueryService {
 
 	Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable);
 
+	Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable);
 }

@@ -28,7 +28,7 @@ instance.interceptors.response.use(
 instance.interceptors.request.use(
     (config) => {
         config.headers = {
-            "Authorization": "Bearer "+localStorage.getItem("access-token"),
+            "Authorization": "Bearer " + localStorage.getItem("access-token"),
             "Refresh-Token": localStorage.getItem("refresh-token"),
             "Customer-Info": JSON.stringify(localStorage.getItem("customer-info")),
             'Content-Type': 'application/json; charset=utf-8',
@@ -76,26 +76,6 @@ export default {
                 }
             })
     },
-    postReviewLikes: function (reviewId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/likes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
-    postReviewDislikes: function (reviewId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/dislikes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
     getReviewComments: function (reviewId) {
         return instance.get(BASE_URL + `product-service/reviews/${reviewId}/comments`)
     },
@@ -123,31 +103,11 @@ export default {
                 }
             })
     },
-    postCommentLikes: function (reviewId, commentId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/likes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
-    postCommentDislikes: function (reviewId, commentId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/dislikes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
     getProductsInCategory: function (categoryId) {
         return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
     },
     getLikesProducts: function () {
-        return instance.get(BASE_URL + `product-service/products/likes?customer=${JSON.parse(localStorage.getItem("customer-info")).id}`)
+        return instance.get(BASE_URL + `product-service/products/my`)
     },
     getProductDetails: function (id) {
         return instance.get(BASE_URL + 'product-service/products/' + id)
@@ -171,9 +131,7 @@ export default {
     },
     postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
-                "myOrderProducts":
-                myOrderProducts
-                ,
+                "myOrderProducts": myOrderProducts,
                 "couponId": couponId,
                 "shippingInfo": shippingInfo,
             },
@@ -213,24 +171,18 @@ export default {
         return instance.get(BASE_URL + 'order-service/orders/' + id)
     },
     getCoupons: function () {
-        return instance.get(BASE_URL + `coupon-service/coupons/my/${JSON.parse(localStorage.getItem("customer-info")).id}`)
+        return instance.get(BASE_URL + `coupon-service/coupons/my`)
     },
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)
     },
-    getPromotions: function () {
-        return instance.get(BASE_URL + 'coupon-service/promotions')
+    getPromotions: function (page) {
+        return instance.get(BASE_URL + `coupon-service/promotions?page=${page}`)
     },
-    joinPromotions: function (promotionId) {
-        return instance.post(BASE_URL + 'coupon-service/promotions/' + promotionId + '/join',
+    joinPromotions: function (promotionId, quests) {
+        return instance.post(BASE_URL + `coupon-service/promotions/${promotionId}`,
             {
-                "memberId": JSON.parse(localStorage.getItem("customer-info")).id
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                "quests": quests
             })
     },
     getPromotionDetails: function (id) {

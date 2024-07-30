@@ -4,12 +4,12 @@ import com.hcs.idempotencyapi.aop.IdempotencyApi;
 import com.mosinsa.order.command.application.OrderCancelTemplate;
 import com.mosinsa.order.command.application.OrderTemplate;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
+import com.mosinsa.order.common.argumentresolver.CustomerInfo;
+import com.mosinsa.order.common.argumentresolver.Login;
 import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.query.application.dto.OrderDetail;
-import com.mosinsa.order.ui.argumentresolver.AuthMap;
-import com.mosinsa.order.ui.argumentresolver.AuthToken;
-import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
-import com.mosinsa.order.ui.argumentresolver.Login;
+import com.mosinsa.order.common.argumentresolver.AuthMap;
+import com.mosinsa.order.common.argumentresolver.AuthToken;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +34,7 @@ public class OrderController {
 													 @Login CustomerInfo customerInfo,
 													 @AuthMap AuthToken authMap) {
 
+        log.info("{}", orderConfirmRequest);
         OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap.map(), customerInfo, orderConfirmRequest);
 
         return ResponseEntity.ok(orderConfirmDto);

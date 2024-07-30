@@ -4,10 +4,6 @@ import com.mosinsa.order.command.application.NotEnoughProductStockException;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
 import com.mosinsa.order.infra.api.ProductAdapter;
 import com.mosinsa.order.infra.api.ResponseResult;
-import com.mosinsa.order.infra.api.feignclient.product.OrderProductRequest;
-import com.mosinsa.order.infra.api.feignclient.product.OrderProductRequests;
-import com.mosinsa.order.infra.api.feignclient.product.ProductClient;
-import com.mosinsa.order.infra.api.feignclient.product.ProductResponse;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.MyOrderProduct;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
@@ -35,8 +31,8 @@ public class ProductFeignAdapter implements ProductAdapter {
                 .map(productResponseResponseResult -> {
                     ProductResponse productResponse = productResponseResponseResult.orElseThrow();
                     int orderStock = orderQuantityMap.getOrDefault(productResponse.productId(), Integer.MAX_VALUE);
-                    if (productResponse.stock() < orderStock) {
-                        log.info("not enough product stock {}/{}", orderStock, productResponse.stock());
+                    if (productResponse.currentStock() < orderStock) {
+                        log.info("not enough product stock {}/{}", orderStock, productResponse.currentStock());
                         throw new NotEnoughProductStockException();
                     }
                     return OrderProductDto.builder()

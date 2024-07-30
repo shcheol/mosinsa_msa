@@ -1,32 +1,32 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.code.TestClass;
-import org.assertj.core.api.Assertions;
+import com.mosinsa.order.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OrderProductTest {
 
     @Test
     void equalsAndHashCode() {
-        OrderProduct actual = OrderProduct.create("productId", 1000, 10);
-        OrderProduct expect = OrderProduct.create("productId", 1000, 10);
-        assertThat(actual).isEqualTo(actual).isEqualTo(expect).hasSameHashCodeAs(expect)
-                .isNotEqualTo(null).isNotEqualTo(new TestClass());
-        OrderProduct a = OrderProduct.create("productIdxxxxxx", 1000, 10);
-        Assertions.assertThat(actual).isNotEqualTo(a).doesNotHaveSameHashCodeAs(a);
-        OrderProduct b = OrderProduct.create("productId", 1012300, 10);
-        Assertions.assertThat(actual).isNotEqualTo(b).doesNotHaveSameHashCodeAs(b);
-        OrderProduct c = OrderProduct.create("productId", 1000, 10123);
-        Assertions.assertThat(actual).isNotEqualTo(c).doesNotHaveSameHashCodeAs(c);
-    }
+        OrderProduct actual = OrderProduct.of("productId", 1000, 10);
+        OrderProduct expect = OrderProduct.of("productId", 1000, 10);
+
+		OrderProduct protectedConstructor = new OrderProduct();
+
+		OrderProduct a = OrderProduct.of("productIdxxxxxx", 1000, 10);
+        OrderProduct b = OrderProduct.of("productId", 1012300, 10);
+        OrderProduct c = OrderProduct.of("productId", 1000, 10123);
+
+		boolean b1 = EqualsAndHashcodeUtils.equalsAndHashcode(actual, expect, protectedConstructor, a, b, c);
+		assertThat(b1).isTrue();
+	}
 
     @Test
     void invalidQuantity() {
 
         assertThrows(IllegalArgumentException.class,
-                () -> OrderProduct.create("productId", 1000, 0));
+                () -> OrderProduct.of("productId", 1000, 0));
     }
 }

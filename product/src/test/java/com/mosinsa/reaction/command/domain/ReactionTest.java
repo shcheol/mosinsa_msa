@@ -1,25 +1,35 @@
 package com.mosinsa.reaction.command.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.code.TestClass;
+import com.mosinsa.reaction.infra.jpa.ReactionRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class ReactionTest {
 
-	@Test
-	void equalsAndHashCode(){
-		Reaction reactionA = Reaction.of(TargetEntity.PRODUCT, "id", ReactionType.LIKES, "member");
+	@Autowired
+	ReactionRepository repository;
 
-		assertThat(reactionA).isEqualTo(reactionA).hasSameHashCodeAs(reactionA)
-				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+	@Test
+	void equalsAndHashCode() {
+		Reaction reactionA = Reaction.of(TargetEntity.PRODUCT, "id", ReactionType.LIKES, "member");
+		Reaction save = repository.save(reactionA);
+		Reaction reactionB = repository.findById(save.getId()).get();
 
 		Reaction reactionC = Reaction.of(TargetEntity.PRODUCT, "id3", ReactionType.LIKES, "member");
-		assertThat(reactionA).isNotEqualTo(reactionC).doesNotHaveSameHashCodeAs(reactionC);
 
 		Reaction protectedConstructor = new Reaction();
-		assertThat(protectedConstructor.hashCode()).isZero();
+
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(reactionA, reactionB, protectedConstructor, reactionC);
+		assertThat(b).isTrue();
 	}
 
 }

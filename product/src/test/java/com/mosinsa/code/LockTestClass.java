@@ -2,15 +2,22 @@ package com.mosinsa.code;
 
 import com.mosinsa.common.aop.RedissonLock;
 
-import java.util.concurrent.CompletableFuture;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LockTestClass {
 
-    @RedissonLock(value = "1234223qkey", waitTime = 100L, leaseTime = 300L, timeUnit = TimeUnit.MILLISECONDS)
-    public void method() throws InterruptedException {
-        System.out.println("do something... start");
-        TimeUnit.MILLISECONDS.sleep(200);
-        System.out.println("do something... end");
-    }
+	private AtomicInteger cnt = new AtomicInteger(0);
+	@RedissonLock(value = "testeky123", waitTime = 200L, leaseTime = 600L, timeUnit = TimeUnit.MILLISECONDS)
+	public void method() throws InterruptedException {
+		System.out.println("do something... start" + LocalDateTime.now());
+		cnt.addAndGet(1);
+		TimeUnit.MILLISECONDS.sleep(300);
+		System.out.println("do something... end" + LocalDateTime.now());
+	}
+
+	public int getCnt(){
+		return cnt.get();
+	}
 }

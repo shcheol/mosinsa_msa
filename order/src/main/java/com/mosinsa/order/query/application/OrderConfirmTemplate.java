@@ -2,10 +2,10 @@ package com.mosinsa.order.query.application;
 
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
+import com.mosinsa.order.common.argumentresolver.CustomerInfo;
 import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.infra.api.ProductAdapter;
 import com.mosinsa.order.infra.api.feignclient.coupon.CouponResponse;
-import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

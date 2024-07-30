@@ -17,21 +17,13 @@
         <td v-if="promotion!=null">{{ promotion.context }}</td>
       </tr>
       <tr>
-        <td>할인률</td>
-        <td v-if="promotion!=null">{{ promotion.discountPolicy }}</td>
-      </tr>
-      <tr>
         <td>기간</td>
         <td v-if="promotion!=null">{{ promotion.period.startDate }} ~ {{ promotion.period.endDate }}</td>
-      </tr>
-      <tr>
-        <td>수량</td>
-        <td v-if="promotion!=null">{{ stock }}/{{ promotion.quantity }}</td>
       </tr>
       </tbody>
     </table>
 
-    <button @click="joinPromotion(promotion.promotionId)" class="btn btn-dark">참여하기</button>
+    <button @click="joinPromotion(promotion)" class="btn btn-dark">참여하기</button>
   </div>
 </template>
 
@@ -42,32 +34,30 @@ export default {
   data() {
     return {
       promotion: null,
-      stock: null
     }
   },
   mounted() {
     apiBoard.getPromotionDetails(this.$route.params.id)
         .then((response) => {
           console.log(response);
-          this.promotion = response.data.promotionDto;
-          this.stock = response.data.stock;
+          this.promotion = response.data;
         })
         .catch(function (e) {
           console.log(e);
         });
   },
   methods: {
-    joinPromotion(promotionId) {
-      if (localStorage.getItem("customer-info") == null) {
-        alert('login이 필요합니다.')
-        this.$router.push({name: "login"})
+    joinPromotion(promotion) {
+      if (promotion.participated) {
+        alert("이미 참여했습니다.");
+      } else {
+        apiBoard.joinPromotions(promotion.promotionId, promotion.quests)
+            .then(() => {
+              alert("쿠폰 발급 성공. 쿠폰함을 확인하세요");
+            }).catch(function (e) {
+          alert("발급 실패, " + e.message);
+        });
       }
-      apiBoard.joinPromotions(promotionId)
-          .then((response) => {
-            alert(response.data.result);
-          }).catch(function (e) {
-        console.log(e);
-      });
     }
   }
 

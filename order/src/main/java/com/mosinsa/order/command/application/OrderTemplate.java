@@ -9,7 +9,6 @@ import com.mosinsa.order.infra.kafka.KafkaEvents;
 import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
-import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

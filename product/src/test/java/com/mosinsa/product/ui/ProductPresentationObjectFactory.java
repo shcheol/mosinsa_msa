@@ -34,7 +34,7 @@ public class ProductPresentationObjectFactory {
         return new ProductQueryService() {
             @Override
             public ProductDetailDto getProductById(String productId) {
-                return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10));
+                return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10),5);
             }
 
             @Override
@@ -46,6 +46,16 @@ public class ProductPresentationObjectFactory {
                         )
                 );
             }
-        };
+
+			@Override
+			public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
+				return new PageImpl<>(
+						List.of(
+								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
+								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
+						)
+				);
+			}
+		};
     }
 }

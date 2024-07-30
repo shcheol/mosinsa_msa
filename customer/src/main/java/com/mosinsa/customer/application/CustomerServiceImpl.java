@@ -1,7 +1,7 @@
 package com.mosinsa.customer.application;
 
-import com.mosinsa.customer.common.ex.CustomerError;
-import com.mosinsa.customer.common.ex.CustomerException;
+import com.mosinsa.common.ex.CustomerError;
+import com.mosinsa.common.ex.CustomerException;
 import com.mosinsa.customer.domain.Customer;
 import com.mosinsa.customer.domain.CustomerId;
 import com.mosinsa.customer.application.dto.CustomerDto;

@@ -30,7 +30,8 @@ export default {
             localStorage.setItem('access-token', response.headers.get("access-token"));
             localStorage.setItem('refresh-token', response.headers.get("refresh-token"));
             localStorage.setItem('customer-info', response.headers.get("customer-info"));
-            this.$store.getters.getLoginState;
+
+            this.$store.commit('setLoginState');
             router.push("/");
           })
           .catch(function (e) {

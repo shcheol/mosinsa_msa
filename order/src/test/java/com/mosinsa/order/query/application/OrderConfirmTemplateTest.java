@@ -2,9 +2,8 @@ package com.mosinsa.order.query.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.order.TestStubConfig;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.ui.argumentresolver.CustomerInfo;
+import com.mosinsa.order.common.argumentresolver.CustomerInfo;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Import({TestStubConfig.class})
+@Import({OrderQueryObjectFactory.class})
 class OrderConfirmTemplateTest {
 
 	ObjectMapper om;

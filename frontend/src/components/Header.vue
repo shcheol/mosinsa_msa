@@ -23,7 +23,7 @@
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
                 </svg>
-                프로모션
+                Promotion
               </router-link>
             </li>
             <li>
@@ -31,10 +31,10 @@
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
                 </svg>
-                myPage
+                My
               </router-link>
             </li>
-            <li>
+            <li v-if="!$store.state.isLogin">
               <router-link to="/login" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
@@ -42,7 +42,7 @@
                 Login
               </router-link>
             </li>
-            <li>
+            <li v-else>
               <router-link to="/logout" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
@@ -56,24 +56,7 @@
       </div>
     </div>
 
-    <div class="px-3 py-2 border-bottom mb-3">
-      <div class="container d-flex flex-wrap justify-content-center">
-        <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
-          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-        </form>
-
-        <div class="text-end">
-          <button type="button" class="btn btn-light text-dark me-2">
-            <router-link to="/login" class="nav-link text-dark">
-              Login
-            </router-link>
-          </button>
-
-
-          <button type="button" class="btn btn-primary">Sign-up</button>
-        </div>
-      </div>
-    </div>
+    <br/>
   </header>
 </template>
 
@@ -81,6 +64,14 @@
 
 export default {
   name: "Header",
+  data(){
+    return{
+      userInfo: null,
+    }
+  },
+  mounted(){
+    this.userInfo = JSON.parse(localStorage.getItem("customer-info"));
+  }
 }
 </script>
 

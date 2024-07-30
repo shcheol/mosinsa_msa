@@ -1,7 +1,7 @@
 package com.mosinsa.reaction.ui;
 
 import com.mosinsa.reaction.command.application.ReactionService;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 
 public class ReactionServiceStub implements ReactionService {
 	@Override

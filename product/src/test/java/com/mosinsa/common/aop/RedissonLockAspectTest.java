@@ -2,47 +2,50 @@ package com.mosinsa.common.aop;
 
 import com.mosinsa.code.LockTestClass;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.redisson.Redisson;
+import org.redisson.config.Config;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Import(LockConfig.class)
 class RedissonLockAspectTest {
 
-    @Autowired
-    LockTestClass lockTestClass;
+	@Test
+	void test() throws InterruptedException {
 
-    @Test
-    void test() throws InterruptedException {
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new LockTestClass());
+		Config config = new Config();
+		config.useSingleServer().setAddress("redis://150.230.252.178:6666");
+		aspectJProxyFactory.addAspect(new RedissonLockAspect(Redisson.create(config)));
 
-        CountDownLatch countDownLatch = new CountDownLatch(2);
-        CompletableFuture.runAsync(() -> {
-            try {
-                lockTestClass.method();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } finally {
-                countDownLatch.countDown();
-            }
-        });
+		LockTestClass proxy = aspectJProxyFactory.getProxy();
 
-        try {
-            assertThrows(TryLockFailException.class, () -> lockTestClass.method());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            countDownLatch.countDown();
-        }
+		CountDownLatch countDownLatch = new CountDownLatch(2);
+		CompletableFuture.runAsync(() -> {
+			try {
+				proxy.method();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			} finally {
+				countDownLatch.countDown();
+			}
+		});
+		try {
+			proxy.method();
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertThat(e).isInstanceOf(TryLockFailException.class);
+		} finally {
+			countDownLatch.countDown();
+		}
 
-        countDownLatch.await();
+		countDownLatch.await();
+		assertThat(proxy.getCnt()).isEqualTo(1);
 
-    }
+	}
 
 
 }

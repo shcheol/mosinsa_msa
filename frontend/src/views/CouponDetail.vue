@@ -9,25 +9,24 @@
         <td v-if="coupon!=null">{{ coupon.couponId }}</td>
       </tr>
       <tr>
-        <td>프로모션 번호</td>
-        <td v-if="coupon!=null">{{ coupon.promotionId }}</td>
-      </tr>
-      <tr>
         <td>발급일</td>
         <td v-if="coupon!=null">{{ coupon.issuedDate }}</td>
       </tr>
       <tr>
         <td>상태</td>
-        <td v-if="coupon!=null && coupon.available">사용가능</td>
-        <td v-if="coupon!=null && !coupon.available">사용불가</td>
+        <td v-if="coupon!=null">{{ coupon.state }}</td>
       </tr>
       <tr>
         <td>만료기간</td>
-        <td v-if="coupon!=null">{{ coupon.duringDate }}</td>
+        <td v-if="coupon!=null">{{ coupon.details.duringDate }}</td>
       </tr>
       <tr>
         <td>할인률</td>
-        <td v-if="coupon!=null">{{ coupon.discountPolicy }}</td>
+        <td v-if="coupon!=null">{{ coupon.details.discountPolicy }}</td>
+      </tr>
+      <tr>
+        <td>최소사용금액</td>
+        <td v-if="coupon!=null">{{ coupon.details.minUsePrice }}</td>
       </tr>
       </tbody>
     </table>

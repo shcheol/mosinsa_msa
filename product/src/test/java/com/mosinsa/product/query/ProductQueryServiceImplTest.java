@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,19 +31,36 @@ class ProductQueryServiceImplTest {
 	}
 
 	@Test
-	void findByCondition(){
+	void findByCondition() {
 		SearchCondition searchCondition = new SearchCondition("categoryId1");
-		Page<ProductQueryDto> byCondition = productQueryServiceImpl.findProductsByCondition(searchCondition, PageRequest.of(0,3));
+		Page<ProductQueryDto> byCondition = productQueryServiceImpl.findProductsByCondition(searchCondition, PageRequest.of(0, 3));
 		int size = byCondition.getContent().size();
 		assertThat(size).isEqualTo(3);
 
 		List<ProductQueryDto> content = byCondition.getContent();
 
-		int idx=0;
+		int idx = 0;
 		List<String> answers = List.of("productId4", "productId1", "productId5");
 		for (ProductQueryDto productQueryDto : content) {
 			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
 		}
+	}
+
+	@Test
+	void findMyProducts() {
+		Page<ProductQueryDto> byCondition = productQueryServiceImpl.findMyProducts("memberId2", PageRequest.of(0, 3));
+		List<ProductQueryDto> content = byCondition.getContent();
+
+		assertThat(content).hasSize(2);
+
+		int idx = 0;
+		List<String> answers = List.of("productId2", "productId1");
+		for (ProductQueryDto productQueryDto : content) {
+			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
+		}
+		PageRequest of = PageRequest.of(0, 3);
+		assertThrows(ProductException.class,
+				() -> productQueryServiceImpl.findMyProducts("memberId2xxx", of));
 	}
 
 }

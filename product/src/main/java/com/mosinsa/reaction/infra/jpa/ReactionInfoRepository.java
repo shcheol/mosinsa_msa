@@ -1,7 +1,7 @@
 package com.mosinsa.reaction.infra.jpa;
 
 import com.mosinsa.reaction.command.domain.ReactionInfo;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -2,8 +2,8 @@ package com.mosinsa.reaction.ui;
 
 import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.common.argumentresolver.GuestOrLogin;
-import com.mosinsa.reaction.qeury.application.ReactionReader;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.ReactionReader;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import com.mosinsa.reaction.ui.request.ReactionRequest;
 import com.mosinsa.reaction.ui.response.ReactionResult;
 import lombok.RequiredArgsConstructor;

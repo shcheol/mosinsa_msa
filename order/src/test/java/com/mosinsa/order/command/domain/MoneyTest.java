@@ -1,10 +1,10 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.code.TestClass;
+import com.mosinsa.order.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MoneyTest {
 

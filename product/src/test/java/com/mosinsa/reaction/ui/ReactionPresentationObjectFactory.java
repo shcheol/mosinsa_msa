@@ -1,7 +1,7 @@
 package com.mosinsa.reaction.ui;
 
 import com.mosinsa.reaction.command.application.ReactionService;
-import com.mosinsa.reaction.qeury.application.ReactionReader;
+import com.mosinsa.reaction.query.application.ReactionReader;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 

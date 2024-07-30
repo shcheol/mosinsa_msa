@@ -1,25 +1,30 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.application.dto.AddressDto;
-import com.mosinsa.order.command.application.dto.ReceiverDto;
-import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.order.infra.repository.OrderRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SpringBootTest
+@Sql("classpath:db/test-init.sql")
 class OrderTest {
 
-	private final ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
+	@Autowired
+	OrderRepository repository;
+	private final Receiver receiver = Receiver.of("", "");
+	private final Address address = Address.of("", "","");
 
 	@Test
 	void equalsAndHashCode() {
-		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		Order order1 = Order.create("cId", "couponId", orderProducts, shippingInfo, 10000);
 
 		Order protectedConstructor = new Order();
@@ -29,7 +34,7 @@ class OrderTest {
 	@Test
 	void create_상품_empty() {
 		List<OrderProduct> orderProducts = List.of();
-		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		assertThrows(OrderException.class,
 				() -> Order.create("customerId", "couponId", orderProducts,
 						shippingInfo, 10000));
@@ -38,7 +43,7 @@ class OrderTest {
 	@Test
 	void create_상품_null() {
 		List<OrderProduct> orderProducts = null;
-		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		assertThrows(OrderException.class,
 				() -> Order.create("customerId", "couponId", orderProducts,
 						shippingInfo, 10000));
@@ -46,8 +51,8 @@ class OrderTest {
 
 	@Test
 	void create_주문자x() {
-		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		assertThrows(OrderException.class,
 				() -> Order.create("", "couponId", orderProducts,
 						shippingInfo, 10000));
@@ -56,8 +61,8 @@ class OrderTest {
 
 	@Test
 	void cancelOrder() {
-		List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(shippingInfoDto);
+		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		Order order = Order.create("cId", "couponId", orderProducts, shippingInfo, 10000);
 		order.cancelOrder();
 		assertThrows(AlreadyCanceledException.class, order::cancelOrder);

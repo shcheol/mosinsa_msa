@@ -2,17 +2,18 @@
   <div class="container">
     <h2>쿠폰목록</h2>
 
-    <div v-for="(coupon) in coupons" :key="coupon">
+    <div v-if="coupons ==null || coupons.length<=0" >쿠폰이 없습니다.</div>
+    <div v-else v-for="(coupon) in coupons" :key="coupon">
       <table class="table">
         <tbody>
         <tr>
           <td>쿠폰번호</td>
           <td v-if="coupon!=null">{{ coupon.couponId }}</td>
-          <button v-if="coupon!=null" @click="couponDetails(coupon.couponId)">쿠폰상세</button>
+          <button v-if="coupon!=null" @click="couponCondition(coupon.couponId)">쿠폰상세</button>
         </tr>
         <tr>
-          <td>프로모션번호</td>
-          <td v-if="coupon!=null">{{ coupon.promotionId }}</td>
+          <td>할인률</td>
+          <td v-if="coupon!=null">{{ coupon.details.discountPolicy }}</td>
         </tr>
         <tr>
           <td>상태</td>
@@ -48,7 +49,7 @@ export default {
         });
   },
   methods: {
-    couponDetails(id) {
+    couponCondition(id) {
       this.$router.push({
         name: 'couponDetails',
         params: {id: id}

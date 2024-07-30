@@ -1,26 +1,32 @@
 package com.mosinsa.common.aop;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
 class RetryAspectTest {
 
-    @Autowired TestClass testClass;
 
-    @Test
-    void success(){
-        testClass.successMethod();
-        assertThat(testClass.getSuccessCount()).isEqualTo(1);
-    }
+	@Test
+	void success() {
 
-    @Test
-    void fail(){
-        assertThrows(RetryFailException.class, () -> testClass.failMethod());
-        assertThat(testClass.getFailCount()).isEqualTo(3);
-    }
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new TestClient());
+		aspectJProxyFactory.addAspect(new RetryAspect());
+		TestClient proxy = aspectJProxyFactory.getProxy();
+
+		proxy.successMethod();
+		assertThat(proxy.getSuccessCount()).isEqualTo(1);
+	}
+
+	@Test
+	void fail() {
+		AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(new TestClient());
+		aspectJProxyFactory.addAspect(new RetryAspect());
+		TestClient proxy = aspectJProxyFactory.getProxy();
+
+		assertThrows(RetryFailException.class, proxy::failMethod);
+		assertThat(proxy.getFailCount()).isEqualTo(3);
+	}
 }
