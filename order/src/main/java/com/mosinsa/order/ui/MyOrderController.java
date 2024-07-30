@@ -1,8 +1,6 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.common.ex.OrderError;
-import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.query.application.OrderQueryServiceImpl;
+import com.mosinsa.order.query.application.OrderQueryService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.SearchCondition;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MyOrderController {
 
-    private final OrderQueryServiceImpl orderQueryService;
+    private final OrderQueryService orderQueryService;
 
 
     @GetMapping
@@ -36,9 +33,6 @@ public class MyOrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDetail> orderDetails(@PathVariable String orderId) {
-        if (!StringUtils.hasText(orderId)) {
-            throw new OrderException(OrderError.VALIDATION_ERROR);
-        }
         OrderDetail orderDto = orderQueryService.getOrderDetails(orderId);
         return ResponseEntity.ok(orderDto);
     }
