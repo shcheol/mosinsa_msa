@@ -35,6 +35,7 @@ class CouponIdTest {
         CouponId other = CouponId.of("testxxx");
         CouponId protectedConstructor = new CouponId();
 
+        System.out.println(protectedConstructor.hashCode());
         EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, other, protectedConstructor);
     }
 

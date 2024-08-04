@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Access(AccessType.FIELD)
 @Getter
 public class PromotionId implements Serializable {
@@ -37,15 +36,19 @@ public class PromotionId implements Serializable {
 		return promotionId;
 	}
 
+    protected PromotionId() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PromotionId that)) return false;
+
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id != null ? id.hashCode() : 0;
     }
 }

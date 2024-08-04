@@ -41,11 +41,12 @@ public class CouponId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CouponId couponId)) return false;
+
         return Objects.equals(id, couponId.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return id != null ? id.hashCode() : 0;
     }
 }
