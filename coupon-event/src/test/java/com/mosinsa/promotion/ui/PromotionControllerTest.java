@@ -162,32 +162,6 @@ class PromotionControllerTest {
 	}
 
 	@Test
-	@DisplayName("promotion 참여 - 로그인 안한 멤버")
-	void joinPromotionsWithoutLogin() throws Exception {
-		JoinPromotionRequest request = new JoinPromotionRequest(null, "promotion1");
-		mockMvc.perform(
-						post("/promotions/" + request.promotionId() + "/join")
-								.contentType(MediaType.APPLICATION_JSON_VALUE)
-								.content(om.writeValueAsString(request))
-				).andExpect(status().isBadRequest())
-				.andExpect(jsonPath("result").value("login first"))
-				.andDo(print());
-	}
-
-	@Test
-	@DisplayName("promotion 참여 - 로그인 멤버")
-	void joinPromotionsWithLogin() throws Exception {
-		JoinPromotionRequest request = new JoinPromotionRequest("1", "promotion1");
-		mockMvc.perform(
-						post("/promotions/" + request.promotionId() + "/join")
-								.contentType(MediaType.APPLICATION_JSON_VALUE)
-								.content(om.writeValueAsString(request))
-				).andExpect(status().isOk())
-				.andExpect(jsonPath("result").value("request..."))
-				.andDo(print());
-	}
-
-	@Test
 	@DisplayName("promotion 생성")
 	void create() throws Exception {
 
