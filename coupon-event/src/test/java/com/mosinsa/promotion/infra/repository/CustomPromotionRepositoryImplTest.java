@@ -30,7 +30,7 @@ class CustomPromotionRepositoryImplTest {
 		PromotionId id = PromotionId.of("promotion1");
 		System.out.println(id);
 		Promotion promotion1 = repository.findById(id).get();
-		Assertions.assertThat(promotion1.getPromotionId()).isEqualTo(id);
+		Assertions.assertThat(promotion1.getId()).isEqualTo(id);
 	}
 
 	@Test

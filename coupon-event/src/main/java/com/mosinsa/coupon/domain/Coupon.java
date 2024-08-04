@@ -5,7 +5,6 @@ import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.promotion.domain.PromotionId;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Objects;
 public class Coupon {
 
 	@EmbeddedId
-	private CouponId couponId;
+	private CouponId id;
 
 	@Embedded
 	private PromotionId promotionId;
@@ -32,7 +31,7 @@ public class Coupon {
 
 	public static Coupon create(PromotionId promotionId, CouponDetails details) {
 		Coupon coupon = new Coupon();
-		coupon.couponId = CouponId.newId();
+		coupon.id = CouponId.newId();
 		coupon.promotionId = promotionId;
 		coupon.details = details;
 		coupon.state = CouponState.CREATED;
@@ -79,13 +78,12 @@ public class Coupon {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-		Coupon coupon = (Coupon) o;
-		return couponId != null && Objects.equals(couponId, coupon.couponId);
+		if (!(o instanceof Coupon coupon)) return false;
+		return Objects.equals(id, coupon.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(couponId);
+		return Objects.hash(id);
 	}
 }

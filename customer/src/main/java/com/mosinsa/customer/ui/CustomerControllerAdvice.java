@@ -1,6 +1,6 @@
 package com.mosinsa.customer.ui;
 
-import com.mosinsa.customer.common.ex.CustomerException;
+import com.mosinsa.common.ex.CustomerException;
 import com.mosinsa.customer.ui.response.BaseResponse;
 import com.mosinsa.customer.ui.response.GlobalResponseEntity;
 import lombok.AccessLevel;

@@ -61,8 +61,6 @@ public class CouponService {
         log.info("coupon issue event {}", event);
         CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
 
-//        duplicateParticipationCheck(condition);
-
         Coupon coupon = couponRepository.findNotIssuedCoupon(condition)
                 .orElseThrow(() -> {
                     log.info("member {} {}", condition.memberId(), CouponError.EMPTY_STOCK.getMessage());
@@ -72,15 +70,7 @@ public class CouponService {
 
         log.info("member {} issue coupon", condition.memberId());
 
-        return coupon.getCouponId();
-    }
-
-    private void duplicateParticipationCheck(CouponSearchCondition condition) {
-        CouponId couponWithMember = couponRepository.findAssignedCoupon(condition);
-        if (couponWithMember != null) {
-            log.info("member {} {}", condition.memberId(), CouponError.DUPLICATE_PARTICIPATION.getMessage());
-            throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
-        }
+        return coupon.getId();
     }
 
     public List<CouponDto> myCoupons(String memberId) {

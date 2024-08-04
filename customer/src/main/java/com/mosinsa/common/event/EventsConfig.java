@@ -1,4 +1,4 @@
-package com.mosinsa.customer.common.event;
+package com.mosinsa.common.event;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;

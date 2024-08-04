@@ -33,7 +33,7 @@ public class PromotionDto {
 	}
 
 	public static PromotionDto convert(Promotion promotion) {
-		return new PromotionDto(promotion.getPromotionId(),
+		return new PromotionDto(promotion.getId(),
 				promotion.getTitle(),
 				promotion.getContext(),
 				promotion.getQuantity(),

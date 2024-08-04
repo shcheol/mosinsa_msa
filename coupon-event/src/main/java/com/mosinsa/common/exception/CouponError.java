@@ -13,9 +13,9 @@ public enum CouponError {
     DUPLICATE_PARTICIPATION("중복 참여입니다.", HttpStatus.NOT_FOUND),
     ;
 
-    private String message;
+    private final String message;
 
-    private HttpStatus status;
+    private final HttpStatus status;
 
     CouponError(String message, HttpStatus status) {
         this.message = message;

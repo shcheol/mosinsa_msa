@@ -40,14 +40,12 @@ public class PromotionId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PromotionId id = (PromotionId) o;
-        return Objects.equals(this.id, id.id);
+        if (!(o instanceof PromotionId that)) return false;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hash(id);
     }
 }

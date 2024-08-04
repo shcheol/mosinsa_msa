@@ -1,6 +1,6 @@
 package com.mosinsa.customer.ui.filter;
 
-import com.mosinsa.customer.common.jwt.TokenProvider;
+import com.mosinsa.common.jwt.TokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -31,7 +31,7 @@ public class CouponDto {
 
 	public static CouponDto convert(Coupon coupon) {
 		return new CouponDto(
-				coupon.getCouponId(),
+				coupon.getId(),
 				coupon.getPromotionId(),
 				coupon.getIssuedDate(),
 				coupon.getMemberId(),

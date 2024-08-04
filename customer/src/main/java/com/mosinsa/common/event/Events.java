@@ -1,4 +1,4 @@
-package com.mosinsa.customer.common.event;
+package com.mosinsa.common.event;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

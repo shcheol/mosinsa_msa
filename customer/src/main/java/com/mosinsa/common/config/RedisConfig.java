@@ -1,4 +1,4 @@
-package com.mosinsa.customer.common.config;
+package com.mosinsa.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

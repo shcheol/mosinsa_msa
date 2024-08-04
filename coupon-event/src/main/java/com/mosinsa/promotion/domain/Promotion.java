@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ import java.util.Objects;
 public class Promotion {
 
     @EmbeddedId
-    private PromotionId promotionId;
+    private PromotionId id;
     @Nonnull
     private String title;
 
@@ -42,12 +41,12 @@ public class Promotion {
         promotion.setQuantity(quantity);
         promotion.setDiscountPolicy(discountPolicy);
         promotion.setPeriod(period);
-        Events.raise(new PromotionCreatedEvent(promotion.getPromotionId(), promotion.getQuantity(), details));
+        Events.raise(new PromotionCreatedEvent(promotion.getId(), promotion.getQuantity(), details));
         return promotion;
     }
 
     private void setPromotionId(PromotionId promotionId) {
-        this.promotionId = promotionId;
+        this.id = promotionId;
     }
 
     private void setTitle(String title) {
@@ -73,13 +72,12 @@ public class Promotion {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Promotion promotion = (Promotion) o;
-        return promotionId != null && Objects.equals(promotionId, promotion.promotionId);
+        if (!(o instanceof Promotion promotion)) return false;
+        return Objects.equals(id, promotion.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(promotionId);
+        return Objects.hash(id);
     }
 }

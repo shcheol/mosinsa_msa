@@ -30,7 +30,7 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 
 		List<PromotionDto> fetch = queryFactory.select(
 						new QPromotionDto(
-								promotion.promotionId,
+								promotion.id,
 								promotion.title,
 								promotion.context,
 								promotion.quantity,
@@ -58,15 +58,15 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 
 	@Override
 	public List<Tuple> stocksGroupByPromotion(PromotionSearchCondition condition) {
-		return queryFactory.select(promotion.promotionId, promotion.count())
+		return queryFactory.select(promotion.id, promotion.count())
 				.from(promotion)
 				.leftJoin(coupon)
-				.on(promotion.promotionId.eq(coupon.promotionId))
+				.on(promotion.id.eq(coupon.promotionId))
 				.where(
 						coupon.memberId.isNull(),
 						proceeding(condition.now(), condition.proceeding())
 				)
-				.groupBy(promotion.promotionId)
+				.groupBy(promotion.id)
 				.fetch();
 	}
 

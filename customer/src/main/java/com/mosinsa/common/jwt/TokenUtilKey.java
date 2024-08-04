@@ -1,4 +1,4 @@
-package com.mosinsa.customer.common.jwt;
+package com.mosinsa.common.jwt;
 
 public enum TokenUtilKey {
     ACCESS_TOKEN("accessToken"),

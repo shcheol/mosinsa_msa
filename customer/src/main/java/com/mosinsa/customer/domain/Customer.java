@@ -1,6 +1,6 @@
 package com.mosinsa.customer.domain;
 
-import com.mosinsa.customer.common.event.Events;
+import com.mosinsa.common.event.Events;
 import com.mosinsa.customer.infra.kafka.CustomerCreatedEvent;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;

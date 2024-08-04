@@ -1,4 +1,4 @@
-package com.mosinsa.customer.common.ex;
+package com.mosinsa.common.ex;
 
 public class AuthorizationException extends RuntimeException {
 

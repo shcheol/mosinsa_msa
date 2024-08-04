@@ -40,14 +40,12 @@ public class CouponId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CouponId id = (CouponId) o;
-        return Objects.equals(this.id, id.id);
+        if (!(o instanceof CouponId couponId)) return false;
+        return Objects.equals(id, couponId.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hash(id);
     }
 }

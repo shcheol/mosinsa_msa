@@ -1,4 +1,4 @@
-package com.mosinsa.config;
+package com.mosinsa.common.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

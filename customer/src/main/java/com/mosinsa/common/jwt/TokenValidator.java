@@ -1,15 +1,15 @@
-package com.mosinsa.customer.common.jwt;
+package com.mosinsa.common.jwt;
 
-import com.mosinsa.customer.common.ex.AuthorizationError;
-import com.mosinsa.customer.common.ex.AuthorizationException;
+import com.mosinsa.common.ex.AuthorizationError;
+import com.mosinsa.common.ex.AuthorizationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.time.Clock;
 import java.util.Map;
 
-import static com.mosinsa.customer.common.jwt.TokenUtilKey.ACCESS_TOKEN;
-import static com.mosinsa.customer.common.jwt.TokenUtilKey.REFRESH_TOKEN;
+import static com.mosinsa.common.jwt.TokenUtilKey.ACCESS_TOKEN;
+import static com.mosinsa.common.jwt.TokenUtilKey.REFRESH_TOKEN;
 
 @RequiredArgsConstructor
 public class TokenValidator {

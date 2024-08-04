@@ -1,9 +1,9 @@
-package com.mosinsa.customer.common.config;
+package com.mosinsa.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.customer.application.CustomerService;
-import com.mosinsa.customer.common.jwt.Token;
-import com.mosinsa.customer.common.jwt.TokenProvider;
+import com.mosinsa.common.jwt.Token;
+import com.mosinsa.common.jwt.TokenProvider;
 import com.mosinsa.customer.ui.filter.AuthenticationFilter;
 import com.mosinsa.customer.ui.filter.JwtLogoutHandler;
 import lombok.RequiredArgsConstructor;

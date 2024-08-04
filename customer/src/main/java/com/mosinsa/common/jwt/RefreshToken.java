@@ -1,4 +1,4 @@
-package com.mosinsa.customer.common.jwt;
+package com.mosinsa.common.jwt;
 
 import com.mosinsa.customer.infra.repository.TokenRepository;
 import io.jsonwebtoken.Claims;

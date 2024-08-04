@@ -30,11 +30,11 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 
 	@Override
 	public List<CouponId> findCouponsInPromotion(CouponSearchCondition condition) {
-		return queryFactory.select(coupon.couponId).from(coupon)
+		return queryFactory.select(coupon.id).from(coupon)
 				.where(
 						promotionEq(condition.promotionId()),
 						notAssignedCoupon())
-				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.id.id))
 				.fetch();
 
 
@@ -49,7 +49,7 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 								promotionEq(condition.promotionId()),
 								notAssignedCoupon()
 						)
-						.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+						.orderBy(new OrderSpecifier<>(Order.ASC, coupon.id.id))
 						.limit(1)
 						.setLockMode(LockModeType.PESSIMISTIC_WRITE)
 						.setHint(
@@ -65,7 +65,7 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 
 		return queryFactory.select(
 						new QCouponDto(
-								coupon.couponId,
+								coupon.id,
 								coupon.promotionId,
 								coupon.issuedDate,
 								coupon.memberId,
@@ -81,12 +81,12 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 
 	@Override
 	public CouponId findAssignedCoupon(CouponSearchCondition condition) {
-		return queryFactory.select(coupon.couponId)
+		return queryFactory.select(coupon.id)
 				.from(coupon)
 				.where(
 						promotionEq(condition.promotionId()),
 						assignedCoupon(condition.memberId()))
-				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
+				.orderBy(new OrderSpecifier<>(Order.ASC, coupon.id.id))
 				.fetchFirst();
 	}
 

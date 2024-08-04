@@ -26,7 +26,7 @@ public class JdbcCouponRepositoryImpl implements JdbcCouponRepository {
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
-                        ps.setObject(1, couponList.get(i).getCouponId().getId());
+                        ps.setObject(1, couponList.get(i).getId().getId());
                         ps.setObject(2, couponList.get(i).getPromotionId().getId());
                         ps.setObject(3, null);
 						ps.setObject(4, couponList.get(i).getDetails().getDiscountPolicy().name());
