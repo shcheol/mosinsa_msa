@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.infra;
+package com.mosinsa.coupon.infra.kafka;
 
 import com.mosinsa.coupon.application.CouponService;
 import com.mosinsa.coupon.domain.CouponIssuedEvent;

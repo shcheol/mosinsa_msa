@@ -123,26 +123,6 @@ export default {
                 }
             })
     },
-    postCommentLikes: function (reviewId, commentId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/likes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
-    postCommentDislikes: function (reviewId, commentId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/comments/${commentId}/dislikes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
     getProductsInCategory: function (categoryId) {
         return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
     },

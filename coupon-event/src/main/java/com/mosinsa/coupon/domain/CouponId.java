@@ -4,9 +4,7 @@ import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -14,7 +12,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Access(AccessType.FIELD)
 public class CouponId implements Serializable {
@@ -26,6 +23,9 @@ public class CouponId implements Serializable {
         CouponId id = new CouponId();
         id.id = UUID.randomUUID().toString();
         return id;
+    }
+
+    protected CouponId() {
     }
 
     public static CouponId of(String id) {

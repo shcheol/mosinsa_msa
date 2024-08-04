@@ -18,7 +18,6 @@ public class Coupon {
 
 	@EmbeddedId
 	private CouponId id;
-
 	@Embedded
 	private PromotionId promotionId;
 	private LocalDateTime issuedDate;

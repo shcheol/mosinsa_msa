@@ -1,5 +1,6 @@
 package com.mosinsa.coupon.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.promotion.domain.PromotionId;
 import org.junit.jupiter.api.Test;
@@ -20,5 +21,7 @@ class CouponTest {
 
         assertThrows(CouponException.class, () -> Coupon.createAll(promotionId, 0, details));
     }
+
+
 
 }

@@ -35,38 +35,14 @@ public class Promotion {
 
     public static Promotion create(String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period, CouponDetails details) {
         Promotion promotion = new Promotion();
-        promotion.setPromotionId(PromotionId.newId());
-        promotion.setTitle(title);
-        promotion.setContext(context);
-        promotion.setQuantity(quantity);
-        promotion.setDiscountPolicy(discountPolicy);
-        promotion.setPeriod(period);
+        promotion.id = PromotionId.newId();
+        promotion.title = title;
+        promotion.context = context;
+        promotion.quantity = quantity;
+        promotion.discountPolicy =discountPolicy;
+        promotion.period = period;
         Events.raise(new PromotionCreatedEvent(promotion.getId(), promotion.getQuantity(), details));
         return promotion;
-    }
-
-    private void setPromotionId(PromotionId promotionId) {
-        this.id = promotionId;
-    }
-
-    private void setTitle(String title) {
-        this.title = title;
-    }
-
-    private void setContext(String context) {
-        this.context = context;
-    }
-
-    private void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    private void setDiscountPolicy(DiscountPolicy discountPolicy) {
-        this.discountPolicy = discountPolicy;
-    }
-
-    private void setPeriod(PromotionPeriod period) {
-        this.period = period;
     }
 
     @Override

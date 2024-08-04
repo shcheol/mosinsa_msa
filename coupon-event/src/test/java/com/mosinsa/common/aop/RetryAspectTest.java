@@ -10,17 +10,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 class RetryAspectTest {
 
-    @Autowired TestClass testClass;
+    @Autowired
+    TestClient testClient;
 
     @Test
     void success(){
-        testClass.successMethod();
-        assertThat(testClass.getSuccessCount()).isEqualTo(1);
+        testClient.successMethod();
+        assertThat(testClient.getSuccessCount()).isEqualTo(1);
     }
 
     @Test
     void fail(){
-        assertThrows(RetryFailException.class, () -> testClass.failMethod());
-        assertThat(testClass.getFailCount()).isEqualTo(3);
+        assertThrows(RetryFailException.class, () -> testClient.failMethod());
+        assertThat(testClient.getFailCount()).isEqualTo(3);
     }
 }

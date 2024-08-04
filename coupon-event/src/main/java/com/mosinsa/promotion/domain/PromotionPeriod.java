@@ -3,21 +3,20 @@ package com.mosinsa.promotion.domain;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 @Getter
 public class PromotionPeriod {
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    protected PromotionPeriod() {
+    }
 
     public PromotionPeriod(LocalDateTime startDate, LocalDateTime endDate) {
         validateDates(startDate, endDate);
@@ -29,5 +28,17 @@ public class PromotionPeriod {
         if (startDate==null || endDate == null ||startDate.isEqual(endDate) || startDate.isAfter(endDate)){
             throw new CouponException(CouponError.INVALID_PERIOD_INPUT);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PromotionPeriod that)) return false;
+        return Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startDate, endDate);
     }
 }

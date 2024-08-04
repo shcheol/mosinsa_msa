@@ -1,10 +1,9 @@
 package com.mosinsa.common.aop;
 
-import org.springframework.boot.test.context.TestComponent;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TestClass{
+public class TestClient {
 
     private int successCount=0;
     private int failCount=0;
