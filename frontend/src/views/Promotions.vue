@@ -1,22 +1,17 @@
 <template>
   <div class="container">
-    <h2>프로모션 목록</h2>
+    <h2>진행중인 프로모션</h2>
 
     <div v-for="(promotion) in promotions" :key="promotion">
       <table class="table">
-        <tbody>
-        <tr>
-          <td>프로모션 번호</td>
-          <td v-if="promotion!=null">{{ promotion.promotionId }}</td>
-          <button v-if="promotion!=null" @click="promotionDetails(promotion.promotionId)">프로모션상세</button>
-        </tr>
+        <tbody v-if="promotion!=null" @click="promotionDetails(promotion.promotionId)">
         <tr>
           <td>제목</td>
           <td v-if="promotion!=null">{{ promotion.title }}</td>
         </tr>
         <tr>
           <td>기간</td>
-          <td v-if="promotion!=null">{{ promotion.period.startDate }} ~ {{promotion.period.endDate}}</td>
+          <td v-if="promotion!=null">{{ dateFormatting(promotion.period.startDate) }} ~ {{dateFormatting(promotion.period.endDate)}}</td>
         </tr>
         </tbody>
       </table>
@@ -28,6 +23,7 @@
 
 <script>
 import apiBoard from '@/api/board'
+import dayjs from "dayjs";
 
 export default {
   data() {
@@ -51,6 +47,9 @@ export default {
         name: 'promotionDetails',
         params: {id: id}
       })
+    },
+    dateFormatting(date) {
+      return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
     },
   }
 }

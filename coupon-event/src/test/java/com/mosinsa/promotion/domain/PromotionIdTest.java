@@ -3,6 +3,7 @@ package com.mosinsa.promotion.domain;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -35,7 +36,7 @@ class PromotionIdTest {
         PromotionId other = PromotionId.of("testxxx");
         PromotionId protectedConstructor = new PromotionId();
 
-        EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, other, protectedConstructor);
+        assertThat(EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, protectedConstructor, other)).isTrue();
     }
 
 }

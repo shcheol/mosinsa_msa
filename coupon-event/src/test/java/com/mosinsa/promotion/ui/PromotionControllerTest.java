@@ -83,7 +83,7 @@ class PromotionControllerTest {
 
 		PageImpl<PromotionDto> page = new PageImpl<>(List.of(dto1, dto2), PageRequest.of(0, 2), 2);
 
-		when(promotionService.findByPromotions(any(), any()))
+		when(promotionService.findPromotionsByCondition(any(), any()))
 				.thenReturn(page);
 
 		mockMvc.perform(
@@ -98,7 +98,7 @@ class PromotionControllerTest {
 	@DisplayName("promotion 목록 조회 - 예외 발생")
 	void promotionListEx() throws Exception {
 
-		when(promotionService.findByPromotions(any(), any()))
+		when(promotionService.findPromotionsByCondition(any(), any()))
 				.thenThrow(new CouponException(CouponError.NOT_FOUND));
 
 		mockMvc.perform(

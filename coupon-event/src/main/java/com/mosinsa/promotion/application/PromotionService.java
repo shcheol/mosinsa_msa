@@ -42,7 +42,7 @@ public class PromotionService {
 	}
 
 	@Transactional
-	public Page<PromotionDto> findByPromotions(PromotionSearchCondition condition, Pageable pageable) {
+	public Page<PromotionDto> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable) {
 		return repository.findPromotionsByCondition(condition, pageable);
 	}
 

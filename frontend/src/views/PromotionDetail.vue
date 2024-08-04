@@ -58,15 +58,11 @@ export default {
   },
   methods: {
     joinPromotion(promotionId) {
-      if (localStorage.getItem("customer-info") == null) {
-        alert('login이 필요합니다.')
-        this.$router.push({name: "login"})
-      }
       apiBoard.joinPromotions(promotionId)
-          .then((response) => {
-            alert(response.data.result);
+          .then(() => {
+            alert("쿠폰 발급 성공. 쿠폰함을 확인하세요");
           }).catch(function (e) {
-        console.log(e);
+            alert("발급 실패, "+e.message);
       });
     }
   }

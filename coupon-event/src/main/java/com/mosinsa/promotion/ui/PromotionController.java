@@ -24,7 +24,7 @@ public class PromotionController {
 
 	@GetMapping("/promotions")
 	public ResponseEntity<Page<PromotionDto>> promotions(PromotionSearchCondition condition, Pageable pageable) {
-		Page<PromotionDto> promotions = promotionService.findByPromotions(condition, pageable);
+		Page<PromotionDto> promotions = promotionService.findPromotionsByCondition(condition, pageable);
 		return ResponseEntity.ok(promotions);
 	}
 
@@ -39,32 +39,10 @@ public class PromotionController {
 		return ResponseEntity.ok(promotionDetails);
 	}
 
-	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/promotions")
-	public PromotionDto create(@RequestBody CreatePromotionRequest request) {
+	public ResponseEntity<PromotionDto> create(@RequestBody CreatePromotionRequest request) {
 		log.info("request {}", request);
-		return promotionService.create(request);
-	}
-
-	@PostMapping(value = "/promotions/{promotionId}/join", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<JoinResult> joinPromotion(@PathVariable("promotionId") String promotionId, @RequestBody JoinPromotionRequest request) {
-
-		validateLogin(request.memberId());
-
-		promotionService.joinPromotion(request.memberId(), promotionId);
-
-		return ResponseEntity.ok(new JoinResult("request..."));
-	}
-
-	private void validateLogin(String memberId) {
-		if(!StringUtils.hasText(memberId)){
-			log.warn("login before join promotion request: {}", memberId);
-			throw new NotLoginRequestException("로그인 후 재요청해주세요.");
-		}
-	}
-
-	@ExceptionHandler(NotLoginRequestException.class)
-	public ResponseEntity<JoinResult> notLoginRequest() {
-		return ResponseEntity.badRequest().body(new JoinResult("login first"));
+		PromotionDto promotionDto = promotionService.create(request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(promotionDto);
 	}
 }

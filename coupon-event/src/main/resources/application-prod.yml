@@ -38,7 +38,10 @@ spring:
       mode: always
   kafka:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
-
+  data:
+    web:
+      pageable:
+        default-page-size: 10
 logging:
   level:
     root: info

@@ -1,8 +1,10 @@
 package com.mosinsa.coupon.domain;
 
 import com.mosinsa.code.EqualsAndHashcodeUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CouponIdTest {
@@ -35,8 +37,7 @@ class CouponIdTest {
         CouponId other = CouponId.of("testxxx");
         CouponId protectedConstructor = new CouponId();
 
-        System.out.println(protectedConstructor.hashCode());
-        EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, other, protectedConstructor);
+        assertThat(EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, protectedConstructor, other)).isTrue();
     }
 
 }

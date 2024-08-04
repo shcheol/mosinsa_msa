@@ -76,26 +76,6 @@ export default {
                 }
             })
     },
-    postReviewLikes: function (reviewId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/likes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
-    postReviewDislikes: function (reviewId) {
-        return instance.post(BASE_URL + `product-service/reviews/${reviewId}/dislikes`, {
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-    },
     getReviewComments: function (reviewId) {
         return instance.get(BASE_URL + `product-service/reviews/${reviewId}/comments`)
     },
@@ -202,15 +182,9 @@ export default {
         return instance.get(BASE_URL + 'coupon-service/promotions')
     },
     joinPromotions: function (promotionId) {
-        return instance.post(BASE_URL + 'coupon-service/promotions/' + promotionId + '/join',
+        return instance.post(BASE_URL + 'coupon-service/coupons/issue',
             {
-                "memberId": JSON.parse(localStorage.getItem("customer-info")).id
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                "promotionId":promotionId
             })
     },
     getPromotionDetails: function (id) {
