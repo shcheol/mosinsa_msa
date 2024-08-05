@@ -1,7 +1,7 @@
 package com.mosinsa.promotion.domain;
 
 import com.mosinsa.common.event.Event;
-import com.mosinsa.coupon.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.CouponDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

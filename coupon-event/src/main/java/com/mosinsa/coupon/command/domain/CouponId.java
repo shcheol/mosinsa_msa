@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.domain;
+package com.mosinsa.coupon.command.domain;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;

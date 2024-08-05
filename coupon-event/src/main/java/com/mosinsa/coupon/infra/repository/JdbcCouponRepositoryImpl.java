@@ -1,6 +1,6 @@
 package com.mosinsa.coupon.infra.repository;
 
-import com.mosinsa.coupon.domain.Coupon;
+import com.mosinsa.coupon.command.domain.Coupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;

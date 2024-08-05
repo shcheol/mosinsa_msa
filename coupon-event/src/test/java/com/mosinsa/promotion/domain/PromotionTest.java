@@ -1,19 +1,17 @@
 package com.mosinsa.promotion.domain;
 
 import com.mosinsa.code.EqualsAndHashcodeUtils;
-import com.mosinsa.coupon.domain.CouponDetails;
-import com.mosinsa.coupon.domain.DiscountPolicy;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import com.mosinsa.promotion.infra.repository.PromotionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")

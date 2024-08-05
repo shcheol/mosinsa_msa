@@ -1,13 +1,11 @@
 package com.mosinsa.promotion.domain;
 
 import com.mosinsa.common.event.Events;
-import com.mosinsa.coupon.domain.CouponDetails;
-import com.mosinsa.coupon.domain.DiscountPolicy;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 

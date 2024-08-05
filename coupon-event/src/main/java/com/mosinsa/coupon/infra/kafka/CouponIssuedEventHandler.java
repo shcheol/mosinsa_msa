@@ -1,7 +1,7 @@
 package com.mosinsa.coupon.infra.kafka;
 
-import com.mosinsa.coupon.application.CouponService;
-import com.mosinsa.coupon.domain.CouponIssuedEvent;
+import com.mosinsa.coupon.command.application.CouponServiceImpl;
+import com.mosinsa.coupon.command.domain.CouponIssuedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CouponIssuedEventHandler {
 
-    private final CouponService couponService;
+    private final CouponServiceImpl couponServiceImpl;
 
     @Async
     @EventListener(CouponIssuedEvent.class)
     public void handle(CouponIssuedEvent event) {
         log.info("handle PromotionCreatedEvent");
-        couponService.issue(event);
+        couponServiceImpl.issue(event);
     }
 }

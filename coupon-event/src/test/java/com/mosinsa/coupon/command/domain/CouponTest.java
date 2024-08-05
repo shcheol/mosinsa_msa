@@ -1,7 +1,9 @@
-package com.mosinsa.coupon.domain;
+package com.mosinsa.coupon.command.domain;
 
-import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.common.exception.CouponException;
+import com.mosinsa.coupon.command.domain.Coupon;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import com.mosinsa.promotion.domain.PromotionId;
 import org.junit.jupiter.api.Test;
 

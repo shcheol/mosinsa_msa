@@ -1,9 +1,9 @@
-package com.mosinsa.coupon.application.dto;
+package com.mosinsa.coupon.query.application.dto;
 
-import com.mosinsa.coupon.domain.Coupon;
-import com.mosinsa.coupon.domain.CouponDetails;
-import com.mosinsa.coupon.domain.CouponId;
-import com.mosinsa.coupon.domain.CouponState;
+import com.mosinsa.coupon.command.domain.Coupon;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.CouponId;
+import com.mosinsa.coupon.command.domain.CouponState;
 import com.mosinsa.promotion.domain.PromotionId;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

@@ -1,5 +1,6 @@
-package com.mosinsa.coupon.domain;
+package com.mosinsa.coupon.command.domain;
 
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

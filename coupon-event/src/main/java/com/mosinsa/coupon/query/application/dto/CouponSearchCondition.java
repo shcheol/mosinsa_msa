@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.application.dto;
+package com.mosinsa.coupon.query.application.dto;
 
 public record CouponSearchCondition(String memberId, String promotionId) {
 }

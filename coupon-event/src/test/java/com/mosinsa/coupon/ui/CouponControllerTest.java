@@ -2,11 +2,11 @@ package com.mosinsa.coupon.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.common.exception.CouponException;
-import com.mosinsa.coupon.application.CouponService;
-import com.mosinsa.coupon.domain.Coupon;
-import com.mosinsa.coupon.domain.CouponDetails;
-import com.mosinsa.coupon.domain.DiscountPolicy;
-import com.mosinsa.coupon.application.dto.CouponDto;
+import com.mosinsa.coupon.command.application.CouponServiceImpl;
+import com.mosinsa.coupon.command.domain.Coupon;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
+import com.mosinsa.coupon.query.application.dto.CouponDto;
 import com.mosinsa.coupon.ui.response.CouponResponse;
 import com.mosinsa.promotion.domain.PromotionId;
 import com.mosinsa.promotion.application.dto.JoinPromotionRequest;
@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,129 +37,64 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(CouponController.class)
-@ExtendWith(MockitoExtension.class)
+@Import(CouponPresentationObjectFactory.class)
 class CouponControllerTest {
 
-	@Autowired
-	MockMvc mockMvc;
+    @Autowired
+    MockMvc mockMvc;
 
-	@MockBean
-	CouponService couponService;
+    @Test
+    @DisplayName("쿠폰 발급")
+    void joinPromotionsWithLogin() throws Exception {
+        mockMvc.perform(
+                        post("/coupons/issue")
+                                .header("customer-info", """
+                                        "{"name":"name","id":"id"}"
+                                        """)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content("""
+                                        {
+                                        "promotionId":"promotionId"
+                                        }
+                                        """)
+                ).andExpect(status().isOk())
+                .andDo(print());
+    }
 
-	ObjectMapper om = new ObjectMapper();
+    @Test
+    @DisplayName("쿠폰 사용")
+    void useCoupon() throws Exception {
+        mockMvc.perform(
+                        post("/coupons/couponId")
+                                .header("customer-info", """
+                                        "{"name":"name","id":"id"}"
+                                        """)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content("""
+                                        {
+                                        "promotionId":"promotionId"
+                                        }
+                                        """)
+                ).andExpect(status().isOk())
+                .andDo(print());
+    }
 
-	MockHttpSession session;
+    @Test
+    @DisplayName("쿠폰 사용 취소")
+    void useCouponCancel() throws Exception {
+        mockMvc.perform(
+                        post("/coupons/couponId/cancel")
+                                .header("customer-info", """
+                                        "{"name":"name","id":"id"}"
+                                        """)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content("""
+                                        {
+                                        "promotionId":"promotionId"
+                                        }
+                                        """)
+                ).andExpect(status().isOk())
+                .andDo(print());
+    }
 
-	@BeforeEach
-	void setUp() {
-		session = new MockHttpSession();
-	}
-
-	@AfterEach
-	void clean() {
-		session.clearAttributes();
-	}
-
-	@Test
-	void couponDetails() throws Exception {
-
-		Coupon coupon = Coupon.create(
-				PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE)
-		);
-		coupon.issuedCoupon("memberId");
-		CouponDto couponDto = CouponDto.convert(coupon);
-		CouponResponse couponResponse = new CouponResponse(couponDto);
-
-		when(couponService.findById(any()))
-				.thenReturn(couponDto);
-
-		mockMvc.perform(get("/coupons/" + couponDto.getCouponId())
-				)
-//                .andExpect(model().attribute("coupon",couponDto))
-//                .andExpect(view().name("my/couponDetail"));
-				.andExpect(status().isOk());
-
-		verify(couponService).findById(any());
-
-	}
-
-	@Test
-	void myCoupons() throws Exception {
-
-		String memberId = "memberId";
-
-		Coupon coupon1 = Coupon.create(
-				PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
-		coupon1.issuedCoupon(memberId);
-		Coupon coupon2 = Coupon.create(
-				PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
-		coupon2.issuedCoupon(memberId);
-
-		CouponDto couponDto1 = CouponDto.convert(coupon1);
-		CouponDto couponDto2 = CouponDto.convert(coupon2);
-
-		List<CouponDto> couponDtos = List.of(couponDto1, couponDto2);
-		when(couponService.myCoupons(memberId))
-				.thenReturn(couponDtos);
-
-		mockMvc.perform(get("/coupons/my/" + memberId)
-						.header("customer-info", """
-								"{"name":"name","id":"id"}"
-								""")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.session(session))
-//                .andExpect(model().attribute("coupons",couponDtos))
-//                .andExpect(view().name("my/coupons"));
-				.andExpect(status().isOk());
-
-	}
-
-
-	@Test
-	@DisplayName("쿠폰 발급 - 로그인 안한 멤버")
-	void joinPromotionsWithoutLogin() throws Exception {
-		JoinPromotionRequest request = new JoinPromotionRequest(null, "promotion2");
-		mockMvc.perform(
-						post("/coupons/issue")
-								.contentType(MediaType.APPLICATION_JSON_VALUE)
-								.content(om.writeValueAsString(request))
-				).andExpect(status().is4xxClientError())
-				.andDo(print());
-	}
-
-	@Test
-	@DisplayName("쿠폰 발급 - 로그인 멤버")
-	void joinPromotionsWithLogin() throws Exception {
-		JoinPromotionRequest request = new JoinPromotionRequest("1", "promotion2");
-		mockMvc.perform(
-						post("/coupons/issue")
-								.header("customer-info", """
-								"{"name":"name","id":"id"}"
-								""")
-								.contentType(MediaType.APPLICATION_JSON_VALUE)
-								.content(om.writeValueAsString(request))
-				).andExpect(status().isOk())
-				.andDo(print());
-	}
-
-//	@Test
-	@DisplayName("쿠폰 발급 - 예외발생")
-	void joinPromotionsDuplicateRequest() throws Exception {
-		JoinPromotionRequest request = new JoinPromotionRequest("1", "promotion3");
-
-		when(couponService.issue(any()))
-				.thenThrow(CouponException.class);
-
-		mockMvc.perform(
-				post("/coupons/issue")
-						.header("customer-info", """
-								"{"name":"name","id":"id"}"
-								""")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content(om.writeValueAsString(request))
-		).andExpect(status().is5xxServerError());
-
-		verify(couponService).issue(any());
-
-	}
 }

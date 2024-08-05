@@ -17,7 +17,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mosinsa.coupon.domain.QCoupon.coupon;
+import static com.mosinsa.coupon.command.domain.QCoupon.coupon;
 import static com.mosinsa.promotion.domain.QPromotion.promotion;
 
 @RequiredArgsConstructor

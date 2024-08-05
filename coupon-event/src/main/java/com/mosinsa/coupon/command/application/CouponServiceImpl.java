@@ -1,14 +1,13 @@
-package com.mosinsa.coupon.application;
+package com.mosinsa.coupon.command.application;
 
 import com.mosinsa.common.aop.Retry;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
-import com.mosinsa.coupon.domain.*;
-import com.mosinsa.coupon.application.dto.CouponDto;
-import com.mosinsa.coupon.application.dto.CouponSearchCondition;
+import com.mosinsa.coupon.query.application.dto.CouponDto;
+import com.mosinsa.coupon.query.application.dto.CouponSearchCondition;
+import com.mosinsa.coupon.command.domain.*;
 import com.mosinsa.coupon.infra.repository.CouponRepository;
 import com.mosinsa.promotion.domain.PromotionCreatedEvent;
-import com.mosinsa.promotion.domain.PromotionId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,26 +19,28 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class CouponService {
+public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
 
+    @Override
     public void createAll(PromotionCreatedEvent event) {
         couponRepository.saveAll(
                 Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
     }
 
+    @Override
     public void createAllByBatchInsert(PromotionCreatedEvent event) {
         couponRepository.batchInsert(Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
     }
 
+    @Override
     @Retry(times = 3)
     public void createForNewMember(String memberId) {
         checkDuplicateIssue(memberId);
 
-        couponRepository
-                .save(Coupon.create(null,
-                        CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
+        couponRepository.save(
+                Coupon.create(null, CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
                 .issuedCoupon(memberId);
     }
 
@@ -51,11 +52,8 @@ public class CouponService {
         }
     }
 
-    public long count(String promotionId) {
-        return couponRepository.countCouponsByPromotionIdAndMemberIdIsNull(PromotionId.of(promotionId));
-    }
 
-    @Transactional
+    @Override
     public CouponId issue(CouponIssuedEvent event) {
 
         log.info("coupon issue event {}", event);
@@ -73,24 +71,19 @@ public class CouponService {
         return coupon.getId();
     }
 
-    public List<CouponDto> myCoupons(String memberId) {
-        return couponRepository.findMyCoupons(memberId);
-    }
-
-    public void usedCoupon(String couponId) {
+    @Override
+    public void useCoupon(String couponId) {
         couponRepository.findById(CouponId.of(couponId))
                 .orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
                 .useCoupon();
     }
 
+    @Override
     public void rollbackCoupon(String couponId) {
         couponRepository.findById(CouponId.of(couponId))
                 .orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
                 .unUseCoupon();
     }
 
-    public CouponDto findById(String couponId) {
-        return CouponDto.convert(
-                couponRepository.findById(CouponId.of(couponId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND)));
-    }
+
 }

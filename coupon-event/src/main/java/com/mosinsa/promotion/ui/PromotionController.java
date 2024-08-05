@@ -1,6 +1,6 @@
 package com.mosinsa.promotion.ui;
 
-import com.mosinsa.coupon.application.CouponService;
+import com.mosinsa.coupon.query.application.CouponQueryService;
 import com.mosinsa.promotion.application.PromotionService;
 import com.mosinsa.promotion.application.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -20,7 +18,7 @@ public class PromotionController {
 
 	private final PromotionService promotionService;
 
-	private final CouponService couponService;
+	private final CouponQueryService couponQueryService;
 
 	@GetMapping("/promotions")
 	public ResponseEntity<Page<PromotionDto>> promotions(PromotionSearchCondition condition, Pageable pageable) {
@@ -33,7 +31,7 @@ public class PromotionController {
 		log.info("{}", promotionId);
 
 		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
-		long count = couponService.count(promotionId);
+		long count = couponQueryService.count(promotionId);
 
 		PromotionDetails promotionDetails = new PromotionDetails(promotionDto, count);
 		return ResponseEntity.ok(promotionDetails);

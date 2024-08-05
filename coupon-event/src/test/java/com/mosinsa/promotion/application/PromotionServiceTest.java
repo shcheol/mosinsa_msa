@@ -1,7 +1,7 @@
 package com.mosinsa.promotion.application;
 
-import com.mosinsa.coupon.domain.CouponDetails;
-import com.mosinsa.coupon.domain.DiscountPolicy;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import com.mosinsa.promotion.domain.PromotionPeriod;
 import com.mosinsa.promotion.application.dto.CreatePromotionRequest;
 import com.mosinsa.promotion.application.dto.PromotionDto;

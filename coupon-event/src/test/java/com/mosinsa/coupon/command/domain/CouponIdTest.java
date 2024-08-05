@@ -1,7 +1,7 @@
-package com.mosinsa.coupon.domain;
+package com.mosinsa.coupon.command.domain;
 
 import com.mosinsa.code.EqualsAndHashcodeUtils;
-import org.assertj.core.api.Assertions;
+import com.mosinsa.coupon.command.domain.CouponId;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

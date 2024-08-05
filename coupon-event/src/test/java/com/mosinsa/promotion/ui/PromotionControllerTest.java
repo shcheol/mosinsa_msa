@@ -6,15 +6,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mosinsa.common.event.EventsConfig;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
-import com.mosinsa.coupon.application.CouponService;
-import com.mosinsa.coupon.domain.CouponDetails;
-import com.mosinsa.coupon.domain.DiscountPolicy;
+import com.mosinsa.coupon.command.application.CouponServiceImpl;
+import com.mosinsa.coupon.command.domain.CouponDetails;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
+import com.mosinsa.coupon.query.application.CouponQueryService;
 import com.mosinsa.promotion.application.PromotionService;
 import com.mosinsa.promotion.domain.Promotion;
 import com.mosinsa.promotion.domain.PromotionId;
 import com.mosinsa.promotion.domain.PromotionPeriod;
 import com.mosinsa.promotion.application.dto.CreatePromotionRequest;
-import com.mosinsa.promotion.application.dto.JoinPromotionRequest;
 import com.mosinsa.promotion.application.dto.PromotionDto;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +53,7 @@ class PromotionControllerTest {
 	PromotionService promotionService;
 
 	@MockBean
-	CouponService couponService;
+	CouponQueryService couponServiceImpl;
 
 	LocalDateTime before = LocalDateTime.of(2023, 10, 28, 00, 00);
 	LocalDateTime after = LocalDateTime.of(2024, 10, 28, 00, 00);
@@ -121,7 +121,7 @@ class PromotionControllerTest {
 		when(promotionService.findByPromotionId(any()))
 				.thenReturn(dto);
 		long stock = 3;
-		when(couponService.count(any()))
+		when(couponServiceImpl.count(any()))
 				.thenReturn(stock);
 
 		mockMvc.perform(
@@ -148,7 +148,7 @@ class PromotionControllerTest {
 		when(promotionService.findByPromotionId(any()))
 				.thenReturn(dto);
 		long stock = 3;
-		when(couponService.count(any()))
+		when(couponServiceImpl.count(any()))
 				.thenReturn(stock);
 
 		mockMvc.perform(

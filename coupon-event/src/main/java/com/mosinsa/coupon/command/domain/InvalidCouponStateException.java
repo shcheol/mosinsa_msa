@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.domain;
+package com.mosinsa.coupon.command.domain;
 
 public class InvalidCouponStateException extends RuntimeException {
 

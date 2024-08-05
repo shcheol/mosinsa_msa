@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.domain;
+package com.mosinsa.coupon.command.domain;
 
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;

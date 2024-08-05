@@ -1,10 +1,9 @@
 package com.mosinsa.promotion.infra;
 
-import com.mosinsa.coupon.application.CouponService;
+import com.mosinsa.coupon.command.application.CouponServiceImpl;
 import com.mosinsa.promotion.domain.PromotionCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionPhase;
@@ -15,7 +14,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class PromotionCreatedEventHandler {
 
-    private final CouponService couponService;
+    private final CouponServiceImpl couponServiceImpl;
 
     @Async
     @TransactionalEventListener(
@@ -24,6 +23,6 @@ public class PromotionCreatedEventHandler {
     )
     public void handle(PromotionCreatedEvent event) {
         log.info("handle PromotionCreatedEvent");
-        couponService.createAllByBatchInsert(event);
+        couponServiceImpl.createAllByBatchInsert(event);
     }
 }

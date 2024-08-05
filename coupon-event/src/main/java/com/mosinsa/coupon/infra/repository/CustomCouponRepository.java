@@ -1,9 +1,9 @@
 package com.mosinsa.coupon.infra.repository;
 
-import com.mosinsa.coupon.domain.Coupon;
-import com.mosinsa.coupon.domain.CouponId;
-import com.mosinsa.coupon.application.dto.CouponDto;
-import com.mosinsa.coupon.application.dto.CouponSearchCondition;
+import com.mosinsa.coupon.command.domain.Coupon;
+import com.mosinsa.coupon.command.domain.CouponId;
+import com.mosinsa.coupon.query.application.dto.CouponDto;
+import com.mosinsa.coupon.query.application.dto.CouponSearchCondition;
 
 import java.util.List;
 import java.util.Optional;
