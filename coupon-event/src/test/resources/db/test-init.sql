@@ -1,5 +1,8 @@
+SET FOREIGN_KEY_CHECKS = 0;
 truncate table promotion;
 truncate table coupon;
+SET FOREIGN_KEY_CHECKS = 1;
+
 
 insert into promotion values ('promotion1', 'title1', 'context1', 2, '2023-10-28','2023-10-29','TEN_PERCENTAGE');
 insert into promotion values ('promotion2', 'title2', 'context2', 2, '2023-10-30','2024-11-30','TEN_PERCENTAGE');

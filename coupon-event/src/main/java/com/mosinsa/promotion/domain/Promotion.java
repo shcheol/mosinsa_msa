@@ -14,7 +14,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "promotion")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Promotion {
 
     @EmbeddedId
@@ -45,7 +44,10 @@ public class Promotion {
         return promotion;
     }
 
-    @Override
+	protected Promotion() {
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Promotion promotion)) return false;

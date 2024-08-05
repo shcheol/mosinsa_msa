@@ -1,10 +1,10 @@
 package com.mosinsa.reaction.command.domain;
 
-import com.mosinsa.code.TestClass;
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReactionIdTest {
 	@Test
@@ -27,13 +27,10 @@ class ReactionIdTest {
 		ReactionId idA = ReactionId.of(value);
 		ReactionId idB = ReactionId.of(value);
 
-		assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
-				.isNotEqualTo(null).isNotEqualTo(new TestClass());
-
 		ReactionId idC = ReactionId.of("idxx");
-		assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
 
 		ReactionId protectedConstructor = new ReactionId();
-		assertThat(protectedConstructor.hashCode()).isZero();
+
+		EqualsAndHashcodeUtils.equalsAndHashcode(idA, idB, protectedConstructor, idC);
 	}
 }

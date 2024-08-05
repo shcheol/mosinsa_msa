@@ -1,5 +1,6 @@
 package com.mosinsa.review.command.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.code.TestClass;
 import com.mosinsa.product.command.domain.ProductId;
 import org.junit.jupiter.api.Test;
@@ -31,15 +32,10 @@ class ReviewIdTest {
         String value = "id";
         ReviewId idA = ReviewId.of(value);
         ReviewId idB = ReviewId.of(value);
-
-        assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
-                .isNotEqualTo(null).isNotEqualTo(new TestClass());
-
         ReviewId idC = ReviewId.of("idxx");
-        assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
-
         ReviewId protectedConstructor = new ReviewId();
-        assertThat(protectedConstructor.hashCode()).isZero();
+
+		EqualsAndHashcodeUtils.equalsAndHashcode(idA,idB, protectedConstructor, idC);
     }
 
 }
