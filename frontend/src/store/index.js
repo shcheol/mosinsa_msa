@@ -3,8 +3,10 @@ import Vuex from 'vuex'
 const store = new Vuex.Store({
     state: {
         cart: [],
+        isLogin: localStorage.getItem("customer-info") !== null,
     },
     actions: {
+
         addCart({state, commit}, product) {
             if (product.stock < 0) {
                 alert("남은수량 없음");
@@ -28,6 +30,12 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        setLoginState(state){
+            state.isLogin=true;
+        },
+        setLogoutState(state){
+            state.isLogin=false;
+        },
         pushProductToCart(state, product) {
             state.cart.push({
                 productId: product.productId,

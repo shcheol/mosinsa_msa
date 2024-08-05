@@ -73,12 +73,12 @@ class PromotionControllerTest {
 		PromotionDto dto1 = PromotionDto.convert(Promotion.create(
 				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
 				new PromotionPeriod(before, after),
-				new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
 		);
 		PromotionDto dto2 = PromotionDto.convert(Promotion.create(
 				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
 				new PromotionPeriod(before, after),
-				new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
 		);
 
 		PageImpl<PromotionDto> page = new PageImpl<>(List.of(dto1, dto2), PageRequest.of(0, 2), 2);
@@ -115,7 +115,7 @@ class PromotionControllerTest {
 		PromotionDto dto = PromotionDto.convert(Promotion.create(
 				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
 				new PromotionPeriod(before, after),
-				new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
 		);
 
 		when(promotionService.findByPromotionId(any()))
@@ -142,7 +142,7 @@ class PromotionControllerTest {
 		PromotionDto dto = PromotionDto.convert(Promotion.create(
 				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
 				new PromotionPeriod(before, after),
-				new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
 		);
 
 		when(promotionService.findByPromotionId(any()))
@@ -170,7 +170,7 @@ class PromotionControllerTest {
 						new PromotionPeriod(
 								LocalDateTime.of(2023, 10, 28, 00, 00),
 								LocalDateTime.of(2024, 10, 28, 00, 00)),
-						new CouponDetails(
+						CouponDetails.of(
 								LocalDateTime.of(2024, 10, 28, 00, 00),
 								DiscountPolicy.TEN_PERCENTAGE));
 

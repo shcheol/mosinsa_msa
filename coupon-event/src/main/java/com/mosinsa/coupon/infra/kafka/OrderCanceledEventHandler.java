@@ -16,9 +16,11 @@ public class OrderCanceledEventHandler {
 
     private final CouponService couponService;
 
+	private final ObjectMapper om;
+
 	@KafkaListener(topics = "${mosinsa.topic.order.cancel}")
 	public void orderCanceledEvent(String message) throws JsonProcessingException {
-		OrderCanceledEvent orderCanceledEvent = new ObjectMapper().readValue(message, OrderCanceledEvent.class);
+		OrderCanceledEvent orderCanceledEvent = om.readValue(message, OrderCanceledEvent.class);
 
 		String couponId = orderCanceledEvent.couponId();
 		if (!StringUtils.hasText(couponId)){

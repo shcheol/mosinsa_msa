@@ -178,8 +178,8 @@ export default {
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)
     },
-    getPromotions: function () {
-        return instance.get(BASE_URL + 'coupon-service/promotions')
+    getPromotions: function (page) {
+        return instance.get(BASE_URL + `coupon-service/promotions?page=${page}`)
     },
     joinPromotions: function (promotionId) {
         return instance.post(BASE_URL + 'coupon-service/coupons/issue',

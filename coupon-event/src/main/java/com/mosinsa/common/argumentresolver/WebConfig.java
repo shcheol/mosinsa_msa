@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 		resolvers.add(new LoginUserArgumentResolver(objectMapper()));
-		resolvers.add(new GuestOrLoginUserArgumentResolver(objectMapper()));
 	}
 
 	@Bean

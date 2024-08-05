@@ -27,7 +27,7 @@ class PromotionServiceTest {
     void create() {
         CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest("title", "context", 500, DiscountPolicy.TEN_PERCENTAGE,
                 new PromotionPeriod(LocalDateTime.now(), LocalDateTime.of(2024, 10, 28, 00, 00)),
-						new CouponDetails(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE));
+				CouponDetails.of(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE));
         PromotionDto promotion = promotionService.create(createPromotionRequest);
         PromotionDto promotionDto = promotionService.findByPromotionId(promotion.getPromotionId());
         assertThat(promotion.getPromotionId()).isEqualTo(promotionDto.getPromotionId());

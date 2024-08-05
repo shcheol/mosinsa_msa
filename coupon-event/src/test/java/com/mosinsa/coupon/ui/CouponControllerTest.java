@@ -63,7 +63,7 @@ class CouponControllerTest {
 	void couponDetails() throws Exception {
 
 		Coupon coupon = Coupon.create(
-				PromotionId.newId(), new CouponDetails(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE)
+				PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE)
 		);
 		coupon.issuedCoupon("memberId");
 		CouponDto couponDto = CouponDto.convert(coupon);
@@ -88,10 +88,10 @@ class CouponControllerTest {
 		String memberId = "memberId";
 
 		Coupon coupon1 = Coupon.create(
-				PromotionId.newId(), new CouponDetails(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
+				PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
 		coupon1.issuedCoupon(memberId);
 		Coupon coupon2 = Coupon.create(
-				PromotionId.newId(), new CouponDetails(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
+				PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
 		coupon2.issuedCoupon(memberId);
 
 		CouponDto couponDto1 = CouponDto.convert(coupon1);

@@ -1,11 +1,13 @@
 package com.mosinsa.promotion.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.common.exception.CouponException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +15,8 @@ class PromotionPeriodTest {
 
     LocalDateTime before = LocalDateTime.of(2023, 10, 28, 00, 00);
     LocalDateTime after = LocalDateTime.of(2024, 10, 28, 00, 00);
+    LocalDateTime diff = LocalDateTime.of(2025, 10, 28, 01, 00);
+    LocalDateTime diffBefore = LocalDateTime.of(2022, 10, 28, 01, 00);
 
     @Test
     @DisplayName("시작과 종료날짜가 동일")
@@ -39,19 +43,12 @@ class PromotionPeriodTest {
     void equalsAndHashCode(){
         PromotionPeriod period1 = new PromotionPeriod(before,after);
         PromotionPeriod period2 = new PromotionPeriod(before,after);
+        PromotionPeriod period3 = new PromotionPeriod(before,diff);
+        PromotionPeriod period4 = new PromotionPeriod(diffBefore,after);
+		PromotionPeriod protectedConstructor = new PromotionPeriod();
 
-		assertThat(period1).hasSameHashCodeAs(period2);
-		assertEquals(period1, period2);
-		assertNotSame(period1, period2);
-    }
-	@Test
-	void equalsAndHashCodeDiff(){
-		PromotionPeriod period1 = new PromotionPeriod(before,after);
-		PromotionPeriod period2 = new PromotionPeriod(before, LocalDateTime.of(2024, 10, 28, 00, 10));
-
-		assertNotEquals(period1.hashCode(), period2.hashCode());
-		assertNotEquals(period1, period2);
-		assertNotSame(period1, period2);
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(period1, period2, protectedConstructor, period3, period4);
+		assertThat(b).isTrue();
 	}
 
 }

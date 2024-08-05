@@ -15,13 +15,13 @@ public class EqualsAndHashcodeUtils {
             assertThat(origin).isEqualTo(origin).isEqualTo(same).hasSameHashCodeAs(same)
                     .isNotEqualTo(null).isNotEqualTo(new TestClass());
             assertThat(origin).isNotEqualTo(notEquals).doesNotHaveSameHashCodeAs(notEquals);
+            assertThat(origin).isNotEqualTo(protectedConstructor).doesNotHaveSameHashCodeAs(protectedConstructor);
 
             if (notEqualsArr != null) {
                 Arrays.stream(notEqualsArr)
                         .forEach(element -> assertThat(origin).isNotEqualTo(element).doesNotHaveSameHashCodeAs(element));
             }
 
-            assertThat(protectedConstructor.hashCode()).isZero();
         }catch (Exception ignore){
             return false;
         }

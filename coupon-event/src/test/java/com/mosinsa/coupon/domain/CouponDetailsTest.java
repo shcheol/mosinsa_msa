@@ -1,9 +1,11 @@
 package com.mosinsa.coupon.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,22 +15,13 @@ class CouponDetailsTest {
 
 	@Test
 	void equalsAndHashCode(){
-		CouponDetails couponDetails1 = new CouponDetails(date, DiscountPolicy.NONE);
-		CouponDetails couponDetails2 = new CouponDetails(date, DiscountPolicy.NONE);
+		CouponDetails couponDetails1 = CouponDetails.of(date, DiscountPolicy.NONE);
+		CouponDetails couponDetails2 = CouponDetails.of(date, DiscountPolicy.NONE);
+		CouponDetails couponDetails3 = CouponDetails.of(date.plusDays(3), DiscountPolicy.NONE);
+		CouponDetails couponDetails4 = CouponDetails.of(date, DiscountPolicy.TEN_PERCENTAGE);
+		CouponDetails couponDetails = new CouponDetails();
 
-		assertThat(couponDetails1).hasSameHashCodeAs(couponDetails2);
-		assertEquals(couponDetails1, couponDetails2);
-		assertNotSame(couponDetails1, couponDetails2);
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(couponDetails1, couponDetails2, couponDetails, couponDetails3, couponDetails4);
+		assertThat(b).isTrue();
 	}
-
-	@Test
-	void equalsAndHashCodeDiff(){
-		CouponDetails couponDetails1 = new CouponDetails(date, DiscountPolicy.NONE);
-		CouponDetails couponDetails2 = new CouponDetails(date, DiscountPolicy.TEN_PERCENTAGE);
-
-		assertNotEquals(couponDetails1.hashCode(), couponDetails2.hashCode());
-		assertNotEquals(couponDetails1, couponDetails2);
-		assertNotSame(couponDetails1, couponDetails2);
-	}
-
 }

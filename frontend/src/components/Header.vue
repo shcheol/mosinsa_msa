@@ -23,7 +23,7 @@
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
                 </svg>
-                프로모션
+                Promotion
               </router-link>
             </li>
             <li>
@@ -31,10 +31,10 @@
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
                 </svg>
-                myPage
+                My
               </router-link>
             </li>
-            <li>
+            <li v-if="!$store.state.isLogin">
               <router-link to="/login" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
@@ -42,7 +42,7 @@
                 Login
               </router-link>
             </li>
-            <li>
+            <li v-else>
               <router-link to="/logout" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#speedometer2"/>
@@ -66,7 +66,7 @@ export default {
   name: "Header",
   data(){
     return{
-      userInfo: null
+      userInfo: null,
     }
   },
   mounted(){

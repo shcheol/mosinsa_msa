@@ -17,6 +17,7 @@ export default {
   },
   mounted(){
     this.userInfo = JSON.parse(localStorage.getItem("customer-info"));
+    this.$store.commit('setLogoutState');
     localStorage.clear();
   }
 }

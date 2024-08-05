@@ -103,7 +103,7 @@ class CouponServiceTest {
 	void createAll() {
 		PromotionId promotionId = PromotionId.of("promotionTest1");
 		service.createAll(new PromotionCreatedEvent(promotionId, 100,
-				new CouponDetails(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE)));
+				CouponDetails.of(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE)));
 		assertThat(repository.findCouponsInPromotion(
 				new CouponSearchCondition(null, promotionId.getId())))
 				.hasSize(100);
@@ -114,7 +114,7 @@ class CouponServiceTest {
 	void createAllByBulkInsert() {
 		PromotionId promotionId = PromotionId.of("promotionTest2");
 		service.createAllByBatchInsert(new PromotionCreatedEvent(promotionId, 100,
-				new CouponDetails(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE)));
+				CouponDetails.of(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE)));
 		assertThat(repository.findCouponsInPromotion(
 				new CouponSearchCondition(null, promotionId.getId())))
 				.hasSize(100);

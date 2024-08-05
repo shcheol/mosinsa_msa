@@ -31,6 +31,7 @@ export default {
             localStorage.setItem('refresh-token', response.headers.get("refresh-token"));
             localStorage.setItem('customer-info', response.headers.get("customer-info"));
 
+            this.$store.commit('setLoginState');
             router.push("/");
           })
           .catch(function (e) {

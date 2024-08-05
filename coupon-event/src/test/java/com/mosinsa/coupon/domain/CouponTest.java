@@ -15,7 +15,7 @@ class CouponTest {
     @Test
     void createAllInvalidQuantity(){
         PromotionId promotionId = PromotionId.of("promotionTest2");
-        CouponDetails details = new CouponDetails(
+        CouponDetails details = CouponDetails.of(
                 LocalDateTime.of(2024, 10, 28, 00, 00),
                 DiscountPolicy.TEN_PERCENTAGE);
 
