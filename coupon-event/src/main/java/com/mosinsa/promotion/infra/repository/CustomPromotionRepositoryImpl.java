@@ -56,20 +56,6 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 		return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
 	}
 
-	@Override
-	public List<Tuple> stocksGroupByPromotion(PromotionSearchCondition condition) {
-		return queryFactory.select(promotion.id, promotion.count())
-				.from(promotion)
-				.leftJoin(coupon)
-				.on(promotion.id.eq(coupon.promotionId))
-				.where(
-						coupon.memberId.isNull(),
-						proceeding(condition.now(), condition.proceeding())
-				)
-				.groupBy(promotion.id)
-				.fetch();
-	}
-
 	private BooleanExpression proceeding(LocalDateTime now, boolean proceeding) {
 		return now != null && proceeding ? promotion.period.endDate.after(now).and(promotion.period.startDate.before(now)) : null;
 	}

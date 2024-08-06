@@ -15,10 +15,13 @@ public enum OrderError {
 	INVALID_IDEMPOTENT_KEY("매칭되는 멱등키가 없습니다.", HttpStatus.NOT_FOUND),
 	INVALID_DATA_IDEMPOTENT_KEY("주문서와 요청이 다릅니다.", HttpStatus.CONFLICT),
 	ORDER_AT_LEAST_ONE_OR_MORE_PRODUCTS("상품을 한개 이상 주문해야합니다.", HttpStatus.BAD_REQUEST),
-	NO_ORDER_CUSTOMER("주문자가 없습니다.", HttpStatus.BAD_REQUEST);
+	NO_ORDER_CUSTOMER("주문자가 없습니다.", HttpStatus.BAD_REQUEST),
+	UNAUTHORIZED_ERROR("인증 실패", HttpStatus.UNAUTHORIZED),
+	;
 
 	private String message;
 	private HttpStatus status;
+
 	OrderError(String message, HttpStatus status) {
 		this.message = message;
 		this.status = status;

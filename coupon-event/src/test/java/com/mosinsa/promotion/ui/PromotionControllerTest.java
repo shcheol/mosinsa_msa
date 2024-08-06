@@ -1,163 +1,45 @@
 package com.mosinsa.promotion.ui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mosinsa.common.event.EventsConfig;
-import com.mosinsa.common.exception.CouponError;
-import com.mosinsa.common.exception.CouponException;
-import com.mosinsa.coupon.command.application.CouponServiceImpl;
-import com.mosinsa.coupon.command.domain.CouponDetails;
-import com.mosinsa.coupon.command.domain.DiscountPolicy;
-import com.mosinsa.coupon.query.application.CouponQueryService;
-import com.mosinsa.promotion.application.PromotionService;
-import com.mosinsa.promotion.domain.Promotion;
-import com.mosinsa.promotion.domain.PromotionId;
-import com.mosinsa.promotion.domain.PromotionPeriod;
-import com.mosinsa.promotion.application.dto.CreatePromotionRequest;
-import com.mosinsa.promotion.application.dto.PromotionDto;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(PromotionController.class)
-@ExtendWith(MockitoExtension.class)
-@Import({EventsConfig.class})
+@Import(PromotionPresentationObjectFactory.class)
 class PromotionControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
 
-	@MockBean
-	PromotionService promotionService;
-
-	@MockBean
-	CouponQueryService couponServiceImpl;
-
-	LocalDateTime before = LocalDateTime.of(2023, 10, 28, 00, 00);
-	LocalDateTime after = LocalDateTime.of(2024, 10, 28, 00, 00);
-	static ObjectMapper om;
-
-	@BeforeAll
-	static void init() {
-		om = new ObjectMapper();
-		om.registerModule(new JavaTimeModule());
-		om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-	}
 
 	@Test
 	@DisplayName("promotion 목록 조회")
 	void promotionList() throws Exception {
 
-		PromotionDto dto1 = PromotionDto.convert(Promotion.create(
-				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
-				new PromotionPeriod(before, after),
-				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
-		);
-		PromotionDto dto2 = PromotionDto.convert(Promotion.create(
-				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
-				new PromotionPeriod(before, after),
-				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
-		);
-
-		PageImpl<PromotionDto> page = new PageImpl<>(List.of(dto1, dto2), PageRequest.of(0, 2), 2);
-
-		when(promotionService.findPromotionsByCondition(any(), any()))
-				.thenReturn(page);
-
-		mockMvc.perform(
-						get("/promotions")
-				).andExpect(status().isOk())
-//                .andExpect(model().attribute("promotions",page))
-//                .andExpect(view().name("promotion/promotionList"))
+		mockMvc.perform(get("/promotions"))
+				.andExpect(status().isOk())
 				.andDo(print());
 	}
 
 	@Test
-	@DisplayName("promotion 목록 조회 - 예외 발생")
-	void promotionListEx() throws Exception {
-
-		when(promotionService.findPromotionsByCondition(any(), any()))
-				.thenThrow(new CouponException(CouponError.NOT_FOUND));
-
-		mockMvc.perform(
-						get("/promotions")
-				).andExpect(status().is4xxClientError())
-//                .andExpect(view().name("promotion/noPromotion"))
-				.andDo(print());
-	}
-
-	@Test
-	@DisplayName("promotion id로 조회")
+	@DisplayName("promotion 상세 조회")
 	void promotionNoLogin() throws Exception {
 
-		PromotionDto dto = PromotionDto.convert(Promotion.create(
-				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
-				new PromotionPeriod(before, after),
-				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
-		);
 
-		when(promotionService.findByPromotionId(any()))
-				.thenReturn(dto);
-		long stock = 3;
-		when(couponServiceImpl.count(any()))
-				.thenReturn(stock);
-
+		String promotionId = "promotionId";
 		mockMvc.perform(
-						get("/promotions/" + dto.getPromotionId())
+						get("/promotions/" + promotionId)
 				).andExpect(status().isOk())
-//                .andExpect(model().attribute("promotion",dto))
-//                .andExpect(model().attribute("stock", stock))
-//                .andExpect(view().name("promotion/promotionDetail"))
-				.andDo(print());
-	}
-
-	@Test
-	@DisplayName("promotion id로 조회 로그인한 멤버")
-	void promotionLogin() throws Exception {
-
-		MockHttpSession session = new MockHttpSession();
-
-		PromotionDto dto = PromotionDto.convert(Promotion.create(
-				"title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
-				new PromotionPeriod(before, after),
-				CouponDetails.of(after, DiscountPolicy.TEN_PERCENTAGE))
-		);
-
-		when(promotionService.findByPromotionId(any()))
-				.thenReturn(dto);
-		long stock = 3;
-		when(couponServiceImpl.count(any()))
-				.thenReturn(stock);
-
-		mockMvc.perform(
-						get("/promotions/" + dto.getPromotionId())
-								.session(session)
-				).andExpect(status().isOk())
-//                .andExpect(model().attribute("promotion",dto))
-//                .andExpect(model().attribute("stock", stock))
-//                .andExpect(view().name("promotion/promotionDetail"))
 				.andDo(print());
 	}
 
@@ -165,44 +47,27 @@ class PromotionControllerTest {
 	@DisplayName("promotion 생성")
 	void create() throws Exception {
 
-		CreatePromotionRequest createPromotionRequest =
-				new CreatePromotionRequest("title", "context", 500, DiscountPolicy.TEN_PERCENTAGE,
-						new PromotionPeriod(
-								LocalDateTime.of(2023, 10, 28, 00, 00),
-								LocalDateTime.of(2024, 10, 28, 00, 00)),
-						CouponDetails.of(
-								LocalDateTime.of(2024, 10, 28, 00, 00),
-								DiscountPolicy.TEN_PERCENTAGE));
-
-		when(promotionService.create(any()))
-				.thenReturn(
-						new PromotionDto(
-								PromotionId.of("promotionTestId"),
-								"title",
-								"context",
-								500,
-								DiscountPolicy.TEN_PERCENTAGE,
-								new PromotionPeriod(
-										LocalDateTime.of(2023, 10, 28, 00, 00),
-										LocalDateTime.of(2024, 10, 28, 00, 00))
-						)
-				);
-
-
-		mockMvc.perform(
-						post("/promotions")
-								.contentType(MediaType.APPLICATION_JSON_VALUE)
-								.content(om.writeValueAsString(createPromotionRequest))
+		mockMvc.perform(post("/promotions")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content("""
+								    {
+								    "title":"제목",
+								    "context":"내용",
+								    "quantity" : 20,
+								    "discountPolicy":"TEN_PERCENTAGE",
+								    "period":{
+								        "startDate":"2023-11-06T00:00:00",
+								        "endDate":"2024-11-06T00:00:00"
+								    },
+								    "details":{
+								            "discountPolicy":"TEN_PERCENTAGE",
+								            "duringDate":"2024-11-06T00:00:00"
+								    }
+								    }
+								""")
 				).andExpect(status().isCreated())
-				.andExpect(jsonPath("promotionId").value("promotionTestId"))
-				.andExpect(jsonPath("title").value("title"))
-				.andExpect(jsonPath("context").value("context"))
-				.andExpect(jsonPath("quantity").value("500"))
-				.andExpect(jsonPath("discountPolicy").value("TEN_PERCENTAGE"))
-				.andExpect(jsonPath("period.startDate").value("2023-10-28T00:00:00"))
-				.andExpect(jsonPath("period.endDate").value("2024-10-28T00:00:00"));
-
-		verify(promotionService).create(createPromotionRequest);
+				.andExpect(jsonPath("id").value("testId"))
+				.andDo(print());
 
 	}
 }

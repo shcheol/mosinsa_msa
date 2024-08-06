@@ -1,28 +1,29 @@
 package com.mosinsa.order.command.domain;
 
+import com.mosinsa.order.code.EqualsAndHashcodeUtils;
+import com.mosinsa.order.code.TestClass;
 import com.mosinsa.order.command.application.dto.AddressDto;
 import com.mosinsa.order.command.application.dto.ReceiverDto;
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
-import com.mosinsa.order.command.code.TestClass;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ShippingInfoTest {
 
     @Test
     void equalsAndHashCode() {
-        ShippingInfoDto shippingInfoDto1 = new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx"));
-        ShippingInfoDto shippingInfoDto2 = new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx"));
-        ShippingInfo shippingInfoA = ShippingInfo.of(shippingInfoDto1);
-        ShippingInfo shippingInfoB = ShippingInfo.of(shippingInfoDto2);
-        assertThat(shippingInfoA).isEqualTo(shippingInfoA).isEqualTo(shippingInfoB).hasSameHashCodeAs(shippingInfoB)
-                .isNotNull().isNotEqualTo(new TestClass());
-        ShippingInfo shippingInfoC = ShippingInfo.of(new ShippingInfoDto("myHome", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("mynamexxx", "010-xxx-xxxx")));
-        assertThat(shippingInfoA).isNotEqualTo(shippingInfoC).doesNotHaveSameHashCodeAs(shippingInfoC);
-        ShippingInfo shippingInfoD = ShippingInfo.of(new ShippingInfoDto("myHomexxx", new AddressDto("zipCode", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx")));
-        assertThat(shippingInfoA).isNotEqualTo(shippingInfoD).doesNotHaveSameHashCodeAs(shippingInfoD);
-        ShippingInfo shippingInfoE = ShippingInfo.of(new ShippingInfoDto("myHome", new AddressDto("zipCodexxx", "address1", "address2"), new ReceiverDto("myname", "010-xxx-xxxx")));
-        assertThat(shippingInfoA).isNotEqualTo(shippingInfoE).doesNotHaveSameHashCodeAs(shippingInfoE);
-    }
+		Address address = Address.of("zipCode", "address1", "address2");
+		Receiver receiver = Receiver.of("myname", "010-xxx-xxxx");
+        ShippingInfo shippingInfoA = ShippingInfo.of(address,receiver, "");
+        ShippingInfo shippingInfoB = ShippingInfo.of(address,receiver, "");
+
+        ShippingInfo shippingInfoC = ShippingInfo.of(address, Receiver.of("mynamexxx", "010-xxx-xxxx"), "myHome");
+        ShippingInfo shippingInfoD = ShippingInfo.of(address, receiver, "myHomexxx");
+        ShippingInfo shippingInfoE = ShippingInfo.of(Address.of("zipCodexxx", "address1", "address2"), receiver,"myHome");
+		ShippingInfo protectedConstructor = new ShippingInfo();
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(shippingInfoA, shippingInfoB, protectedConstructor, shippingInfoC, shippingInfoD, shippingInfoE);
+		assertThat(b);
+	}
 }

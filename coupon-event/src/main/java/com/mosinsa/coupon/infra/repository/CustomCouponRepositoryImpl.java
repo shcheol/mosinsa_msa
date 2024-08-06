@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static com.mosinsa.coupon.command.domain.QCoupon.coupon;
 
+
 @RequiredArgsConstructor
 public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 

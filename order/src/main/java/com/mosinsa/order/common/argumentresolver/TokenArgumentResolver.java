@@ -1,4 +1,4 @@
-package com.mosinsa.order.ui.argumentresolver;
+package com.mosinsa.order.common.argumentresolver;
 
 import com.mosinsa.order.ui.HeaderConst;
 import jakarta.servlet.http.HttpServletRequest;

@@ -3,6 +3,8 @@ package com.mosinsa.review.command.domain;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class WriterTest {
 
 	@Test
@@ -16,7 +18,8 @@ class WriterTest {
 		Writer c = Writer.of("idxxx", "name");
 		Writer d = Writer.of("id", "namexxx");
 
-		EqualsAndHashcodeUtils.equalsAndHashcode(a, b, protectedConstructor, c, d);
+		boolean b1 = EqualsAndHashcodeUtils.equalsAndHashcode(a, b, protectedConstructor, c, d);
+		assertThat(b1).isTrue();
 	}
 
 }

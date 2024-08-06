@@ -1,6 +1,5 @@
 package com.mosinsa.promotion.domain;
 
-import com.mosinsa.common.event.Events;
 import com.mosinsa.coupon.command.domain.CouponDetails;
 import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import jakarta.annotation.Nonnull;
@@ -38,7 +37,6 @@ public class Promotion {
         promotion.quantity = quantity;
         promotion.discountPolicy =discountPolicy;
         promotion.period = period;
-        Events.raise(new PromotionCreatedEvent(promotion.getId(), promotion.getQuantity(), details));
         return promotion;
     }
 

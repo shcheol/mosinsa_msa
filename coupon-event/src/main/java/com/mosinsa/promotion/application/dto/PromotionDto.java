@@ -32,7 +32,7 @@ public class PromotionDto {
 		this.period = period;
 	}
 
-	public static PromotionDto convert(Promotion promotion) {
+	public static PromotionDto of(Promotion promotion) {
 		return new PromotionDto(promotion.getId(),
 				promotion.getTitle(),
 				promotion.getContext(),

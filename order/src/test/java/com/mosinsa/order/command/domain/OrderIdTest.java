@@ -1,6 +1,6 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.code.TestClass;
+import com.mosinsa.order.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,14 +34,10 @@ class OrderIdTest {
         String value = "id";
         OrderId idA = OrderId.of(value);
         OrderId idB = OrderId.of(value);
-
-        assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
-                .isNotEqualTo(null).isNotEqualTo(new TestClass());
-        OrderId idC = OrderId.of("idxx");
-        assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
-
-        OrderId protectedConstructor = new OrderId();
-        assertThat(protectedConstructor.hashCode()).isZero();
+		OrderId protectedConstructor = new OrderId();
+		OrderId idC = OrderId.of("idxx");
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(idA, idB, protectedConstructor, idC);
+		assertThat(b).isTrue();
     }
 
 }

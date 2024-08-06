@@ -11,6 +11,4 @@ import java.util.List;
 public interface CustomPromotionRepository {
 
 	Page<PromotionDto> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable);
-
-	List<Tuple> stocksGroupByPromotion(PromotionSearchCondition condition);
 }

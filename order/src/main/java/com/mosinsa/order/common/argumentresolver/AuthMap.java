@@ -1,4 +1,4 @@
-package com.mosinsa.order.ui.argumentresolver;
+package com.mosinsa.order.common.argumentresolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

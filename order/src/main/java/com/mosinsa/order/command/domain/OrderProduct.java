@@ -25,7 +25,7 @@ public class OrderProduct {
 	@Column(name = "amounts")
 	private Money amounts;
 
-	public static OrderProduct create(String productId, int price, int quantity) {
+	public static OrderProduct of(String productId, int price, int quantity) {
 
 		OrderProduct orderProduct = new OrderProduct();
 		orderProduct.productId = productId;

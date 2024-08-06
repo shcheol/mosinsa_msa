@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -27,7 +28,8 @@ class ReactionTest {
 
 		Reaction protectedConstructor = new Reaction();
 
-		EqualsAndHashcodeUtils.equalsAndHashcode(reactionA, reactionB, protectedConstructor, reactionC);
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(reactionA, reactionB, protectedConstructor, reactionC);
+		assertThat(b).isTrue();
 	}
 
 }

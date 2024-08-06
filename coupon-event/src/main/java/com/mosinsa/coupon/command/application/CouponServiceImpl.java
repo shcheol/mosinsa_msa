@@ -41,7 +41,7 @@ public class CouponServiceImpl implements CouponService {
 
         couponRepository.save(
                 Coupon.create(null, CouponDetails.createOneYearDuringDate(DiscountPolicy.TEN_PERCENTAGE)))
-                .issuedCoupon(memberId);
+                .issueForMember(memberId);
     }
 
     private void checkDuplicateIssue(String memberId) {
@@ -64,7 +64,7 @@ public class CouponServiceImpl implements CouponService {
                     log.info("member {} {}", condition.memberId(), CouponError.EMPTY_STOCK.getMessage());
                     throw new CouponException(CouponError.EMPTY_STOCK);
                 });
-        coupon.issuedCoupon(event.getMemberId());
+        coupon.issueForMember(event.getMemberId());
 
         log.info("member {} issue coupon", condition.memberId());
 
@@ -75,14 +75,14 @@ public class CouponServiceImpl implements CouponService {
     public void useCoupon(String couponId) {
         couponRepository.findById(CouponId.of(couponId))
                 .orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
-                .useCoupon();
+                .use();
     }
 
     @Override
     public void rollbackCoupon(String couponId) {
         couponRepository.findById(CouponId.of(couponId))
                 .orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
-                .unUseCoupon();
+                .useCancel();
     }
 
 

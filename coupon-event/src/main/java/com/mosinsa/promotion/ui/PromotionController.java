@@ -2,7 +2,11 @@ package com.mosinsa.promotion.ui;
 
 import com.mosinsa.coupon.query.application.CouponQueryService;
 import com.mosinsa.promotion.application.PromotionService;
-import com.mosinsa.promotion.application.dto.*;
+import com.mosinsa.promotion.application.dto.CreatePromotionRequest;
+import com.mosinsa.promotion.application.dto.PromotionDetails;
+import com.mosinsa.promotion.application.dto.PromotionDto;
+import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.domain.PromotionId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,10 +31,10 @@ public class PromotionController {
 	}
 
 	@GetMapping("/promotions/{promotionId}")
-	public ResponseEntity<PromotionDetails> detail(@PathVariable("promotionId") String promotionId) {
+	public ResponseEntity<PromotionDetails> getDetails(@PathVariable("promotionId") String promotionId) {
 		log.info("{}", promotionId);
 
-		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
+		PromotionDto promotionDto = promotionService.getPromotionDetails(promotionId);
 		long count = couponQueryService.count(promotionId);
 
 		PromotionDetails promotionDetails = new PromotionDetails(promotionDto, count);
@@ -38,9 +42,9 @@ public class PromotionController {
 	}
 
 	@PostMapping("/promotions")
-	public ResponseEntity<PromotionDto> create(@RequestBody CreatePromotionRequest request) {
+	public ResponseEntity<PromotionId> register(@RequestBody CreatePromotionRequest request) {
 		log.info("request {}", request);
-		PromotionDto promotionDto = promotionService.create(request);
-		return ResponseEntity.status(HttpStatus.CREATED).body(promotionDto);
+		PromotionId promotionId = promotionService.registerPromotion(request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(promotionId);
 	}
 }

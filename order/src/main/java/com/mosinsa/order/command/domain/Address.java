@@ -23,11 +23,11 @@ public class Address {
     @Column(name = "address2")
     private String address2;
 
-    public static Address of(AddressDto addressDto){
+    public static Address of(String zipCode, String address1, String address2){
         Address address = new Address();
-        address.zipCode = addressDto.zipCode();
-        address.address1 = addressDto.address1();
-        address.address2 = addressDto.address2();
+        address.zipCode = zipCode;
+        address.address1 = address1;
+        address.address2 = address2;
         return address;
     }
 

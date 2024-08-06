@@ -37,10 +37,10 @@ public class CouponQueryServiceStub implements CouponQueryService {
 
         Coupon coupon1 = Coupon.create(
                 PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
-        coupon1.issuedCoupon(memberId);
+        coupon1.issueForMember(memberId);
         Coupon coupon2 = Coupon.create(
                 PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
-        coupon2.issuedCoupon(memberId);
+        coupon2.issueForMember(memberId);
 
         CouponDto couponDto1 = CouponDto.convert(coupon1);
         CouponDto couponDto2 = CouponDto.convert(coupon2);

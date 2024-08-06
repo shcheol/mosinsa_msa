@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +36,8 @@ class ReviewIdTest {
         ReviewId idC = ReviewId.of("idxx");
         ReviewId protectedConstructor = new ReviewId();
 
-		EqualsAndHashcodeUtils.equalsAndHashcode(idA,idB, protectedConstructor, idC);
-    }
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(idA, idB, protectedConstructor, idC);
+		assertThat(b).isTrue();
+	}
 
 }

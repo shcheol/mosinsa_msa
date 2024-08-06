@@ -1,12 +1,6 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.command.application.dto.AddressDto;
-import com.mosinsa.order.command.application.dto.ReceiverDto;
-import com.mosinsa.order.command.application.dto.ShippingInfoDto;
-import com.mosinsa.order.command.domain.Order;
-import com.mosinsa.order.command.domain.OrderId;
-import com.mosinsa.order.command.domain.OrderProduct;
-import com.mosinsa.order.command.domain.ShippingInfo;
+import com.mosinsa.order.command.domain.*;
 import com.mosinsa.order.query.application.OrderQueryService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
@@ -20,19 +14,25 @@ import java.util.List;
 public class OrderQueryServiceStub implements OrderQueryService {
 	@Override
 	public Page<OrderSummary> findMyOrdersByCondition(SearchCondition condition, Pageable pageable) {
-		ShippingInfoDto shippingInfoDto = new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""));
+		Address address = Address.of("zipCode", "address1", "address2");
+		Receiver receiver = Receiver.of("myname", "010-xxx-xxxx");
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
 		return new PageImpl<>(
-				List.of(new OrderSummary(Order.create(OrderId.newId(), "customer", "", List.of(OrderProduct.create("b", 100, 2)),
-								ShippingInfo.of(shippingInfoDto), 10000)),
-						new OrderSummary(Order.create(OrderId.newId(), "customer", "", List.of(OrderProduct.create("b", 100, 2)),
-								ShippingInfo.of(shippingInfoDto), 10000)))
+				List.of(new OrderSummary(Order.create(OrderId.newId(), "customer", "", List.of(OrderProduct.of("b", 100, 2)),
+								shippingInfo, 10000)),
+						new OrderSummary(Order.create(OrderId.newId(), "customer", "", List.of(OrderProduct.of("b", 100, 2)),
+								shippingInfo, 10000)))
 
 		);
 	}
 
 	@Override
 	public OrderDetail getOrderDetails(String orderId) {
-		return new OrderDetail(Order.create(OrderId.of(orderId), "customer", "", List.of(OrderProduct.create("b", 100, 2)),
-				ShippingInfo.of(new ShippingInfoDto("", new AddressDto("", "", ""), new ReceiverDto("", ""))), 10000));
+		ShippingInfo of = ShippingInfo.of(Address.of("", "", ""), Receiver.of("", ""), "");
+		return new OrderDetail(
+				Order.create(
+						OrderId.of(orderId),
+						"customer", "", List.of(OrderProduct.of("b", 100, 2)),
+						of, 10000));
 	}
 }

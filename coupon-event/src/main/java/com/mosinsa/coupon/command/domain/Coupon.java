@@ -46,18 +46,18 @@ public class Coupon {
 		return coupons;
 	}
 
-	public void issuedCoupon(String memberId) {
+	public void issueForMember(String memberId) {
 		this.memberId = memberId;
 		this.issuedDate = LocalDateTime.now();
 		this.state = CouponState.ISSUED;
 	}
 
-	public void useCoupon() {
+	public void use() {
 		verifyCanUseState();
 		this.state = CouponState.USED;
 	}
 
-	public void unUseCoupon() {
+	public void useCancel() {
 		verifyUsedCoupon();
 		this.state = CouponState.ISSUED;
 	}
