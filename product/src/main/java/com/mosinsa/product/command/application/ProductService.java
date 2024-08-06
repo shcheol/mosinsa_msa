@@ -1,7 +1,6 @@
 package com.mosinsa.product.command.application;
 
 import com.mosinsa.product.command.domain.ProductId;
-import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;

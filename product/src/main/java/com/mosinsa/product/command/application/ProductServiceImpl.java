@@ -10,7 +10,6 @@ import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.StockStatus;
 import com.mosinsa.product.infra.redis.StockOperand;
 import com.mosinsa.product.infra.repository.ProductRepository;
-import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
