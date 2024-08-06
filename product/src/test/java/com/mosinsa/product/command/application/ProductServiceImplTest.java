@@ -3,12 +3,13 @@ package com.mosinsa.product.command.application;
 import com.mosinsa.common.ex.CategoryException;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.InvalidStockException;
+import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.StockStatus;
-import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.query.ProductQueryService;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,10 +46,8 @@ class ProductServiceImplTest {
     @DisplayName(value = "상품등록")
     void registerProduct() {
         CreateProductRequest createProductRequest = new CreateProductRequest("product", 3000, "categoryId1", 10);
-        ProductDetailDto product = productService.createProduct(createProductRequest);
-        assertThat(product.getName()).isEqualTo("product");
-        assertThat(product.getPrice()).isEqualTo(3000);
-        assertThat(product.getTotalStock()).isEqualTo(10);
+        ProductId id = productService.createProduct(createProductRequest);
+        Assertions.assertThat(id).isNotNull();
     }
 
     @Test

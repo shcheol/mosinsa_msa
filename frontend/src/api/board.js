@@ -131,10 +131,7 @@ export default {
     },
     postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
-                "myOrderProducts": {
-                    "productId":myOrderProducts.productId,
-                    "quantity":myOrderProducts.quantity
-                },
+                "myOrderProducts": myOrderProducts,
                 "couponId": couponId,
                 "shippingInfo": shippingInfo,
             },
@@ -174,7 +171,7 @@ export default {
         return instance.get(BASE_URL + 'order-service/orders/' + id)
     },
     getCoupons: function () {
-        return instance.get(BASE_URL + `coupon-service/coupons/my/${JSON.parse(localStorage.getItem("customer-info")).id}`)
+        return instance.get(BASE_URL + `coupon-service/coupons/my`)
     },
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)

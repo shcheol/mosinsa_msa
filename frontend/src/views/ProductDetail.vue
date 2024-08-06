@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td>수량</td>
-        <td v-if="product!=null">{{ product.stock }}</td>
+        <td v-if="product!=null">{{ product.currentStock }}/{{ product.totalStock }}</td>
       </tr>
       <tr>
         <td>가격</td>

@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
     @Transactional
-    public ProductDetailDto createProduct(CreateProductRequest request) {
+    public ProductId createProduct(CreateProductRequest request) {
         Category category = categoryService.getCategory(request.category());
 
         Product product = productRepository.save(
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
                         category,
                         request.stock()));
         stockPort.setStock(product.getId().getId(), request.stock());
-        return new ProductDetailDto(product);
+        return product.getId();
     }
 
 	@Override

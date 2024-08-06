@@ -2,22 +2,22 @@ package com.mosinsa.product.query;
 
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.StockStatus;
-import com.querydsl.core.annotations.QueryProjection;
-import lombok.*;
+import lombok.Value;
 
 @Value
 public class ProductDetailDto {
     String productId;
     String name;
     int price;
+    long currentStock;
     long totalStock;
 	StockStatus stockStatus;
 
-	@QueryProjection
-    public ProductDetailDto(Product product) {
+    public ProductDetailDto(Product product, long currentStock) {
         this.productId = product.getId().getId();
         this.name = product.getName();
         this.price = product.getPrice().getValue();
+        this.currentStock = currentStock;
         this.totalStock = product.getStock().getTotal();
 		this.stockStatus = product.getStock().getStatus();
     }

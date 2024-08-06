@@ -1,11 +1,9 @@
 package com.mosinsa.product.ui;
 
-import com.mosinsa.category.Category;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.application.ProductService;
-import com.mosinsa.product.command.domain.Product;
-import com.mosinsa.product.query.ProductDetailDto;
+import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.CreateProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequest;
@@ -15,7 +13,7 @@ import java.util.List;
 public class ProductServiceStub implements ProductService {
 	private static boolean called = false;
     @Override
-    public ProductDetailDto createProduct(CreateProductRequest request) {
+    public ProductId createProduct(CreateProductRequest request) {
         if (request.name().equals("error")) {
             throw new RuntimeException();
         }
@@ -25,7 +23,7 @@ public class ProductServiceStub implements ProductService {
         if (request.name().equals("productException5xx")) {
             throw new ProductException(ProductError.INTERNAL_SERVER_ERROR);
         }
-        return new ProductDetailDto(Product.create(request.name(), request.price(), Category.of(request.category()), request.stock()));
+        return ProductId.of("id");
     }
 
     @Override

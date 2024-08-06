@@ -34,6 +34,7 @@ public class OrderController {
 													 @Login CustomerInfo customerInfo,
 													 @AuthMap AuthToken authMap) {
 
+        log.info("{}", orderConfirmRequest);
         OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap.map(), customerInfo, orderConfirmRequest);
 
         return ResponseEntity.ok(orderConfirmDto);

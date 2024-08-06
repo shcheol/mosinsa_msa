@@ -2,6 +2,7 @@ package com.mosinsa.product.query;
 
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
+import com.mosinsa.product.command.application.StockService;
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.infra.repository.ProductRepository;
@@ -17,17 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProductQueryServiceImpl implements ProductQueryService{
+public class ProductQueryServiceImpl implements ProductQueryService {
 
     private final ProductRepository productRepository;
+    private final StockService stockService;
 
-	@Override
+    @Override
     public ProductDetailDto getProductById(String productId) {
+        long currentStock = stockService.currentStock(productId);
         return new ProductDetailDto(productRepository.findProductDetailById(ProductId.of(productId))
-                .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)));
+                .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)),currentStock);
     }
 
-	@Override
+    @Override
     public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
         return productRepository.findByCondition(condition, pageable);
     }
