@@ -28,7 +28,7 @@ instance.interceptors.response.use(
 instance.interceptors.request.use(
     (config) => {
         config.headers = {
-            "Authorization": "Bearer "+localStorage.getItem("access-token"),
+            "Authorization": "Bearer " + localStorage.getItem("access-token"),
             "Refresh-Token": localStorage.getItem("refresh-token"),
             "Customer-Info": JSON.stringify(localStorage.getItem("customer-info")),
             'Content-Type': 'application/json; charset=utf-8',
@@ -131,9 +131,10 @@ export default {
     },
     postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
-                "myOrderProducts":
-                myOrderProducts
-                ,
+                "myOrderProducts": {
+                    "productId":myOrderProducts.productId,
+                    "quantity":myOrderProducts.quantity
+                },
                 "couponId": couponId,
                 "shippingInfo": shippingInfo,
             },
@@ -184,7 +185,7 @@ export default {
     joinPromotions: function (promotionId) {
         return instance.post(BASE_URL + 'coupon-service/coupons/issue',
             {
-                "promotionId":promotionId
+                "promotionId": promotionId
             })
     },
     getPromotionDetails: function (id) {

@@ -2,7 +2,7 @@ package com.mosinsa.coupon.infra.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.coupon.command.application.CouponServiceImpl;
+import com.mosinsa.coupon.command.application.CouponService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class OrderCanceledEventHandler {
 
-    private final CouponServiceImpl couponServiceImpl;
+    private final CouponService couponService;
 
 	private final ObjectMapper om;
 
@@ -27,6 +27,6 @@ public class OrderCanceledEventHandler {
 			log.debug("event {} has no coupon to cancel", orderCanceledEvent);
 			return;
 		}
-		couponServiceImpl.rollbackCoupon(couponId);
+		couponService.rollbackCoupon(couponId);
 	}
 }

@@ -1,6 +1,5 @@
 package com.mosinsa.order.common.argumentresolver;
 
-import com.mosinsa.order.ui.HeaderConst;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;

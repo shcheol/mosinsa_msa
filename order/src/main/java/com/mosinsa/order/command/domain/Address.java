@@ -1,6 +1,5 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.command.application.dto.AddressDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

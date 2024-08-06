@@ -3,7 +3,6 @@ package com.mosinsa.promotion.infra.repository;
 import com.mosinsa.promotion.application.dto.PromotionDto;
 import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
 import com.mosinsa.promotion.application.dto.QPromotionDto;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -17,7 +16,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mosinsa.coupon.command.domain.QCoupon.coupon;
 import static com.mosinsa.promotion.domain.QPromotion.promotion;
 
 @RequiredArgsConstructor

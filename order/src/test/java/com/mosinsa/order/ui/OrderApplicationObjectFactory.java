@@ -11,4 +11,6 @@ public class OrderApplicationObjectFactory {
 	public OrderQueryService orderQueryService(){
 		return new OrderQueryServiceStub();
 	}
+
+
 }

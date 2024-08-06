@@ -17,7 +17,6 @@ public class ReactionReaderImpl implements ReactionReader {
     private final ReactionRepository repository;
     private final ReactionInfoRepository infoRepository;
 
-
     public boolean hasReacted(ReactionSearchCondition condition) {
         Reaction reaction = repository.findReactionByCondition(condition).orElse(null);
         return reaction != null && reaction.isActive();
