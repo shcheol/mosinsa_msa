@@ -1,5 +1,8 @@
 package com.mosinsa;
 
+import com.mosinsa.category.CategoryController;
+import com.mosinsa.category.CategoryObjectFactory;
+import com.mosinsa.code.TestController;
 import com.mosinsa.product.ui.ProductController;
 import com.mosinsa.product.ui.ProductPresentationObjectFactory;
 import com.mosinsa.product.ui.ViewProductController;
@@ -19,12 +22,14 @@ import org.springframework.context.annotation.Import;
 		ViewReactionController.class,
 		ReviewController.class,
 		ViewReviewController.class,
+		TestController.class,
+		CategoryController.class
 })
 @Import({
 		ProductPresentationObjectFactory.class,
 		ReactionPresentationObjectFactory.class,
-
 		ReviewPresentationObjectFactory.class,
+		CategoryObjectFactory.class
 })
 public abstract class ControllerTest {
 }
