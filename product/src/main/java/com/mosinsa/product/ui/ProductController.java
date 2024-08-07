@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/products")
-public class ProductController {
+public class 	ProductController {
 
     private final ProductService productService;
 

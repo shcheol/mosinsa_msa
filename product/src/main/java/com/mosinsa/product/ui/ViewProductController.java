@@ -1,5 +1,8 @@
 package com.mosinsa.product.ui;
 
+import com.mosinsa.common.argumentresolver.CustomerInfo;
+import com.mosinsa.common.argumentresolver.GuestOrLogin;
+import com.mosinsa.common.argumentresolver.Login;
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.query.ProductQueryService;
@@ -22,11 +25,18 @@ public class ViewProductController {
 	private final ProductQueryService productQueryService;
 
 	@GetMapping
-	public ResponseEntity<Page<ProductQueryDto>> findAllProducts(SearchCondition condition, Pageable pageable) {
+	public ResponseEntity<Page<ProductQueryDto>> findAllProducts(SearchCondition condition, Pageable pageable, @GuestOrLogin CustomerInfo customerInfo) {
 
 		Page<ProductQueryDto> allProducts = productQueryService.findProductsByCondition(condition, pageable);
 		return ResponseEntity.ok(allProducts);
 	}
+	@GetMapping("/my")
+	public ResponseEntity<Page<ProductQueryDto>> findAllProducts(@Login CustomerInfo customerInfo, Pageable pageable) {
+
+		Page<ProductQueryDto> allProducts = productQueryService.findMyProducts(customerInfo.id(), pageable);
+		return ResponseEntity.ok(allProducts);
+	}
+
 
 	@GetMapping("/{productId}")
 	public ResponseEntity<ProductDetailDto> productDetails(@PathVariable String productId) {

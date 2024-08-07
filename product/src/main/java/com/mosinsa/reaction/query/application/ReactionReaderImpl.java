@@ -1,10 +1,10 @@
-package com.mosinsa.reaction.qeury.application;
+package com.mosinsa.reaction.query.application;
 
 import com.mosinsa.reaction.command.domain.Reaction;
 import com.mosinsa.reaction.command.domain.ReactionInfo;
 import com.mosinsa.reaction.infra.jpa.ReactionInfoRepository;
 import com.mosinsa.reaction.infra.jpa.ReactionRepository;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

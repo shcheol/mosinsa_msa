@@ -3,7 +3,7 @@ package com.mosinsa.reaction.ui;
 import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.common.argumentresolver.Login;
 import com.mosinsa.reaction.command.application.ReactionService;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import com.mosinsa.reaction.ui.request.ReactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

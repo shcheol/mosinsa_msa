@@ -46,6 +46,11 @@ public class ProductPresentationObjectFactory {
                         )
                 );
             }
-        };
+
+			@Override
+			public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
+				return null;
+			}
+		};
     }
 }

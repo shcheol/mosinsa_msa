@@ -1,6 +1,6 @@
 package com.mosinsa.reaction.command.application;
 
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 
 public interface ReactionService {
 	String reaction(ReactionSearchCondition condition);

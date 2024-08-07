@@ -2,8 +2,8 @@ package com.mosinsa.reaction.command.application;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
-import com.mosinsa.reaction.qeury.application.ReactionReaderImpl;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.ReactionReaderImpl;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

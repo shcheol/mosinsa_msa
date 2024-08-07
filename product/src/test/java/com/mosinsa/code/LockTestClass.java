@@ -6,10 +6,10 @@ import java.util.concurrent.TimeUnit;
 
 public class LockTestClass {
 
-    @RedissonLock(value = "qqq", waitTime = 100L, leaseTime = 300L, timeUnit = TimeUnit.MILLISECONDS)
+    @RedissonLock(value = "qqq", waitTime = 500L, leaseTime = 2100L, timeUnit = TimeUnit.MILLISECONDS)
     public void method() throws InterruptedException {
         System.out.println("do something... start");
-        TimeUnit.MILLISECONDS.sleep(200);
+        TimeUnit.MILLISECONDS.sleep(1500);
         System.out.println("do something... end");
     }
 }

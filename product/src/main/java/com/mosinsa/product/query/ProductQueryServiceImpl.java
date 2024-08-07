@@ -35,4 +35,8 @@ public class ProductQueryServiceImpl implements ProductQueryService {
         return productRepository.findByCondition(condition, pageable);
     }
 
+	@Override
+	public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
+		return productRepository.findMyProducts(memberId, pageable);
+	}
 }

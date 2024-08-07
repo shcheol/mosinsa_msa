@@ -1,7 +1,7 @@
 package com.mosinsa.reaction.ui;
 
-import com.mosinsa.reaction.qeury.application.ReactionReader;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.ReactionReader;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 
 public class ReactionReaderStub implements ReactionReader {
     @Override

@@ -9,4 +9,6 @@ public interface CustomProductRepository {
 
 	Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable);
 
+	Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable);
+
 }

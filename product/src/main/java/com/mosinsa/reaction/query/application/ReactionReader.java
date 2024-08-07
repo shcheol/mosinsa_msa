@@ -1,6 +1,6 @@
-package com.mosinsa.reaction.qeury.application;
+package com.mosinsa.reaction.query.application;
 
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 
 public interface ReactionReader {
     boolean hasReacted(ReactionSearchCondition condition);

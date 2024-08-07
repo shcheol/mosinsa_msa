@@ -4,7 +4,7 @@ import com.mosinsa.common.aop.RedissonLock;
 import com.mosinsa.reaction.command.domain.ReactionInfo;
 import com.mosinsa.reaction.infra.jpa.ReactionInfoRepository;
 import com.mosinsa.reaction.infra.kafka.ProduceTemplate;
-import com.mosinsa.reaction.qeury.application.dto.ReactionSearchCondition;
+import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

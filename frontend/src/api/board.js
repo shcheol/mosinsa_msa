@@ -107,7 +107,7 @@ export default {
         return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
     },
     getLikesProducts: function () {
-        return instance.get(BASE_URL + `product-service/products/likes?customer=${JSON.parse(localStorage.getItem("customer-info")).id}`)
+        return instance.get(BASE_URL + `product-service/products/my`)
     },
     getProductDetails: function (id) {
         return instance.get(BASE_URL + 'product-service/products/' + id)

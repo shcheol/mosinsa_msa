@@ -1,4 +1,4 @@
-package com.mosinsa.reaction.qeury.application.dto;
+package com.mosinsa.reaction.query.application.dto;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
