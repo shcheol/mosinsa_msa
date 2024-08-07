@@ -20,23 +20,28 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProductQueryServiceImpl implements ProductQueryService {
 
-    private final ProductRepository productRepository;
-    private final StockService stockService;
+	private final ProductRepository productRepository;
+	private final StockService stockService;
 
-    @Override
-    public ProductDetailDto getProductById(String productId) {
-        long currentStock = stockService.currentStock(productId);
-        return new ProductDetailDto(productRepository.findProductDetailById(ProductId.of(productId))
-                .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)),currentStock);
-    }
+	@Override
+	public ProductDetailDto getProductById(String productId) {
+		long currentStock = stockService.currentStock(productId);
+		return new ProductDetailDto(productRepository.findProductDetailById(ProductId.of(productId))
+				.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)), currentStock);
+	}
 
-    @Override
-    public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
-        return productRepository.findByCondition(condition, pageable);
-    }
+	@Override
+	public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
+		return productRepository.findByCondition(condition, pageable);
+	}
 
 	@Override
 	public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
-		return productRepository.findMyProducts(memberId, pageable);
+
+		Page<ProductQueryDto> myProducts = productRepository.findMyProducts(memberId, pageable);
+		if (myProducts.getContent().isEmpty()) {
+			throw new ProductException(ProductError.NOT_FOUNT_PRODUCT);
+		}
+		return myProducts;
 	}
 }
