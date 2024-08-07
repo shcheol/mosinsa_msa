@@ -1,5 +1,6 @@
 package com.mosinsa.product.ui;
 
+import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,9 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ViewProductController.class)
-@Import(ProductPresentationObjectFactory.class)
-class ViewProductControllerTest {
+
+class ViewProductControllerTest extends ControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;

@@ -1,9 +1,8 @@
 package com.mosinsa.review.ui;
 
+import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -11,9 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ViewReviewController.class)
-@Import(ReviewPresentationObjectFactory.class)
-class ViewReviewControllerTest {
+class ViewReviewControllerTest extends ControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
