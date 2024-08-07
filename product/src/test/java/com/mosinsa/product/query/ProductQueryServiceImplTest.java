@@ -58,9 +58,9 @@ class ProductQueryServiceImplTest {
 		for (ProductQueryDto productQueryDto : content) {
 			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
 		}
-
+		PageRequest of = PageRequest.of(0, 3);
 		assertThrows(ProductException.class,
-				() -> productQueryServiceImpl.findMyProducts("memberId2xxx", PageRequest.of(0, 3)));
+				() -> productQueryServiceImpl.findMyProducts("memberId2xxx", of));
 	}
 
 }

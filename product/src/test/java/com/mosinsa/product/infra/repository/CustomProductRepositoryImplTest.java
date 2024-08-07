@@ -74,8 +74,8 @@ class CustomProductRepositoryImplTest {
 
 	@Test
 	void findMyProductsWithNoMemberId() {
-
-		assertThrows(ProductException.class, () -> repository.findMyProducts(null, PageRequest.of(0, 3)));
+		PageRequest of = PageRequest.of(0, 3);
+		assertThrows(ProductException.class, () -> repository.findMyProducts(null, of));
 	}
 
 

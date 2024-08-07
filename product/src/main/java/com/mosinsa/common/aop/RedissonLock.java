@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RedissonLock {
 
-    String value();
+    String value() default "key";
 	TimeUnit timeUnit() default TimeUnit.SECONDS;
 	long waitTime() default 3L;
 	long leaseTime() default 5L;
