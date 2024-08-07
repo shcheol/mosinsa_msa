@@ -49,7 +49,12 @@ public class ProductPresentationObjectFactory {
 
 			@Override
 			public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
-				return null;
+				return new PageImpl<>(
+						List.of(
+								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
+								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
+						)
+				);
 			}
 		};
     }

@@ -29,6 +29,17 @@ class ViewProductControllerTest {
 	}
 
 	@Test
+	void findMYProducts() throws Exception {
+		mockMvc.perform(get("/products/my")
+						.header("customer-info", """
+								"{"name":"name","id":"id"}"
+								"""))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("size").value(2))
+				.andDo(print());
+	}
+
+	@Test
 	void productDetails() throws Exception {
 		mockMvc.perform(get("/products/productId1"))
 				.andExpect(status().isOk())

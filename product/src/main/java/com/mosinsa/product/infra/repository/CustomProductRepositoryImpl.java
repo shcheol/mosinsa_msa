@@ -21,34 +21,34 @@ import static com.mosinsa.reaction.command.domain.QReaction.reaction;
 @RequiredArgsConstructor
 public class CustomProductRepositoryImpl implements CustomProductRepository {
 
-    private final JPAQueryFactory factory;
+	private final JPAQueryFactory factory;
 
-    @Override
-    public Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable) {
+	@Override
+	public Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable) {
 
-        List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
-                .from(product)
-                .where(
-                        category(condition.categoryId())
-                )
-                .orderBy(
-                        product.createdDate.desc()
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize()).fetch();
-        return PageableExecutionUtils
-                .getPage(fetch, pageable,
-                        factory.select(product.count())
-                                .from(product)
-                                .where(
-                                        category(condition.categoryId())
-                                )::fetchOne);
+		List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
+				.from(product)
+				.where(
+						category(condition.categoryId())
+				)
+				.orderBy(
+						product.createdDate.desc()
+				)
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize()).fetch();
+		return PageableExecutionUtils
+				.getPage(fetch, pageable,
+						factory.select(product.count())
+								.from(product)
+								.where(
+										category(condition.categoryId())
+								)::fetchOne);
 
-    }
+	}
 
 	@Override
 	public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
-		factory.select(new QProductQueryDto(product))
+		List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
 				.from(product)
 				.innerJoin(reaction)
 				.on(product.id.id.eq(reaction.targetId))
@@ -58,10 +58,18 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 						checkMyReaction(memberId),
 						checkActive()
 				)
-
+				.orderBy(reaction.lastModifiedDate.desc())
 				.fetch();
-
-		return null;
+		return PageableExecutionUtils
+				.getPage(fetch, pageable,
+						factory.select(product.count())
+								.from(product)
+								.where(
+										checkTarget(TargetEntity.PRODUCT),
+										checkReactionType(ReactionType.LIKES),
+										checkMyReaction(memberId),
+										checkActive()
+								)::fetchOne);
 	}
 
 	private BooleanExpression checkActive() {
@@ -69,7 +77,7 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 	}
 
 	private BooleanExpression checkMyReaction(String memberId) {
-		return memberId!=null?reaction.memberId.eq(memberId):null;
+		return memberId != null ? reaction.memberId.eq(memberId) : null;
 	}
 
 	private BooleanExpression checkReactionType(ReactionType likes) {
@@ -77,8 +85,8 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 	}
 
 	private BooleanExpression category(String categoryId) {
-        return categoryId != null ? product.category.id.id.eq(categoryId) : null;
-    }
+		return categoryId != null ? product.category.id.id.eq(categoryId) : null;
+	}
 
 	private BooleanExpression checkTarget(TargetEntity target) {
 		return reaction.targetType.eq(target);

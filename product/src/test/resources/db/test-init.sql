@@ -40,3 +40,9 @@ insert into reaction(reaction_id, active, created_date, last_modified_date, memb
     values ('reactionId1','N','2024-02-25 16:24:35','2024-02-25 16:24:35','memberId1', 'LIKES','productId1','PRODUCT');
 insert into reaction(reaction_id, active, created_date, last_modified_date, member_id, reaction_type, target_id, target_type)
     values ('reactionId2','Y','2024-02-25 16:24:35','2024-02-25 16:24:35','memberId2', 'LIKES','productId1','PRODUCT');
+insert into reaction(reaction_id, active, created_date, last_modified_date, member_id, reaction_type, target_id, target_type)
+    values ('reactionId3','Y','2024-02-25 16:24:35','2024-02-25 16:24:36','memberId2', 'LIKES','productId2','PRODUCT');
+insert into reaction(reaction_id, active, created_date, last_modified_date, member_id, reaction_type, target_id, target_type)
+    values ('reactionId4','N','2024-02-25 16:24:35','2024-02-25 16:24:36','memberId2', 'LIKES','productId3','PRODUCT');
+insert into reaction(reaction_id, active, created_date, last_modified_date, member_id, reaction_type, target_id, target_type)
+    values ('reactionId5','N','2024-02-25 16:24:35','2024-02-25 16:24:36','memberId2', 'LIKES','reviewId1','REVIEW');

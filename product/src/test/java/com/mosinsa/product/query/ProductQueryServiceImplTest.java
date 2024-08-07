@@ -45,4 +45,18 @@ class ProductQueryServiceImplTest {
 		}
 	}
 
+	@Test
+	void findMyProducts(){
+		Page<ProductQueryDto> byCondition = productQueryServiceImpl.findMyProducts("memberId2", PageRequest.of(0,3));
+		List<ProductQueryDto> content = byCondition.getContent();
+
+		assertThat(content).hasSize(2);
+
+		int idx=0;
+		List<String> answers = List.of("productId2", "productId1");
+		for (ProductQueryDto productQueryDto : content) {
+			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
+		}
+	}
+
 }

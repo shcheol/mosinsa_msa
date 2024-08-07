@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -21,7 +22,7 @@ class CustomProductRepositoryImplTest {
 	ProductRepository repository;
 
 	@Test
-	void test(){
+	void findByCategory(){
 
 		SearchCondition searchCondition = new SearchCondition("categoryId1");
 		Page<ProductQueryDto> byCondition = repository.findByCondition(searchCondition, PageRequest.of(0,3));
@@ -39,7 +40,7 @@ class CustomProductRepositoryImplTest {
 	}
 
 	@Test
-	void testNull(){
+	void findProductsWithNoCategoryId(){
 
 		SearchCondition searchCondition = new SearchCondition(null);
 		Page<ProductQueryDto> byCondition = repository.findByCondition(searchCondition, PageRequest.of(0,3));
@@ -53,6 +54,21 @@ class CustomProductRepositoryImplTest {
 		for (ProductQueryDto productQueryDto : content) {
 			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
 		}
+
+	}
+
+	@Test
+	void findMyProducts(){
+		Page<ProductQueryDto> myProducts = repository.findMyProducts("memberId2", PageRequest.of(0, 3));
+		List<ProductQueryDto> content = myProducts.getContent();
+		assertThat(content).hasSize(2);
+
+		int idx=0;
+		List<String> answers = List.of("productId2", "productId1");
+		for (ProductQueryDto productQueryDto : content) {
+			assertThat(productQueryDto.getProductId()).isEqualTo(answers.get(idx++));
+		}
+
 
 	}
 
