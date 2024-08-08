@@ -21,7 +21,7 @@ public class Promotion {
     @Column(name = "contexts")
     private String context;
 
-    private int quantity;
+    private int stock;
 
     @Enumerated(EnumType.STRING)
     private DiscountPolicy discountPolicy;
@@ -29,12 +29,12 @@ public class Promotion {
     @Embedded
     private PromotionPeriod period;
 
-    public static Promotion create(String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period, CouponDetails details) {
+    public static Promotion create(String title, String context, int stock, DiscountPolicy discountPolicy, PromotionPeriod period) {
         Promotion promotion = new Promotion();
         promotion.id = PromotionId.newId();
         promotion.title = title;
         promotion.context = context;
-        promotion.quantity = quantity;
+        promotion.stock = stock;
         promotion.discountPolicy =discountPolicy;
         promotion.period = period;
         return promotion;

@@ -24,7 +24,7 @@ class PromotionTest {
 	void equalsAndHashCode(){
 		LocalDateTime now = LocalDateTime.now();
 		Promotion promotion = Promotion.create("title", "context", 10, DiscountPolicy.NONE,
-				new PromotionPeriod(now, now.plusDays(2)), CouponDetails.of(now.plusMonths(3), DiscountPolicy.NONE));
+				new PromotionPeriod(now, now.plusDays(2)));
 		Promotion save = repository.save(promotion);
 		Promotion same = repository.findById(save.getId()).get();
 		Promotion protectedConstructor = new Promotion();

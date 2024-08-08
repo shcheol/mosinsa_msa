@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS promotion (
   promotion_id VARCHAR(255) NOT NULL PRIMARY KEY,
   title VARCHAR(100),
   contexts TEXT,
-  quantity INT(4),
+  stock INT(4),
   start_date DATE,
   end_date DATE,
   discount_policy VARCHAR(255)

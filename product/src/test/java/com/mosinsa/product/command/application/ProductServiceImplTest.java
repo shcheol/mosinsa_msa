@@ -32,7 +32,6 @@ class ProductServiceImplTest {
     ProductQueryService productQueryService;
     @Autowired
     ProductService productService;
-
 	@Autowired
 	StockPort stockPort;
 

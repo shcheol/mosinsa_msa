@@ -16,18 +16,18 @@ public class PromotionDto {
 
 	private final String context;
 
-	private final int quantity;
+	private final int stock;
 
 	private final DiscountPolicy discountPolicy;
 
 	private final PromotionPeriod period;
 
 	@QueryProjection
-	public PromotionDto(PromotionId promotionId, String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period) {
+	public PromotionDto(PromotionId promotionId, String title, String context, int stock, DiscountPolicy discountPolicy, PromotionPeriod period) {
 		this.promotionId = promotionId.getId();
 		this.title = title;
 		this.context = context;
-		this.quantity = quantity;
+		this.stock = stock;
 		this.discountPolicy = discountPolicy;
 		this.period = period;
 	}
@@ -36,7 +36,7 @@ public class PromotionDto {
 		return new PromotionDto(promotion.getId(),
 				promotion.getTitle(),
 				promotion.getContext(),
-				promotion.getQuantity(),
+				promotion.getStock(),
 				promotion.getDiscountPolicy(),
 				promotion.getPeriod());
 	}

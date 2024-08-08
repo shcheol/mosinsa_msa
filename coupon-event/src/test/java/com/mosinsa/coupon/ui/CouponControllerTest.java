@@ -1,10 +1,9 @@
 package com.mosinsa.coupon.ui;
 
+import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -12,9 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CouponController.class)
-@Import(CouponPresentationObjectFactory.class)
-class CouponControllerTest {
+class CouponControllerTest extends ControllerTest {
 
     @Autowired
     MockMvc mockMvc;

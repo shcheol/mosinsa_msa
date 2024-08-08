@@ -20,8 +20,8 @@ public class Coupon {
 	private CouponId id;
 	@Embedded
 	private PromotionId promotionId;
-	private LocalDateTime issuedDate;
 	private String memberId;
+	private LocalDateTime issuedDate;
 	@Column(name = "state")
 	@Enumerated(EnumType.STRING)
 	private CouponState state;

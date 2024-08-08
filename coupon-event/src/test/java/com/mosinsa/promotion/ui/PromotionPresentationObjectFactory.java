@@ -16,7 +16,7 @@ public class PromotionPresentationObjectFactory {
 		return new PromotionServiceStub();
 	}
 
-	@Bean
+	//@Bean
 	public CouponQueryService couponQueryService(){
 		return new CouponQueryService() {
 			@Override

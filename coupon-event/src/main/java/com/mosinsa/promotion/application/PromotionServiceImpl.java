@@ -31,9 +31,8 @@ public class PromotionServiceImpl implements PromotionService {
 				request.context(),
 				request.quantity(),
 				request.discountPolicy(),
-				request.period(),
-				couponDetails);
-		Events.raise(new PromotionCreatedEvent(promotion.getId(), promotion.getQuantity(), couponDetails));
+				request.period());
+		Events.raise(new PromotionCreatedEvent(promotion.getId(), promotion.getStock(), couponDetails));
 		return repository.save(promotion).getId();
 	}
 

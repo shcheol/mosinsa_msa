@@ -31,7 +31,7 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 								promotion.id,
 								promotion.title,
 								promotion.context,
-								promotion.quantity,
+								promotion.stock,
 								promotion.discountPolicy,
 								promotion.period
 						)

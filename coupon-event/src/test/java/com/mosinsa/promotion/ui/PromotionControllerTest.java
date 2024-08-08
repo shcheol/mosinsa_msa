@@ -1,5 +1,6 @@
 package com.mosinsa.promotion.ui;
 
+import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,60 +15,58 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PromotionController.class)
-@Import(PromotionPresentationObjectFactory.class)
-class PromotionControllerTest {
+class PromotionControllerTest extends ControllerTest {
 
-	@Autowired
-	MockMvc mockMvc;
+    @Autowired
+    MockMvc mockMvc;
 
 
-	@Test
-	@DisplayName("promotion 목록 조회")
-	void promotionList() throws Exception {
+    @Test
+    @DisplayName("promotion 목록 조회")
+    void promotionList() throws Exception {
 
-		mockMvc.perform(get("/promotions"))
-				.andExpect(status().isOk())
-				.andDo(print());
-	}
+        mockMvc.perform(get("/promotions"))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 
-	@Test
-	@DisplayName("promotion 상세 조회")
-	void promotionNoLogin() throws Exception {
+    @Test
+    @DisplayName("promotion 상세 조회")
+    void promotionNoLogin() throws Exception {
 
 
-		String promotionId = "promotionId";
-		mockMvc.perform(
-						get("/promotions/" + promotionId)
-				).andExpect(status().isOk())
-				.andDo(print());
-	}
+        String promotionId = "promotionId";
+        mockMvc.perform(
+                        get("/promotions/" + promotionId)
+                ).andExpect(status().isOk())
+                .andDo(print());
+    }
 
-	@Test
-	@DisplayName("promotion 생성")
-	void create() throws Exception {
+    @Test
+    @DisplayName("promotion 생성")
+    void create() throws Exception {
 
-		mockMvc.perform(post("/promotions")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content("""
-								    {
-								    "title":"제목",
-								    "context":"내용",
-								    "quantity" : 20,
-								    "discountPolicy":"TEN_PERCENTAGE",
-								    "period":{
-								        "startDate":"2023-11-06T00:00:00",
-								        "endDate":"2024-11-06T00:00:00"
-								    },
-								    "details":{
-								            "discountPolicy":"TEN_PERCENTAGE",
-								            "duringDate":"2024-11-06T00:00:00"
-								    }
-								    }
-								""")
-				).andExpect(status().isCreated())
-				.andExpect(jsonPath("id").value("testId"))
-				.andDo(print());
+        mockMvc.perform(post("/promotions")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content("""
+                                    {
+                                    "title":"제목",
+                                    "context":"내용",
+                                    "quantity" : 20,
+                                    "discountPolicy":"TEN_PERCENTAGE",
+                                    "period":{
+                                        "startDate":"2023-11-06T00:00:00",
+                                        "endDate":"2024-11-06T00:00:00"
+                                    },
+                                    "details":{
+                                            "discountPolicy":"TEN_PERCENTAGE",
+                                            "duringDate":"2024-11-06T00:00:00"
+                                    }
+                                    }
+                                """)
+                ).andExpect(status().isCreated())
+                .andExpect(jsonPath("id").value("testId"))
+                .andDo(print());
 
-	}
+    }
 }
