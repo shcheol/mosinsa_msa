@@ -4,15 +4,17 @@ import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.command.domain.*;
 import com.mosinsa.coupon.query.application.CouponQueryService;
-import com.mosinsa.coupon.query.application.dto.CouponDto;
-import com.mosinsa.promotion.domain.PromotionId;
+import com.mosinsa.coupon.query.application.dto.CouponDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class CouponQueryServiceStub implements CouponQueryService {
+    CouponCondition of = CouponCondition.of(8000L, LocalDate.now(), DiscountPolicy.NONE);
+
     @Override
-    public CouponDto getCouponDetails(String couponId) {
+    public CouponDetails getCouponDetails(String couponId) {
         if (couponId.equals("globalEx")){
             throw new IllegalArgumentException();
         }
@@ -23,27 +25,18 @@ public class CouponQueryServiceStub implements CouponQueryService {
             throw new CouponException(CouponError.INTERNAL_SERVER_ERROR);
         }
 
-        return new CouponDto(CouponId.of(couponId), null, LocalDateTime.now(),null, CouponState.ISSUED,
-                CouponDetails.of(LocalDateTime.now(), DiscountPolicy.NONE));
+        return new CouponDetails(
+                couponId, LocalDateTime.now(),null, CouponState.ISSUED, of);
     }
 
     @Override
-    public long count(String promotionId) {
-        return 10;
-    }
+    public List<CouponDetails> getMyCoupons(String memberId) {
 
-    @Override
-    public List<CouponDto> getMyCoupons(String memberId) {
+        Coupon coupon1 = Coupon.issue(memberId, of);
+        Coupon coupon2 = Coupon.issue(memberId, of);
 
-        Coupon coupon1 = Coupon.create(
-                PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
-        coupon1.issueForMember(memberId);
-        Coupon coupon2 = Coupon.create(
-                PromotionId.newId(), CouponDetails.of(LocalDateTime.now(), DiscountPolicy.TEN_PERCENTAGE));
-        coupon2.issueForMember(memberId);
-
-        CouponDto couponDto1 = CouponDto.convert(coupon1);
-        CouponDto couponDto2 = CouponDto.convert(coupon2);
+        CouponDetails couponDto1 = CouponDetails.convert(coupon1);
+        CouponDetails couponDto2 = CouponDetails.convert(coupon2);
 
         return List.of(couponDto1, couponDto2);
     }

@@ -1,55 +1,39 @@
 package com.mosinsa.coupon.command.domain;
 
-import com.mosinsa.common.exception.CouponError;
-import com.mosinsa.common.exception.CouponException;
-import com.mosinsa.promotion.domain.PromotionId;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "coupon")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 public class Coupon {
 
 	@EmbeddedId
 	private CouponId id;
-	@Embedded
-	private PromotionId promotionId;
 	private String memberId;
-	private LocalDateTime issuedDate;
 	@Column(name = "state")
 	@Enumerated(EnumType.STRING)
 	private CouponState state;
 	@Embedded
-	private CouponDetails details;
+	private CouponCondition details;
 
-	public static Coupon create(PromotionId promotionId, CouponDetails details) {
+	@CreatedDate
+	@Column(updatable = false)
+	private LocalDateTime issuedDate;
+
+	public static Coupon issue(String memberId, CouponCondition details) {
 		Coupon coupon = new Coupon();
 		coupon.id = CouponId.newId();
-		coupon.promotionId = promotionId;
+		coupon.memberId = memberId;
 		coupon.details = details;
-		coupon.state = CouponState.CREATED;
+		coupon.state = CouponState.ISSUED;
 		return coupon;
-	}
-
-	public static List<Coupon> createAll(PromotionId promotionId, int quantity, CouponDetails details) {
-		if (quantity <= 0) throw new CouponException(CouponError.INVALID_QUANTITY);
-		ArrayList<Coupon> coupons = new ArrayList<>();
-		for (int i = 0; i < quantity; i++) {
-			coupons.add(Coupon.create(promotionId, details));
-		}
-		return coupons;
-	}
-
-	public void issueForMember(String memberId) {
-		this.memberId = memberId;
-		this.issuedDate = LocalDateTime.now();
-		this.state = CouponState.ISSUED;
 	}
 
 	public void use() {

@@ -1,8 +1,8 @@
 package com.mosinsa.promotion.infra.repository;
 
-import com.mosinsa.promotion.application.dto.PromotionDto;
-import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
-import com.mosinsa.promotion.application.dto.QPromotionDto;
+import com.mosinsa.promotion.query.dto.PromotionDto;
+import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.query.dto.QPromotionDto;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,7 +16,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.mosinsa.promotion.domain.QPromotion.promotion;
+import static com.mosinsa.promotion.command.domain.QPromotion.promotion;
 
 @RequiredArgsConstructor
 public class CustomPromotionRepositoryImpl implements CustomPromotionRepository {
@@ -31,8 +31,6 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 								promotion.id,
 								promotion.title,
 								promotion.context,
-								promotion.stock,
-								promotion.discountPolicy,
 								promotion.period
 						)
 				).from(promotion)

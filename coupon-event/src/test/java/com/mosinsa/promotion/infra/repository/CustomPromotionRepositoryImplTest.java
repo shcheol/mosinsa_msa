@@ -1,7 +1,7 @@
 package com.mosinsa.promotion.infra.repository;
 
-import com.mosinsa.promotion.application.dto.PromotionDto;
-import com.mosinsa.promotion.application.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.query.dto.PromotionDto;
+import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

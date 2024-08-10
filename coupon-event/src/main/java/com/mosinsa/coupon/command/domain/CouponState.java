@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public enum CouponState {
 
-    CREATED, ISSUED, USED, EXPIRED,
+    ISSUED, USED, EXPIRED,
 }

@@ -18,7 +18,7 @@ public class CouponIssuedEventHandler {
     @Async
     @EventListener(CouponIssuedEvent.class)
     public void handle(CouponIssuedEvent event) {
-        log.info("handle PromotionCreatedEvent");
+        log.info("handle CouponIssuedEvent");
         couponService.issue(event);
     }
 }

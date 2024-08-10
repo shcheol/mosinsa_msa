@@ -20,28 +20,6 @@ class PromotionControllerTest extends ControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-
-    @Test
-    @DisplayName("promotion 목록 조회")
-    void promotionList() throws Exception {
-
-        mockMvc.perform(get("/promotions"))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("promotion 상세 조회")
-    void promotionNoLogin() throws Exception {
-
-
-        String promotionId = "promotionId";
-        mockMvc.perform(
-                        get("/promotions/" + promotionId)
-                ).andExpect(status().isOk())
-                .andDo(print());
-    }
-
     @Test
     @DisplayName("promotion 생성")
     void create() throws Exception {

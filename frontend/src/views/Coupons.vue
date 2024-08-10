@@ -8,7 +8,7 @@
         <tr>
           <td>쿠폰번호</td>
           <td v-if="coupon!=null">{{ coupon.couponId }}</td>
-          <button v-if="coupon!=null" @click="couponDetails(coupon.couponId)">쿠폰상세</button>
+          <button v-if="coupon!=null" @click="couponCondition(coupon.couponId)">쿠폰상세</button>
         </tr>
         <tr>
           <td>프로모션번호</td>
@@ -48,9 +48,9 @@ export default {
         });
   },
   methods: {
-    couponDetails(id) {
+    couponCondition(id) {
       this.$router.push({
-        name: 'couponDetails',
+        name: 'couponCondition',
         params: {id: id}
       })
     },

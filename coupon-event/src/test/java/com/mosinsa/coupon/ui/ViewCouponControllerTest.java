@@ -2,7 +2,6 @@ package com.mosinsa.coupon.ui;
 
 import com.mosinsa.ControllerTest;
 import com.mosinsa.common.exception.CouponError;
-import com.mosinsa.coupon.query.application.CouponQueryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,9 +15,6 @@ class ViewCouponControllerTest extends ControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-
-    @Autowired
-    CouponQueryService couponQueryService;
 
     @Test
     void couponDetails() throws Exception {
