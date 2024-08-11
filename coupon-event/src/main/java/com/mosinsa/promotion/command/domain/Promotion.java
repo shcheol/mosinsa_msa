@@ -1,6 +1,5 @@
 package com.mosinsa.promotion.command.domain;
 
-import com.mosinsa.coupon.command.domain.DiscountPolicy;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.Getter;

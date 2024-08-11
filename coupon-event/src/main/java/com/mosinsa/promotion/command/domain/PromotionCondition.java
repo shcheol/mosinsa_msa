@@ -12,6 +12,8 @@ import java.util.UUID;
 @Getter
 public class PromotionCondition extends BaseEntity {
 
+
+    private String conditions;
     public static PromotionCondition create() {
         PromotionCondition promotionCondition = new PromotionCondition();
 
