@@ -11,38 +11,44 @@ import java.util.Objects;
 @Getter
 public class Promotion {
 
-    @EmbeddedId
-    private PromotionId id;
-    @Nonnull
-    private String title;
+	@EmbeddedId
+	private PromotionId id;
+	@Nonnull
+	private String title;
 
-    @Column(name = "contexts")
-    private String context;
+	@Column(name = "contexts")
+	private String context;
 
-    @Embedded
-    private PromotionPeriod period;
+	@Enumerated(EnumType.STRING)
+	private DateUnit dateUnit;
+	@Embedded
+	private PromotionPeriod period;
 
-    public static Promotion create(String title, String context, PromotionPeriod period) {
-        Promotion promotion = new Promotion();
-        promotion.id = PromotionId.newId();
-        promotion.title = title;
-        promotion.context = context;
-        promotion.period = period;
-        return promotion;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	private PromotionCondition promotionCondition;
 
-    protected Promotion() {
-    }
+	public static Promotion create(String title, String context,DateUnit dateUnit, PromotionPeriod period) {
+		Promotion promotion = new Promotion();
+		promotion.id = PromotionId.newId();
+		promotion.title = title;
+		promotion.context = context;
+		promotion.dateUnit = dateUnit;
+		promotion.period = period;
+		return promotion;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Promotion promotion)) return false;
-        return Objects.equals(id, promotion.id);
-    }
+	protected Promotion() {
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Promotion promotion)) return false;
+		return Objects.equals(id, promotion.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 }

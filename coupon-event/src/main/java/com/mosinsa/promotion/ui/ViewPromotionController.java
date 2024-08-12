@@ -2,8 +2,8 @@ package com.mosinsa.promotion.ui;
 
 import com.mosinsa.promotion.query.PromotionQueryService;
 import com.mosinsa.promotion.query.dto.PromotionDetails;
-import com.mosinsa.promotion.query.dto.PromotionDto;
 import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
+import com.mosinsa.promotion.query.dto.PromotionSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,22 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ViewPromotionController {
 
-    private final PromotionQueryService promotionQueryService;
+	private final PromotionQueryService promotionQueryService;
 
-    @GetMapping("/promotions")
-    public ResponseEntity<Page<PromotionDto>> promotions(PromotionSearchCondition condition, Pageable pageable) {
-        Page<PromotionDto> promotions = promotionQueryService.findPromotionsByCondition(condition, pageable);
-        return ResponseEntity.ok(promotions);
-    }
+	@GetMapping("/promotions")
+	public ResponseEntity<Page<PromotionSummary>> promotions(PromotionSearchCondition condition, Pageable pageable) {
+		Page<PromotionSummary> promotions = promotionQueryService.findPromotionsByCondition(condition, pageable);
+		return ResponseEntity.ok(promotions);
+	}
 
-    @GetMapping("/promotions/{promotionId}")
-    public ResponseEntity<PromotionDetails> getDetails(@PathVariable("promotionId") String promotionId) {
-        log.info("{}", promotionId);
+	@GetMapping("/promotions/{promotionId}")
+	public ResponseEntity<PromotionDetails> getDetails(@PathVariable("promotionId") String promotionId) {
+		log.info("{}", promotionId);
 
-        PromotionDto promotionDto = promotionQueryService.getPromotionDetails(promotionId);
+		PromotionDetails promotionDetails = promotionQueryService.getPromotionDetails(promotionId);
 
-        PromotionDetails promotionDetails = new PromotionDetails(promotionDto);
-        return ResponseEntity.ok(promotionDetails);
-    }
+		return ResponseEntity.ok(promotionDetails);
+	}
 
 }

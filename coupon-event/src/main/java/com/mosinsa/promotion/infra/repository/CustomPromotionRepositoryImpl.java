@@ -1,8 +1,8 @@
 package com.mosinsa.promotion.infra.repository;
 
-import com.mosinsa.promotion.query.dto.PromotionDto;
+import com.mosinsa.promotion.query.dto.PromotionSummary;
 import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
-import com.mosinsa.promotion.query.dto.QPromotionDto;
+import com.mosinsa.promotion.query.dto.QPromotionSummary;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -24,10 +24,10 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<PromotionDto> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable) {
+	public Page<PromotionSummary> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable) {
 
-		List<PromotionDto> fetch = queryFactory.select(
-						new QPromotionDto(
+		List<PromotionSummary> fetch = queryFactory.select(
+						new QPromotionSummary(
 								promotion.id,
 								promotion.title,
 								promotion.context,

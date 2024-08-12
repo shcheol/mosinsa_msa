@@ -19,6 +19,7 @@ public class PromotionServiceImpl implements PromotionService {
     public PromotionId registerPromotion(CreatePromotionRequest request) {
         Promotion promotion = Promotion.create(request.title(),
                 request.context(),
+				request.dateUnit(),
                 request.period());
         return repository.save(promotion).getId();
     }

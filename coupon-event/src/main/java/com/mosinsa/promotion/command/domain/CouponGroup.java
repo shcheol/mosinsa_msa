@@ -6,16 +6,25 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class CouponGroup extends BaseEntity{
+public class CouponGroup extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Quest quest;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Quest quest;
 
-    private long couponGroupSequence;
+	private long couponGroupSequence;
 
-    private int quantity;
+	private int quantity;
 
-    @Enumerated(EnumType.STRING)
-    private DiscountPolicy discountPolicy;
+	@Enumerated(EnumType.STRING)
+	private DiscountPolicy discountPolicy;
 
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

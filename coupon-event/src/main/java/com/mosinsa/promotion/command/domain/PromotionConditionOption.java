@@ -1,24 +1,36 @@
 package com.mosinsa.promotion.command.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Getter
-public class PromotionConditionOption extends BaseEntity{
+public class PromotionConditionOption extends BaseEntity {
 
+	private String optionName;
 
-    public static PromotionConditionOption create() {
-        PromotionConditionOption promotionConditionOption = new PromotionConditionOption();
+	@ManyToOne(fetch = FetchType.LAZY)
+	private PromotionCondition promotionCondition;
 
-        return promotionConditionOption;
-    }
+	public static PromotionConditionOption create(String optionName, PromotionCondition promotionCondition) {
+		PromotionConditionOption promotionConditionOption = new PromotionConditionOption();
+		promotionConditionOption.optionName = optionName;
+		promotionConditionOption.promotionCondition = promotionCondition;
+		return promotionConditionOption;
+	}
 
-    protected PromotionConditionOption() {
-    }
+	protected PromotionConditionOption() {
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

@@ -49,7 +49,7 @@ export default {
     apiBoard.getPromotionDetails(this.$route.params.id)
         .then((response) => {
           console.log(response);
-          this.promotion = response.data.promotionDto;
+          this.promotion = response.data.promotionSummary;
           this.stock = response.data.stock;
         })
         .catch(function (e) {

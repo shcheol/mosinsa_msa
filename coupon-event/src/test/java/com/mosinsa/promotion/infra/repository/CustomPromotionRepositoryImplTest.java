@@ -1,6 +1,6 @@
 package com.mosinsa.promotion.infra.repository;
 
-import com.mosinsa.promotion.query.dto.PromotionDto;
+import com.mosinsa.promotion.query.dto.PromotionSummary;
 import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class CustomPromotionRepositoryImplTest {
 
 		PromotionSearchCondition condition = new PromotionSearchCondition(true, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
-		List<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of).getContent();
+		List<PromotionSummary> promotions = repository.findPromotionsByCondition(condition, of).getContent();
 		assertThat(promotions).hasSize(1);
 	}
 
@@ -35,7 +35,7 @@ class CustomPromotionRepositoryImplTest {
 
 		PromotionSearchCondition condition = new PromotionSearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
-		Page<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of);
+		Page<PromotionSummary> promotions = repository.findPromotionsByCondition(condition, of);
 
 		assertThat(promotions.getContent()).hasSize(3);
 	}

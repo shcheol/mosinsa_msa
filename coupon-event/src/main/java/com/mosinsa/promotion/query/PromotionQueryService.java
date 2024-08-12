@@ -1,12 +1,13 @@
 package com.mosinsa.promotion.query;
 
-import com.mosinsa.promotion.query.dto.PromotionDto;
+import com.mosinsa.promotion.query.dto.PromotionDetails;
+import com.mosinsa.promotion.query.dto.PromotionSummary;
 import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PromotionQueryService {
-    PromotionDto getPromotionDetails(String promotionId);
+    PromotionDetails getPromotionDetails(String promotionId);
 
-    Page<PromotionDto> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable);
+    Page<PromotionSummary> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable);
 }
