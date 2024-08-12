@@ -2,7 +2,6 @@ package com.mosinsa.coupon.query.application.dto;
 
 import com.mosinsa.coupon.command.domain.Coupon;
 import com.mosinsa.coupon.command.domain.CouponCondition;
-import com.mosinsa.coupon.command.domain.CouponId;
 import com.mosinsa.coupon.command.domain.CouponState;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,7 @@ public record CouponDetails(
                 coupon.getIssuedDate(),
                 coupon.getMemberId(),
                 coupon.getState(),
-                coupon.getDetails()
+                coupon.getCondition()
         );
     }
 }

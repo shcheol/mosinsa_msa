@@ -40,6 +40,6 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
     }
 
     private BooleanExpression availableDate() {
-        return coupon.details.duringDate.after(LocalDate.now());
+        return coupon.condition.duringDate.after(LocalDate.now());
     }
 }

@@ -21,17 +21,17 @@ public class Coupon {
 	@Enumerated(EnumType.STRING)
 	private CouponState state;
 	@Embedded
-	private CouponCondition details;
+	private CouponCondition condition;
 
 	@CreatedDate
 	@Column(updatable = false)
 	private LocalDateTime issuedDate;
 
-	public static Coupon issue(String memberId, CouponCondition details) {
+	public static Coupon issue(String memberId, CouponCondition condition) {
 		Coupon coupon = new Coupon();
 		coupon.id = CouponId.newId();
 		coupon.memberId = memberId;
-		coupon.details = details;
+		coupon.condition = condition;
 		coupon.state = CouponState.ISSUED;
 		return coupon;
 	}
