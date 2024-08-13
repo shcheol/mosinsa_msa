@@ -23,11 +23,19 @@ public class Quest extends BaseEntity {
 	private List<CouponGroup> couponGroupList = new ArrayList<>();
 
     public static Quest create() {
-        Quest quest = new Quest();
-
-        return quest;
+		return new Quest();
     }
 
     protected Quest() {
     }
+
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

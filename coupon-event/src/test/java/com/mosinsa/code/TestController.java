@@ -1,6 +1,7 @@
 package com.mosinsa.code;
 
 import com.mosinsa.common.argumentresolver.CustomerInfo;
+import com.mosinsa.common.argumentresolver.GuestOrLogin;
 import com.mosinsa.common.argumentresolver.Login;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +22,12 @@ public class TestController {
 	}
 
 	@GetMapping("/success2")
-	public Object loginUserOrGuest(CustomerInfo customerInfo){
+	public Object loginUserOrGuest(@GuestOrLogin CustomerInfo customerInfo){
 		return customerInfo;
 	}
 
 	@GetMapping("/fail2")
-	public Object loginUserOrGuest(TestClass customerInfo){
+	public Object loginUserOrGuest(@GuestOrLogin TestClass customerInfo){
 		return customerInfo;
 	}
 }

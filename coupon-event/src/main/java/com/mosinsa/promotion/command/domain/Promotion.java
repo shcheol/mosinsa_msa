@@ -27,7 +27,7 @@ public class Promotion {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private PromotionCondition promotionCondition;
 
-	public static Promotion create(String title, String context,DateUnit dateUnit, PromotionPeriod period) {
+	public static Promotion create(String title, String context, DateUnit dateUnit, PromotionPeriod period) {
 		Promotion promotion = new Promotion();
 		promotion.id = PromotionId.newId();
 		promotion.title = title;
