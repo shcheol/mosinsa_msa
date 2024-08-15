@@ -1,8 +1,6 @@
 package com.mosinsa.promotion.command.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -12,11 +10,12 @@ import java.util.List;
 @Getter
 public class PromotionCondition extends BaseEntity {
 
-	private String conditions;
+	@Enumerated(EnumType.STRING)
+	private PromotionConditions conditions;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "promotionCondition")
 	private List<PromotionConditionOption> promotionConditionOptions = new ArrayList<>();
-	public static PromotionCondition create(String conditions) {
+	public static PromotionCondition create(PromotionConditions conditions) {
 		PromotionCondition promotionCondition = new PromotionCondition();
 		promotionCondition.conditions = conditions;
 		return promotionCondition;

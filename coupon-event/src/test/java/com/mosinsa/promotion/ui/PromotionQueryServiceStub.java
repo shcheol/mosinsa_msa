@@ -6,7 +6,6 @@ import com.mosinsa.promotion.command.domain.PromotionPeriod;
 import com.mosinsa.promotion.query.PromotionQueryService;
 import com.mosinsa.promotion.query.dto.PromotionDetails;
 import com.mosinsa.promotion.query.dto.PromotionSummary;
-import com.mosinsa.promotion.query.dto.PromotionSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +21,7 @@ public class PromotionQueryServiceStub implements PromotionQueryService {
 	LocalDateTime after = LocalDateTime.of(2024, 10, 28, 00, 00);
 
 	@Override
-	public PromotionDetails getPromotionDetails(String promotionId) {
+	public PromotionDetails getPromotionDetails(String promotionId, String memberId) {
 
 		return PromotionDetails.of(
 				Promotion.create("title", "context", DateUnit.ONCE,  new PromotionPeriod(before, after)),
@@ -31,7 +30,7 @@ public class PromotionQueryServiceStub implements PromotionQueryService {
 	}
 
 	@Override
-	public Page<PromotionSummary> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable) {
+	public Page<PromotionSummary> findPromotions(Pageable pageable) {
 		PromotionSummary dto1 = PromotionSummary.of(Promotion.create(
 				"title", "context",DateUnit.ONCE,  new PromotionPeriod(before, after))
 		);

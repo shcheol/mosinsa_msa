@@ -1,20 +1,19 @@
 package com.mosinsa.promotion.command.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 @Getter
 public class PromotionConditionOption extends BaseEntity {
 
-	private String optionName;
+	@Enumerated(EnumType.STRING)
+	private ConditionOption optionName;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private PromotionCondition promotionCondition;
 
-	public static PromotionConditionOption create(String optionName) {
+	public static PromotionConditionOption create(ConditionOption optionName) {
 		PromotionConditionOption promotionConditionOption = new PromotionConditionOption();
 		promotionConditionOption.optionName = optionName;
 		return promotionConditionOption;

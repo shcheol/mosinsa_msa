@@ -1,9 +1,6 @@
 package com.mosinsa.promotion.command.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -14,6 +11,7 @@ import java.util.List;
 public class Quest extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="promotion_id")
     private Promotion promotion;
 
 	@ManyToOne(fetch = FetchType.LAZY)

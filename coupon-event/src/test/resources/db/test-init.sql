@@ -10,18 +10,19 @@ truncate table coupon_group;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into promotion(promotion_id, title, contexts, date_unit, start_date, end_date, promotion_condition_id)
-values ('promotion1', 'title1', '신규 가입자 10000원, 기존 유저 3000원 쿠폰', 'ONCE', '2023-10-28', '2023-10-29', 1),
+values ('promotion1', 'title1', '신규 가입자 10000원, 기존 유저 3000원 쿠폰', 'ONCE', '2023-10-28', '2025-10-29', 1),
        ('promotion2', 'title2', 'context2', 'ONCE','2023-10-30', '2024-11-30', 1),
-       ('promotion3', 'title3', 'context3','EVERYDAY', '2023-10-31', '2024-11-30', 1),
-       ('promotion4', 'title3', 'context3', 'EVERYDAY','2023-10-31', '2024-11-30', 2);
+       ('promotion3', 'title3', 'context3','DAILY', '2023-10-31', '2024-11-30', 1),
+       ('promotion4', 'title3', 'context3', 'DAILY','2023-10-31', '2024-11-30', 2),
+       ('promotion5', 'title3', 'context3', 'DAILY','2023-10-31', '2023-11-30', 2);
 
 insert into promotion_condition(id, conditions, created_date, last_modified_date)
-values (1, '신규가입여부', '2023-10-31', '2024-11-30'),
-       (2, '누적 결제 금액', '2023-10-31', '2024-11-30');
+values (1, 'NEW_MEMBER', '2023-10-31', '2024-11-30'),
+       (2, 'ORDER_COUNT', '2023-10-31', '2024-11-30');
 
 insert into promotion_condition_option(id, option_name, promotion_condition_id, created_date, last_modified_date)
-values (1, '신규 가입자', 1, '2023-10-31', '2024-11-30'),
-       (2, '기존 가입자', 1, '2023-10-31', '2024-11-30'),
+values (1, 'NEW_MEMBER', 1, '2023-10-31', '2024-11-30'),
+       (2, 'OLD_MEMBER', 1, '2023-10-31', '2024-11-30'),
        (3, '100000미만', 2, '2023-10-31', '2024-11-30'),
        (4, '100000이상', 2, '2023-10-31', '2024-11-30'),
        (5, '1000000이상', 2, '2023-10-31', '2024-11-30');

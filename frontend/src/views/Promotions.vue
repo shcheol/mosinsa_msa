@@ -3,8 +3,9 @@
     <h2>진행중인 프로모션</h2>
 
       <div class="main__container">
-        <div class="item" v-for="(promotion) in promotions" :key="promotion" @click="promotionDetails(promotion.promotionId)">
+        <div class="item" v-for="(promotion) in promotions" :key="promotion" @click="promotionDetails(promotion)">
           <p v-if="promotion!=null">{{ promotion.title }}</p>
+          <p v-if="promotion!=null">{{ promotion.context }}</p>
           <p v-if="promotion!=null">기간: {{ dateFormatting(promotion.period.startDate) }} ~ {{dateFormatting(promotion.period.endDate)}}</p>
         </div>
       </div>
@@ -64,11 +65,15 @@ export default {
           });
     },
 
-    promotionDetails(id) {
-      this.$router.push({
-        name: 'promotionDetails',
-        params: {id: id}
-      })
+    promotionDetails(promotion) {
+      if (!promotion.proceeding){
+        alert("종료된 프로모션입니다.")
+      }else {
+        this.$router.push({
+          name: 'promotionDetails',
+          params: {id: promotion.promotionId}
+        })
+      }
     },
     dateFormatting(date) {
       return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
