@@ -25,7 +25,8 @@ public class PromotionQueryServiceStub implements PromotionQueryService {
 
 		return PromotionDetails.of(
 				Promotion.create("title", "context", DateUnit.ONCE,  new PromotionPeriod(before, after)),
-				false
+				false,
+				List.of()
 		);
 	}
 

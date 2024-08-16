@@ -3,8 +3,9 @@ package com.mosinsa.promotion.infra.api;
 import com.mosinsa.promotion.infra.api.feignclient.order.OrderSummary;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public interface OrderAdapter {
-    ResponseResult<OrderSummary> getMyOrders(Map<String, Collection<String>> headers);
+    ResponseResult<List<OrderSummary>> getMyOrders(Map<String, Collection<String>> headers);
 }
