@@ -16,9 +16,10 @@ public class PromotionHistory extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Quest quest;
 
-    public static PromotionHistory of(String memberId) {
+    public static PromotionHistory of(String memberId, Quest quest) {
         PromotionHistory promotionHistory = new PromotionHistory();
         promotionHistory.memberId = memberId;
+		promotionHistory.quest = quest;
         return promotionHistory;
     }
 

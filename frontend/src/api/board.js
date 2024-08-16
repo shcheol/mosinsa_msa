@@ -179,10 +179,10 @@ export default {
     getPromotions: function (page) {
         return instance.get(BASE_URL + `coupon-service/promotions?page=${page}`)
     },
-    joinPromotions: function (promotionId) {
+    joinPromotions: function (promotionId, quests) {
         return instance.post(BASE_URL + `coupon-service/promotions/${promotionId}`,
             {
-                "promotionId": promotionId
+                "quests": quests
             })
     },
     getPromotionDetails: function (id) {

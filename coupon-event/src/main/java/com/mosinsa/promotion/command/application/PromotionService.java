@@ -1,8 +1,8 @@
 package com.mosinsa.promotion.command.application;
 
-import com.mosinsa.promotion.command.application.dto.CreatePromotionRequest;
-import com.mosinsa.promotion.command.domain.PromotionId;
+import com.mosinsa.promotion.command.application.dto.ParticipateDto;
 
 public interface PromotionService {
-    PromotionId registerPromotion(CreatePromotionRequest request);
+    void participatePromotion(ParticipateDto participateDto);
+
 }

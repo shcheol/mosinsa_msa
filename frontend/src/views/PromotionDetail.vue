@@ -51,7 +51,7 @@ export default {
       if (promotion.participated) {
         alert("이미 참여했습니다.");
       } else {
-        apiBoard.joinPromotions(promotion.promotionId)
+        apiBoard.joinPromotions(promotion.promotionId, promotion.quests)
             .then(() => {
               alert("쿠폰 발급 성공. 쿠폰함을 확인하세요");
             }).catch(function (e) {

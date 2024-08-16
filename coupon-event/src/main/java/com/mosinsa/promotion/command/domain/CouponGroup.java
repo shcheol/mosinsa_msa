@@ -18,6 +18,10 @@ public class CouponGroup extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private DiscountPolicy discountPolicy;
 
+	public void issue(){
+		quantity-=1;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		return super.equals(o);
