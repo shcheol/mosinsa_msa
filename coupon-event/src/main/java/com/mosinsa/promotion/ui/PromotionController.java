@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,5 +24,11 @@ public class PromotionController {
         log.info("request {}", request);
         PromotionId promotionId = promotionService.registerPromotion(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(promotionId);
+    }
+
+    @PostMapping("/promotions/{promotionId}")
+    public ResponseEntity<String> participate(@PathVariable String promotionId) {
+
+        return ResponseEntity.ok().body(promotionId);
     }
 }

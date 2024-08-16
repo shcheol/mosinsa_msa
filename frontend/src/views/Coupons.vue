@@ -2,7 +2,8 @@
   <div class="container">
     <h2>쿠폰목록</h2>
 
-    <div v-for="(coupon) in coupons" :key="coupon">
+    <div v-if="coupons ==null || coupons.length<=0" >쿠폰이 없습니다.</div>
+    <div v-else v-for="(coupon) in coupons" :key="coupon">
       <table class="table">
         <tbody>
         <tr>

@@ -180,7 +180,7 @@ export default {
         return instance.get(BASE_URL + `coupon-service/promotions?page=${page}`)
     },
     joinPromotions: function (promotionId) {
-        return instance.post(BASE_URL + 'coupon-service/coupons/issue',
+        return instance.post(BASE_URL + `coupon-service/promotions/${promotionId}`,
             {
                 "promotionId": promotionId
             })
