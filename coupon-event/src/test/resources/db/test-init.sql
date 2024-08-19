@@ -7,6 +7,7 @@ truncate table quest;
 
 truncate table coupon;
 truncate table coupon_group;
+truncate table coupon_group_info;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into promotion(promotion_id, title, contexts, date_unit, start_date, end_date, promotion_condition_id)
@@ -34,13 +35,19 @@ values (1, 'promotion1', 1, '2023-10-31', '2024-11-30'),
        (4, 'promotion4', 4, '2023-10-31', '2024-11-30'),
        (5, 'promotion4', 5, '2023-10-31', '2024-11-30');
 
-insert into coupon_group(id, coupon_group_sequence, discount_policy, quantity, quest_id, created_date, last_modified_date)
+insert into coupon_group_info(id, coupon_group_sequence, discount_policy, quantity, quest_id, created_date, last_modified_date)
 values (1, 1, 'TWENTY_PERCENTAGE', 300, 1, '2023-10-31', '2024-11-30'),
        (2, 2, 'TEN_PERCENTAGE', 300, 2, '2023-10-31', '2024-11-30'),
-       (3, 2, '3000won', 300, 2, '2023-10-31', '2024-11-30'),
-       (4, 3, '5000won', 300, 2, '2023-10-31', '2024-11-30'),
-       (5, 4, '10000won', 300, 2, '2023-10-31', '2024-11-30');
+       (3, 3, '3000won', 300, 3, '2023-10-31', '2024-11-30'),
+       (4, 3, '5000won', 300, 3, '2023-10-31', '2024-11-30'),
+       (5, 4, '10000won', 300, 3, '2023-10-31', '2024-11-30');
 
+insert into coupon_group(id, coupon_group_sequence, discount_policy, min_use_price, during_date, created_date, last_modified_date)
+values (1, 1, 'TWENTY_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
+       (2, 2, 'TEN_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
+       (3, 3, '3000won', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
+       (4, 3, '5000won', 3000, '2024-11-30','2023-10-31', '2024-11-30'),
+       (5, 4, '10000won', 3000, '2024-11-30','2023-10-31', '2024-11-30');
 
 insert into coupon(coupon_id, member_id, issued_date, discount_policy, during_date, min_use_price, state)
 values ('coupon1', 'memberId1', '2023-12-31', 'TEN_PERCENTAGE', '2025-12-31', 3000, 'ISSUED');

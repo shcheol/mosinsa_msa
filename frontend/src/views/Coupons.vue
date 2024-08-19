@@ -12,8 +12,8 @@
           <button v-if="coupon!=null" @click="couponCondition(coupon.couponId)">쿠폰상세</button>
         </tr>
         <tr>
-          <td>프로모션번호</td>
-          <td v-if="coupon!=null">{{ coupon.promotionId }}</td>
+          <td>할인률</td>
+          <td v-if="coupon!=null">{{ coupon.details.discountPolicy }}</td>
         </tr>
         <tr>
           <td>상태</td>
@@ -51,7 +51,7 @@ export default {
   methods: {
     couponCondition(id) {
       this.$router.push({
-        name: 'couponCondition',
+        name: 'couponDetails',
         params: {id: id}
       })
     },

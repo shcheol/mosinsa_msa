@@ -6,6 +6,8 @@ drop table if exists promotion_history;
 drop table if exists quest;
 drop table if exists coupon;
 drop table if exists coupon_group;
+drop table if exists coupon_group_info;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table coupon
@@ -23,6 +25,18 @@ create table coupon
 
 create table coupon_group
 (
+    id                    bigint not null auto_increment,
+    coupon_group_sequence bigint not null,
+    discount_policy       varchar(255),
+    min_use_price         bigint,
+    during_date           date,
+    created_date          datetime(6),
+    last_modified_date    datetime(6),
+    primary key (id)
+) engine = InnoDB;
+
+create table coupon_group_info
+(
     id                    bigint  not null auto_increment,
     coupon_group_sequence bigint  not null,
     discount_policy       varchar(255),
@@ -38,7 +52,7 @@ create table promotion
     promotion_id           varchar(255) not null,
     title                  varchar(255),
     contexts               varchar(255),
-    date_unit               varchar(255),
+    date_unit              varchar(255),
     end_date               datetime(6),
     start_date             datetime(6),
     promotion_condition_id bigint,
@@ -77,7 +91,7 @@ create table promotion_history
 create table quest
 (
     id                            bigint not null auto_increment,
-    promotion_id        varchar(255),
+    promotion_id                  varchar(255),
     promotion_condition_option_id bigint,
     created_date                  datetime(6),
     last_modified_date            datetime(6),

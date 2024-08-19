@@ -18,7 +18,7 @@ public class Quest extends BaseEntity {
     private PromotionConditionOption promotionConditionOption;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "quest")
-	private List<CouponGroup> couponGroupList = new ArrayList<>();
+	private List<CouponGroupInfo> couponGroupInfoList = new ArrayList<>();
 
     public static Quest create() {
 		return new Quest();

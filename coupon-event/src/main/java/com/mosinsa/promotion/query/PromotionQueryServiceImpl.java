@@ -21,9 +21,10 @@ import java.util.List;
 public class PromotionQueryServiceImpl implements PromotionQueryService {
 
 	private final PromotionRepository repository;
-
 	private final QuestRepository questRepository;
 	private final ConditionOptionFinder optionFinder;
+
+	private final MemberParticipatedChecker memberParticipatedChecker;
 
 	@Override
 	@Transactional
@@ -36,10 +37,17 @@ public class PromotionQueryServiceImpl implements PromotionQueryService {
 		ConditionStrategy conditionOption = optionFinder.findConditionOption(conditions);
 		ConditionOption conditionOption1 = conditionOption.getConditionOption(memberId);
 
-		//TODO: 참여여부
-
-		List<QuestDto> questDtos = questRepository.findByConditionOption(conditionOption1).stream().map(QuestDto::of).toList();
-		return PromotionDetails.of(promotion, false, questDtos);
+		DateUnit dateUnit = promotion.getDateUnit();
+		List<Quest> quests = questRepository.findByConditionOption(conditionOption1).stream().toList();
+		boolean participated=false;
+		for (Quest quest : quests) {
+			boolean memberParticipated = memberParticipatedChecker.isMemberParticipated(memberId, quest, dateUnit);
+			if (memberParticipated){
+				participated=true;
+			}
+		}
+		List<QuestDto> questDtos = quests.stream().map(QuestDto::of).toList();
+		return PromotionDetails.of(promotion, participated, questDtos);
 	}
 
 	@Override

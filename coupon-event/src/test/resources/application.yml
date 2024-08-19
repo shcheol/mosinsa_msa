@@ -53,6 +53,8 @@ mosinsa:
       cancel: mosinsa-order-cancel
     customer:
       create: mosinsa-customer-create
+    promotion:
+      participate: mosinsa-promotion-participate
 
 feignclient:
   url:

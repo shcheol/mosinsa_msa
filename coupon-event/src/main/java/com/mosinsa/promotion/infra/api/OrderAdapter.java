@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderAdapter {
-    ResponseResult<List<OrderSummary>> getMyOrders(Map<String, Collection<String>> headers);
+    ResponseResult<List<OrderSummary>> getMyOrders(String customerId);
 }

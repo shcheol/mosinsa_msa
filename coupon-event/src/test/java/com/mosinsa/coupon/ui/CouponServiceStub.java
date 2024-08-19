@@ -11,7 +11,12 @@ public class CouponServiceStub implements CouponService {
         return CouponId.of("couponId");
     }
 
-    @Override
+	@Override
+	public CouponId issue(String memberId, long couponGroupSequence) {
+		return null;
+	}
+
+	@Override
     public void useCoupon(String couponId) {
 
     }
