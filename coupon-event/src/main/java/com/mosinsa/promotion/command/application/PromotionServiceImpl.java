@@ -47,17 +47,11 @@ public class PromotionServiceImpl implements PromotionService {
 			// 프로모션 참여 이력 저장
 			Quest quest = questRepository.findById(questDto.id()).orElseThrow();
 			boolean memberParticipated = memberParticipatedChecker.isMemberParticipated(participateDto.memberId(), quest, dateUnit);
-			if (memberParticipated){
+			if (memberParticipated) {
 				throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
 			}
 			historyRepository.save(PromotionHistory.of(participateDto.memberId(), quest));
-			List<CouponGroupInfo> couponGroupInfoList = quest.getCouponGroupInfoList();
-
-
-			for (CouponGroupInfo couponGroupInfo : couponGroupInfoList) {
-				System.out.println("couponGroupInfo.getQuest().getId() = " + couponGroupInfo.getQuest().getId());
-			}
-			return couponGroupInfoList;
+			return quest.getCouponGroupInfoList();
 		}).flatMap(List::stream).toList();
 
 		// 그룹 시퀀스에 따라 쿠폰 발행

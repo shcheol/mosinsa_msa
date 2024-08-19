@@ -7,14 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class PromotionParticipatedEventHandler {
 
-    private final CouponService couponService;
+	private final CouponService couponService;
 
 	private final ObjectMapper om;
 

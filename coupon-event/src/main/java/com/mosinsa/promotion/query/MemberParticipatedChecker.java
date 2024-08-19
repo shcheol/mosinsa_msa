@@ -1,7 +1,6 @@
 package com.mosinsa.promotion.query;
 
 import com.mosinsa.promotion.command.domain.DateUnit;
-import com.mosinsa.promotion.command.domain.Promotion;
 import com.mosinsa.promotion.command.domain.PromotionHistory;
 import com.mosinsa.promotion.command.domain.Quest;
 import com.mosinsa.promotion.infra.repository.PromotionHistoryRepository;
@@ -18,24 +17,24 @@ public class MemberParticipatedChecker {
 
 	private final PromotionHistoryRepository repository;
 
-    public boolean isMemberParticipated(String memberId, Quest quest, DateUnit dateUnit){
+	public boolean isMemberParticipated(String memberId, Quest quest, DateUnit dateUnit) {
 
 		List<PromotionHistory> promotionHistories = repository.participatedHistory(memberId, quest);
 
-		if (promotionHistories.isEmpty()){
+		if (promotionHistories.isEmpty()) {
 			return false;
 		}
 
-		if (dateUnit.equals(DateUnit.ONCE)){
+		if (dateUnit.equals(DateUnit.ONCE)) {
 			return true;
 		}
 
-		if (dateUnit.equals(DateUnit.DAILY)){
+		if (dateUnit.equals(DateUnit.DAILY)) {
 			LocalDateTime lastParticipatedDateTime = promotionHistories.get(0).getLastModifiedDate();
 			LocalDate lastParticipatedDate = LocalDate.of(lastParticipatedDateTime.getYear(), lastParticipatedDateTime.getMonth(), lastParticipatedDateTime.getDayOfMonth());
 			return !lastParticipatedDate.isBefore(LocalDate.now().minusDays(1));
 		}
 
 		return false;
-    }
+	}
 }
