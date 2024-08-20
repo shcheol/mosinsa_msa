@@ -25,9 +25,7 @@ public class StockOperation {
 
 				try {
 					operations.multi();
-					for (StockOperand stock : stocks) {
-						operations.opsForValue().decrement((K) stock.key(), stock.quantity());
-					}
+					stocks.forEach(stock -> operations.opsForValue().decrement((K) stock.key(), stock.quantity()));
 					return operations.exec().stream().mapToLong(Long.class::cast).boxed().toList();
 				} catch (Exception e) {
 					operations.discard();
@@ -43,9 +41,7 @@ public class StockOperation {
 			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
 				try {
 					operations.multi();
-					for (StockOperand stock : stocks) {
-						operations.opsForValue().increment((K) stock.key(), stock.quantity());
-					}
+					stocks.forEach(stock -> operations.opsForValue().increment((K) stock.key(), stock.quantity()));
 					return operations.exec().stream().mapToLong(Long.class::cast).boxed().toList();
 				} catch (Exception e) {
 					operations.discard();
