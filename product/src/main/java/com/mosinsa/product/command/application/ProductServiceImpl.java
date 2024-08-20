@@ -49,13 +49,10 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> products = getProducts(orderProducts);
 
-        if (!validateStockStatus(products)) {
-            throw new AlreadySoldOutException();
-        }
+        validateStockStatus(products);
 
         List<StockOperand> stockOperands = getStockOperands(orderProducts);
         StockResult stockResult = stockPort.tryDecrease(customerId, orderId, stockOperands);
-
         if (StockResult.FAIL.equals(stockResult)) {
             throw new InvalidStockException();
         }
@@ -77,8 +74,10 @@ public class ProductServiceImpl implements ProductService {
                         .orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT))).toList();
     }
 
-    private boolean validateStockStatus(List<Product> products) {
-        return products.stream().allMatch(p -> p.getStock().getStatus().equals(StockStatus.ON));
+    private void validateStockStatus(List<Product> products) {
+        if(!products.stream().allMatch(p -> p.getStock().getStatus().equals(StockStatus.ON))){
+            throw new AlreadySoldOutException();
+        }
     }
 
 	@Override
