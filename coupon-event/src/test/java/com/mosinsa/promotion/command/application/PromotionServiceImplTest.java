@@ -1,28 +1,37 @@
 package com.mosinsa.promotion.command.application;
 
-import com.mosinsa.coupon.command.domain.CouponCondition;
-import com.mosinsa.coupon.command.domain.DiscountPolicy;
-import com.mosinsa.promotion.command.domain.DateUnit;
-import com.mosinsa.promotion.command.domain.PromotionId;
-import com.mosinsa.promotion.command.domain.PromotionPeriod;
+import com.mosinsa.common.exception.CouponException;
+import com.mosinsa.promotion.command.application.dto.ParticipateDto;
+import com.mosinsa.promotion.query.dto.QuestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
+@Sql("classpath:db/test-init.sql")
 class PromotionServiceImplTest {
 
     @Autowired
     private PromotionServiceImpl promotionService;
 
     @Test
-    void create() {
+    void participate() {
+        ParticipateDto participateDto = new ParticipateDto("promotion1", UUID.randomUUID().toString(), List.of(new QuestDto(1L)));
+        promotionService.participatePromotion(participateDto);
+        assertThrows(CouponException.class, () -> promotionService.participatePromotion(participateDto));
+    }
 
+    @Test
+    void participateEx() {
+        ParticipateDto participateDto = new ParticipateDto("promotion1xxx", "memberId1", List.of());
+        assertThrows(CouponException.class,
+                () -> promotionService.participatePromotion(participateDto));
     }
 }

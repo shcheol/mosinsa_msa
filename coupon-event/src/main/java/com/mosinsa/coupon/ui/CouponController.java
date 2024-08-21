@@ -26,7 +26,7 @@ public class CouponController {
     @PostMapping("/coupons/{couponId}/cancel")
     public ResponseEntity<Void> cancelCoupon(@PathVariable("couponId") String couponId) {
 
-        couponService.rollbackCoupon(couponId);
+        couponService.cancelCoupon(couponId);
         return ResponseEntity.ok().build();
     }
 }

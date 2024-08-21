@@ -25,13 +25,13 @@ create table coupon
 
 create table coupon_group
 (
-    id                    bigint not null auto_increment,
-    coupon_group_sequence bigint not null,
-    discount_policy       varchar(255),
-    min_use_price         bigint,
-    during_date           date,
-    created_date          datetime(6),
-    last_modified_date    datetime(6),
+    id                 bigint not null auto_increment,
+    name               varchar(255),
+    discount_policy    varchar(255),
+    min_use_price      bigint,
+    during_date        date,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
     primary key (id)
 ) engine = InnoDB;
 

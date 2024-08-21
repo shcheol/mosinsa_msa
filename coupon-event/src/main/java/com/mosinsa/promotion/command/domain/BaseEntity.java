@@ -29,16 +29,16 @@ public abstract class BaseEntity {
 	protected BaseEntity() {
 	}
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BaseEntity that)) return false;
 
-        return Objects.equals(id, that.id);
+        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return getId() != null ? getId().hashCode() : 0;
     }
 }

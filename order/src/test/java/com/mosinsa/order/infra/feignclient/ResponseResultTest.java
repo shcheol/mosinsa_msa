@@ -19,6 +19,7 @@ class ResponseResultTest {
     void create(){
         ResponseResult<Object> empty = ResponseResult.empty();
         assertThat(empty.get()).isNull();
+        assertThat(empty.getData()).isNull();
         assertThat(empty.getStatus()).isZero();
         assertThat(empty.getMessage()).isEqualTo("empty");
     }

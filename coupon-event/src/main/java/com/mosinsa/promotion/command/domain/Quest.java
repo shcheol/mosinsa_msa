@@ -10,22 +10,18 @@ import java.util.List;
 @Getter
 public class Quest extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="promotion_id")
-    private Promotion promotion;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "promotion_id")
+	private Promotion promotion;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-    private PromotionConditionOption promotionConditionOption;
+	private PromotionConditionOption promotionConditionOption;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "quest")
 	private List<CouponGroupInfo> couponGroupInfoList = new ArrayList<>();
 
-    public static Quest create() {
-		return new Quest();
-    }
-
-    protected Quest() {
-    }
+	protected Quest() {
+	}
 
 	@Override
 	public boolean equals(Object o) {
