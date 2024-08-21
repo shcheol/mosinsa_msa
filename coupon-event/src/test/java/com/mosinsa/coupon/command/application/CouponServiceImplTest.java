@@ -1,7 +1,7 @@
 package com.mosinsa.coupon.command.application;
 
 import com.mosinsa.coupon.command.domain.*;
-import com.mosinsa.coupon.infra.repository.CouponRepository;
+import com.mosinsa.coupon.infra.jpa.CouponRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

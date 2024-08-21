@@ -1,4 +1,4 @@
-package com.mosinsa.promotion.infra.repository;
+package com.mosinsa.promotion.infra.jpa;
 
 import com.mosinsa.promotion.command.domain.Promotion;
 import com.mosinsa.promotion.command.domain.PromotionId;

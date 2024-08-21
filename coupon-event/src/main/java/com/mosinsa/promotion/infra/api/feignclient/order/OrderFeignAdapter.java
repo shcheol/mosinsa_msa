@@ -3,6 +3,7 @@ package com.mosinsa.promotion.infra.api.feignclient.order;
 import com.mosinsa.promotion.infra.api.HeaderConst;
 import com.mosinsa.promotion.infra.api.OrderAdapter;
 import com.mosinsa.promotion.infra.api.ResponseResult;
+import com.mosinsa.promotion.infra.api.feignclient.RequestHeaderExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,20 +27,8 @@ public class OrderFeignAdapter implements OrderAdapter {
 	@Override
 	public ResponseResult<List<OrderSummary>> getMyOrders(String customerId) {
 
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		Map<String, Collection<String>> headers = new HashMap<>();
-		String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if (StringUtils.hasText(auth)) {
-			headers.put(HttpHeaders.AUTHORIZATION, List.of(auth));
-		}
-		String token = request.getHeader(HeaderConst.REFRESH_TOKEN.key());
-		if (StringUtils.hasText(token)) {
-			headers.put(HeaderConst.REFRESH_TOKEN.key(), List.of(token));
-		}
-		String userInfo = request.getHeader(HeaderConst.CUSTOMER_INFO.key());
-		if (StringUtils.hasText(userInfo)) {
-			headers.put(HeaderConst.CUSTOMER_INFO.key(), List.of(userInfo));
-		}
+		Map<String, Collection<String>> headers = RequestHeaderExtractor.extract();
+
 		return ResponseResult.execute(() -> client.myOrders(headers, customerId).getContent());
 
 	}

@@ -2,8 +2,8 @@ package com.mosinsa.promotion.query;
 
 import com.mosinsa.promotion.command.domain.DateUnit;
 import com.mosinsa.promotion.command.domain.PromotionHistory;
+import com.mosinsa.promotion.command.domain.PromotionHistoryRepository;
 import com.mosinsa.promotion.command.domain.Quest;
-import com.mosinsa.promotion.infra.repository.PromotionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

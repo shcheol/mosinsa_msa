@@ -2,15 +2,12 @@ package com.mosinsa.coupon.command.domain;
 
 import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
-import com.mosinsa.coupon.infra.repository.CouponRepository;
+import com.mosinsa.coupon.infra.jpa.CouponRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

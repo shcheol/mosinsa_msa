@@ -1,4 +1,4 @@
-package com.mosinsa.promotion.infra.repository;
+package com.mosinsa.promotion.infra.jpa;
 
 import com.mosinsa.promotion.command.domain.ConditionOption;
 import com.mosinsa.promotion.command.domain.Quest;

@@ -3,7 +3,7 @@ package com.mosinsa.coupon.query.application;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.command.domain.CouponId;
-import com.mosinsa.coupon.infra.repository.CouponRepository;
+import com.mosinsa.coupon.infra.jpa.CouponRepository;
 import com.mosinsa.coupon.query.application.dto.CouponDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

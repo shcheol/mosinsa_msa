@@ -3,7 +3,7 @@ package com.mosinsa.promotion.query;
 import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.promotion.command.domain.*;
-import com.mosinsa.promotion.infra.repository.QuestRepository;
+import com.mosinsa.promotion.infra.jpa.QuestRepository;
 import com.mosinsa.promotion.query.dto.PromotionDetails;
 import com.mosinsa.promotion.query.dto.PromotionSummary;
 import com.mosinsa.promotion.query.dto.QuestDto;
