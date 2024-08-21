@@ -6,11 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,16 +21,13 @@ class CouponServiceImplTest {
     CouponRepository repository;
 
     @Test
-    @Commit
-    @Transactional
     @DisplayName("쿠폰발급")
     void issue() {
-        CouponIssuedEvent event = new CouponIssuedEvent("1", 3000L, LocalDate.now().plusDays(30), DiscountPolicy.TEN_PERCENTAGE);
-        CouponId couponId = service.issue(event);
+        CouponId couponId = service.issue("memberId", 1L);
 
         Coupon coupon = repository.findById(couponId).get();
 
-        assertThat(coupon.getMemberId()).isEqualTo("1");
+        assertThat(coupon.getMemberId()).isEqualTo("memberId");
         assertThat(coupon.getIssuedDate()).isNotNull();
         assertThat(coupon.getState()).isEqualTo(CouponState.ISSUED);
     }

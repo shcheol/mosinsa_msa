@@ -19,19 +19,6 @@ public class CouponServiceImpl implements CouponService {
 	private final CouponGroupRepository couponGroupRepository;
 
 	@Override
-	public CouponId issue(CouponIssuedEvent event) {
-		log.info("coupon issue event {}", event);
-		return couponRepository.save(
-				Coupon.issue(
-						event.getMemberId(),
-						CouponCondition.of(
-								event.getMinUsePrice(),
-								event.getDuringDate(),
-								event.getDiscountPolicy()
-						))).getId();
-	}
-
-	@Override
 	public CouponId issue(String memberId, long couponGroupSequence) {
 
 		CouponGroup couponGroup = couponGroupRepository.findByCouponGroupSequence(couponGroupSequence)
@@ -54,7 +41,7 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	@Override
-	public void rollbackCoupon(String couponId) {
+	public void cancelCoupon(String couponId) {
 		couponRepository.findById(CouponId.of(couponId))
 				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
 				.useCancel();

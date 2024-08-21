@@ -27,6 +27,6 @@ public class OrderCanceledEventHandler {
 			log.debug("event {} has no coupon to cancel", orderCanceledEvent);
 			return;
 		}
-		couponService.rollbackCoupon(couponId);
+		couponService.cancelCoupon(couponId);
 	}
 }
