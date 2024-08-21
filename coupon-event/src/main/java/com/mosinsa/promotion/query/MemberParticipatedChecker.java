@@ -17,9 +17,9 @@ public class MemberParticipatedChecker {
 
 	private final PromotionHistoryRepository repository;
 
-	public boolean isMemberParticipated(String memberId, Quest quest, DateUnit dateUnit) {
+	public boolean isMemberParticipated(String memberId, List<Quest> quests, DateUnit dateUnit) {
 
-		List<PromotionHistory> promotionHistories = repository.participatedHistory(memberId, quest);
+		List<PromotionHistory> promotionHistories = repository.participatedHistory(memberId, quests);
 
 		if (promotionHistories.isEmpty()) {
 			return false;

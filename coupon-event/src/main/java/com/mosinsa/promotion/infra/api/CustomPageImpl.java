@@ -21,12 +21,4 @@ public class CustomPageImpl<T> extends PageImpl<T> {
 						  @JsonProperty("numberOfElements") int numberOfElements) {
 		super(content, PageRequest.of(number, 1), 10);
 	}
-
-	public CustomPageImpl(List<T> content, Pageable pageable, long total) {
-		super(content, pageable, total);
-	}
-
-	public CustomPageImpl(List<T> content) {
-		super(content);
-	}
 }

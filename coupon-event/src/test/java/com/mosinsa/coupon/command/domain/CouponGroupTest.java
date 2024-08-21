@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CouponGroupTest extends InMemoryJpaTest {
@@ -20,6 +21,7 @@ class CouponGroupTest extends InMemoryJpaTest {
 		CouponGroup save = repository.save(of);
 
 		assertThat(save.getId()).isNotNull();
+		assertThat(save.getName()).isEqualTo("name");
 		assertThat(save.getCreatedDate()).isNotNull();
 		assertThat(save.getLastModifiedDate()).isNotNull();
 	}

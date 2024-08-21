@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface PromotionHistoryRepository extends JpaRepository<PromotionHistory, Long> {
 
-	@Query(value = "select ph from PromotionHistory ph where ph.memberId = :memberId and ph.quest =:quest order by ph.lastModifiedDate desc")
-	List<PromotionHistory> participatedHistory(@Param("memberId") String memberId, @Param("quest") Quest quest);
+	@Query(value = "select ph from PromotionHistory ph where ph.memberId = :memberId and ph.quest in (:quests) order by ph.lastModifiedDate desc")
+	List<PromotionHistory> participatedHistory(@Param("memberId") String memberId, @Param("quests") List<Quest> quests);
 }

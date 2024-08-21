@@ -24,7 +24,6 @@ public class PromotionServiceImpl implements PromotionService {
 	private final PromotionRepository repository;
 	private final PromotionHistoryRepository historyRepository;
 	private final QuestRepository questRepository;
-
 	private final MemberParticipatedChecker memberParticipatedChecker;
 	@Value("${mosinsa.topic.promotion.participate}")
 	private String promotionParticipateTopic;
@@ -42,13 +41,15 @@ public class PromotionServiceImpl implements PromotionService {
 
 		//프로모션 조건으로 쿠폰 그룹 구하기
 		List<QuestDto> questDtos = participateDto.questDtos();
-		List<CouponGroupInfo> couponGroupInfos = questDtos.stream().map(questDto -> {
-			// 프로모션 참여 이력 저장
-			Quest quest = questRepository.findById(questDto.id()).orElseThrow();
-			boolean memberParticipated = memberParticipatedChecker.isMemberParticipated(participateDto.memberId(), quest, dateUnit);
-			if (memberParticipated) {
-				throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
-			}
+
+		List<Quest> quests = questDtos.stream().map(questDto -> questRepository.findById(questDto.id()).orElseThrow()).toList();
+
+		boolean memberParticipated = memberParticipatedChecker.isMemberParticipated(participateDto.memberId(), quests, dateUnit);
+		if (memberParticipated) {
+			throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
+		}
+
+		List<CouponGroupInfo> couponGroupInfos = quests.stream().map(quest -> {
 			historyRepository.save(PromotionHistory.of(participateDto.memberId(), quest));
 			return quest.getCouponGroupInfoList();
 		}).flatMap(List::stream).toList();

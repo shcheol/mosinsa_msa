@@ -38,13 +38,9 @@ public class PromotionQueryServiceImpl implements PromotionQueryService {
 
 		DateUnit dateUnit = promotion.getDateUnit();
 		List<Quest> quests = questRepository.findByConditionOption(conditionOption1).stream().toList();
-		boolean participated=false;
-		for (Quest quest : quests) {
-			boolean memberParticipated = memberParticipatedChecker.isMemberParticipated(memberId, quest, dateUnit);
-			if (memberParticipated){
-				participated=true;
-			}
-		}
+
+		boolean participated = memberParticipatedChecker.isMemberParticipated(memberId, quests, dateUnit);
+
 		List<QuestDto> questDtos = quests.stream().map(QuestDto::of).toList();
 		return PromotionDetails.of(promotion, participated, questDtos);
 	}
