@@ -1,19 +1,14 @@
 package com.mosinsa.promotion.command.domain;
 
 import com.mosinsa.code.EqualsAndHashcodeUtils;
-import com.mosinsa.promotion.infra.repository.PromotionRepository;
+import com.mosinsa.promotion.infra.repository.PromotionJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

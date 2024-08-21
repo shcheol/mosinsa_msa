@@ -7,7 +7,6 @@ import com.mosinsa.promotion.command.domain.*;
 import com.mosinsa.promotion.infra.kafka.KafkaEvents;
 import com.mosinsa.promotion.infra.kafka.ParticipatedEvent;
 import com.mosinsa.promotion.infra.repository.PromotionHistoryRepository;
-import com.mosinsa.promotion.infra.repository.PromotionRepository;
 import com.mosinsa.promotion.infra.repository.QuestRepository;
 import com.mosinsa.promotion.query.MemberParticipatedChecker;
 import com.mosinsa.promotion.query.dto.QuestDto;
