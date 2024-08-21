@@ -1,19 +1,12 @@
 package com.mosinsa.promotion.infra.api.feignclient.order;
 
-import com.mosinsa.promotion.infra.api.HeaderConst;
 import com.mosinsa.promotion.infra.api.OrderAdapter;
 import com.mosinsa.promotion.infra.api.ResponseResult;
 import com.mosinsa.promotion.infra.api.feignclient.RequestHeaderExtractor;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +21,6 @@ public class OrderFeignAdapter implements OrderAdapter {
 	public ResponseResult<List<OrderSummary>> getMyOrders(String customerId) {
 
 		Map<String, Collection<String>> headers = RequestHeaderExtractor.extract();
-
 		return ResponseResult.execute(() -> client.myOrders(headers, customerId).getContent());
-
 	}
 }

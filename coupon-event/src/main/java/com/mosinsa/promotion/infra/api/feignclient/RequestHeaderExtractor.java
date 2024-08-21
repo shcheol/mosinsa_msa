@@ -31,4 +31,7 @@ public class RequestHeaderExtractor {
 		}
 		return headers;
 	}
+
+	private RequestHeaderExtractor() {
+	}
 }
