@@ -23,10 +23,8 @@ public class OrderCanceledEventHandler {
 		OrderCanceledEvent orderCanceledEvent = om.readValue(message, OrderCanceledEvent.class);
 
 		String couponId = orderCanceledEvent.couponId();
-		if (!StringUtils.hasText(couponId)){
-			log.debug("event {} has no coupon to cancel", orderCanceledEvent);
-			return;
+		if (StringUtils.hasText(couponId)){
+			couponService.cancelCoupon(couponId);
 		}
-		couponService.cancelCoupon(couponId);
 	}
 }

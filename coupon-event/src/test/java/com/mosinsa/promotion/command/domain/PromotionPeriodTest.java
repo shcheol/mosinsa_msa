@@ -6,8 +6,12 @@ import com.mosinsa.promotion.command.domain.PromotionPeriod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +53,24 @@ class PromotionPeriodTest {
 
 		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(period1, period2, protectedConstructor, period3, period4);
 		assertThat(b).isTrue();
+	}
+
+	@Test
+	void proceeding(){
+
+		Clock fixed = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+
+		LocalDateTime now = LocalDateTime.now(fixed);
+		PromotionPeriod promotionPeriod = new PromotionPeriod(now, now.plusDays(2));
+		assertThat(promotionPeriod.isProceeding(now)).isFalse();
+		assertThat(promotionPeriod.isProceeding(now.plusSeconds(1))).isTrue();
+		assertThat(promotionPeriod.isProceeding(now.minusDays(1))).isFalse();
+		assertThat(promotionPeriod.isProceeding(now.plusDays(1))).isTrue();
+		assertThat(promotionPeriod.isProceeding(now.plusDays(2).minusMinutes(1))).isTrue();
+		assertThat(promotionPeriod.isProceeding(now.plusDays(2))).isFalse();
+		assertThat(promotionPeriod.isProceeding(now.plusDays(3))).isFalse();
+
+
 	}
 
 }

@@ -4,8 +4,6 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -39,10 +37,6 @@ public class Promotion {
 		return promotion;
 	}
 
-	public boolean isProceeding(){
-		LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
-		return now.isAfter(this.period.getStartDate()) && now.isBefore(this.period.getEndDate());
-	}
 	protected Promotion() {
 	}
 

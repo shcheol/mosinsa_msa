@@ -4,7 +4,6 @@ truncate table promotion_condition;
 truncate table promotion_condition_option;
 truncate table promotion_history;
 truncate table quest;
-
 truncate table coupon;
 truncate table coupon_group;
 truncate table coupon_group_info;

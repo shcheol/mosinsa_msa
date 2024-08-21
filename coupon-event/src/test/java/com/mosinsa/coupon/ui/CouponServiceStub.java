@@ -5,6 +5,12 @@ import com.mosinsa.coupon.command.domain.CouponId;
 
 public class CouponServiceStub implements CouponService {
 
+	private int cancelCalledCount=0;
+
+	public int getCancelCalledCount() {
+		return cancelCalledCount;
+	}
+
 	@Override
 	public CouponId issue(String memberId, long couponGroupSequence) {
 		return null;
@@ -17,6 +23,6 @@ public class CouponServiceStub implements CouponService {
 
 	@Override
 	public void cancelCoupon(String couponId) {
-
+		cancelCalledCount++;
 	}
 }
