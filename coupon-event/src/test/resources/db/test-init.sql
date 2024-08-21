@@ -41,12 +41,12 @@ values (1, 1, 'TWENTY_PERCENTAGE', 300, 1, '2023-10-31', '2024-11-30'),
        (4, 3, '5000won', 300, 3, '2023-10-31', '2024-11-30'),
        (5, 4, '10000won', 300, 3, '2023-10-31', '2024-11-30');
 
-insert into coupon_group(id, coupon_group_sequence, discount_policy, min_use_price, during_date, created_date, last_modified_date)
-values (1, 1, 'TWENTY_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
-       (2, 2, 'TEN_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
-       (3, 3, '3000won', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
-       (4, 3, '5000won', 3000, '2024-11-30','2023-10-31', '2024-11-30'),
-       (5, 4, '10000won', 3000, '2024-11-30','2023-10-31', '2024-11-30');
+insert into coupon_group(id, name, discount_policy, min_use_price, during_date, created_date, last_modified_date)
+values (1, '300원', 'TWENTY_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
+       (2, '2', 'TEN_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
+       (3, '3', '3000won', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
+       (4, '3', '5000won', 3000, '2024-11-30','2023-10-31', '2024-11-30'),
+       (5, '4', '10000won', 3000, '2024-11-30','2023-10-31', '2024-11-30');
 
 insert into coupon(coupon_id, member_id, issued_date, discount_policy, during_date, min_use_price, state)
 values ('coupon1', 'memberId1', '2023-12-31', 'TEN_PERCENTAGE', '2025-12-31', 3000, 'ISSUED');

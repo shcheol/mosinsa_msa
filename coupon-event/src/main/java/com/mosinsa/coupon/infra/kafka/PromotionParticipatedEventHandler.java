@@ -18,7 +18,7 @@ public class PromotionParticipatedEventHandler {
 	private final ObjectMapper om;
 
 	@KafkaListener(topics = "${mosinsa.topic.promotion.participate}")
-	public void orderCanceledEvent(String message) throws JsonProcessingException {
+	public void promotionParticipatedEvent(String message) throws JsonProcessingException {
 		ParticipatedEvent participatedEvent = om.readValue(message, ParticipatedEvent.class);
 
 		couponService.issue(participatedEvent.memberId(), participatedEvent.couponGroupSequence());

@@ -21,7 +21,7 @@ public class CouponServiceImpl implements CouponService {
 	@Override
 	public CouponId issue(String memberId, long couponGroupSequence) {
 
-		CouponGroup couponGroup = couponGroupRepository.findByCouponGroupSequence(couponGroupSequence)
+		CouponGroup couponGroup = couponGroupRepository.findById(couponGroupSequence)
 				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND));
 
 		Coupon issue = Coupon.issue(memberId, CouponCondition.of(

@@ -1,5 +1,6 @@
 package com.mosinsa.coupon.command.domain;
 
+import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.coupon.infra.repository.CouponRepository;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,9 @@ import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Sql("classpath:db/test-init.sql")
-class CouponTest {
+//@SpringBootTest
+//@Sql("classpath:db/test-init.sql")
+class CouponTest extends InMemoryJpaTest {
 
 	@Autowired
 	CouponRepository repository;

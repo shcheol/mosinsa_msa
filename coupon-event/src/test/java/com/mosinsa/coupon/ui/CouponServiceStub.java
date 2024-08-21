@@ -5,15 +5,21 @@ import com.mosinsa.coupon.command.domain.CouponId;
 
 public class CouponServiceStub implements CouponService {
 
+	private int issueCalledCount=0;
 	private int cancelCalledCount=0;
 
 	public int getCancelCalledCount() {
 		return cancelCalledCount;
 	}
 
+	public int getIssueCalledCount() {
+		return issueCalledCount;
+	}
+
 	@Override
 	public CouponId issue(String memberId, long couponGroupSequence) {
-		return null;
+		issueCalledCount++;
+		return CouponId.of("id");
 	}
 
 	@Override
