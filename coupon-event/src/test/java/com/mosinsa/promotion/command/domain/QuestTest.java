@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +25,15 @@ class QuestTest extends InMemoryJpaTest {
 		Quest other = repository.findById(2L).get();
 		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, protectedConstructor, other);
 		assertThat(b).isTrue();
+	}
+
+	@Test
+	void value(){
+		Quest quest = repository.findById(1L).get();
+		assertThat(quest.getId()).isEqualTo(1L);
+		assertThat(quest.getPromotion()).isNotNull();
+		assertThat(quest.getPromotionConditionOption()).isNotNull();
+		assertThat(quest.getCouponGroupInfoList()).hasSize(1);
 	}
 
 }
