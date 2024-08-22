@@ -18,6 +18,6 @@ public class CustomPageImpl<T> extends PageImpl<T> {
 						  @JsonProperty("pageable") JsonNode pageable, @JsonProperty("last") boolean last,
 						  @JsonProperty("totalPages") int totalPages, @JsonProperty("sort") JsonNode sort,
 						  @JsonProperty("numberOfElements") int numberOfElements) {
-		super(content, PageRequest.of(number, 1), 10);
+		super(content, PageRequest.of(number, size), totalElements);
 	}
 }

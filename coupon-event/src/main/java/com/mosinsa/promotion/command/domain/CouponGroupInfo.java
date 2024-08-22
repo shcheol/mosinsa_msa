@@ -18,6 +18,20 @@ public class CouponGroupInfo extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private DiscountPolicy discountPolicy;
 
+	public static CouponGroupInfo of(long couponGroupSequence, int quantity, DiscountPolicy discountPolicy, Quest quest){
+		CouponGroupInfo couponGroupInfo = new CouponGroupInfo();
+		couponGroupInfo.couponGroupSequence = couponGroupSequence;
+		couponGroupInfo.quantity = quantity;
+		couponGroupInfo.discountPolicy = discountPolicy;
+		couponGroupInfo.setQuest(quest);
+		return couponGroupInfo;
+	}
+
+	private void setQuest(Quest quest) {
+		this.quest = quest;
+		this.quest.getCouponGroupInfoList().add(this);
+	}
+
 	public void issue(){
 		quantity-=1;
 	}

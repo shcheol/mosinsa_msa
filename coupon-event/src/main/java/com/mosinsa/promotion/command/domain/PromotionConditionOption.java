@@ -13,10 +13,16 @@ public class PromotionConditionOption extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private PromotionCondition promotionCondition;
 
-	public static PromotionConditionOption create(ConditionOption optionName) {
+	public static PromotionConditionOption of(ConditionOption optionName, PromotionCondition promotionCondition) {
 		PromotionConditionOption promotionConditionOption = new PromotionConditionOption();
 		promotionConditionOption.optionName = optionName;
+		promotionConditionOption.setPromotionCondition(promotionCondition);
 		return promotionConditionOption;
+	}
+
+	private void setPromotionCondition(PromotionCondition promotionCondition) {
+		this.promotionCondition = promotionCondition;
+		this.promotionCondition.getPromotionConditionOptions().add(this);
 	}
 
 	protected PromotionConditionOption() {

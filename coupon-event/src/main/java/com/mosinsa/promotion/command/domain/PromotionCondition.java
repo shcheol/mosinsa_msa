@@ -15,6 +15,7 @@ public class PromotionCondition extends BaseEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "promotionCondition")
 	private List<PromotionConditionOption> promotionConditionOptions = new ArrayList<>();
+
 	public static PromotionCondition of(PromotionConditions conditions) {
 		PromotionCondition promotionCondition = new PromotionCondition();
 		promotionCondition.conditions = conditions;

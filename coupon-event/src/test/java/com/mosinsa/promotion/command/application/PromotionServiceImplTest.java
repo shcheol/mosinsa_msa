@@ -18,11 +18,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class PromotionServiceImplTest {
 
-    @Autowired
-    private PromotionServiceImpl promotionService;
+	@Autowired
+	private PromotionServiceImpl promotionService;
 
-    @Test
-    void create() {
+	@Test
+	void create() {
 
-    }
+	}
 }

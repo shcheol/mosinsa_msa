@@ -17,7 +17,7 @@ values ('promotion1', 'title1', '신규 가입자 10000원, 기존 유저 3000�
        ('promotion5', 'title3', 'context3', 'DAILY','2023-10-31', '2023-11-30', 2);
 
 insert into promotion_condition(id, conditions, created_date, last_modified_date)
-values (1, 'NEW_MEMBER', '2023-10-31', '2024-11-30'),
+values (1, 'NEW_OR_OLD_MEMBER', '2023-10-31', '2024-11-30'),
        (2, 'ORDER_COUNT', '2023-10-31', '2024-11-30');
 
 insert into promotion_condition_option(id, option_name, promotion_condition_id, created_date, last_modified_date)
@@ -40,6 +40,10 @@ values (1, 1, 'TWENTY_PERCENTAGE', 300, 1, '2023-10-31', '2024-11-30'),
        (3, 3, '3000won', 300, 3, '2023-10-31', '2024-11-30'),
        (4, 3, '5000won', 300, 3, '2023-10-31', '2024-11-30'),
        (5, 4, '10000won', 300, 3, '2023-10-31', '2024-11-30');
+
+insert into promotion_history(id, member_id, quest_id, created_date, last_modified_date)
+values (1,'memberId1',1, '2023-10-31', '2024-11-30'),
+       (2,'memberId2',1, '2023-10-31', '2024-11-30');
 
 insert into coupon_group(id, name, discount_policy, min_use_price, during_date, created_date, last_modified_date)
 values (1, '300원', 'TWENTY_PERCENTAGE', 3000,'2024-11-30', '2023-10-31', '2024-11-30'),
