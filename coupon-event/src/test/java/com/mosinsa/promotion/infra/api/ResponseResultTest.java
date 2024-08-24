@@ -3,11 +3,13 @@ package com.mosinsa.promotion.infra.api;
 import feign.FeignException;
 import feign.Request;
 import feign.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,6 +20,7 @@ class ResponseResultTest {
 	void create(){
 		ResponseResult<Object> empty = ResponseResult.empty();
 		assertThat(empty.get()).isNull();
+		assertThat(empty.getData()).isNull();
 		assertThat(empty.getStatus()).isZero();
 		assertThat(empty.getMessage()).isEqualTo("empty");
 	}
