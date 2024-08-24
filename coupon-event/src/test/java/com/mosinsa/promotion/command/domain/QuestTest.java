@@ -31,7 +31,8 @@ class QuestTest extends InMemoryJpaTest {
 	void value(){
 		Quest quest = repository.findById(1L).get();
 		assertThat(quest.getId()).isEqualTo(1L);
-		assertThat(quest.getPromotion()).isNotNull();
+		PromotionId promotion1 = PromotionId.of("promotion1");
+		assertThat(quest.getPromotion().getId()).isEqualTo(promotion1);
 		assertThat(quest.getPromotionConditionOption()).isNotNull();
 		assertThat(quest.getCouponGroupInfoList()).hasSize(1);
 	}
