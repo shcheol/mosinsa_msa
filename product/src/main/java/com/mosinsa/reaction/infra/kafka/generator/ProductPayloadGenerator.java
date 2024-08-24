@@ -1,6 +1,7 @@
 package com.mosinsa.reaction.infra.kafka.generator;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
+import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.mosinsa.reaction.infra.kafka.events.ProductLikesEvent;
 import org.springframework.stereotype.Component;
 
@@ -12,5 +13,10 @@ public class ProductPayloadGenerator implements PayloadGenerator {
             return new ProductLikesEvent(channel, canceled);
         }
         throw new PayloadGenerateFailException();
+    }
+
+    @Override
+    public boolean isSupport(TargetEntity targetEntity) {
+        return TargetEntity.PRODUCT.equals(targetEntity);
     }
 }

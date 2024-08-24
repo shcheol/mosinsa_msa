@@ -46,6 +46,12 @@ class StockOperationTest {
 	}
 
 	@Test
+	void stockOperationEx() {
+		assertThrows(NullPointerException.class, () -> operation.increaseAndGet(null));
+		assertThrows(NullPointerException.class, () -> operation.decreaseAndGet(null));
+	}
+
+	@Test
 	void setAndGet() {
 		String key = UUID.randomUUID().toString();
 		assertThat(operation.get(key)).isZero();

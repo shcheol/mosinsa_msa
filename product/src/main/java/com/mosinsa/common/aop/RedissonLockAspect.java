@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 public class RedissonLockAspect {
 
     private final RedissonClient redissonClient;
-
-
     @Around("@annotation(redissonLock)")
     public Object tryLock(ProceedingJoinPoint joinPoint, RedissonLock redissonLock) throws Throwable {
 
@@ -34,7 +32,7 @@ public class RedissonLockAspect {
         } finally {
             try {
                 lock.unlock();
-            } catch (IllegalMonitorStateException e) {
+            } catch (Exception e) {
                 log.info("Redisson Lock Already UnLock {}", redissonLock.value());
             }
         }
