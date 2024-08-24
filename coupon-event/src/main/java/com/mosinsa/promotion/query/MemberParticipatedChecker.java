@@ -1,5 +1,7 @@
 package com.mosinsa.promotion.query;
 
+import com.mosinsa.common.exception.CouponError;
+import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.promotion.command.domain.DateUnit;
 import com.mosinsa.promotion.command.domain.PromotionHistory;
 import com.mosinsa.promotion.command.domain.PromotionHistoryRepository;
@@ -17,24 +19,15 @@ public class MemberParticipatedChecker {
 
 	private final PromotionHistoryRepository repository;
 
+	private final List<DateUnitStrategy> dateUnitStrategies;
+
 	public boolean isMemberParticipated(String memberId, List<Quest> quests, DateUnit dateUnit) {
 
 		List<PromotionHistory> promotionHistories = repository.participatedHistory(memberId, quests);
 
-		if (promotionHistories.isEmpty()) {
-			return false;
-		}
-
-		if (dateUnit.equals(DateUnit.ONCE)) {
-			return true;
-		}
-
-		if (dateUnit.equals(DateUnit.DAILY)) {
-			LocalDateTime lastParticipatedDateTime = promotionHistories.get(0).getLastModifiedDate();
-			LocalDate lastParticipatedDate = LocalDate.of(lastParticipatedDateTime.getYear(), lastParticipatedDateTime.getMonth(), lastParticipatedDateTime.getDayOfMonth());
-			return !lastParticipatedDate.isBefore(LocalDate.now().minusDays(1));
-		}
-
-		return false;
+		return dateUnitStrategies.stream()
+				.filter(dateUnitStrategy -> dateUnitStrategy.isSupport(dateUnit)).findAny()
+				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
+				.isParticipated(promotionHistories);
 	}
 }

@@ -12,7 +12,6 @@ public interface PromotionHistoryRepository extends Repository<PromotionHistory,
 	PromotionHistory save(PromotionHistory save);
 	Optional<PromotionHistory> findById(Long id);
 
-
 	@Query(value = "select ph from PromotionHistory ph where ph.memberId = :memberId and ph.quest in (:quests) order by ph.lastModifiedDate desc")
 	List<PromotionHistory> participatedHistory(@Param("memberId") String memberId, @Param("quests") List<Quest> quests);
 }
