@@ -8,9 +8,9 @@ import com.mosinsa.promotion.infra.jpa.QuestRepository;
 import com.mosinsa.promotion.infra.kafka.KafkaEvents;
 import com.mosinsa.promotion.infra.kafka.ParticipatedEvent;
 import com.mosinsa.promotion.query.MemberParticipatedChecker;
-import com.mosinsa.promotion.query.dto.QuestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,48 +20,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PromotionServiceImpl implements PromotionService {
 
-	private final PromotionRepository repository;
-	private final PromotionHistoryRepository historyRepository;
-	private final QuestRepository questRepository;
-	private final MemberParticipatedChecker memberParticipatedChecker;
-	@Value("${mosinsa.topic.promotion.participate}")
-	private String promotionParticipateTopic;
+    private final PromotionRepository repository;
+    private final PromotionHistoryRepository historyRepository;
+    private final QuestRepository questRepository;
+    private final MemberParticipatedChecker memberParticipatedChecker;
 
-	@Override
-	@Transactional
-	public void participatePromotion(ParticipateDto participateDto) {
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    @Value("${mosinsa.topic.promotion.participate}")
+    private String promotionParticipateTopic;
 
-		PromotionId id = PromotionId.of(participateDto.promotionId());
-		Promotion promotion = repository.findById(id)
-				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND));
+    @Override
+    @Transactional
+    public void participatePromotion(ParticipateDto participateDto) {
 
-		// 참여여부
-		DateUnit dateUnit = promotion.getDateUnit();
+        DateUnit dateUnit = repository.findById(PromotionId.of(participateDto.promotionId()))
+                .orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
+                .getDateUnit();
+        List<Quest> quests = participateDto.questDtos().stream()
+                .map(questDto -> questRepository.findById(questDto.id()).orElseThrow())
+                .toList();
+        if (memberParticipatedChecker.isMemberParticipated(participateDto.memberId(), quests, dateUnit)) {
+            throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
+        }
 
-		//프로모션 조건으로 쿠폰 그룹 구하기
-		List<QuestDto> questDtos = participateDto.questDtos();
-
-		List<Quest> quests = questDtos.stream().map(questDto -> questRepository.findById(questDto.id()).orElseThrow()).toList();
-
-		boolean memberParticipated = memberParticipatedChecker.isMemberParticipated(participateDto.memberId(), quests, dateUnit);
-		if (memberParticipated) {
-			throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
-		}
-
-		List<CouponGroupInfo> couponGroupInfos = quests.stream().map(quest -> {
-			historyRepository.save(PromotionHistory.of(participateDto.memberId(), quest));
-			return quest.getCouponGroupInfoList();
-		}).flatMap(List::stream).toList();
-
-		// 그룹 시퀀스에 따라 쿠폰 발행
-		couponGroupInfos.forEach(couponGroupInfo -> {
-			couponGroupInfo.issue();
-			KafkaEvents.raise(
-					promotionParticipateTopic,
-					new ParticipatedEvent(participateDto.memberId(), couponGroupInfo.getCouponGroupSequence()));
-		});
-
-		//응답
-	}
+        quests.stream().map(quest -> {
+                    historyRepository.save(PromotionHistory.of(participateDto.memberId(), quest));
+                    return quest.getCouponGroupInfoList();
+                })
+                .flatMap(List::stream)
+                .forEach(couponGroupInfo -> {
+                    couponGroupInfo.issue();
+                    KafkaEvents.raise(
+                            promotionParticipateTopic,
+                            new ParticipatedEvent(participateDto.memberId(), couponGroupInfo.getCouponGroupSequence()));
+                });
+    }
 
 }

@@ -22,7 +22,6 @@ public class PromotionQueryServiceImpl implements PromotionQueryService {
 	private final PromotionRepository repository;
 	private final QuestRepository questRepository;
 	private final ConditionOptionFinder optionFinder;
-
 	private final MemberParticipatedChecker memberParticipatedChecker;
 
 	@Override
@@ -30,15 +29,13 @@ public class PromotionQueryServiceImpl implements PromotionQueryService {
 	public PromotionDetails getPromotionDetails(String promotionId, String memberId) {
 		Promotion promotion = repository.findById(PromotionId.of(promotionId))
 				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND));
-		PromotionCondition promotionCondition = promotion.getPromotionCondition();
-		PromotionConditions conditions = promotionCondition.getConditions();
 
-		ConditionStrategy conditionOption = optionFinder.findConditionOption(conditions);
-		ConditionOption conditionOption1 = conditionOption.getConditionOption(memberId);
+		PromotionConditions conditions = promotion.getPromotionCondition().getConditions();
+
+		ConditionOption conditionOption = optionFinder.findConditionOption(conditions).getConditionOption(memberId);
 
 		DateUnit dateUnit = promotion.getDateUnit();
-		List<Quest> quests = questRepository.findByConditionOption(conditionOption1).stream().toList();
-
+		List<Quest> quests = questRepository.findByConditionOption(conditionOption).stream().toList();
 		boolean participated = memberParticipatedChecker.isMemberParticipated(memberId, quests, dateUnit);
 
 		List<QuestDto> questDtos = quests.stream().map(QuestDto::of).toList();

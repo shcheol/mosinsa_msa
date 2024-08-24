@@ -1,5 +1,6 @@
 package com.mosinsa.promotion.query;
 
+import com.mosinsa.promotion.query.dto.PromotionDetails;
 import com.mosinsa.promotion.query.dto.PromotionSummary;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,10 @@ class PromotionQueryServiceImplTest {
 
     @Test
     void getPromotionDetails() {
-        service.getPromotionDetails("promotion1","");
+        PromotionDetails promotion1 = service.getPromotionDetails("promotion1", "member1");
+        Assertions.assertThat(promotion1.promotionId()).isEqualTo("promotion1");
+        Assertions.assertThat(promotion1.participated()).isFalse();
+        Assertions.assertThat(promotion1.quests()).hasSize(1);
     }
 
     @Test
