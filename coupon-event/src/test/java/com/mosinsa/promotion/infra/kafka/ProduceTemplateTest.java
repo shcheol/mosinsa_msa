@@ -1,10 +1,10 @@
-package com.mosinsa.reaction.infra.kafka;
+package com.mosinsa.promotion.infra.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProduceTemplateTest {
@@ -29,4 +29,5 @@ class ProduceTemplateTest {
     static class B {
         public A a;
     }
+
 }

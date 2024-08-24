@@ -5,8 +5,8 @@ import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.promotion.command.application.dto.ParticipateDto;
 import com.mosinsa.promotion.command.domain.*;
 import com.mosinsa.promotion.infra.jpa.QuestRepository;
-import com.mosinsa.promotion.infra.kafka.KafkaEvents;
 import com.mosinsa.promotion.infra.kafka.ParticipatedEvent;
+import com.mosinsa.promotion.infra.kafka.ProduceTemplate;
 import com.mosinsa.promotion.query.MemberParticipatedChecker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +24,7 @@ public class PromotionServiceImpl implements PromotionService {
     private final PromotionHistoryRepository historyRepository;
     private final QuestRepository questRepository;
     private final MemberParticipatedChecker memberParticipatedChecker;
-
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ProduceTemplate produceTemplate;
     @Value("${mosinsa.topic.promotion.participate}")
     private String promotionParticipateTopic;
 
@@ -50,8 +49,7 @@ public class PromotionServiceImpl implements PromotionService {
                 .flatMap(List::stream)
                 .forEach(couponGroupInfo -> {
                     couponGroupInfo.issue();
-                    KafkaEvents.raise(
-                            promotionParticipateTopic,
+                    produceTemplate.produce(promotionParticipateTopic,
                             new ParticipatedEvent(participateDto.memberId(), couponGroupInfo.getCouponGroupSequence()));
                 });
     }
