@@ -37,8 +37,7 @@ class PromotionHistoryTest extends InMemoryJpaTest {
         PromotionHistory protectedConstructor = new PromotionHistory();
         PromotionHistory other = repository.findById(2L).get();
 
-        Assertions.assertThat(noId).isEqualTo(noId2);
-        Assertions.assertThat(noId).isNotEqualTo(origin);
+        Assertions.assertThat(noId).isEqualTo(noId2).isNotEqualTo(origin);
 
         boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(origin, same, protectedConstructor, other);
         assertThat(b).isTrue();

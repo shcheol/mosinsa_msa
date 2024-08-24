@@ -9,25 +9,23 @@ import com.mosinsa.promotion.command.domain.Quest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class MemberParticipatedChecker {
 
-	private final PromotionHistoryRepository repository;
+    private final PromotionHistoryRepository repository;
 
-	private final List<DateUnitStrategy> dateUnitStrategies;
+    private final List<DateUnitStrategy> dateUnitStrategies;
 
-	public boolean isMemberParticipated(String memberId, List<Quest> quests, DateUnit dateUnit) {
+    public boolean isMemberParticipated(String memberId, List<Quest> quests, DateUnit dateUnit) {
 
-		List<PromotionHistory> promotionHistories = repository.participatedHistory(memberId, quests);
+        List<PromotionHistory> promotionHistories = repository.participatedHistory(memberId, quests);
 
-		return dateUnitStrategies.stream()
-				.filter(dateUnitStrategy -> dateUnitStrategy.isSupport(dateUnit)).findAny()
-				.orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
-				.isParticipated(promotionHistories);
-	}
+        return dateUnitStrategies.stream()
+                .filter(dateUnitStrategy -> dateUnitStrategy.isSupport(dateUnit)).findAny()
+                .orElseThrow(() -> new CouponException(CouponError.NOT_FOUND))
+                .isParticipated(promotionHistories);
+    }
 }
