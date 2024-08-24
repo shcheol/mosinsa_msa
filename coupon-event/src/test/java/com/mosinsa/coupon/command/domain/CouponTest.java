@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-//@SpringBootTest
-//@Sql("classpath:db/test-init.sql")
 class CouponTest extends InMemoryJpaTest {
 
 	@Autowired

@@ -5,11 +5,9 @@ import com.mosinsa.code.EqualsAndHashcodeUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Sql("classpath:db/test-init.sql")
 class PromotionConditionTest extends InMemoryJpaTest {
 
     @Autowired
@@ -29,14 +27,20 @@ class PromotionConditionTest extends InMemoryJpaTest {
 
     }
 
-	@Test
-	void field() {
-		PromotionCondition condition1 = repository.findDetailsById(PromotionId.of("promotion1")).get()
-				.getPromotionCondition();
+    @Test
+    void field() {
+        PromotionCondition condition1 = repository.findDetailsById(PromotionId.of("promotion1")).get()
+                .getPromotionCondition();
 
-		Assertions.assertThat(condition1.getConditions()).isEqualTo(PromotionConditions.NEW_OR_OLD_MEMBER);
-		Assertions.assertThat(condition1.getPromotionConditionOptions()).hasSize(2);
+        Assertions.assertThat(condition1.getConditions()).isEqualTo(PromotionConditions.NEW_OR_OLD_MEMBER);
+        Assertions.assertThat(condition1.getPromotionConditionOptions()).hasSize(2);
+    }
 
-	}
+    @Test
+    void save() {
+        PromotionCondition of = PromotionCondition.of(PromotionConditions.NEW_OR_OLD_MEMBER);
+        Assertions.assertThat(of.getConditions()).isEqualTo(PromotionConditions.NEW_OR_OLD_MEMBER);
+        Assertions.assertThat(of.getPromotionConditionOptions()).isEmpty();
+    }
 
 }
