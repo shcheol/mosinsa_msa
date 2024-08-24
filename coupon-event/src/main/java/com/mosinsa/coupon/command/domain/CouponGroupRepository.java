@@ -6,5 +6,7 @@ import java.util.Optional;
 
 public interface CouponGroupRepository extends Repository<CouponGroup, Long> {
 
-	Optional<CouponGroup> findByCouponGroupSequence(Long sequence);
+	Optional<CouponGroup> findById(Long id);
+
+	CouponGroup save(CouponGroup couponGroup);
 }

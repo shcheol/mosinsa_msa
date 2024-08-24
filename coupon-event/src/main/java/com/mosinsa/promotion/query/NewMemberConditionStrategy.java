@@ -27,6 +27,6 @@ public class NewMemberConditionStrategy implements ConditionStrategy {
 
 	@Override
 	public boolean isSupport(PromotionConditions promotionConditions) {
-		return PromotionConditions.NEW_MEMBER.equals(promotionConditions);
+		return PromotionConditions.NEW_OR_OLD_MEMBER.equals(promotionConditions);
 	}
 }

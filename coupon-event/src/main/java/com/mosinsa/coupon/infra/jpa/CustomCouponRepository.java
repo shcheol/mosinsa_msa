@@ -1,4 +1,4 @@
-package com.mosinsa.coupon.infra.repository;
+package com.mosinsa.coupon.infra.jpa;
 
 import com.mosinsa.coupon.command.domain.Coupon;
 
