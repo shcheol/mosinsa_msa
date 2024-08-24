@@ -1,6 +1,7 @@
 package com.mosinsa.reaction.infra.kafka.generator;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
+import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.mosinsa.reaction.infra.kafka.events.CommentDislikesEvent;
 import com.mosinsa.reaction.infra.kafka.events.CommentLikesEvent;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,10 @@ public class CommentPayloadGenerator implements PayloadGenerator {
             return new CommentDislikesEvent(channel, targetId, canceled);
         }
         throw new PayloadGenerateFailException();
+    }
+
+    @Override
+    public boolean isSupport(TargetEntity targetEntity) {
+        return TargetEntity.COMMENT.equals(targetEntity);
     }
 }

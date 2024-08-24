@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -18,36 +18,38 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProduceTemplate {
 
-	private final Map<String, ChannelProvider> channelProviderMap;
+    private final List<ChannelProvider> channelProviders;
 
-	private final Map<String, PayloadGenerator> payloadGeneratorMap;
+    private final List<PayloadGenerator> payloadGenerators;
 
-	private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-	private final ObjectMapper om;
+    private final ObjectMapper om;
 
-	public void produce(TargetEntity target, String targetId, ReactionType reactionType, boolean canceled) {
+    public void produce(TargetEntity target, String targetId, ReactionType reactionType, boolean canceled) {
 
-		// topic 생성
-		String topic = TopicGenerator.generate(target, reactionType);
+        String topic = TopicGenerator.generate(target, reactionType);
 
-		//채널
-		String channel = channelProviderMap.get(target.name().toLowerCase() + "ChannelProvider").provide(targetId);
+        String channel = channelProviders.stream()
+                .filter(channelProvider -> channelProvider.isSupport(target))
+                .findAny().orElseThrow()
+                .provide(targetId);
 
-		//payload 생성
-		Object payload = payloadGeneratorMap.get(target.name().toLowerCase() + "PayloadGenerator").generate(channel, targetId, reactionType, canceled);
+        Object payload = payloadGenerators.stream()
+                .filter(channelProvider -> channelProvider.isSupport(target))
+                .findAny().orElseThrow()
+                .generate(channel, targetId, reactionType, canceled);
 
-		// 전달
-		String key = UUID.randomUUID().toString();
-		log.info("publish {}, key {}", topic, key);
-		kafkaTemplate.send(topic, key, getPayloadFromObject(payload));
-	}
+        String key = UUID.randomUUID().toString();
+        log.info("publish {}, key {}", topic, key);
+        kafkaTemplate.send(topic, key, getPayloadFromObject(payload));
+    }
 
-	protected String getPayloadFromObject(Object event){
-		try {
-			return om.writeValueAsString(event);
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
-	}
+    protected String getPayloadFromObject(Object event) {
+        try {
+            return om.writeValueAsString(event);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

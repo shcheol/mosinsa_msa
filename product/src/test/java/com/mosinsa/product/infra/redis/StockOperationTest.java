@@ -1,5 +1,6 @@
 package com.mosinsa.product.infra.redis;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,6 +44,18 @@ class StockOperationTest {
 		List<StockOperand> stockOperands = List.of(new StockOperand(key1, 10L), new StockOperand(key2, 10L));
 		assertThat(operation.increaseAndGet(stockOperands)).containsExactly(30L,30L);
 		assertThat(operation.increaseAndGet(stockOperands)).containsExactly(40L,40L);
+	}
+
+	@Test
+	void stockOperationEx() {
+		assertThrows(NullPointerException.class, () -> operation.increaseAndGet(null));
+		assertThrows(NullPointerException.class, () -> operation.decreaseAndGet(null));
+	}
+
+	@Test
+	void stockOperationEmpty() {
+		Assertions.assertThat(operation.decreaseAndGet(List.of())).isEmpty();
+		Assertions.assertThat(operation.increaseAndGet(List.of())).isEmpty();
 	}
 
 	@Test
