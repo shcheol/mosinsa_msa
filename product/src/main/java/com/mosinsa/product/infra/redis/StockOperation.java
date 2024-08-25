@@ -18,7 +18,6 @@ public class StockOperation {
 	private final RedisTemplate<String, String> redisTemplate;
 
 	public List<Long> decreaseAndGet(List<StockOperand> stocks) {
-
 		return redisTemplate.execute(new SessionCallback<>() {
 			@Override
 			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
