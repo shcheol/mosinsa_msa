@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.repository;
+package com.mosinsa.order.infra.jpa;
 
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
@@ -14,7 +14,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")

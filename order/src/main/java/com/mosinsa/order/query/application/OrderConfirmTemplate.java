@@ -24,10 +24,10 @@ public class OrderConfirmTemplate {
     private final CouponAdapter couponAdapter;
     private final ProductAdapter productAdaptor;
 
-    public OrderConfirmDto orderConfirm(Map<String, Collection<String>> authMap, CustomerInfo customerInfo,
+    public OrderConfirmDto orderConfirm(CustomerInfo customerInfo,
                                         OrderConfirmRequest orderConfirmRequest) {
 
-        List<OrderProductDto> confirmOrderProducts = productAdaptor.confirm(authMap, orderConfirmRequest);
+        List<OrderProductDto> confirmOrderProducts = productAdaptor.confirm(orderConfirmRequest);
         int sum = calculateTotalAmount(confirmOrderProducts);
         OrderConfirmDto confirmDto = OrderConfirmDto.builder()
                 .customerId(customerInfo.id())
@@ -41,7 +41,7 @@ public class OrderConfirmTemplate {
         }
 
         String couponId = orderConfirmRequest.couponId();
-        CouponResponse coupon = couponAdapter.getCoupon(authMap, couponId)
+        CouponResponse coupon = couponAdapter.getCoupon(couponId)
                 .orElseThrow();
 
         return confirmDto.useCoupon(couponId, coupon.discountPolicy());

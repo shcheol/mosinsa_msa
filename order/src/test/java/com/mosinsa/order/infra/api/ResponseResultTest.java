@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.feignclient;
+package com.mosinsa.order.infra.api;
 
 import com.mosinsa.order.infra.api.ExternalServerException;
 import com.mosinsa.order.infra.api.ResponseResult;

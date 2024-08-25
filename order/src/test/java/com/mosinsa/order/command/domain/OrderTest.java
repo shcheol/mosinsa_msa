@@ -1,7 +1,7 @@
 package com.mosinsa.order.command.domain;
 
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.infra.repository.OrderRepository;
+import com.mosinsa.order.infra.jpa.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

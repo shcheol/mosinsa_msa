@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Collection;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -41,19 +38,17 @@ class OrderTemplateTest {
 	CreateOrderRequest orderWithCoupon;
 	CreateOrderRequest orderWithoutCoupon;
 
-	Map<String, Collection<String>> header = Map.of();
-
 	@Test
 	void orderWithCoupon() {
 
-		when(productAdaptor.orderProducts(any(), any(), any()))
+		when(productAdaptor.orderProducts(any(), any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
-		when(couponAdapter.useCoupon(any(), any()))
+		when(couponAdapter.useCoupon(any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
 
-		OrderDetail order = orderTemplate.order(header, orderWithCoupon);
+		OrderDetail order = orderTemplate.order(orderWithCoupon);
 		assertThat(order.getOrderProducts()).hasSize(1);
 		assertThat(order.getCustomerId()).isEqualTo("customerId");
 		assertThat(order.getCouponId()).isEqualTo("couponId");
@@ -63,11 +58,11 @@ class OrderTemplateTest {
 	@Test
 	void orderWithoutCoupon() {
 
-		when(productAdaptor.orderProducts(any(),any(), any()))
+		when(productAdaptor.orderProducts(any(),any()))
 				.thenReturn(ResponseResult.execute(() -> {
 				}));
 
-		OrderDetail order = orderTemplate.order(header, orderWithoutCoupon);
+		OrderDetail order = orderTemplate.order(orderWithoutCoupon);
 		assertThat(order.getOrderProducts()).hasSize(1);
 		assertThat(order.getCustomerId()).isEqualTo("customerId");
 		assertThat(order.getCouponId()).isNull();

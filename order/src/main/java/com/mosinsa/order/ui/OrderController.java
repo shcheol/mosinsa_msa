@@ -8,8 +8,6 @@ import com.mosinsa.order.common.argumentresolver.CustomerInfo;
 import com.mosinsa.order.common.argumentresolver.Login;
 import com.mosinsa.order.query.application.OrderConfirmTemplate;
 import com.mosinsa.order.query.application.dto.OrderDetail;
-import com.mosinsa.order.common.argumentresolver.AuthMap;
-import com.mosinsa.order.common.argumentresolver.AuthToken;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +29,10 @@ public class OrderController {
 
     @PostMapping("/orderConfirm")
     public ResponseEntity<OrderConfirmDto> orderConfirm(@RequestBody OrderConfirmRequest orderConfirmRequest,
-													 @Login CustomerInfo customerInfo,
-													 @AuthMap AuthToken authMap) {
+													 @Login CustomerInfo customerInfo) {
 
         log.info("{}", orderConfirmRequest);
-        OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(authMap.map(), customerInfo, orderConfirmRequest);
+        OrderConfirmDto orderConfirmDto = orderConfirmTemplate.orderConfirm(customerInfo, orderConfirmRequest);
 
         return ResponseEntity.ok(orderConfirmDto);
 
@@ -43,9 +40,9 @@ public class OrderController {
 
     @PostMapping("/order")
     @IdempotencyApi(storeType = "redisIdempotentKeyStore")
-    public ResponseEntity<OrderDetail> orders(@RequestBody CreateOrderRequest orderRequest, @AuthMap AuthToken authMap) {
+    public ResponseEntity<OrderDetail> orders(@RequestBody CreateOrderRequest orderRequest) {
 
-        OrderDetail orderDto = orderTemplate.order(authMap.map(), orderRequest);
+        OrderDetail orderDto = orderTemplate.order(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
     }
 

@@ -16,7 +16,7 @@ public class ResponseResult<T> {
     private final String message;
     private final T data;
 
-    private ResponseResult(int status, T data, String message) {
+    protected ResponseResult(int status, T data, String message) {
         this.status = status;
         this.data = data;
         this.message = message;

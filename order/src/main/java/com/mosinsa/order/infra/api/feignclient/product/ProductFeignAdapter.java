@@ -3,6 +3,7 @@ package com.mosinsa.order.infra.api.feignclient.product;
 import com.mosinsa.order.command.application.NotEnoughProductStockException;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
 import com.mosinsa.order.infra.api.ProductAdapter;
+import com.mosinsa.order.infra.api.RequestHeaderExtractor;
 import com.mosinsa.order.infra.api.ResponseResult;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import com.mosinsa.order.ui.request.MyOrderProduct;
@@ -24,10 +25,9 @@ public class ProductFeignAdapter implements ProductAdapter {
     private final ProductClient productClient;
 
     @Override
-    public List<OrderProductDto> confirm(Map<String, Collection<String>> headers, OrderConfirmRequest orderConfirmRequest) {
+    public List<OrderProductDto> confirm(OrderConfirmRequest orderConfirmRequest) {
         Map<String, Integer> orderQuantityMap = getOrderQuantityMap(orderConfirmRequest);
-
-        return getProductResponses(headers, orderConfirmRequest).stream()
+        return getProductResponses(orderConfirmRequest).stream()
                 .map(productResponseResponseResult -> {
                     ProductResponse productResponse = productResponseResponseResult.orElseThrow();
                     int orderStock = orderQuantityMap.getOrDefault(productResponse.productId(), Integer.MAX_VALUE);
@@ -49,7 +49,8 @@ public class ProductFeignAdapter implements ProductAdapter {
                 .collect(Collectors.toMap(MyOrderProduct::productId, MyOrderProduct::quantity));
     }
 
-    private List<ResponseResult<ProductResponse>> getProductResponses(Map<String, Collection<String>> headers, OrderConfirmRequest orderConfirmRequest) {
+    private List<ResponseResult<ProductResponse>> getProductResponses(OrderConfirmRequest orderConfirmRequest) {
+        Map<String, Collection<String>> headers = RequestHeaderExtractor.extract();
         return orderConfirmRequest.myOrderProducts().stream()
                 .map(myOrderProduct ->
                         ResponseResult.execute(() -> productClient.getProduct(headers, myOrderProduct.productId()))
@@ -58,11 +59,11 @@ public class ProductFeignAdapter implements ProductAdapter {
 
 
     @Override
-    public ResponseResult<Void> orderProducts(Map<String, Collection<String>> headers, String orderId, CreateOrderRequest orderRequest) {
+    public ResponseResult<Void> orderProducts(String orderId, CreateOrderRequest orderRequest) {
 
         OrderProductRequests orderProductRequests = new OrderProductRequests(orderId, orderRequest.orderConfirm().orderProducts().stream()
                 .map(op -> new OrderProductRequest(op.productId(), op.quantity())).toList());
-
+        Map<String, Collection<String>> headers = RequestHeaderExtractor.extract();
         return ResponseResult.execute(() -> productClient.orderProducts(headers, orderProductRequests));
     }
 }

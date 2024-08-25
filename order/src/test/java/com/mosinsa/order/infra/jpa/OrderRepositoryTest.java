@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.repository;
+package com.mosinsa.order.infra.jpa;
 
 import com.mosinsa.order.code.TestClass;
 import com.mosinsa.order.command.domain.*;

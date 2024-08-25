@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProductAdapter {
-    List<OrderProductDto> confirm(Map<String, Collection<String>> headers, OrderConfirmRequest orderConfirmRequest);
+    List<OrderProductDto> confirm(OrderConfirmRequest orderConfirmRequest);
 
-    ResponseResult<Void> orderProducts(Map<String, Collection<String>> headers, String orderId, CreateOrderRequest orderRequest);
+    ResponseResult<Void> orderProducts(String orderId, CreateOrderRequest orderRequest);
 }

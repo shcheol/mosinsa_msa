@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class StubProductAdapter implements ProductAdapter {
     @Override
-    public List<OrderProductDto> confirm(Map<String, Collection<String>> headers, OrderConfirmRequest orderConfirmRequest) {
+    public List<OrderProductDto> confirm(OrderConfirmRequest orderConfirmRequest) {
 
         return List.of(
                 OrderProductDto.builder()
@@ -27,7 +27,7 @@ public class StubProductAdapter implements ProductAdapter {
     }
 
     @Override
-    public ResponseResult<Void> orderProducts(Map<String, Collection<String>> headers, String orderId, CreateOrderRequest orderRequest) {
+    public ResponseResult<Void> orderProducts(String orderId, CreateOrderRequest orderRequest) {
         return ResponseResult.execute(() -> System.out.println("call product service"));
     }
 }
