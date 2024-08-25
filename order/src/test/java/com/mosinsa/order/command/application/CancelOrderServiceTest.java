@@ -1,8 +1,8 @@
 package com.mosinsa.order.command.application;
 
+import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderStatus;
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.query.application.dto.OrderDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,11 +20,11 @@ class CancelOrderServiceTest {
 
 	@Test
 	void cancelOrder() {
-		OrderDetail orderId1 = service.cancelOrder("orderId1");
+		Order orderId1 = service.cancelOrder("orderId1");
 		OrderStatus status1 = orderId1.getStatus();
 		assertThat(status1).isEqualTo(OrderStatus.CANCELED);
 
-		OrderDetail orderId2 = service.cancelOrder("orderId2");
+		Order orderId2 = service.cancelOrder("orderId2");
 		OrderStatus status2 = orderId2.getStatus();
 		assertThat(status2).isEqualTo(OrderStatus.CANCELED);
 

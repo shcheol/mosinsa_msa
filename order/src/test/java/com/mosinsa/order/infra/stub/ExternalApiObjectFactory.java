@@ -1,4 +1,4 @@
-package com.mosinsa.order.query.application;
+package com.mosinsa.order.infra.stub;
 
 import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.infra.api.ProductAdapter;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 @TestConfiguration
-public class OrderQueryObjectFactory {
+public class ExternalApiObjectFactory {
 
     @Bean
     public CouponAdapter couponAdapter(){

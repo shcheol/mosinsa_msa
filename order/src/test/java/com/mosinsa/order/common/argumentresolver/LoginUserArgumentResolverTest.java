@@ -1,5 +1,6 @@
 package com.mosinsa.order.common.argumentresolver;
 
+import com.mosinsa.order.ControllerTest;
 import com.mosinsa.order.code.TestController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TestController.class)
-class LoginUserArgumentResolverTest {
+class LoginUserArgumentResolverTest extends ControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
