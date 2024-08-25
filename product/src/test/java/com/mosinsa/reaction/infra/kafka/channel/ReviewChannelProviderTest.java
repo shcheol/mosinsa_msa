@@ -1,6 +1,7 @@
 package com.mosinsa.reaction.infra.kafka.channel;
 
 import com.mosinsa.common.ex.ReviewException;
+import com.mosinsa.reaction.command.domain.TargetEntity;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ class ReviewChannelProviderTest {
     void provideFail() {
         assertThrows(ReviewException.class, () -> provider.provide("reviewId1xxx"));
     }
-
+    @Test
+    void isSupport(){
+        Assertions.assertThat(provider.isSupport(TargetEntity.PRODUCT)).isFalse();
+        Assertions.assertThat(provider.isSupport(TargetEntity.REVIEW)).isTrue();
+        Assertions.assertThat(provider.isSupport(TargetEntity.COMMENT)).isFalse();
+    }
 }

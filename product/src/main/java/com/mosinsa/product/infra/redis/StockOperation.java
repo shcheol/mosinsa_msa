@@ -18,7 +18,9 @@ public class StockOperation {
 	private final RedisTemplate<String, String> redisTemplate;
 
 	public List<Long> decreaseAndGet(List<StockOperand> stocks) {
-
+		if(stocks.isEmpty()){
+			return List.of();
+		}
 		return redisTemplate.execute(new SessionCallback<>() {
 			@Override
 			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
@@ -36,6 +38,9 @@ public class StockOperation {
 	}
 
 	public List<Long> increaseAndGet(List<StockOperand> stocks) {
+		if(stocks.isEmpty()){
+			return List.of();
+		}
 		return redisTemplate.execute(new SessionCallback<>() {
 			@Override
 			public <K, V> List<Long> execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {

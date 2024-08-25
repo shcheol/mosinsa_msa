@@ -1,6 +1,7 @@
 package com.mosinsa.reaction.infra.kafka.generator;
 
 import com.mosinsa.reaction.command.domain.ReactionType;
+import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.mosinsa.reaction.infra.kafka.events.CommentDislikesEvent;
 import com.mosinsa.reaction.infra.kafka.events.CommentLikesEvent;
 import org.assertj.core.api.Assertions;
@@ -26,5 +27,13 @@ class CommentPayloadGeneratorTest {
 
         assertThrows(PayloadGenerateFailException.class,
                 () -> commentPayloadGenerator.generate("channel", "targetId", null, true));
+    }
+
+    @Test
+    void isSupport(){
+        CommentPayloadGenerator commentPayloadGenerator = new CommentPayloadGenerator();
+        Assertions.assertThat(commentPayloadGenerator.isSupport(TargetEntity.PRODUCT)).isFalse();
+        Assertions.assertThat(commentPayloadGenerator.isSupport(TargetEntity.REVIEW)).isFalse();
+        Assertions.assertThat(commentPayloadGenerator.isSupport(TargetEntity.COMMENT)).isTrue();
     }
 }

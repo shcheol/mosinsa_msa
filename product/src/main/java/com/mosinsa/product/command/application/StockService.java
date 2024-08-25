@@ -31,9 +31,6 @@ public class StockService implements StockPort {
 	@Override
     @Transactional
     public StockResult tryDecrease(String customerId, String orderId, List<StockOperand> stockOperands) {
-		if (stockOperands.isEmpty()){
-			return StockResult.FAIL;
-		}
 
         List<Long> execute = operation.decreaseAndGet(stockOperands);
         if (!execute.isEmpty() && execute.stream().allMatch(f -> f >= 0)) {
