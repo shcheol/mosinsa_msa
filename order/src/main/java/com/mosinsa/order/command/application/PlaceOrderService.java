@@ -4,7 +4,7 @@ import com.mosinsa.order.command.application.dto.AddressDto;
 import com.mosinsa.order.command.application.dto.ReceiverDto;
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import com.mosinsa.order.command.domain.*;
-import com.mosinsa.order.infra.jpa.OrderRepository;
+import com.mosinsa.order.command.domain.OrderRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,6 @@ public class PlaceOrderService {
 				Order.create(
 						orderId,
 						orderRequest.orderConfirm().customerId(),
-						orderRequest.orderConfirm().couponId(),
 						orderRequest.orderConfirm().orderProducts().stream().map(
 								orderProduct -> OrderProduct.of(
 										orderProduct.productId(),

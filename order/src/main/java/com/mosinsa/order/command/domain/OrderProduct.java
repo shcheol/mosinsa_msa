@@ -32,7 +32,6 @@ public class OrderProduct {
 		orderProduct.price = Money.of(price);
 		orderProduct.setQuantity(quantity);
 		orderProduct.amounts = orderProduct.price.multiply(quantity);
-
 		return orderProduct;
 	}
 

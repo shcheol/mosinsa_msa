@@ -23,8 +23,6 @@ public class Order extends AuditingEntity {
 
 	private String customerId;
 
-	private String couponId;
-
 	@Convert(converter = MoneyConverter.class)
 	@Column(name = "total_price")
 	private Money totalPrice;
@@ -35,28 +33,18 @@ public class Order extends AuditingEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 
+	@OneToOne(mappedBy = "order")
+	private OrderCoupon orderCoupon;
+
 	@ElementCollection(fetch = FetchType.LAZY)
 	@CollectionTable(name = "order_product",
 			joinColumns = @JoinColumn(name = "order_id")
 	)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public static Order create(OrderId orderId, String customerId, String couponId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
+	public static Order create(OrderId orderId, String customerId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
 		Order order = new Order();
 		order.id = orderId;
-		order.useCoupon(couponId);
-		order.setCustomerId(customerId);
-		order.status = OrderStatus.PAYMENT_WAITING;
-		order.addOrderProducts(orderProducts);
-		order.setShippingInfo(shippingInfo);
-		order.setTotalPrice(Money.of(totalPrice));
-		return order;
-	}
-
-	public static Order create(String customerId, String couponId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
-		Order order = new Order();
-		order.id = OrderId.newId();
-		order.useCoupon(couponId);
 		order.setCustomerId(customerId);
 		order.status = OrderStatus.PAYMENT_WAITING;
 		order.addOrderProducts(orderProducts);
@@ -67,10 +55,6 @@ public class Order extends AuditingEntity {
 
 	private void setTotalPrice(Money totalPrice) {
 		this.totalPrice = totalPrice;
-	}
-
-	private void useCoupon(String couponId) {
-		this.couponId = couponId;
 	}
 
 	private void setShippingInfo(ShippingInfo shippingInfo){

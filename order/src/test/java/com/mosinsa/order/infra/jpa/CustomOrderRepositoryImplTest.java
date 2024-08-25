@@ -2,6 +2,7 @@ package com.mosinsa.order.infra.jpa;
 
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
+import com.mosinsa.order.command.domain.OrderRepository;
 import com.mosinsa.order.command.domain.OrderStatus;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;

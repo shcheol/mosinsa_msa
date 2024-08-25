@@ -4,7 +4,7 @@ import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.infra.jpa.OrderRepository;
+import com.mosinsa.order.command.domain.OrderRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

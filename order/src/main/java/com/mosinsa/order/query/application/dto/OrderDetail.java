@@ -23,7 +23,7 @@ public class OrderDetail {
 	public OrderDetail(Order order) {
 		this.orderId = order.getId().getId();
 		this.customerId = order.getCustomerId();
-		this.couponId = order.getCouponId();
+		this.couponId = order.getOrderCoupon().getCouponId();
 		this.status = order.getStatus();
 		this.totalPrice = order.getTotalPrice().getValue();
 		this.shippingInfo = ShippingInfoDto.of(order.getShippingInfo());

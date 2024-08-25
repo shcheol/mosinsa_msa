@@ -16,44 +16,44 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Sql("classpath:db/test-init.sql")
 class OrderRepositoryTest {
 
-	@Autowired
-	OrderRepository repository;
+    @Autowired
+    OrderRepository repository;
 
-	@Test
-	void equalsAndHashCode(){
-		Order orderA = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
-		Order orderB = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
+    @Test
+    void equalsAndHashCode() {
+        Order orderA = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
+        Order orderB = repository.findOrderDetailsById(OrderId.of("orderId1")).get();
 
-		assertThat(orderA).isEqualTo(orderA).isEqualTo(orderB).hasSameHashCodeAs(orderB)
-				.isNotEqualTo(null).isNotEqualTo(new TestClass());
+        assertThat(orderA).isEqualTo(orderA).isEqualTo(orderB).hasSameHashCodeAs(orderB)
+                .isNotEqualTo(null).isNotEqualTo(new TestClass());
 
-		Order orderC = repository.findOrderDetailsById(OrderId.of("orderId2")).get();
-		assertThat(orderA).isNotEqualTo(orderC).doesNotHaveSameHashCodeAs(orderC);
-	}
+        Order orderC = repository.findOrderDetailsById(OrderId.of("orderId2")).get();
+        assertThat(orderA).isNotEqualTo(orderC).doesNotHaveSameHashCodeAs(orderC);
+    }
 
-	@Test
-	void create() {
-		Address address = Address.of("zipCode", "address1", "address2");
-		Receiver receiver = Receiver.of("myname", "010-xxx-xxxx");
-		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
+    @Test
+    void create() {
+        Address address = Address.of("zipCode", "address1", "address2");
+        Receiver receiver = Receiver.of("myname", "010-xxx-xxxx");
+        ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
 
-		Order order = Order.create("customerId",
-				"couponId",
-				List.of(OrderProduct.of("productId",1000, 10)),
-				shippingInfo,
-				10000);
-		Order saveOrder = repository.save(order);
+        Order order = Order.create(OrderId.newId(),
+                "customerId",
+                List.of(OrderProduct.of("productId", 1000, 10)),
+                shippingInfo,
+                10000);
+        Order saveOrder = repository.save(order);
 
-		Order findOrder = repository.findById(saveOrder.getId()).get();
+        Order findOrder = repository.findById(saveOrder.getId()).get();
 
-		assertThat(findOrder).isEqualTo(saveOrder);
-	}
+        assertThat(findOrder).isEqualTo(saveOrder);
+    }
 
-	@Test
-	void cancelFail(){
-		Order findOrder3 = repository.findById(OrderId.of("orderId3")).get();
-		assertThat(findOrder3.getStatus()).isNotEqualTo(OrderStatus.CANCELED);
+    @Test
+    void cancelFail() {
+        Order findOrder3 = repository.findById(OrderId.of("orderId3")).get();
+        assertThat(findOrder3.getStatus()).isNotEqualTo(OrderStatus.CANCELED);
 
-		assertThrows(AlreadyShippedException.class, findOrder3::cancelOrder);
-	}
+        assertThrows(AlreadyShippedException.class, findOrder3::cancelOrder);
+    }
 }

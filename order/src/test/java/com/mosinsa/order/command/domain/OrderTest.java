@@ -1,7 +1,6 @@
 package com.mosinsa.order.command.domain;
 
 import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.infra.jpa.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +24,7 @@ class OrderTest {
 	void equalsAndHashCode() {
 		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
-		Order order1 = Order.create("cId", "couponId", orderProducts, shippingInfo, 10000);
+		Order order1 = Order.create(OrderId.newId(),"cId",  orderProducts, shippingInfo, 10000);
 
 		Order protectedConstructor = new Order();
 		assertThat(protectedConstructor).isNotEqualTo(order1);
@@ -36,7 +35,7 @@ class OrderTest {
 		List<OrderProduct> orderProducts = List.of();
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		assertThrows(OrderException.class,
-				() -> Order.create("customerId", "couponId", orderProducts,
+				() -> Order.create(OrderId.newId(),"customerId", orderProducts,
 						shippingInfo, 10000));
 	}
 
@@ -45,7 +44,7 @@ class OrderTest {
 		List<OrderProduct> orderProducts = null;
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		assertThrows(OrderException.class,
-				() -> Order.create("customerId", "couponId", orderProducts,
+				() -> Order.create(OrderId.newId(),"customerId", orderProducts,
 						shippingInfo, 10000));
 	}
 
@@ -54,7 +53,7 @@ class OrderTest {
 		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
 		assertThrows(OrderException.class,
-				() -> Order.create("", "couponId", orderProducts,
+				() -> Order.create(OrderId.newId(),"", orderProducts,
 						shippingInfo, 10000));
 	}
 
@@ -63,7 +62,7 @@ class OrderTest {
 	void cancelOrder() {
 		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
-		Order order = Order.create("cId", "couponId", orderProducts, shippingInfo, 10000);
+		Order order = Order.create(OrderId.newId(),"cId", orderProducts, shippingInfo, 10000);
 		order.cancelOrder();
 		assertThrows(AlreadyCanceledException.class, order::cancelOrder);
 

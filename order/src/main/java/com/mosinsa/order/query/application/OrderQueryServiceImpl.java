@@ -3,7 +3,7 @@ package com.mosinsa.order.query.application;
 import com.mosinsa.order.common.ex.OrderError;
 import com.mosinsa.order.common.ex.OrderException;
 import com.mosinsa.order.command.domain.OrderId;
-import com.mosinsa.order.infra.jpa.OrderRepository;
+import com.mosinsa.order.command.domain.OrderRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.SearchCondition;
