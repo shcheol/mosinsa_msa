@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Embeddable
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Access(AccessType.FIELD)
 public class OrderId implements Serializable {
 
@@ -23,20 +22,22 @@ public class OrderId implements Serializable {
     private String id;
 
     public static OrderId newId() {
-        return new OrderId(UUID.randomUUID().toString());
+        OrderId id = new OrderId();
+        id.id = UUID.randomUUID().toString();
+        return id;
     }
 
     public static OrderId of(String id) {
-        return new OrderId(id);
-    }
-
-    private OrderId(String id){
-        if (!StringUtils.hasText(id)){
+        if (!StringUtils.hasText(id)) {
             throw new IllegalArgumentException();
         }
-        this.id = id;
+        OrderId orderId = new OrderId();
+        orderId.id = id;
+        return orderId;
     }
 
+    protected OrderId(){
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
