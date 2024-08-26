@@ -7,8 +7,8 @@ import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.common.ex.OrderRollbackException;
 import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.infra.api.ProductAdapter;
-import com.mosinsa.order.infra.kafka.KafkaEvents;
 import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
+import com.mosinsa.order.infra.kafka.ProduceTemplate;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,8 @@ public class OrderServiceImpl implements OrderService {
 	private final ProductAdapter productAdaptor;
 	private final PlaceOrderService placeOrderService;
 	private final CancelOrderService cancelOrderService;
+
+	private final ProduceTemplate producerTemplate;
 
 	@Value("${mosinsa.topic.order.cancel}")
 	public String orderCancelTopic;
@@ -49,12 +51,12 @@ public class OrderServiceImpl implements OrderService {
 			return new OrderDetail(order);
 		} catch (Exception e) {
 			log.error("order save fail => rollback product stock, coupon usage");
-
-			KafkaEvents.raise(orderCancelTopic, new OrderCanceledEvent(
-					"",
+			OrderCanceledEvent event = new OrderCanceledEvent(
+					orderId.getId(),
 					orderConfirmDto.couponId(),
 					orderConfirmDto.customerId(),
-					orderConfirmDto.orderProducts()));
+					orderConfirmDto.orderProducts());
+			producerTemplate.produce(orderCancelTopic, event);
 			throw new OrderRollbackException(e);
 		}
 	}
@@ -63,12 +65,12 @@ public class OrderServiceImpl implements OrderService {
 	public OrderDetail cancelOrder(String orderId) {
 		Order cancelOrder = cancelOrderService.cancelOrder(orderId);
 
-		KafkaEvents.raise(orderCancelTopic,
-				new OrderCanceledEvent(cancelOrder.getId().getId(),
-						cancelOrder.getCustomerId(),
-						cancelOrder.getOrderCoupon().getCouponId(),
-						cancelOrder.getOrderProducts().stream().map(OrderProductDto::of).toList()));
-
+		OrderCanceledEvent event = new OrderCanceledEvent(
+				cancelOrder.getId().getId(),
+				cancelOrder.getCustomerId(),
+				cancelOrder.getOrderCoupon().getCouponId(),
+				cancelOrder.getOrderProducts().stream().map(OrderProductDto::of).toList());
+		producerTemplate.produce(orderCancelTopic, event);
 		return new OrderDetail(cancelOrder);
 	}
 }
