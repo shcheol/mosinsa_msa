@@ -3,34 +3,30 @@ package com.mosinsa.order.command.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.util.Objects;
-
 @Entity
 @Getter
-public class OrderCoupon {
+public class OrderCoupon extends IdBaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	private String couponId;
 
-    private String couponId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id")
+	private Order order;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
+	public static OrderCoupon of(String couponId, Order order){
+		OrderCoupon orderCoupon = new OrderCoupon();
+		orderCoupon.couponId = couponId;
+		orderCoupon.order = order;
+		return orderCoupon;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 
-        OrderCoupon that = (OrderCoupon) o;
-
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
 }

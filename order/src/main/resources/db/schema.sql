@@ -6,18 +6,24 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 create table order_product
 (
-    order_id   varchar(255) not null,
-    amounts    integer,
-    price      integer,
-    product_id varchar(255),
-    quantity   integer      not null
+    id                 bigint       not null auto_increment,
+    order_id           varchar(255),
+    amounts            integer,
+    price              integer,
+    product_id         varchar(255),
+    quantity           integer      not null,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
 ) engine = InnoDB;
 
 create table order_coupon
 (
-    id        bigint not null auto_increment,
-    coupon_id varchar(255),
-    order_id  varchar(255),
+    id                 bigint not null auto_increment,
+    coupon_id          varchar(255),
+    order_id           varchar(255),
+    created_date       datetime(6),
+    last_modified_date datetime(6),
     primary key (id)
 ) engine = InnoDB;
 

@@ -33,14 +33,12 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 				.limit(pageable.getPageSize()).fetch();
 
 		return PageableExecutionUtils
-				.getPage(fetch, pageable,
-						factory
-								.select(order.count())
-								.from(order)
-								.where(
-										customer(condition.customerId()),
-										status(condition.status())
-								).orderBy(order.createdDate.desc())::fetchOne);
+				.getPage(fetch, pageable, factory.select(order.count())
+						.from(order)
+						.where(
+								customer(condition.customerId()),
+								status(condition.status())
+						).orderBy(order.createdDate.desc())::fetchOne);
 	}
 
 	private BooleanExpression customer(String customerId) {

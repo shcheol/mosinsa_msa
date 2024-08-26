@@ -8,8 +8,8 @@ import com.mosinsa.order.infra.api.feignclient.coupon.CouponResponse;
 public class StubCouponAdapter implements CouponAdapter {
     @Override
     public ResponseResult<Void> useCoupon(String couponId) {
-        System.out.println("");
-        return null;
+        System.out.println("use");
+        return ResponseResult.execute(()-> System.out.println(couponId));
     }
 
     @Override

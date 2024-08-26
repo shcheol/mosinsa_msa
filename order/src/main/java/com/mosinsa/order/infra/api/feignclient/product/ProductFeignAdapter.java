@@ -1,6 +1,7 @@
 package com.mosinsa.order.infra.api.feignclient.product;
 
 import com.mosinsa.order.command.application.NotEnoughProductStockException;
+import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
 import com.mosinsa.order.infra.api.ProductAdapter;
 import com.mosinsa.order.infra.api.RequestHeaderExtractor;
@@ -59,9 +60,9 @@ public class ProductFeignAdapter implements ProductAdapter {
 
 
     @Override
-    public ResponseResult<Void> orderProducts(String orderId, CreateOrderRequest orderRequest) {
+    public ResponseResult<Void> orderProducts(String orderId, OrderConfirmDto orderConfirmDto) {
 
-        OrderProductRequests orderProductRequests = new OrderProductRequests(orderId, orderRequest.orderConfirm().orderProducts().stream()
+        OrderProductRequests orderProductRequests = new OrderProductRequests(orderId, orderConfirmDto.orderProducts().stream()
                 .map(op -> new OrderProductRequest(op.productId(), op.quantity())).toList());
         Map<String, Collection<String>> headers = RequestHeaderExtractor.extract();
         return ResponseResult.execute(() -> productClient.orderProducts(headers, orderProductRequests));

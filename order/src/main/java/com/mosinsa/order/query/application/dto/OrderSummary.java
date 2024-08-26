@@ -1,6 +1,7 @@
 package com.mosinsa.order.query.application.dto;
 
 import com.mosinsa.order.command.domain.Order;
+import com.mosinsa.order.command.domain.OrderCoupon;
 import com.mosinsa.order.command.domain.OrderStatus;
 import lombok.Value;
 

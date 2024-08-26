@@ -1,5 +1,6 @@
 package com.mosinsa.order.ui;
 
+import com.mosinsa.order.ControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,9 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = MyOrderController.class)
-@Import(OrderApplicationObjectFactory.class)
-class MyOrderControllerTest {
+class ViewOrderControllerTest extends ControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 
