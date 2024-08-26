@@ -47,8 +47,8 @@ class ProductFeignAdapterTest {
         when(client.getProduct(any(), any()))
                 .thenReturn(
                         new ProductResponse("productId", "", 1000, 1, 3000, ""));
-
-        assertThrows(NotEnoughProductStockException.class, () ->  adapter.confirm(getOrderConfirmRequest()));
+        OrderConfirmRequest orderConfirmRequest = getOrderConfirmRequest();
+        assertThrows(NotEnoughProductStockException.class, () ->  adapter.confirm(orderConfirmRequest));
     }
 
     @Test
