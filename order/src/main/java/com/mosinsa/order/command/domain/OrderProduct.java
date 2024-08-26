@@ -1,24 +1,19 @@
 package com.mosinsa.order.command.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
-@Embeddable
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderProduct {
-	private String productId;
+@Entity
+public class OrderProduct extends IdBaseEntity {
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id")
+	private Order order;
+	private String productId;
 	@Convert(converter = MoneyConverter.class)
 	@Column(name = "price")
 	private Money price;
-
 	private int quantity;
 
 	@Convert(converter = MoneyConverter.class)
@@ -32,10 +27,11 @@ public class OrderProduct {
 		orderProduct.price = Money.of(price);
 		orderProduct.setQuantity(quantity);
 		orderProduct.amounts = orderProduct.price.multiply(quantity);
-
 		return orderProduct;
 	}
-
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 	private void setQuantity(int quantity) {
 		if (quantity < 1) {
 			throw new IllegalArgumentException();
@@ -43,15 +39,18 @@ public class OrderProduct {
 		this.quantity = quantity;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof OrderProduct that)) return false;
-		return quantity == that.quantity && Objects.equals(productId, that.productId) && Objects.equals(price, that.price);
+	protected OrderProduct() {
+
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(productId, price, quantity, amounts);
+		return super.hashCode();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
 }

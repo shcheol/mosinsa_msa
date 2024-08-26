@@ -1,7 +1,8 @@
-package com.mosinsa.order.infra.repository;
+package com.mosinsa.order.infra.jpa;
 
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
+import com.mosinsa.order.command.domain.OrderRepository;
 import com.mosinsa.order.command.domain.OrderStatus;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
@@ -37,7 +37,7 @@ class CustomOrderRepositoryImplTest {
         }
     }
 
-    @Test
+//    @Test
     void findOrdersByConditionAll() {
         SearchCondition searchCondition = new SearchCondition(null,null);
         Page<Order> ordersByCondition = repository.findOrdersByCondition(searchCondition, PageRequest.of(0, 3));

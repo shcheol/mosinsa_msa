@@ -3,6 +3,7 @@ package com.mosinsa.order.query.application.dto;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import com.mosinsa.order.command.domain.Order;
+import com.mosinsa.order.command.domain.OrderCoupon;
 import com.mosinsa.order.command.domain.OrderStatus;
 import lombok.Value;
 
@@ -23,7 +24,7 @@ public class OrderDetail {
 	public OrderDetail(Order order) {
 		this.orderId = order.getId().getId();
 		this.customerId = order.getCustomerId();
-		this.couponId = order.getCouponId();
+		this.couponId = order.getOrderCoupon().getCouponId();
 		this.status = order.getStatus();
 		this.totalPrice = order.getTotalPrice().getValue();
 		this.shippingInfo = ShippingInfoDto.of(order.getShippingInfo());

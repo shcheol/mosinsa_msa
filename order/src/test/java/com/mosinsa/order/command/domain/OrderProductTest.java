@@ -1,25 +1,28 @@
 package com.mosinsa.order.command.domain;
 
+import com.mosinsa.order.InMemoryJpaTest;
 import com.mosinsa.order.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class OrderProductTest {
+class OrderProductTest extends InMemoryJpaTest {
+
+	@Autowired
+	OrderRepository repository;
 
     @Test
     void equalsAndHashCode() {
-        OrderProduct actual = OrderProduct.of("productId", 1000, 10);
-        OrderProduct expect = OrderProduct.of("productId", 1000, 10);
+		OrderProduct actual = repository.findById(OrderId.of("orderId1")).get().getOrderProducts().get(0);
+        OrderProduct expect =  repository.findById(OrderId.of("orderId1")).get().getOrderProducts().get(0);
 
 		OrderProduct protectedConstructor = new OrderProduct();
 
-		OrderProduct a = OrderProduct.of("productIdxxxxxx", 1000, 10);
-        OrderProduct b = OrderProduct.of("productId", 1012300, 10);
-        OrderProduct c = OrderProduct.of("productId", 1000, 10123);
+		OrderProduct a = repository.findById(OrderId.of("orderId2")).get().getOrderProducts().get(0);
 
-		boolean b1 = EqualsAndHashcodeUtils.equalsAndHashcode(actual, expect, protectedConstructor, a, b, c);
+		boolean b1 = EqualsAndHashcodeUtils.equalsAndHashcode(actual, expect, protectedConstructor, a);
 		assertThat(b1).isTrue();
 	}
 

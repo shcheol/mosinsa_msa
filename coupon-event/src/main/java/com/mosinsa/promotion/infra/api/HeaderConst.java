@@ -6,7 +6,7 @@ public enum HeaderConst {
     REFRESH_TOKEN("Refresh-Token"),
     CUSTOMER_INFO("Customer-Info")
     ;
-    private String key;
+    private final String key;
 
     HeaderConst(String key){
         this.key = key;

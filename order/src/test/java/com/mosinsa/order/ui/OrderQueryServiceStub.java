@@ -1,9 +1,12 @@
 package com.mosinsa.order.ui;
 
+import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.*;
+import com.mosinsa.order.common.argumentresolver.CustomerInfo;
 import com.mosinsa.order.query.application.OrderQueryService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
+import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,11 +20,15 @@ public class OrderQueryServiceStub implements OrderQueryService {
 		Address address = Address.of("zipCode", "address1", "address2");
 		Receiver receiver = Receiver.of("myname", "010-xxx-xxxx");
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
-		return new PageImpl<>(
-				List.of(new OrderSummary(Order.create(OrderId.newId(), "customer", "", List.of(OrderProduct.of("b", 100, 2)),
-								shippingInfo, 10000)),
-						new OrderSummary(Order.create(OrderId.newId(), "customer", "", List.of(OrderProduct.of("b", 100, 2)),
-								shippingInfo, 10000)))
+
+		Order order = Order.create(OrderId.newId(), "customer", List.of(OrderProduct.of("b", 100, 2)),
+				shippingInfo, 10000);
+		order.useCoupon("coupon");
+		Order order1 = Order.create(OrderId.newId(), "customer", List.of(OrderProduct.of("b", 100, 2)),
+				shippingInfo, 10000);
+		order1.useCoupon("coupon1");
+
+		return new PageImpl<>(List.of(new OrderSummary(order), new OrderSummary(order1))
 
 		);
 	}
@@ -29,10 +36,13 @@ public class OrderQueryServiceStub implements OrderQueryService {
 	@Override
 	public OrderDetail getOrderDetails(String orderId) {
 		ShippingInfo of = ShippingInfo.of(Address.of("", "", ""), Receiver.of("", ""), "");
-		return new OrderDetail(
-				Order.create(
-						OrderId.of(orderId),
-						"customer", "", List.of(OrderProduct.of("b", 100, 2)),
-						of, 10000));
+		Order order = Order.create(OrderId.of(orderId), "customer", List.of(OrderProduct.of("b", 100, 2)), of, 10000);
+		order.useCoupon("q");
+		return new OrderDetail(order);
+	}
+
+	@Override
+	public OrderConfirmDto orderConfirm(CustomerInfo customerInfo, OrderConfirmRequest orderConfirmRequest) {
+		return null;
 	}
 }
