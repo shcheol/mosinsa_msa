@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.function.Supplier;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +33,19 @@ class ResponseResultTest {
         assertThat(execute.get()).isEqualTo("test");
         assertThat(execute.getMessage()).isEmpty();
     }
+
+	@Test
+	void constructor(){
+		ResponseResult<Object> fail1 = new ResponseResult<>(199, "test", "");
+		ResponseResult<Object> success1 = new ResponseResult<>(200, "test", "");
+		ResponseResult<Object> success2 = new ResponseResult<>(299, "test", "");
+		ResponseResult<Object> fail2 = new ResponseResult<>(300, "test", "");
+
+		assertThrows(ExternalServerException.class, fail1::orElseThrow);
+		assertThat(success1.orElseThrow()).isEqualTo("test");
+		assertThat(success2.orElseThrow()).isEqualTo("test");
+		assertThrows(ExternalServerException.class, fail2::orElseThrow);
+	}
 
     @Test
     void executeFeignException(){
@@ -58,6 +73,35 @@ class ResponseResultTest {
 
         assertThat(executeFail.getMessage()).isEqualTo("error message");
     }
+
+	@Test
+	void executeRunnableFeignException(){
+		FeignException feignException = FeignException
+				.errorStatus("", Response.builder()
+						.request(Request.create(Request.HttpMethod.GET, "", Map.of(), null, Charset.defaultCharset(), null))
+						.status(400).build());
+
+		Runnable runnable = () -> {
+			throw feignException;
+		};
+		ResponseResult<Object> executeFail = ResponseResult.execute(runnable);
+		assertThat(executeFail.getStatus()).isEqualTo(feignException.status());
+		assertThat(executeFail.getMessage()).isEqualTo(feignException.getLocalizedMessage());
+		assertThat(executeFail.get()).isNull();
+	}
+
+	@Test
+	void executeRunnableFail(){
+		Runnable runnable = () -> {
+			throw new RuntimeException("error message");
+		};
+		ResponseResult<Object> executeFail = ResponseResult.execute(runnable);
+
+		assertThat(executeFail.get()).isNull();
+		assertThat(executeFail.getStatus()).isEqualTo(500);
+
+		assertThat(executeFail.getMessage()).isEqualTo("error message");
+	}
 
     @Test
     void orElse(){

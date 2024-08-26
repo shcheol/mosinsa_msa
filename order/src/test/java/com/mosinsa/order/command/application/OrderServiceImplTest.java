@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.AlreadyShippedException;
 import com.mosinsa.order.command.domain.OrderStatus;
+import com.mosinsa.order.common.ex.OrderRollbackException;
 import com.mosinsa.order.infra.stub.ExternalApiObjectFactory;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,7 @@ class OrderServiceImplTest {
 	ObjectMapper om;
 	OrderConfirmDto orderWithCoupon;
 	OrderConfirmDto orderWithoutCoupon;
-
+	OrderConfirmDto orderWithoutCustomer;
 	@Autowired
 	OrderService orderService;
 
@@ -40,10 +41,6 @@ class OrderServiceImplTest {
 
 	@Test
 	void orderWithoutCoupon() {
-//
-//		when(productAdaptor.orderProducts(any(),any()))
-//				.thenReturn(ResponseResult.execute(() -> {
-//				}));
 
 		OrderDetail order = orderService.order(orderWithoutCoupon);
 		assertThat(order.getOrderProducts()).hasSize(1);
@@ -51,6 +48,12 @@ class OrderServiceImplTest {
 		assertThat(order.getCouponId()).isEmpty();
 		assertThat(order.getTotalPrice()).isEqualTo(6000);
 	}
+
+	@Test
+	void orderWithoutCouponEx() {
+		assertThrows(OrderRollbackException.class, () -> orderService.order(orderWithoutCustomer));
+	}
+
 
 	@Test
 	void cancelOrder() {
@@ -129,5 +132,33 @@ class OrderServiceImplTest {
 				 
 				""";
 		orderWithoutCoupon = om.readValue(noCoupon, OrderConfirmDto.class);
+		String noCustomer = """
+								
+				{
+				         "orderProducts": [
+				             {
+				                 "productId": "productId",
+				                 "price": 3000,
+				                 "quantity": 2,
+				                 "amounts": 6000
+				             }
+				         ],
+				         "shippingInfo": {
+				             "message": "home",
+				             "address": {
+				                 "zipCode": "zipcode",
+				                 "address1": "address1",
+				                 "address2": "address2"
+				             },
+				             "receiver": {
+				                 "name": "myname",
+				                 "phoneNumber": "010-1111-1111"
+				             }
+				         },
+				         "totalAmount": 6000
+				     }
+				 
+				""";
+		orderWithoutCustomer = om.readValue(noCustomer, OrderConfirmDto.class);
 	}
 }
