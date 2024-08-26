@@ -1,4 +1,4 @@
-package com.mosinsa.order.infra.jpa;
+package com.mosinsa.order.command.domain;
 
 import com.mosinsa.order.InMemoryJpaTest;
 import com.mosinsa.order.code.TestClass;
@@ -46,9 +46,11 @@ class OrderRepositoryTest extends InMemoryJpaTest {
 		assertThat(findOrder).isEqualTo(saveOrder);
 		assertThat(findOrder.getOrderCoupon().getCouponId()).isEmpty();
 		assertThat(findOrder.getOrderProducts()).hasSize(1);
+		assertThat(findOrder.getOrderProducts().get(0).getId()).isNotNull();
 		assertThat(findOrder.getOrderProducts().get(0).getPrice().getValue()).isEqualTo(1000);
 		assertThat(findOrder.getOrderProducts().get(0).getProductId()).isEqualTo("productId");
 		assertThat(findOrder.getOrderProducts().get(0).getQuantity()).isEqualTo(10);
+		assertThat(findOrder.getOrderProducts().get(0).getOrder()).isEqualTo(findOrder);
 		assertThat(findOrder.getCustomerId()).isEqualTo("customerId");
 		assertThat(findOrder.getCreatedDate()).isNotNull();
 		assertThat(findOrder.getLastModifiedDate()).isNotNull();

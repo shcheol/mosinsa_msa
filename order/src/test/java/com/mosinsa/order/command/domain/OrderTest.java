@@ -18,13 +18,13 @@ class OrderTest {
 	@Autowired
 	OrderRepository repository;
 	private final Receiver receiver = Receiver.of("", "");
-	private final Address address = Address.of("", "","");
+	private final Address address = Address.of("", "", "");
 
 	@Test
 	void equalsAndHashCode() {
 		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
-		Order order1 = Order.create(OrderId.newId(),"cId",  orderProducts, shippingInfo, 10000);
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
+		Order order1 = Order.create(OrderId.newId(), "cId", orderProducts, shippingInfo, 10000);
 
 		Order protectedConstructor = new Order();
 		assertThat(protectedConstructor).isNotEqualTo(order1);
@@ -33,27 +33,30 @@ class OrderTest {
 	@Test
 	void create_상품_empty() {
 		List<OrderProduct> orderProducts = List.of();
-		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
+		OrderId orderId = OrderId.newId();
 		assertThrows(OrderException.class,
-				() -> Order.create(OrderId.newId(),"customerId", orderProducts,
+				() -> Order.create(orderId, "customerId", orderProducts,
 						shippingInfo, 10000));
 	}
 
 	@Test
 	void create_상품_null() {
 		List<OrderProduct> orderProducts = null;
-		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
+		OrderId orderId = OrderId.newId();
 		assertThrows(OrderException.class,
-				() -> Order.create(OrderId.newId(),"customerId", orderProducts,
+				() -> Order.create(orderId, "customerId", orderProducts,
 						shippingInfo, 10000));
 	}
 
 	@Test
 	void create_주문자x() {
 		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
+		OrderId orderId = OrderId.newId();
 		assertThrows(OrderException.class,
-				() -> Order.create(OrderId.newId(),"", orderProducts,
+				() -> Order.create(orderId, "", orderProducts,
 						shippingInfo, 10000));
 	}
 
@@ -61,8 +64,8 @@ class OrderTest {
 	@Test
 	void cancelOrder() {
 		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
-		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver,"");
-		Order order = Order.create(OrderId.newId(),"cId", orderProducts, shippingInfo, 10000);
+		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
+		Order order = Order.create(OrderId.newId(), "cId", orderProducts, shippingInfo, 10000);
 		order.cancelOrder();
 		assertThrows(AlreadyCanceledException.class, order::cancelOrder);
 
