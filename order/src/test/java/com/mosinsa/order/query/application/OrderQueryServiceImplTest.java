@@ -2,6 +2,7 @@ package com.mosinsa.order.query.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.order.ApplicationTest;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.common.argumentresolver.CustomerInfo;
 import com.mosinsa.order.common.ex.OrderException;
@@ -26,10 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest
-@Sql("classpath:db/test-init.sql")
-@Import(ExternalApiObjectFactory.class)
-class OrderQueryServiceImplTest {
+class OrderQueryServiceImplTest extends ApplicationTest {
 
 	@Autowired
 	OrderQueryServiceImpl orderQueryService;

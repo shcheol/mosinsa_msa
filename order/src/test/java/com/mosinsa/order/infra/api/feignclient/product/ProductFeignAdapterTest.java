@@ -2,6 +2,7 @@ package com.mosinsa.order.infra.api.feignclient.product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.order.ApplicationTest;
 import com.mosinsa.order.command.application.NotEnoughProductStockException;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
@@ -22,19 +23,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
-class ProductFeignAdapterTest {
+class ProductFeignAdapterTest extends ApplicationTest {
 
-    @MockBean
-    ProductClient client;
 
     @Autowired
     ProductFeignAdapter adapter;
 
     @Test
     void confirm() throws JsonProcessingException {
-        when(client.getProduct(any(), any()))
+        when(productClient.getProduct(any(), any()))
                 .thenReturn(
                         new ProductResponse("productId", "", 1000, 3, 3000, ""));
 
@@ -44,7 +41,7 @@ class ProductFeignAdapterTest {
 
     @Test
     void confirmEx() throws JsonProcessingException {
-        when(client.getProduct(any(), any()))
+        when(productClient.getProduct(any(), any()))
                 .thenReturn(
                         new ProductResponse("productId", "", 1000, 1, 3000, ""));
         OrderConfirmRequest orderConfirmRequest = getOrderConfirmRequest();
@@ -53,7 +50,7 @@ class ProductFeignAdapterTest {
 
     @Test
     void orderProducts() throws JsonProcessingException {
-        doNothing().when(client).orderProducts(any(), any());
+        doNothing().when(productClient).orderProducts(any(), any());
 
         ResponseResult<Void> response = adapter.orderProducts("", getOrderConfirm());
         Assertions.assertThat(response.getStatus()).isEqualTo(200);
