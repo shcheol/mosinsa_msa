@@ -1,5 +1,6 @@
 package com.mosinsa.order.command.domain;
 
+import com.mosinsa.order.InMemoryJpaTest;
 import com.mosinsa.order.common.ex.OrderException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Sql("classpath:db/test-init.sql")
-class OrderTest {
+class OrderTest extends InMemoryJpaTest {
 
 	@Autowired
 	OrderRepository repository;
@@ -70,32 +69,4 @@ class OrderTest {
 		assertThrows(AlreadyCanceledException.class, order::cancelOrder);
 
 	}
-
-//    @Test
-//    void 쿠폰사용() {
-//        List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-//        Order order = Order.create("customerId", "couponId", orderProducts,
-//				ShippingInfo.of(shippingInfoDto), 10000);
-////        order.useCoupon("couponId", "TEN_PERCENTAGE");
-//        assertThat(order.getTotalPrice()).isEqualTo(Money.of(900));
-//    }
-//    @Test
-//    void 쿠폰사용_noId() {
-//        List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-//        Order order = Order.create("customerId", orderProducts,
-//                ShippingInfo.of(shippingInfoDto));
-//
-//        assertThrows(InvalidCouponException.class,
-//                () -> order.useCoupon("", "TEN_PERCENTAGE"));
-//    }
-//
-//    @Test
-//    void 쿠폰사용_invalid_discountPolicy() {
-//        List<OrderProduct> orderProducts = List.of(OrderProduct.create("id", 1000, 1));
-//        Order order = Order.create("customerId", orderProducts,
-//                ShippingInfo.of(shippingInfoDto));
-//
-//        assertThrows(IllegalArgumentException.class,
-//                () -> order.useCoupon("asdf", "TEN_PERCENTAGExxxxx"));
-//    }
 }

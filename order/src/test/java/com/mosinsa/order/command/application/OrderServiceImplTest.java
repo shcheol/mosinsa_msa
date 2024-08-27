@@ -6,22 +6,17 @@ import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.AlreadyShippedException;
 import com.mosinsa.order.command.domain.OrderStatus;
 import com.mosinsa.order.common.ex.OrderRollbackException;
-import com.mosinsa.order.infra.stub.ExternalApiObjectFactory;
+import com.mosinsa.order.ApplicationTest;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Sql("classpath:db/test-init.sql")
-@Import(ExternalApiObjectFactory.class)
-class OrderServiceImplTest {
+
+class OrderServiceImplTest extends ApplicationTest {
 	ObjectMapper om;
 	OrderConfirmDto orderWithCoupon;
 	OrderConfirmDto orderWithoutCoupon;

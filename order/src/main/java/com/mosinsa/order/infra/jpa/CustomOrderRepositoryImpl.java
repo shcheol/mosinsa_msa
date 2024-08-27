@@ -38,7 +38,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
 						.where(
 								customer(condition.customerId()),
 								status(condition.status())
-						).orderBy(order.createdDate.desc())::fetchOne);
+						)::fetchOne);
 	}
 
 	private BooleanExpression customer(String customerId) {
