@@ -1,7 +1,8 @@
-package com.mosinsa.product.infra.repository;
+package com.mosinsa.product.infra.jpa;
 
 import com.mosinsa.code.TestClass;
 import com.mosinsa.product.command.domain.StockHistory;
+import com.mosinsa.product.command.domain.StockHistoryRepository;
 import com.mosinsa.product.command.domain.StockHistoryType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class StockHistoryRepositoryTest {

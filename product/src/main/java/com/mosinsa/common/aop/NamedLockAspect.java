@@ -1,6 +1,6 @@
 package com.mosinsa.common.aop;
 
-import com.mosinsa.product.infra.repository.ProductRepository;
+import com.mosinsa.product.command.domain.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

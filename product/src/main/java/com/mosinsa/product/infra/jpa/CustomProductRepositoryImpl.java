@@ -1,4 +1,4 @@
-package com.mosinsa.product.infra.repository;
+package com.mosinsa.product.infra.jpa;
 
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
