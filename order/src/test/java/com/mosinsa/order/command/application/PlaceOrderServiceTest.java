@@ -2,18 +2,17 @@ package com.mosinsa.order.command.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.order.ApplicationTest;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class PlaceOrderServiceTest {
+class PlaceOrderServiceTest extends ApplicationTest {
 	ObjectMapper om;
 	OrderConfirmDto orderWithCoupon;
 	OrderConfirmDto orderWithoutCoupon;
