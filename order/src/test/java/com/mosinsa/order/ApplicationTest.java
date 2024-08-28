@@ -1,6 +1,7 @@
 package com.mosinsa.order;
 
 import com.mosinsa.order.infra.api.feignclient.coupon.CouponClient;
+import com.mosinsa.order.infra.api.feignclient.product.ProductClient;
 import com.mosinsa.order.infra.stub.ExternalApiObjectFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +20,10 @@ public abstract class ApplicationTest {
 
 
 	@MockBean
-	CouponClient client;
+	public CouponClient couponClient;
+
+
+	@MockBean
+	public ProductClient productClient;
 
 }
