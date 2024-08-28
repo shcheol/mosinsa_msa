@@ -1,16 +1,13 @@
 package com.mosinsa.product.command.domain;
 
 import com.mosinsa.code.TestClass;
-import com.mosinsa.product.infra.repository.StockHistoryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class StockHistoryTest {

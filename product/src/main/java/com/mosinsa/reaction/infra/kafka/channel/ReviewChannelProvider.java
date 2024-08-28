@@ -4,7 +4,7 @@ import com.mosinsa.common.ex.ReviewError;
 import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.mosinsa.review.command.domain.ReviewId;
-import com.mosinsa.review.infra.jpa.ReviewRepository;
+import com.mosinsa.review.command.domain.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -3,7 +3,7 @@ package com.mosinsa.reaction.infra.kafka.channel;
 import com.mosinsa.common.ex.ReviewError;
 import com.mosinsa.common.ex.ReviewException;
 import com.mosinsa.reaction.command.domain.TargetEntity;
-import com.mosinsa.review.infra.jpa.CommentRepository;
+import com.mosinsa.review.command.domain.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -4,13 +4,12 @@ import com.mosinsa.common.exception.CouponError;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.promotion.command.application.dto.ParticipateDto;
 import com.mosinsa.promotion.command.domain.*;
-import com.mosinsa.promotion.infra.jpa.QuestRepository;
+import com.mosinsa.promotion.command.domain.QuestRepository;
 import com.mosinsa.promotion.infra.kafka.ParticipatedEvent;
 import com.mosinsa.promotion.infra.kafka.ProduceTemplate;
 import com.mosinsa.promotion.query.MemberParticipatedChecker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

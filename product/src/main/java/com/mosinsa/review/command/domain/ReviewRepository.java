@@ -1,18 +1,21 @@
-package com.mosinsa.review.infra.jpa;
+package com.mosinsa.review.command.domain;
 
-import com.mosinsa.review.command.domain.Review;
-import com.mosinsa.review.command.domain.ReviewId;
 import com.mosinsa.review.query.application.dto.ReviewSummaryDto;
 import com.querydsl.core.Tuple;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ReviewRepository extends JpaRepository<Review, ReviewId> {
+public interface ReviewRepository extends Repository<Review, ReviewId> {
+
+	Review save(Review review);
+
+	Optional<Review> findById(ReviewId reviewId);
 
 	@Query(value = "select new com.mosinsa.review.query.application.dto.ReviewSummaryDto(r) " +
 			" from Review r where r.productId = :productId and r.deleted = false order by r.createdDate desc")

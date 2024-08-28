@@ -1,15 +1,17 @@
-package com.mosinsa.reaction.infra.jpa;
+package com.mosinsa.reaction.command.domain;
 
-import com.mosinsa.reaction.command.domain.Reaction;
-import com.mosinsa.reaction.command.domain.ReactionId;
 import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface ReactionRepository extends JpaRepository<Reaction, ReactionId> {
+public interface ReactionRepository extends Repository<Reaction, ReactionId> {
+
+	Reaction save(Reaction reaction);
+
+	Optional<Reaction> findById(ReactionId reactionId);
 
 	@Query(value = "select r from Reaction r " +
 			"where r.targetType = :#{#condition.target()} " +

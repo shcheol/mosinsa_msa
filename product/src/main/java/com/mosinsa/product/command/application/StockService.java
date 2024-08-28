@@ -4,7 +4,7 @@ import com.mosinsa.product.command.domain.StockHistory;
 import com.mosinsa.product.command.domain.StockHistoryType;
 import com.mosinsa.product.infra.redis.StockOperand;
 import com.mosinsa.product.infra.redis.StockOperation;
-import com.mosinsa.product.infra.repository.StockHistoryRepository;
+import com.mosinsa.product.command.domain.StockHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

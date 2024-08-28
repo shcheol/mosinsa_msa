@@ -1,6 +1,7 @@
 package com.mosinsa.reaction.infra.jpa;
 
 import com.mosinsa.reaction.command.domain.Reaction;
+import com.mosinsa.reaction.command.domain.ReactionRepository;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ReactionRepositoryTest {
 
-	@Autowired ReactionRepository repository;
+	@Autowired
+	ReactionRepository repository;
 
 	@Test
 	void auditingEntity(){

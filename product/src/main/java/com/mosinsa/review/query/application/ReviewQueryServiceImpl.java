@@ -1,7 +1,7 @@
 package com.mosinsa.review.query.application;
 
-import com.mosinsa.review.infra.jpa.CommentRepository;
-import com.mosinsa.review.infra.jpa.ReviewRepository;
+import com.mosinsa.review.command.domain.CommentRepository;
+import com.mosinsa.review.command.domain.ReviewRepository;
 import com.mosinsa.review.query.application.dto.CommentSummaryDto;
 import com.mosinsa.review.query.application.dto.ReviewSummaryDto;
 import com.mosinsa.review.ui.reqeust.ReviewSummaryRequest;

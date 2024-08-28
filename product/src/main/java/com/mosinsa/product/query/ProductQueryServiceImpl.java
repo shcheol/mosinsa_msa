@@ -5,7 +5,7 @@ import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.application.StockService;
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.command.domain.ProductId;
-import com.mosinsa.product.infra.repository.ProductRepository;
+import com.mosinsa.product.command.domain.ProductRepository;
 import com.mosinsa.product.ui.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
