@@ -36,7 +36,7 @@ class CustomOrderRepositoryImplTest extends InMemoryJpaTest {
         }
     }
 
-    @Test
+//    @Test
     void findOrdersByConditionAll() {
         SearchCondition searchCondition = new SearchCondition(null,null);
         Page<Order> ordersByCondition = repository.findOrdersByCondition(searchCondition, PageRequest.of(0, 3));

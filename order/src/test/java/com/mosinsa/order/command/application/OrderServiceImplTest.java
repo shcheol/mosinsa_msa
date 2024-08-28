@@ -2,11 +2,11 @@ package com.mosinsa.order.command.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mosinsa.order.ApplicationTest;
 import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.AlreadyShippedException;
 import com.mosinsa.order.command.domain.OrderStatus;
 import com.mosinsa.order.common.ex.OrderRollbackException;
-import com.mosinsa.order.ApplicationTest;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 class OrderServiceImplTest extends ApplicationTest {
 	ObjectMapper om;
