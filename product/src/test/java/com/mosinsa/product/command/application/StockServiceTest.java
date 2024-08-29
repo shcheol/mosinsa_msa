@@ -2,7 +2,7 @@ package com.mosinsa.product.command.application;
 
 import com.mosinsa.product.command.domain.StockHistory;
 import com.mosinsa.product.infra.redis.StockOperand;
-import com.mosinsa.product.infra.repository.StockHistoryRepository;
+import com.mosinsa.product.command.domain.StockHistoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

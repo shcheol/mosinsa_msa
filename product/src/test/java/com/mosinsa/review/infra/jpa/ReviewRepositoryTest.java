@@ -3,6 +3,7 @@ package com.mosinsa.review.infra.jpa;
 import com.mosinsa.review.command.domain.Comment;
 import com.mosinsa.review.command.domain.Review;
 import com.mosinsa.review.command.domain.ReviewId;
+import com.mosinsa.review.command.domain.ReviewRepository;
 import com.querydsl.core.Tuple;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Test;

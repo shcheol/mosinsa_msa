@@ -1,9 +1,10 @@
-package com.mosinsa.product.infra.repository;
+package com.mosinsa.product.infra.jpa;
 
 import com.mosinsa.category.CategoryRepository;
 import com.mosinsa.category.Category;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.ProductId;
+import com.mosinsa.product.command.domain.ProductRepository;
 import com.mosinsa.product.command.domain.Stock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

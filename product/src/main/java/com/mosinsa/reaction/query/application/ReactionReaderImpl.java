@@ -2,8 +2,8 @@ package com.mosinsa.reaction.query.application;
 
 import com.mosinsa.reaction.command.domain.Reaction;
 import com.mosinsa.reaction.command.domain.ReactionInfo;
-import com.mosinsa.reaction.infra.jpa.ReactionInfoRepository;
-import com.mosinsa.reaction.infra.jpa.ReactionRepository;
+import com.mosinsa.reaction.command.domain.ReactionInfoRepository;
+import com.mosinsa.reaction.command.domain.ReactionRepository;
 import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

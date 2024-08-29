@@ -1,5 +1,6 @@
 package com.mosinsa.order.infra.jpa;
 
+import com.mosinsa.order.InMemoryJpaTest;
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.command.domain.OrderRepository;
@@ -16,9 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Sql("classpath:db/test-init.sql")
-class CustomOrderRepositoryImplTest {
+class CustomOrderRepositoryImplTest extends InMemoryJpaTest {
 
     @Autowired
     OrderRepository repository;

@@ -4,7 +4,6 @@ import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.common.exception.CouponException;
 import com.mosinsa.coupon.command.domain.DiscountPolicy;
-import com.mosinsa.promotion.infra.jpa.QuestRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

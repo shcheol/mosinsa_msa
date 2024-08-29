@@ -2,7 +2,6 @@ package com.mosinsa.promotion.command.domain;
 
 import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
-import com.mosinsa.promotion.infra.jpa.QuestRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

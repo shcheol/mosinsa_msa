@@ -1,4 +1,4 @@
-package com.mosinsa.product.infra.repository;
+package com.mosinsa.product.infra.jpa;
 
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.ui.request.SearchCondition;

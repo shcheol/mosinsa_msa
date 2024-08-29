@@ -2,7 +2,7 @@ package com.mosinsa.reaction.command.application;
 
 import com.mosinsa.common.aop.RedissonLock;
 import com.mosinsa.reaction.command.domain.ReactionInfo;
-import com.mosinsa.reaction.infra.jpa.ReactionInfoRepository;
+import com.mosinsa.reaction.command.domain.ReactionInfoRepository;
 import com.mosinsa.reaction.infra.kafka.ProduceTemplate;
 import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;

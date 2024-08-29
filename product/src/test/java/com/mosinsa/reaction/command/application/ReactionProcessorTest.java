@@ -4,7 +4,7 @@ import com.mosinsa.reaction.command.domain.Reaction;
 import com.mosinsa.reaction.command.domain.ReactionId;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
-import com.mosinsa.reaction.infra.jpa.ReactionRepository;
+import com.mosinsa.reaction.command.domain.ReactionRepository;
 import com.mosinsa.reaction.query.application.ReactionReaderImpl;
 import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import org.junit.jupiter.api.Test;
