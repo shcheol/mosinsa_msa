@@ -17,6 +17,6 @@ public interface PromotionRepository extends Repository<Promotion, PromotionId> 
 
 	Promotion save(Promotion promotion);
 
-	@Query(value = "select p from Promotion p join fetch PromotionCondition pc where p.id = :id")
+	@Query(value = "select p from Promotion p join fetch p.promotionCondition join fetch p.promotionCondition.promotionConditionOptions where p.id = :id")
 	Optional<Promotion> findDetailsById(@Param("id") PromotionId id);
 }
