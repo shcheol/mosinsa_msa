@@ -2,7 +2,7 @@
   <div class="vl-parent" ref="loadingRef">
     <h3>상품 리뷰 ({{ reviewsNumberOfElements }})</h3>
 
-    <div class="comment-list" >
+    <div class="comment-list">
       <ul>
         <li v-for="(review) in reviews" :key="review">
           <div>
@@ -60,19 +60,12 @@ import apiBoard from "@/api/board";
 import dayjs from "dayjs";
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-import {ref} from 'vue'
 
 
 export default {
   name: "Reviews",
   props: {
     propsValue: String
-  },
-  setup() {
-    const loadingRef = ref(null)
-    return {
-      loadingRef,
-    }
   },
   data() {
     return {
@@ -90,7 +83,7 @@ export default {
   watch: {
     propsValue() {
       this.productId = this.propsValue;
-      this.getReview(this.productId);
+      //this.getReview(this.productId);
     }
   },
   mounted() {
@@ -99,13 +92,11 @@ export default {
       console.log(event);
       this.disconnect()
     });
-    console.log("mounted " + this.loadingRef);
-
-    this.showLoadingOverlay();
+    // this.showLoadingOverlay();
 
   },
   beforeUnmount() {
-    this.disconnect();
+    // this.disconnect();
   },
   methods: {
     showLoadingOverlay() {
@@ -135,25 +126,16 @@ export default {
           {},
           frame => {
             console.log('connect success', frame);
-            try {
-
-              let connectInterval = setInterval(function () {
-                console.log("timeout")
-                if (this.stompClient.connected) {
-                  this.stompClient.subscribe(`/topic/${this.productId}`, response => {
-                    console.log('subscribe message: ', response.body);
-                    const message = JSON.parse(response.body);
-                    console.log(message)
-                    this.processSubscribedMessage(message);
-                  });
-                  clearInterval(connectInterval);
-                }
-              }.bind(this), 1000);
-            } catch (e) {
-              console.log(e);
-            } finally {
-              this.commentLoader.hide();
-            }
+            // try {
+              this.stompClient.subscribe(`/topic/${this.productId}`, response => {
+                console.log('subscribe message: ', response.body);
+                const message = JSON.parse(response.body);
+                console.log(message)
+                this.processSubscribedMessage(message);
+              });
+            // } finally {
+            //   this.commentLoader.hide();
+            // }
           },
           error => {
             console.log('socket connect fail', error);

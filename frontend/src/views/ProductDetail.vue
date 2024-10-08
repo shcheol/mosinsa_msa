@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <div class="black-bg" v-if="modalState">
+    <div class="black-bg" v-if="modalState" @click="closeModal()">
       <div class="white-bg">
         <h4>수량</h4>
         <input type="number" class="form-control" id="quantity" name="quantity" v-model="quantity"/>
@@ -71,18 +71,24 @@ export default {
   },
   mounted() {
     this.productId = this.$route.params.id;
-    apiBoard.getProductDetails(this.productId)
-        .then((response) => {
-          console.log(response);
-          this.product = response.data;
-        });
-    this.totalReaction(this.productId);
+    //this.getProductDetails(this.productId);
+    //this.totalReaction(this.productId);
 
   },
   methods: {
-
-    orders(productId, price, quantity) {
+    closeModal(){
       this.modalState = false;
+    }
+    ,
+    getProductDetails(productId) {
+      apiBoard.getProductDetails(productId)
+          .then((response) => {
+            console.log(response);
+            this.product = response.data;
+          });
+    },
+    orders(productId, price, quantity) {
+      this.closeModal();
 
       this.$router.push({
         name: 'orderConfirm',
@@ -123,18 +129,27 @@ export default {
 
 <style>
 .black-bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: relative;
-  padding: 20px;
+  /*display: none; !* Hidden by default *!*/
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .white-bg {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%; /* Could be more or less, depending on screen size */
 }
 
 ul li {

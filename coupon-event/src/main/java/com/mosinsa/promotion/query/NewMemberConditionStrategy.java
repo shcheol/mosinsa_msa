@@ -2,6 +2,7 @@ package com.mosinsa.promotion.query;
 
 import com.mosinsa.promotion.command.domain.ConditionOption;
 import com.mosinsa.promotion.command.domain.PromotionConditions;
+import com.mosinsa.promotion.infra.api.ExternalServerException;
 import com.mosinsa.promotion.infra.api.OrderAdapter;
 import com.mosinsa.promotion.infra.api.feignclient.order.OrderSummary;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,7 @@ public class NewMemberConditionStrategy implements ConditionStrategy {
 	@Override
 	public ConditionOption getConditionOption(String memberId) {
 
-		List<OrderSummary> orderSummaries = orderAdapter.getMyOrders(memberId).orElse(List.of());
-		if (orderSummaries.isEmpty()) {
+		if (orderAdapter.getMyOrders(memberId).orElseThrow().isEmpty()) {
 			return ConditionOption.NEW_MEMBER;
 		}
 		return ConditionOption.OLD_MEMBER;
