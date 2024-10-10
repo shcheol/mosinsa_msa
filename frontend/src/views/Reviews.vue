@@ -83,7 +83,7 @@ export default {
   watch: {
     propsValue() {
       this.productId = this.propsValue;
-      //this.getReview(this.productId);
+      this.getReview(this.productId);
     }
   },
   mounted() {
@@ -93,10 +93,9 @@ export default {
       this.disconnect()
     });
     // this.showLoadingOverlay();
-
   },
   beforeUnmount() {
-    // this.disconnect();
+    this.disconnect();
   },
   methods: {
     showLoadingOverlay() {
@@ -114,7 +113,6 @@ export default {
           clearInterval(loadingInterval);
         }
       }.bind(this), 1000);
-
     },
     connect() {
       const serverURL = "/websocket-service/register"
@@ -126,16 +124,12 @@ export default {
           {},
           frame => {
             console.log('connect success', frame);
-            // try {
               this.stompClient.subscribe(`/topic/${this.productId}`, response => {
                 console.log('subscribe message: ', response.body);
                 const message = JSON.parse(response.body);
                 console.log(message)
                 this.processSubscribedMessage(message);
               });
-            // } finally {
-            //   this.commentLoader.hide();
-            // }
           },
           error => {
             console.log('socket connect fail', error);

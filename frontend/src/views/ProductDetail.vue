@@ -71,9 +71,8 @@ export default {
   },
   mounted() {
     this.productId = this.$route.params.id;
-    //this.getProductDetails(this.productId);
-    //this.totalReaction(this.productId);
-
+    this.getProductDetails(this.productId);
+    this.totalReaction(this.productId);
   },
   methods: {
     closeModal(){
