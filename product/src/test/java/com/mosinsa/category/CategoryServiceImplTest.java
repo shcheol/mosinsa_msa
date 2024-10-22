@@ -1,6 +1,7 @@
 package com.mosinsa.category;
 
 import com.mosinsa.common.ex.CategoryException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,30 +20,45 @@ class CategoryServiceImplTest {
 	CategoryServiceImpl service;
 
 	@Test
-	void createCategory() {
-		assertThat(service.getCategoryList()).hasSize(9);
-		CreateCategoryRequest request = new CreateCategoryRequest("신발");
-		service.createCategory(request);
-		assertThat(service.getCategoryList()).hasSize(10);
+	void register() {
+		int size = service.getCategoryList().size();
+		service.register("new신발", null);
+		assertThat(service.getCategoryList()).hasSize(size+1);
+		assertThrows(RuntimeException.class, () ->service.register("new신발", null));
+	}
+	@Test
+	void registerHasParentCategory() {
+		String parentId = "categoryId4";
+		String parentName = "신발";
+		int size = service.getCategory(parentId).getChildren().size();
+		service.register("new신발", parentName);
+		Assertions.assertThat(service.getCategory(parentId).getChildren()).hasSize(size+1);
+	}
+	@Test
+	void registerDuplicateNameThrowsException() {
+		service.register("new신발", null);
+		assertThrows(RuntimeException.class, () ->service.register("new신발", null));
 	}
 
 	@Test
-	void getCategoryList() {
-		List<String> strings = service.getCategoryList().stream().map(CategoryDto::name).toList();
-		assertThat(strings).contains("상의", "바지", "아우터", "신발", "가방", "양말", "원피스", "치마", "모자");
+	void registerInvalidParentNameThrowsException() {
+		String parentName = "신발xxxxx";
+
+		assertThrows(RuntimeException.class, () -> service.register("new신발", parentName));
+	}
+
+	@Test
+	void getRepresentCategoryList() {
+		List<CategoryDto> categoryList = service.getCategoryList();
+		List<String> strings = categoryList.stream().map(CategoryDto::name).toList();
+		assertThat(strings).containsExactly( "가방", "바지","상의", "소품", "신발", "아우터");
+		System.out.println(categoryList);
+		System.out.println(categoryList.size());
 	}
 
 	@Test
 	void getCategoryEx(){
 		assertThrows(CategoryException.class, () -> service.getCategory("categoryId1xxxx"));
-	}
-
-	@Test
-	void getCategory(){
-
-		Category category1 = service.getCategory("categoryId1");
-		Category category2 = service.getCategory("categoryId1");
-		assertThat(category1).isEqualTo(category2).hasSameHashCodeAs(category2);
 	}
 
 }

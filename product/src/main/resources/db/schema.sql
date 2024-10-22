@@ -13,7 +13,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 create table category
 (
     category_id varchar(255) not null,
-    name        varchar(255),
+    name        varchar(255) unique not null,
+    parent_id   varchar(255),
     primary key (category_id)
 ) engine = InnoDB;
 

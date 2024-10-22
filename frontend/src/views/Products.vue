@@ -44,12 +44,11 @@ export default {
   watch: {
     category() {
       this.categoryId = this.category;
-      console.log(this.categoryId);
       this.getProducts(this.categoryId);
     }
   },
   mounted() {
-    this.getProducts();
+    this.getProducts(this.categoryId);
   },
   methods: {
     productDetails(i) {
@@ -61,7 +60,6 @@ export default {
     getProducts(categoryId) {
       apiBoard.getProducts(categoryId)
           .then((response) => {
-            console.log(response.data);
             this.products = response.data.content;
             this.pageArr = new Array(response.data.totalPages);
             this.first = response.data.first;

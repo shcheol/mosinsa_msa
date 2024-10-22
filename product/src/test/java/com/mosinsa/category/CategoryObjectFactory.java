@@ -14,8 +14,7 @@ public class CategoryObjectFactory {
 	public CategoryService categoryService(){
 		return new CategoryService() {
 			@Override
-			public CategoryDto createCategory(CreateCategoryRequest request) {
-				return null;
+			public void register(String name, String parentName) {
 			}
 
 			@Override
@@ -25,7 +24,7 @@ public class CategoryObjectFactory {
 
 			@Override
 			public List<CategoryDto> getCategoryList() {
-				return List.of(new CategoryDto("testId","testName"));
+				return List.of(new CategoryDto("testId","testName",List.of(new CategoryDto("id", "child",List.of()))));
 			}
 		};
 	}

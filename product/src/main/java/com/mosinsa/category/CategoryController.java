@@ -1,10 +1,9 @@
 package com.mosinsa.category;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +16,12 @@ public class CategoryController {
 
 	@GetMapping
 	public ResponseEntity<List<CategoryDto>> getCategories(){
+		List<CategoryDto> categoryList = categoryService.getCategoryList();
+		return ResponseEntity.ok(categoryList);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<List<CategoryDto>> getCategory(@PathVariable("id") @NotBlank String id, @ModelAttribute CategoryCondition condition){
 		List<CategoryDto> categoryList = categoryService.getCategoryList();
 		return ResponseEntity.ok(categoryList);
 	}

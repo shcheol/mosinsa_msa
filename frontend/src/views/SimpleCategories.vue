@@ -19,29 +19,24 @@ export default {
   data() {
     return {
       categories: [],
-      categoryId: this.selected,
-    }
-  },
-  props: ['selected'],
-  watch: {
-    selected() {
-      this.categoryId = this.selected;
-
     }
   },
   mounted() {
-    this.getCategories(this.categoryId);
+    this.getCategories();
   },
   methods: {
-    getCategories(id) {
-      apiBoard.getCategories(id)
+    getCategories() {
+      apiBoard.getCategories()
           .then((response) => {
             this.temp = response.data;
             Array.prototype.push.apply(this.categories, this.temp)
           });
     },
     selectCategory(id) {
-      this.$emit('update', id);
+      this.$router.push({
+        name: 'categoryProducts',
+        params: {id: id}
+      })
     }
   }
 }

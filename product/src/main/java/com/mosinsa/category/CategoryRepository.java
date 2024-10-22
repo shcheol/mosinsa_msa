@@ -1,7 +1,9 @@
 package com.mosinsa.category;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +14,15 @@ public interface CategoryRepository extends Repository<Category, CategoryId> {
 
 	Optional<Category> findById(CategoryId categoryId);
 
-	List<Category> findAll(Sort sort);
+	@Query(value = "select c from Category c join fetch c.children where c.id = :categoryId")
+	Optional<Category> findDetailsById(@Param("categoryId") CategoryId categoryId);
+
+	@Query(value = "select c from Category c where c.name = :name")
+	Optional<Category> findByName(@Param("name") String name);
+
+	@Query(value = "select c from Category c where c.parent is null")
+	List<Category> findRepresentCategories(Sort sort);
+
+	@Query(value = "select c from Category c where c.parent is null")
+	List<Category> findRepresentCategoriesFromParent(@Param("parent") String parentId);
 }

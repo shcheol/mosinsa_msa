@@ -33,6 +33,5 @@ class CategoryIdTest {
                 .isNotEqualTo(null).isNotEqualTo(new TestClass())
                 .doesNotHaveSameHashCodeAs(protectedConstructor);
         assertThat(protectedConstructor.hashCode()).isZero();
-
     }
 }

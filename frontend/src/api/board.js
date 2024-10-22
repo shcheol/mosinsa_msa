@@ -42,8 +42,11 @@ instance.interceptors.request.use(
 
 
 export default {
-    getCategories: function () {
-        return instance.get(BASE_URL + 'product-service/category')
+    getCategories: function (id) {
+        if (!id) {
+            return instance.get(BASE_URL + 'product-service/category')
+        }
+        return instance.get(BASE_URL + `product-service/category/${id}`)
     },
     getProducts: function (categoryId) {
         if (!categoryId){

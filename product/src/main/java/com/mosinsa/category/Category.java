@@ -1,12 +1,13 @@
 package com.mosinsa.category;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -17,12 +18,28 @@ public class Category {
     @EmbeddedId
     private CategoryId id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Category parent;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private List<Category> children = new ArrayList<>();
+
     public static Category of(String name) {
+        return Category.of(name, null);
+    }
+
+    public static Category of(String name, Category parent) {
         Category category = new Category();
         category.id = CategoryId.newId();
         category.name = name;
+        category.parent = parent;
+        if (parent != null){
+            parent.children.add(category);
+        }
         return category;
     }
 

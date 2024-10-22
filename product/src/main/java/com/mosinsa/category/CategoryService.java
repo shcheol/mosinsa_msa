@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-	CategoryDto createCategory(CreateCategoryRequest request);
+	void register(String name, String parentName);
 
 	Category getCategory(String categoryId);
 

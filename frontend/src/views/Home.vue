@@ -2,19 +2,21 @@
   <div class="home">
 
     <Promotions />
-    <Categories @update="selectedCategory"/>
-    <Items :category="category"/>
+    <SimpleCategories/>
+    <h5>타임세일</h5>
+    <h5>인기순</h5>
+    <Products :category="category"/>
 
   </div>
 </template>
 
 <script>
 import Promotions from "@/views/Promotions";
-import Categories from "@/views/Categories";
+import SimpleCategories from "@/views/SimpleCategories";
 import Products from "@/views/Products";
 
 export default {
-  components: {Items: Products, Categories, Promotions},
+  components: {Products, SimpleCategories, Promotions},
   data() {
     return {
       temp: [],
@@ -25,10 +27,7 @@ export default {
 
   },
   methods: {
-    selectedCategory(id) {
-      console.log('수신한 메시지:', id);
-      this.category = id;
-    },
+
   }
 }
 </script>

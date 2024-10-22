@@ -10,6 +10,12 @@ const routes = [
         component: HomeView
     },
     {
+        path: '/categories/:id',
+        name: 'categoryProducts',
+        component: () => import('../views/CategoryProduct.vue'),
+        props: true
+    },
+    {
         path: '/products/:id',
         name: 'productDetails',
         component: () => import('../views/ProductDetail.vue'),
