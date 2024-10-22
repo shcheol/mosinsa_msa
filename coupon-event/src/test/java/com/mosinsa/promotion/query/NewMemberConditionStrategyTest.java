@@ -17,7 +17,7 @@ class NewMemberConditionStrategyTest {
     void getConditionOptions() {
         NewMemberConditionStrategy newMemberConditionStrategy = new NewMemberConditionStrategy(customerId -> {
             if (customerId.isEmpty()) {
-                return ResponseResult.empty();
+                return ResponseResult.execute(() -> List.of());
             }
             return ResponseResult.execute(() ->
                     List.of(new OrderSummary("", "", "", "", 2L)));

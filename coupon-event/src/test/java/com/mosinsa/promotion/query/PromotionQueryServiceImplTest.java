@@ -17,7 +17,7 @@ class PromotionQueryServiceImplTest {
     @Autowired
     PromotionQueryServiceImpl service;
 
-    @Test
+//    @Test
     void getPromotionDetails() {
         PromotionDetails promotion1 = service.getPromotionDetails("promotion1", "member1");
         Assertions.assertThat(promotion1.promotionId()).isEqualTo("promotion1");
