@@ -15,15 +15,7 @@
                 <svg class="bi d-block mx-auto mb-1" width="24" height="24">
                   <use xlink:href="#home"/>
                 </svg>
-                Home
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/promotions" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                  <use xlink:href="#speedometer2"/>
-                </svg>
-                Promotion
+                MOSINSA
               </router-link>
             </li>
             <li>

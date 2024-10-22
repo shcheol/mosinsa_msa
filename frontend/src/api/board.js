@@ -45,8 +45,11 @@ export default {
     getCategories: function () {
         return instance.get(BASE_URL + 'product-service/category')
     },
-    getProducts: function () {
-        return instance.get(BASE_URL + 'product-service/products')
+    getProducts: function (categoryId) {
+        if (!categoryId){
+            return instance.get(BASE_URL + 'product-service/products')
+        }
+        return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
     },
     getProductReviews: function (productId) {
         return instance.get(BASE_URL + 'product-service/reviews?productId=' + productId)
@@ -102,9 +105,6 @@ export default {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-    },
-    getProductsInCategory: function (categoryId) {
-        return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
     },
     getLikesProducts: function () {
         return instance.get(BASE_URL + `product-service/products/my`)
@@ -176,8 +176,8 @@ export default {
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)
     },
-    getPromotions: function (page) {
-        return instance.get(BASE_URL + `coupon-service/promotions?page=${page}`)
+    getPromotions: function () {
+        return instance.get(BASE_URL + `coupon-service/promotions`)
     },
     joinPromotions: function (promotionId, quests) {
         return instance.post(BASE_URL + `coupon-service/promotions/${promotionId}`,
