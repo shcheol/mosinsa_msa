@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Categories :selected="category" @update="selectedCategory" />
+    <Categories :category="category" @update="selectedCategory" />
     <Products :category="category"/>
   </div>
 </template>
@@ -13,16 +13,23 @@ export default {
   components: {Products, Categories},
   data() {
     return {
-      category: null,
-      selectedId: null,
+      category: this.$route.params.id,
+      // selectedId: null,
     }
   },
-  beforeMount() {
-    this.category = this.$route.params.id;
+  watch: {
+    $route(id) {
+      console.log(id)
+      this.category = this.$route.params.id
+    },
   },
+  mounted() {
+    console.log('daf')
+  }  ,
   methods: {
     selectedCategory(id) {
       this.category = id;
+      console.log('11')
     },
   }
 }

@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <h5>카테고리</h5>
+    <h5>{{ categoryMenu.name }}</h5>
     <div>
       <ul>
-        <li v-for="category in categories" :key="category"
+        <li v-for="category in categoryMenu.childCategories" :key="category"
             @click="selectCategory(category.categoryId)" style="display: inline-block">
-          <div style="padding-right: 10px"> {{ category.name }}</div>
+          <div style="padding-right: 10px; padding-left: 10px;"> {{ category.name }}</div>
         </li>
       </ul>
     </div>
@@ -18,15 +18,19 @@ import apiBoard from "@/api/board";
 export default {
   data() {
     return {
-      categories: [],
-      categoryId: this.selected,
+      categoryId: this.category,
+      categoryMenu: {
+        "categoryId": null,
+        "name": null,
+        "childCategories": [],
+      },
     }
   },
-  props: ['selected'],
+  props: ['category'],
   watch: {
-    selected() {
-      this.categoryId = this.selected;
-
+    category() {
+      this.categoryId = this.category;
+      this.getCategories(this.categoryId);
     }
   },
   mounted() {
@@ -36,8 +40,8 @@ export default {
     getCategories(id) {
       apiBoard.getCategories(id)
           .then((response) => {
-            this.temp = response.data;
-            Array.prototype.push.apply(this.categories, this.temp)
+            console.log(response);
+            this.categoryMenu = response.data;
           });
     },
     selectCategory(id) {

@@ -28,7 +28,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-#        jdbc:
+        default_batch_fetch_size: 100
+    #        jdbc:
 #          batch_size: 20
 #        order_inserts: true
 #        order_updates: true

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +24,9 @@ class CategoryTest {
         String testCategory = "test";
 
         Category test = Category.of(testCategory);
-        Assertions.assertThat(test.getName()).isEqualTo(testCategory);
-        Assertions.assertThat(test.getParent()).isNull();
-        Assertions.assertThat(test.getChildren()).isEmpty();
+        assertThat(test.getName()).isEqualTo(testCategory);
+        assertThat(test.getParent()).isNull();
+        assertThat(test.getChildren()).isEmpty();
     }
 
     @Test
@@ -33,9 +34,9 @@ class CategoryTest {
         String testCategory = "test";
 
         Category test = Category.of(testCategory, null);
-        Assertions.assertThat(test.getName()).isEqualTo(testCategory);
-        Assertions.assertThat(test.getParent()).isNull();
-        Assertions.assertThat(test.getChildren()).isEmpty();
+        assertThat(test.getName()).isEqualTo(testCategory);
+        assertThat(test.getParent()).isNull();
+        assertThat(test.getChildren()).isEmpty();
     }
 
 
@@ -46,11 +47,24 @@ class CategoryTest {
 
         Category parent = Category.of(testParent);
         Category test = Category.of(testCategory, parent);
-        Assertions.assertThat(test.getName()).isEqualTo(testCategory);
-        Assertions.assertThat(test.getParent()).isEqualTo(parent);
-        Assertions.assertThat(test.getChildren()).isEmpty();
-        Assertions.assertThat(parent.getChildren()).containsExactly(test);
+        assertThat(test.getName()).isEqualTo(testCategory);
+        assertThat(test.getParent()).isEqualTo(parent);
+        assertThat(test.getChildren()).isEmpty();
+        assertThat(parent.getChildren()).containsExactly(test);
     }
+
+	@Test
+	void isRootAndIsLeaf(){
+		String testCategory = "test";
+		String testParent = "testParent";
+
+		Category parent = Category.of(testParent);
+		Category test = Category.of(testCategory, parent);
+		assertThat(test.isRoot()).isFalse();
+		assertThat(test.isLeaf()).isTrue();
+		assertThat(parent.isRoot()).isTrue();
+		assertThat(parent.isLeaf()).isFalse();
+	}
 
     @Test
     void equalsAndHashCode() {
@@ -60,6 +74,7 @@ class CategoryTest {
         Category categoryB = repository.findById(save.getId()).get();
         Category protectedConstructor = new Category();
 
-        EqualsAndHashcodeUtils.equalsAndHashcode(categoryA, categoryB, protectedConstructor, Category.of(value+"XXX"));
-    }
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(categoryA, categoryB, protectedConstructor, Category.of(value + "XXX"));
+		assertThat(b).isTrue();
+	}
 }

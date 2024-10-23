@@ -3,8 +3,10 @@
 
     <Promotions />
     <SimpleCategories/>
+    <div>
     <h5>타임세일</h5>
     <h5>인기순</h5>
+    </div>
     <Products :category="category"/>
 
   </div>

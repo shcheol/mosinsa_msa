@@ -23,9 +23,16 @@ public class CategoryObjectFactory {
 			}
 
 			@Override
-			public List<CategoryDto> getCategoryList() {
+			public List<CategoryDto> getAllCategoriesFromRoot() {
 				return List.of(new CategoryDto("testId","testName",List.of(new CategoryDto("id", "child",List.of()))));
 			}
+
+			@Override
+			public CategoryDto getCategorySetFromParent(String rootId) {
+				return null;
+			}
+
+
 		};
 	}
 }

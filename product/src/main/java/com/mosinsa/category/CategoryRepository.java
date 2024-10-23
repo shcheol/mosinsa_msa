@@ -14,15 +14,15 @@ public interface CategoryRepository extends Repository<Category, CategoryId> {
 
 	Optional<Category> findById(CategoryId categoryId);
 
-	@Query(value = "select c from Category c join fetch c.children where c.id = :categoryId")
+	@Query(value = "select c from Category c left join fetch c.children where c.id = :categoryId")
 	Optional<Category> findDetailsById(@Param("categoryId") CategoryId categoryId);
 
 	@Query(value = "select c from Category c where c.name = :name")
 	Optional<Category> findByName(@Param("name") String name);
 
-	@Query(value = "select c from Category c where c.parent is null")
-	List<Category> findRepresentCategories(Sort sort);
+	@Query(value = "select c from Category c left join fetch c.children where c.parent is null")
+	List<Category> findCategoriesFromRoot(Sort sort);
 
-	@Query(value = "select c from Category c where c.parent is null")
-	List<Category> findRepresentCategoriesFromParent(@Param("parent") String parentId);
+	@Query(value = "select c from Category c join fetch c.children where c.id = :parentId")
+	Category findCategoriesFromParent(@Param("parentId") CategoryId parentId);
 }

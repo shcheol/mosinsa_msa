@@ -34,14 +34,17 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<CategoryDto> getCategoryList() {
+	public List<CategoryDto> getAllCategoriesFromRoot() {
 
-		return repository.findRepresentCategories(Sort.by(Sort.Direction.ASC, "name"))
+		return repository.findCategoriesFromRoot(Sort.by(Sort.Direction.ASC, "name"))
 				.stream()
 				.map(CategoryDto::convert)
 				.toList();
-
-//		return repository.findAll(Sort.by(Sort.Direction.ASC, "name"))
-//				.stream().map(CategoryDto::convert).toList();
 	}
+
+	@Override
+	public CategoryDto getCategorySetFromParent(String rootId) {
+		return CategoryDto.convert(repository.findCategoriesFromParent(CategoryId.of(rootId)));
+	}
+
 }

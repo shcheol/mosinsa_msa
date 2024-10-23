@@ -8,5 +8,7 @@ public interface CategoryService {
 
 	Category getCategory(String categoryId);
 
-	List<CategoryDto> getCategoryList();
+	List<CategoryDto> getAllCategoriesFromRoot();
+
+	CategoryDto getCategorySetFromParent(String rootId);
 }

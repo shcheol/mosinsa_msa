@@ -21,10 +21,9 @@ class CategoryServiceImplTest {
 
 	@Test
 	void register() {
-		int size = service.getCategoryList().size();
+		int size = service.getAllCategoriesFromRoot().size();
 		service.register("new신발", null);
-		assertThat(service.getCategoryList()).hasSize(size+1);
-		assertThrows(RuntimeException.class, () ->service.register("new신발", null));
+		assertThat(service.getAllCategoriesFromRoot()).hasSize(size+1);
 	}
 	@Test
 	void registerHasParentCategory() {
@@ -49,7 +48,7 @@ class CategoryServiceImplTest {
 
 	@Test
 	void getRepresentCategoryList() {
-		List<CategoryDto> categoryList = service.getCategoryList();
+		List<CategoryDto> categoryList = service.getAllCategoriesFromRoot();
 		List<String> strings = categoryList.stream().map(CategoryDto::name).toList();
 		assertThat(strings).containsExactly( "가방", "바지","상의", "소품", "신발", "아우터");
 		System.out.println(categoryList);

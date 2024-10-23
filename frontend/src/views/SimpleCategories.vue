@@ -18,6 +18,7 @@ import apiBoard from "@/api/board";
 export default {
   data() {
     return {
+      temp: [],
       categories: [],
     }
   },
@@ -28,6 +29,7 @@ export default {
     getCategories() {
       apiBoard.getCategories()
           .then((response) => {
+            console.log(response.data);
             this.temp = response.data;
             Array.prototype.push.apply(this.categories, this.temp)
           });

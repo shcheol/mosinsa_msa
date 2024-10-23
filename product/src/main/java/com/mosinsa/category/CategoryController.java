@@ -16,13 +16,13 @@ public class CategoryController {
 
 	@GetMapping
 	public ResponseEntity<List<CategoryDto>> getCategories(){
-		List<CategoryDto> categoryList = categoryService.getCategoryList();
+		List<CategoryDto> categoryList = categoryService.getAllCategoriesFromRoot();
 		return ResponseEntity.ok(categoryList);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<List<CategoryDto>> getCategory(@PathVariable("id") @NotBlank String id, @ModelAttribute CategoryCondition condition){
-		List<CategoryDto> categoryList = categoryService.getCategoryList();
-		return ResponseEntity.ok(categoryList);
+	public ResponseEntity<CategoryDto> getCategory(@PathVariable("id") @NotBlank String id){
+		CategoryDto categorySet = categoryService.getCategorySetFromParent(id);
+		return ResponseEntity.ok(categorySet);
 	}
 }

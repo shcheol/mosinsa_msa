@@ -1,6 +1,7 @@
 package com.mosinsa.product.command.application;
 
 import com.mosinsa.category.Category;
+import com.mosinsa.category.CategoryCondition;
 import com.mosinsa.category.CategoryDto;
 import com.mosinsa.category.CategoryService;
 import com.mosinsa.common.ex.CategoryError;
@@ -23,7 +24,13 @@ public class CategoryServiceStub implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getCategoryList() {
+    public List<CategoryDto> getAllCategoriesFromRoot() {
         return null;
     }
+
+	@Override
+	public CategoryDto getCategorySetFromParent(String rootId) {
+		return null;
+	}
+
 }

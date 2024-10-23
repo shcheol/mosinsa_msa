@@ -15,44 +15,52 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
-    @EmbeddedId
-    private CategoryId id;
+	@EmbeddedId
+	private CategoryId id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+	@Column(nullable = false, unique = true)
+	private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
+	private Category parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<Category> children = new ArrayList<>();
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+	private List<Category> children = new ArrayList<>();
 
-    public static Category of(String name) {
-        return Category.of(name, null);
-    }
+	public static Category of(String name) {
+		return Category.of(name, null);
+	}
 
-    public static Category of(String name, Category parent) {
-        Category category = new Category();
-        category.id = CategoryId.newId();
-        category.name = name;
-        category.parent = parent;
-        if (parent != null){
-            parent.children.add(category);
-        }
-        return category;
-    }
+	public boolean isRoot() {
+		return parent == null;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Category category = (Category) o;
-        return id != null && Objects.equals(id, category.id);
-    }
+	public boolean isLeaf(){
+		return children.isEmpty();
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+	public static Category of(String name, Category parent) {
+		Category category = new Category();
+		category.id = CategoryId.newId();
+		category.name = name;
+		category.parent = parent;
+		if (parent != null) {
+			parent.children.add(category);
+		}
+		return category;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+		Category category = (Category) o;
+		return id != null && Objects.equals(id, category.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 }
