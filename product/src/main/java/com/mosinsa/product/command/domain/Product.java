@@ -6,16 +6,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product {
+public class Product extends AuditingEntity {
 
     @EmbeddedId
+	@GeneratedValue(generator = "product_id")
+	@GenericGenerator(name = "product_id", strategy = "com.mosinsa.product.command.domain.ProductIdGenerator")
     private ProductId id;
 
     private String name;
@@ -24,7 +26,7 @@ public class Product {
     @Column(name = "price")
     private Money price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -32,17 +34,13 @@ public class Product {
 	@JoinColumn(name = "stock_id")
     private Stock stock;
 
-    private LocalDateTime createdDate;
-
 
     public static Product create(String name, Integer price, Category category, long stock) {
         Product product = new Product();
-        product.id = ProductId.newId();
         product.name = name;
         product.price = Money.of(price);
         product.category = category;
         product.stock = Stock.of(stock);
-        product.createdDate = LocalDateTime.now();
         return product;
     }
 

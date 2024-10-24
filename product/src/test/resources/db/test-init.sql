@@ -73,12 +73,12 @@ values ('stockId1', 10, 'ON'),
        ('stockId3', 30, 'SOLD_OUT'),
        ('stockId4', 30, 'ON'),
        ('stockId5', 30, 'ON');
-insert into product
-values ('productId1', '반팔', 2000, 'categoryId1', 'stockId1', '2024-05-25 12:20:35'),
-       ('productId2', '청바지', 1000, 'categoryId2', 'stockId2', '2024-05-25 15:20:35'),
-       ('productId3', '코트', 3000, 'categoryId3', 'stockId3', '2024-05-25 15:21:35'),
-       ('productId4', '비슬로우', 62910, 'categoryId1', 'stockId4', '2024-06-25 15:21:35'),
-       ('productId5', '검정반팔', 2000, 'categoryId1', 'stockId5', '2024-02-25 15:21:35');
+insert into product (product_id, name, price, category_id, stock_id, created_date, last_modified_date)
+values ('productId1', '반팔', 2000, 'categoryId1', 'stockId1', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ('productId2', '청바지', 1000, 'categoryId2', 'stockId2', '2024-05-25 15:20:35', '2024-05-25 12:20:35'),
+       ('productId3', '코트', 3000, 'categoryId3', 'stockId3', '2024-05-25 15:21:35', '2024-05-25 12:20:35'),
+       ('productId4', '비슬로우', 62910, 'categoryId1', 'stockId4', '2024-06-25 15:21:35', '2024-05-25 12:20:35'),
+       ('productId5', '검정반팔', 2000, 'categoryId1', 'stockId5', '2024-02-25 15:21:35', '2024-05-25 12:20:35');
 
 
 

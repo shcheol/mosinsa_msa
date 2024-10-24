@@ -13,13 +13,13 @@ spring:
     name: product-service
   config:
     import: "optional:configserver:http://127.0.0.1:8888/"
-  datasource:
-    url: jdbc:h2:mem:productdb;MODE=MySQL
 #  datasource:
-#    url: ENC(HjNAitmxHiKzo1DcxY8DymurOWVNEZv8vuQrgYtkbSprxN4URB+VolfEhEHjew9lmKBxyiFhOnvzgX61CPJemteLs2AtU+vrvDaiQchg+bkU160Iza+5uA==)
-#    username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
-#    password: ENC(8AvrvIm/Ria2OTgXu6tsqhToqOb0mI/I)
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:h2:mem:productdb;MODE=MySQL
+  datasource:
+    url: ENC(HjNAitmxHiKzo1DcxY8DymurOWVNEZv8vuQrgYtkbSprxN4URB+VolfEhEHjew9lmKBxyiFhOnvzgX61CPJemteLs2AtU+vrvDaiQchg+bkU160Iza+5uA==)
+    username: ENC(j+10aWZUDLrHRFOy6wo5JQ==)
+    password: ENC(8AvrvIm/Ria2OTgXu6tsqhToqOb0mI/I)
+    driver-class-name: com.mysql.cj.jdbc.Driver
   # JPA Setting
   jpa:
     show-sql: true

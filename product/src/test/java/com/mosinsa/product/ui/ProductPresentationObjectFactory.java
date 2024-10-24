@@ -18,39 +18,37 @@ import java.util.List;
 @TestConfiguration
 public class ProductPresentationObjectFactory {
 
-    @Bean
-    public ProductService productService() {
-        return new ProductServiceStub();
-    }
+	@Bean
+	public ProductService productService() {
+		return new ProductServiceStub();
+	}
 
 
-    @Bean
-    public ProductQueryService productQueryService() {
-        return new ProductQueryService() {
-            @Override
-            public ProductDetailDto getProductById(String productId) {
-                return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10),5);
-            }
+	@Bean
+	public ProductQueryService productQueryService() {
+		return new ProductQueryService() {
+			@Override
+			public ProductDetailDto getProductById(String productId) {
+				return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10), 5);
+			}
 
-            @Override
-            public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
-                return new PageImpl<>(
-                        List.of(
-                                new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
-                                new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
-                        )
-                );
-            }
+			@Override
+			public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
+				return new PageImpl<>(
+						List.of(new ProductQueryDto("", "", 1000),
+								new ProductQueryDto("", "", 1000))
+				);
+			}
 
 			@Override
 			public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
 				return new PageImpl<>(
 						List.of(
-								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
-								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
+								new ProductQueryDto("", "", 1000),
+								new ProductQueryDto("", "", 1000)
 						)
 				);
 			}
 		};
-    }
+	}
 }
