@@ -1,23 +1,21 @@
-package com.mosinsa.category;
+package com.mosinsa.category.domain;
 
+import com.mosinsa.category.domain.Category;
+import com.mosinsa.category.domain.CategoryRepository;
 import com.mosinsa.code.EqualsAndHashcodeUtils;
-import com.mosinsa.code.TestClass;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql("classpath:db/test-init.sql")
 class CategoryTest {
 
     @Autowired
-    CategoryRepository repository;
+	CategoryRepository repository;
 
     @Test
     void ofSingleParam() {

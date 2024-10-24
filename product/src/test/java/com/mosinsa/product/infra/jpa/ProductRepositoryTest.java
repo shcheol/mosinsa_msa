@@ -1,7 +1,7 @@
 package com.mosinsa.product.infra.jpa;
 
-import com.mosinsa.category.CategoryRepository;
-import com.mosinsa.category.Category;
+import com.mosinsa.category.domain.CategoryRepository;
+import com.mosinsa.category.domain.Category;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.ProductRepository;

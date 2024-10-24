@@ -1,5 +1,8 @@
-package com.mosinsa.category;
+package com.mosinsa.category.application;
 
+import com.mosinsa.category.domain.Category;
+import com.mosinsa.category.domain.CategoryId;
+import com.mosinsa.category.domain.CategoryRepository;
 import com.mosinsa.common.ex.CategoryError;
 import com.mosinsa.common.ex.CategoryException;
 import lombok.RequiredArgsConstructor;

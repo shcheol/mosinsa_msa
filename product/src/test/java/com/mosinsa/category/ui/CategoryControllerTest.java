@@ -1,4 +1,4 @@
-package com.mosinsa.category;
+package com.mosinsa.category.ui;
 
 import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.Test;

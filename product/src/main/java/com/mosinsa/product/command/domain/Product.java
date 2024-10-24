@@ -1,6 +1,6 @@
 package com.mosinsa.product.command.domain;
 
-import com.mosinsa.category.Category;
+import com.mosinsa.category.domain.Category;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,5 +1,8 @@
-package com.mosinsa.category;
+package com.mosinsa.category.application;
 
+import com.mosinsa.category.application.CategoryDto;
+import com.mosinsa.category.application.CategoryService;
+import com.mosinsa.category.domain.Category;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;

@@ -80,6 +80,8 @@ values ('productId1', '반팔', 2000, 'categoryId1', 'stockId1', '2024-05-25 12:
        ('productId4', '비슬로우', 62910, 'categoryId1', 'stockId4', '2024-06-25 15:21:35'),
        ('productId5', '검정반팔', 2000, 'categoryId1', 'stockId5', '2024-02-25 15:21:35');
 
+
+
 insert into review
 values ('reviewId1', 'good', '2024-02-25 15:21:35', 'N', 'writer1', 'writerId1', 'productId1', 4),
        ('reviewId2', 'good', '2024-02-25 15:22:35', 'Y', 'writer2', 'writerId2', 'productId1', 0);

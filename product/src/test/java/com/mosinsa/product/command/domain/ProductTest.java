@@ -1,6 +1,6 @@
 package com.mosinsa.product.command.domain;
 
-import com.mosinsa.category.Category;
+import com.mosinsa.category.domain.Category;
 import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

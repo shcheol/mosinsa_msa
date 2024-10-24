@@ -1,5 +1,7 @@
-package com.mosinsa.category;
+package com.mosinsa.category.ui;
 
+import com.mosinsa.category.application.CategoryDto;
+import com.mosinsa.category.application.CategoryService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

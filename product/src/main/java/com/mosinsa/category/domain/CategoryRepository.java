@@ -1,4 +1,4 @@
-package com.mosinsa.category;
+package com.mosinsa.category.domain;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;

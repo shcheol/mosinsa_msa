@@ -1,16 +1,11 @@
 package com.mosinsa.product.ui;
 
-import com.mosinsa.category.Category;
-import com.mosinsa.common.ex.ProductError;
-import com.mosinsa.common.ex.ProductException;
+import com.mosinsa.category.domain.Category;
 import com.mosinsa.product.command.application.ProductService;
 import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.query.ProductQueryService;
-import com.mosinsa.product.ui.request.CancelOrderProductRequest;
-import com.mosinsa.product.ui.request.CreateProductRequest;
-import com.mosinsa.product.ui.request.OrderProductRequest;
 import com.mosinsa.product.ui.request.SearchCondition;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,6 @@
-package com.mosinsa.category;
+package com.mosinsa.category.application;
+
+import com.mosinsa.category.domain.Category;
 
 import java.util.List;
 

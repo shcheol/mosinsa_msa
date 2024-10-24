@@ -1,9 +1,8 @@
 package com.mosinsa.product.command.application;
 
-import com.mosinsa.category.Category;
-import com.mosinsa.category.CategoryCondition;
-import com.mosinsa.category.CategoryDto;
-import com.mosinsa.category.CategoryService;
+import com.mosinsa.category.domain.Category;
+import com.mosinsa.category.application.CategoryDto;
+import com.mosinsa.category.application.CategoryService;
 import com.mosinsa.common.ex.CategoryError;
 import com.mosinsa.common.ex.CategoryException;
 

@@ -1,5 +1,7 @@
-package com.mosinsa.category;
+package com.mosinsa.category.application;
 
+import com.mosinsa.category.application.CategoryDto;
+import com.mosinsa.category.application.CategoryServiceImpl;
 import com.mosinsa.common.ex.CategoryException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

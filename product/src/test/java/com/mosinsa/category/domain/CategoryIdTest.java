@@ -1,5 +1,6 @@
-package com.mosinsa.category;
+package com.mosinsa.category.domain;
 
+import com.mosinsa.category.domain.CategoryId;
 import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 

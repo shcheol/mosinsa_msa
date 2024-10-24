@@ -1,4 +1,4 @@
-package com.mosinsa.category;
+package com.mosinsa.category.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

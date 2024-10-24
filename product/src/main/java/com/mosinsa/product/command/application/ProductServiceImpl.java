@@ -1,7 +1,7 @@
 package com.mosinsa.product.command.application;
 
-import com.mosinsa.category.Category;
-import com.mosinsa.category.CategoryService;
+import com.mosinsa.category.domain.Category;
+import com.mosinsa.category.application.CategoryService;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.InvalidStockException;
