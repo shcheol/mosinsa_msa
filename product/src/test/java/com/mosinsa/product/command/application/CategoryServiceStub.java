@@ -7,6 +7,7 @@ import com.mosinsa.common.ex.CategoryError;
 import com.mosinsa.common.ex.CategoryException;
 
 import java.util.List;
+import java.util.Set;
 
 public class CategoryServiceStub implements CategoryService {
 
@@ -29,6 +30,11 @@ public class CategoryServiceStub implements CategoryService {
 
 	@Override
 	public CategoryDto getCategorySetFromParent(String rootId) {
+		return null;
+	}
+
+	@Override
+	public Set<String> getSubIds(String categoryId) {
 		return null;
 	}
 

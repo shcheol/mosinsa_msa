@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Transactional
 	public void register(String name, String parentName) {
 		Category parent = null;
-		if (StringUtils.hasText(parentName)){
+		if (StringUtils.hasText(parentName)) {
 			parent = repository.findByName(parentName).orElseThrow();
 		}
 		repository.save(Category.of(name, parent));
@@ -47,7 +49,24 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryDto getCategorySetFromParent(String rootId) {
-		return CategoryDto.convert(repository.findCategoriesFromParent(CategoryId.of(rootId)));
+		return CategoryDto.convert(repository.findDetailsById(CategoryId.of(rootId)).orElseThrow());
+	}
+
+	@Override
+	public Set<String> getSubIds(String categoryId) {
+		Set<String> ids = new HashSet<>();
+		Category category = repository.findDetailsById(CategoryId.of(categoryId))
+				.orElseThrow(() -> new CategoryException(CategoryError.NOT_FOUNT_CATEGORY));
+		getSubCategories(category, ids);
+		return ids;
+	}
+
+	private void getSubCategories(Category category, Set<String> ids) {
+		ids.add(category.getId().getId());
+		if (category.getChildren().isEmpty()) {
+			return;
+		}
+		category.getChildren().forEach(c -> getSubCategories(c, ids));
 	}
 
 }

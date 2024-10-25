@@ -3,6 +3,7 @@ package com.mosinsa.category.application;
 import com.mosinsa.category.domain.Category;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CategoryService {
 
@@ -13,4 +14,6 @@ public interface CategoryService {
 	List<CategoryDto> getAllCategoriesFromRoot();
 
 	CategoryDto getCategorySetFromParent(String rootId);
+
+	Set<String> getSubIds(String categoryId);
 }

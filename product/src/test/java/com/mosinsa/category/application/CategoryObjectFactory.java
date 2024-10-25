@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 import java.util.List;
+import java.util.Set;
 
 @TestConfiguration
 public class CategoryObjectFactory {
@@ -32,6 +33,11 @@ public class CategoryObjectFactory {
 
 			@Override
 			public CategoryDto getCategorySetFromParent(String rootId) {
+				return null;
+			}
+
+			@Override
+			public Set<String> getSubIds(String categoryId) {
 				return null;
 			}
 

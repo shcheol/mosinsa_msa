@@ -1,10 +1,9 @@
 package com.mosinsa.product.ui;
 
 import com.mosinsa.common.argumentresolver.CustomerInfo;
-import com.mosinsa.common.argumentresolver.GuestOrLogin;
 import com.mosinsa.common.argumentresolver.Login;
-import com.mosinsa.product.command.application.dto.ProductQueryDto;
-import com.mosinsa.product.query.ProductDetailDto;
+import com.mosinsa.product.query.dto.ProductSummary;
+import com.mosinsa.product.query.dto.ProductDetails;
 import com.mosinsa.product.query.ProductQueryService;
 import com.mosinsa.product.ui.request.SearchCondition;
 import lombok.RequiredArgsConstructor;
@@ -25,24 +24,24 @@ public class ViewProductController {
 	private final ProductQueryService productQueryService;
 
 	@GetMapping
-	public ResponseEntity<Page<ProductQueryDto>> findAllProducts(SearchCondition condition, Pageable pageable, @GuestOrLogin CustomerInfo customerInfo) {
+	public ResponseEntity<Page<ProductSummary>> findAllProducts(SearchCondition condition, Pageable pageable) {
 
-		Page<ProductQueryDto> allProducts = productQueryService.findProductsByCondition(condition, pageable);
+		Page<ProductSummary> allProducts = productQueryService.findProductsByCondition(condition, pageable);
 		return ResponseEntity.ok(allProducts);
 	}
 	@GetMapping("/my")
-	public ResponseEntity<Page<ProductQueryDto>> findAllProducts(@Login CustomerInfo customerInfo, Pageable pageable) {
+	public ResponseEntity<Page<ProductSummary>> findMyProducts(@Login CustomerInfo customerInfo, Pageable pageable) {
 
-		Page<ProductQueryDto> allProducts = productQueryService.findMyProducts(customerInfo.id(), pageable);
+		Page<ProductSummary> allProducts = productQueryService.findMyProducts(customerInfo.id(), pageable);
 		return ResponseEntity.ok(allProducts);
 	}
 
 
 	@GetMapping("/{productId}")
-	public ResponseEntity<ProductDetailDto> productDetails(@PathVariable String productId) {
+	public ResponseEntity<ProductDetails> productDetails(@PathVariable String productId) {
 		log.info("getProduct {}", productId);
 
-		ProductDetailDto productDetailDto = productQueryService.getProductById(productId);
-		return ResponseEntity.ok(productDetailDto);
+		ProductDetails productDetails = productQueryService.getProductById(productId);
+		return ResponseEntity.ok(productDetails);
 	}
 }
