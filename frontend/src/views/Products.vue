@@ -38,17 +38,22 @@ export default {
       first: null,
       last: null,
       categoryId: this.category,
+      selectedId: this.selectId,
     }
   },
-  props: ['category'],
+  props: ['category', 'selectId'],
   watch: {
     category() {
+      console.log('pro')
       this.categoryId = this.category;
-      this.getProducts(this.categoryId);
+      this.selectedId = this.selectId;
+      console.log(this.selectedId);
+      this.getProducts(this.selectedId);
     }
   },
   mounted() {
-    this.getProducts(this.categoryId);
+    console.log(this.selectedId);
+    this.getProducts(this.selectedId);
   },
   methods: {
     productDetails(i) {

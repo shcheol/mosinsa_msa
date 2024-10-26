@@ -33,12 +33,10 @@ export default {
   },
   methods: {
     onItemClick(e, i) {
-      console.log("onItemClick" + e + i);
-      console.log(e);
       console.log(i);
       this.$router.push({
         name: 'categoryProducts',
-        params: {id: i.cId}
+        params: {id: i.cId, selectId: i.selectId}
       })
     },
     onCollapse(c) {
@@ -54,18 +52,21 @@ export default {
                 title: c.name,
                 icon: "fa fa-envelope",
                 cId: c.categoryId,
+                selectId: c.categoryId,
                 child: []
               };
               c.childCategories.forEach(cc => {
                 const childData = {
                   title: cc.name,
                   cId: c.categoryId,
+                  selectId: cc.categoryId,
                   child: []
                 };
                 cc.childCategories.forEach(ccc => {
                   childData.child.push({
                     title: ccc.name,
                     cId: c.categoryId,
+                    selectId: ccc.categoryId,
                   })
                 })
                 data.child.push(childData)

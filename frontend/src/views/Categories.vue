@@ -1,13 +1,23 @@
 <template>
   <div class="container">
     <h5>{{ categoryMenu.name }}</h5>
-    <div>
-      <ul>
-        <li v-for="category in categoryMenu.childCategories" :key="category"
-            @click="selectCategory(category.categoryId)" style="display: inline-block">
-          <div style="padding-right: 10px; padding-left: 10px;"> {{ category.name }}</div>
-        </li>
-      </ul>
+    <div style="background: #eeeeee">
+      <div v-for="category in categoryMenu.childCategories" :key="category" @click="selectCategory(categoryId, category.categoryId)"
+           style="display: inline-block; background: #eeeeee">
+        <button type="button" class="btn btn-outline- text-small "
+                :class="[selectedId === category.categoryId? ' text-dark ' : ' text-black-50 ' ]">{{ category.name }}
+        </button>
+      </div>
+      <div v-if="hasSubChildCategories" style="background: #ffffff">
+        <div v-for="category in selectedSubChildCategories" :key="category"
+             @click="selectCategory(categoryId, category.categoryId)" style="display: inline-block; background: lightgray">
+          <div>
+            <button type="button" class="btn btn-outline- text-small"
+                    :class="[selectedId === category.categoryId?'text-dark' : 'text-black-50' ]">{{ category.name }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -19,17 +29,21 @@ export default {
   data() {
     return {
       categoryId: this.category,
+      selectedId: this.selectId,
       categoryMenu: {
         "categoryId": null,
         "name": null,
         "childCategories": [],
       },
+      selectedSubChildCategories: null,
+      hasSubChildCategories: null,
     }
   },
-  props: ['category'],
+  props: ['category', 'selectId'],
   watch: {
     category() {
       this.categoryId = this.category;
+      this.selectedId = this.selectId;
       this.getCategories(this.categoryId);
     }
   },
@@ -42,10 +56,14 @@ export default {
           .then((response) => {
             console.log(response);
             this.categoryMenu = response.data;
+            this.hasSubChildCategories = this.categoryMenu.childCategories.at(0).childCategories.length > 0;
+            if (this.hasSubChildCategories) {
+              this.selectedSubChildCategories = this.categoryMenu.childCategories.at(0).childCategories;
+            }
           });
     },
-    selectCategory(id) {
-      this.$emit('update', id);
+    selectCategory(id, selectId) {
+      this.$emit('update', id, selectId);
     }
   }
 }

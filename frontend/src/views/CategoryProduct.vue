@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <Categories :category="category" @update="selectedCategory" />
-    <Products :category="category"/>
+    <Categories :category="category" :selectId="selectId" @update="selectedCategory" />
+    <Products :category="category" :selectId="selectId"/>
   </div>
 </template>
 
@@ -14,22 +14,27 @@ export default {
   data() {
     return {
       category: this.$route.params.id,
-      // selectedId: null,
+      selectId: this.$route.params.selectId,
     }
   },
   watch: {
-    $route(id) {
-      console.log(id)
+    $route() {
       this.category = this.$route.params.id
+      this.selectId = this.$route.params.selectId
     },
   },
   mounted() {
     console.log('daf')
+    console.log(this.category)
+    console.log(this.selectId)
   }  ,
   methods: {
-    selectedCategory(id) {
+    selectedCategory(id, selectId) {
       this.category = id;
+      this.selectId = selectId;
       console.log('11')
+      console.log(this.category)
+      console.log(this.selectId)
     },
   }
 }
