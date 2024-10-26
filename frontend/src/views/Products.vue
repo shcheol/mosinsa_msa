@@ -48,6 +48,11 @@ export default {
       this.categoryId = this.category;
       this.selectedId = this.selectId;
       console.log(this.selectedId);
+      this.getProducts(this.category);
+    },
+    selectId() {
+      this.categoryId = this.category;
+      this.selectedId = this.selectId;
       this.getProducts(this.selectedId);
     }
   },

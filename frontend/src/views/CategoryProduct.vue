@@ -23,11 +23,6 @@ export default {
       this.selectId = this.$route.params.selectId
     },
   },
-  mounted() {
-    console.log('daf')
-    console.log(this.category)
-    console.log(this.selectId)
-  }  ,
   methods: {
     selectedCategory(id, selectId) {
       this.category = id;

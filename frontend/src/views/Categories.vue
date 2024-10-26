@@ -2,7 +2,8 @@
   <div class="container">
     <h5>{{ categoryMenu.name }}</h5>
     <div style="background: #eeeeee">
-      <div v-for="category in categoryMenu.childCategories" :key="category" @click="selectCategory(categoryId, category.categoryId)"
+      <div v-for="category in categoryMenu.childCategories" :key="category"
+           @click="selectCategory(categoryId, category.categoryId)"
            style="display: inline-block; background: #eeeeee">
         <button type="button" class="btn btn-outline- text-small "
                 :class="[selectedId === category.categoryId? ' text-dark ' : ' text-black-50 ' ]">{{ category.name }}
@@ -10,7 +11,8 @@
       </div>
       <div v-if="hasSubChildCategories" style="background: #ffffff">
         <div v-for="category in selectedSubChildCategories" :key="category"
-             @click="selectCategory(categoryId, category.categoryId)" style="display: inline-block; background: lightgray">
+             @click="selectCategory(categoryId, category.categoryId)"
+             style="display: inline-block; background: lightgray">
           <div>
             <button type="button" class="btn btn-outline- text-small"
                     :class="[selectedId === category.categoryId?'text-dark' : 'text-black-50' ]">{{ category.name }}
@@ -44,6 +46,12 @@ export default {
     category() {
       this.categoryId = this.category;
       this.selectedId = this.selectId;
+      this.selectedSubChildCategories = null;
+      this.getCategories(this.categoryId);
+    },
+    selectId() {
+      this.categoryId = this.category;
+      this.selectedId = this.selectId;
       this.getCategories(this.categoryId);
     }
   },
@@ -58,7 +66,10 @@ export default {
             this.categoryMenu = response.data;
             this.hasSubChildCategories = this.categoryMenu.childCategories.at(0).childCategories.length > 0;
             if (this.hasSubChildCategories) {
-              this.selectedSubChildCategories = this.categoryMenu.childCategories.at(0).childCategories;
+              let find = this.categoryMenu.childCategories.find(cc => cc.categoryId === this.selectId);
+              if (find) {
+                this.selectedSubChildCategories = find.childCategories;
+              }
             }
           });
     },
