@@ -4,6 +4,7 @@ import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class StockTest {
 
@@ -11,22 +12,14 @@ class StockTest {
 	void stockCreate(){
 
 		Stock stock = Stock.of(10);
-		assertThat(stock.getId()).isNotEmpty();
 		assertThat(stock.getTotal()).isEqualTo(10);
 		assertThat(stock.getStatus()).isEqualTo(StockStatus.ON);
 	}
 
 	@Test
-	void idEqualsAndHashCode() {
-		long value = 10L;
-		Stock idA = Stock.of(value);
-		Stock protectedConstructor = new Stock();
+	void stockEx(){
 
-		assertThat(idA).isEqualTo(idA).hasSameHashCodeAs(idA)
-				.isNotEqualTo(null).isNotEqualTo(new TestClass())
-				.doesNotHaveSameHashCodeAs(protectedConstructor);
-		assertThat(protectedConstructor.hashCode()).isZero();
-
+		assertThrows(InvalidStockException.class, () -> Stock.of(-1));
 	}
 
 }

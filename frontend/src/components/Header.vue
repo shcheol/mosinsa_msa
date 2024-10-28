@@ -1,54 +1,28 @@
 <template>
   <header>
-    <div class="px-3 py-2 bg-dark text-white">
+    <div class="px-3 py-2 text-white ">
       <div class="container">
-
         <div class="d-flex align-items-center justify-content-between">
           <!-- 좌측: Navigation 메뉴 -->
           <div class="d-flex align-items-center">
-            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-              <li>
-                <router-link to="/" class="nav-link text-white">
-                  <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                    <use xlink:href="#home"/>
-                  </svg>
-                  MOSINSA
-                </router-link>
-              </li>
-            </ul>
-
+            <router-link to="/" class="nav-link text-black">
+              <p class="text-black text-xl-center" style="font-weight: bold; font-size: x-large ">MOSINSA</p>
+            </router-link>
           </div>
           <div class="d-flex align-items-center">
             <div>
               <router-link to="/myPage" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                  <use xlink:href="#speedometer2"/>
-                </svg>
-                My
+                <img src="../assets/mypage.png" width="32" height="32" alt="My">
               </router-link>
             </div>
-            <div v-if="!$store.state.isLogin">
-              <router-link to="/login" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                  <use xlink:href="#speedometer2"/>
-                </svg>
-                Login
-              </router-link>
-            </div>
-            <div v-else>
-              <router-link to="/logout" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                  <use xlink:href="#speedometer2"/>
-                </svg>
-                Logout
-              </router-link>
+            <div style="padding-left: 10px">
+              <img src="../assets/category.png" width="32" height="32" alt="category">
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <br/>
   </header>
 </template>
 
@@ -68,5 +42,7 @@ export default {
 </script>
 
 <style scoped>
-
+header {
+  background: gray;
+}
 </style>

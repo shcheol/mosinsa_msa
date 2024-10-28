@@ -67,18 +67,18 @@ values ('categoryId31', '슬립온', 'categoryId19'),
        ('categoryId52', '아날로그', 'categoryId30'),
        ('categoryId53', '시계용품', 'categoryId30');
 
-insert into stock
-values ('stockId1', 10, 'ON'),
-       ('stockId2', 20, 'SOLD_OUT'),
-       ('stockId3', 30, 'SOLD_OUT'),
-       ('stockId4', 30, 'ON'),
-       ('stockId5', 30, 'ON');
+insert into stock(total, status, created_date, last_modified_date)
+values ( 10, 'ON', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ( 20, 'SOLD_OUT', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ( 30, 'SOLD_OUT', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ( 30, 'ON', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ( 30, 'ON', '2024-05-25 12:20:35', '2024-05-25 12:20:35');
 insert into product (product_id, name, price, category_id, stock_id, created_date, last_modified_date)
-values ('productId1', '반팔', 2000, 'categoryId1', 'stockId1', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
-       ('productId2', '청바지', 1000, 'categoryId2', 'stockId2', '2024-05-25 15:20:35', '2024-05-25 12:20:35'),
-       ('productId3', '코트', 3000, 'categoryId3', 'stockId3', '2024-05-25 15:21:35', '2024-05-25 12:20:35'),
-       ('productId4', '비슬로우', 62910, 'categoryId1', 'stockId4', '2024-06-25 15:21:35', '2024-05-25 12:20:35'),
-       ('productId5', '검정반팔', 2000, 'categoryId1', 'stockId5', '2024-02-25 15:21:35', '2024-05-25 12:20:35');
+values ('productId1', '반팔', 2000, 'categoryId1', 1, '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ('productId2', '청바지', 1000, 'categoryId2', 2, '2024-05-25 15:20:35', '2024-05-25 12:20:35'),
+       ('productId3', '코트', 3000, 'categoryId3', 3, '2024-05-25 15:21:35', '2024-05-25 12:20:35'),
+       ('productId4', '비슬로우', 62910, 'categoryId1', 4, '2024-06-25 15:21:35', '2024-05-25 12:20:35'),
+       ('productId5', '검정반팔', 2000, 'categoryId1', 5, '2024-02-25 15:21:35', '2024-05-25 12:20:35');
 
 
 

@@ -12,7 +12,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 create table category
 (
-    category_id varchar(255) not null,
+    category_id varchar(255)        not null,
     name        varchar(255) unique not null,
     parent_id   varchar(255),
     primary key (category_id)
@@ -20,34 +20,38 @@ create table category
 
 create table product
 (
-    product_id   varchar(255) not null,
-    name         varchar(255),
-    price        integer,
-    category_id  varchar(255),
-    stock_id     varchar(255),
-    created_date timestamp,
+    product_id         varchar(255) not null,
+    name               varchar(255),
+    price              integer,
+    category_id        varchar(255),
+    brand        varchar(255),
+    stock_id           bigint,
+    created_date       timestamp,
     last_modified_date timestamp,
     primary key (product_id)
 ) engine = InnoDB;
 
 create table stock
 (
-    stock_id varchar(255) not null,
-    total    bigint       not null,
-    status   varchar(255) not null,
-    primary key (stock_id)
+    id                 bigint       not null auto_increment,
+    total              bigint       not null,
+    status             varchar(255) not null,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
 ) engine = InnoDB;
 
 create table stock_history
 (
-    stock_history_id varchar(255) not null,
-    order_num        varchar(255) not null,
-    member_id        varchar(255) not null,
-    product_id       varchar(255) not null,
-    quantity         bigint,
-    type             varchar(255) not null,
-    created_date     datetime(6),
-    primary key (stock_history_id)
+    id                 bigint       not null auto_increment,
+    order_num          varchar(255) not null,
+    member_id          varchar(255) not null,
+    product_id         varchar(255) not null,
+    quantity           bigint,
+    type               varchar(255) not null,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
 ) engine = InnoDB;
 
 create table comment

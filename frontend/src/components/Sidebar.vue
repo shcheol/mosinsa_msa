@@ -1,10 +1,11 @@
 <template>
-  <sidebar-menu
+  <sidebar-menu class="sidebar"
       :collapsed="collapsed"
       :menu="menu"
       :show-one-child="true"
       :relative="false"
       :hide-toggle="false"
+      :theme="'white-theme'"
       @collapse="onCollapse"
       @itemClick="onItemClick"
   ></sidebar-menu>
@@ -22,6 +23,7 @@ export default {
           hiddenOnCollapse: false,
           title: "CATEGORY"
         },
+
       ],
       collapsed: true,
       temp: [],
@@ -81,4 +83,12 @@ export default {
 </script>
 
 <style>
+.sidebar.v-sidebar-menu .vsm-arrow:after {
+  content: "\f105";
+  font-family: "FontAwesome",sans-serif;
+}
+.sidebar.v-sidebar-menu .collapse-btn:after {
+  content: "\f07e";
+  font-family: "FontAwesome",sans-serif;
+}
 </style>

@@ -1,4 +1,4 @@
-insert into product (product_id, name, price, category_id, stock_id, created_date, last_modified_date)
+insert into product (product_id, name, price, category_id, brand, created_date, last_modified_date)
 values (SUBSTR(MD5(RAND()), 1, 8), 'Aurora Washed Denim Pant',    	59000,	'categoryId11','인플레이션'	, '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
        (SUBSTR(MD5(RAND()), 1, 8), '스텝 M92 코듀로이 옐로우',	134100	,'categoryId11','플랙'		, '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
 (SUBSTR(MD5(RAND()), 1, 8), 'CB 와이드 데님팬츠 (블루)',	42000,	'categoryId11','카고브로스'	, '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
