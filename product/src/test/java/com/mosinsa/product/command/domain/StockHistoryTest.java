@@ -18,8 +18,8 @@ class StockHistoryTest {
 
 	@Test
 	void equalsAndHashcode() {
-		StockHistory of = StockHistory.of("orderNum", "memberId", "productId", 10, StockHistoryType.PLUS);
-		StockHistory of1 = StockHistory.of("orderNum", "memberId", "productId", 10, StockHistoryType.MINUS);
+		StockHistory of = StockHistory.of("orderNum", "memberId", 1L, 10, StockHistoryType.PLUS);
+		StockHistory of1 = StockHistory.of("orderNum", "memberId", 1L, 10, StockHistoryType.MINUS);
 		repository.saveAll(List.of(of, of1));
 
 

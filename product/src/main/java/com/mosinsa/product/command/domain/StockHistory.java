@@ -13,7 +13,7 @@ public class StockHistory extends BaseIdEntity {
 
 	private String memberId;
 
-	private String productId;
+	private Long targetId;
 
 	private long quantity;
 
@@ -23,11 +23,11 @@ public class StockHistory extends BaseIdEntity {
 	protected StockHistory() {
 	}
 
-	public static StockHistory of(String orderNum, String memberId, String productId, long quantity, StockHistoryType type) {
+	public static StockHistory of(String orderNum, String memberId, Long targetId, long quantity, StockHistoryType type) {
 		StockHistory stockHistory = new StockHistory();
 		stockHistory.orderNum = orderNum;
 		stockHistory.memberId = memberId;
-		stockHistory.productId = productId;
+		stockHistory.targetId = targetId;
 		stockHistory.quantity = quantity;
 		stockHistory.type = type;
 		return stockHistory;

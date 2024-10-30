@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,9 @@ public class ViewProductController {
 	public ResponseEntity<Page<ProductSummary>> findMyProducts(@Login CustomerInfo customerInfo, Pageable pageable) {
 
 		Page<ProductSummary> allProducts = productQueryService.findMyProducts(customerInfo.id(), pageable);
+		if (allProducts.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
 		return ResponseEntity.ok(allProducts);
 	}
 

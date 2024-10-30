@@ -41,8 +41,6 @@ class ViewProductControllerTest extends ControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("name").value("test"))
 				.andExpect(jsonPath("price").value(1000))
-				.andExpect(jsonPath("totalStock").value(10))
-				.andExpect(jsonPath("stockStatus").value("ON"))
 				.andExpect(jsonPath("productId").exists())
 				.andDo(print());
 	}

@@ -2,9 +2,7 @@ package com.mosinsa.product.infra.jpa;
 
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
-import com.mosinsa.product.query.dto.ProductSummary;
-import com.mosinsa.product.query.dto.QProductSummary;
-import com.mosinsa.product.ui.request.SearchCondition;
+import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -28,10 +26,12 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 	private final JPAQueryFactory factory;
 
 	@Override
-	public Page<ProductSummary> findByCondition(CategorySearchCondition condition, Pageable pageable) {
+	public Page<Product> findByCondition(CategorySearchCondition condition, Pageable pageable) {
 
-		List<ProductSummary> fetch = factory.select(new QProductSummary(product))
+		List<Product> fetch = factory.select(product)
 				.from(product)
+				.leftJoin(product.brand)
+				.fetchJoin()
 				.where(
 						category(condition.ids())
 				)
@@ -50,12 +50,14 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 	}
 
 	@Override
-	public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
-		if (!StringUtils.hasText(memberId)){
+	public Page<Product> findMyProducts(String memberId, Pageable pageable) {
+		if (!StringUtils.hasText(memberId)) {
 			throw new ProductException(ProductError.NOT_FOUNT_PRODUCT);
 		}
-		List<ProductSummary> fetch = factory.select(new QProductSummary(product))
+		List<Product> fetch = factory.select(product)
 				.from(product)
+				.leftJoin(product.brand)
+				.fetchJoin()
 				.innerJoin(reaction)
 				.on(product.id.id.eq(reaction.targetId))
 				.where(
@@ -91,7 +93,7 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 	}
 
 	private BooleanExpression category(Set<String> ids) {
-		return ids != null && !ids.isEmpty() ? product.category.id.id.in(ids): null;
+		return ids != null && !ids.isEmpty() ? product.category.id.id.in(ids) : null;
 	}
 
 	private BooleanExpression checkTarget(TargetEntity target) {

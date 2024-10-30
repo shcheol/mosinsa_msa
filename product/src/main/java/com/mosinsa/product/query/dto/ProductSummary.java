@@ -1,25 +1,11 @@
 package com.mosinsa.product.query.dto;
 
+
 import com.mosinsa.product.command.domain.Product;
-import com.querydsl.core.annotations.QueryProjection;
-import lombok.Value;
 
-@Value
-public class ProductSummary {
-	String productId;
-	String name;
-	int price;
+public record ProductSummary(String productId, String name, int price, String brandName) {
 
-	@QueryProjection
-	public ProductSummary(Product product) {
-		this.productId = product.getId().getId();
-		this.name = product.getName();
-		this.price = product.getPrice().getValue();
-	}
-
-	public ProductSummary(String productId, String name, int price) {
-		this.productId = productId;
-		this.name = name;
-		this.price = price;
+	public static ProductSummary of(Product product){
+		return new ProductSummary(product.getId().getId(), product.getName(), product.getPrice().getValue(), product.getBrand().getName());
 	}
 }

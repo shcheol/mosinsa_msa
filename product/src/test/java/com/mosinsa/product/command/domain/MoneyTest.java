@@ -17,7 +17,7 @@ class MoneyTest {
 
     @Test
     void createFail(){
-        assertThrows(InvalidMoneyException.class, () -> Money.of(0));
+        assertThrows(InvalidMoneyException.class, () -> Money.of(-1));
     }
 
     @Test
@@ -30,6 +30,6 @@ class MoneyTest {
     @Test
     void multiplyFail(){
         Money of = Money.of(100);
-        assertThrows(InvalidMoneyException.class, () -> of.multiply(0));
+        assertThrows(InvalidMoneyException.class, () -> of.multiply(-1));
     }
 }

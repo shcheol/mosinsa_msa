@@ -41,7 +41,7 @@ class ProductQueryServiceImplTest {
 		int idx = 0;
 		List<String> answers = List.of("productId4", "productId1", "productId5");
 		for (ProductSummary productSummary : content) {
-			assertThat(productSummary.getProductId()).isEqualTo(answers.get(idx++));
+			assertThat(productSummary.productId()).isEqualTo(answers.get(idx++));
 		}
 	}
 
@@ -55,11 +55,8 @@ class ProductQueryServiceImplTest {
 		int idx = 0;
 		List<String> answers = List.of("productId2", "productId1");
 		for (ProductSummary productSummary : content) {
-			assertThat(productSummary.getProductId()).isEqualTo(answers.get(idx++));
+			assertThat(productSummary.productId()).isEqualTo(answers.get(idx++));
 		}
-		PageRequest of = PageRequest.of(0, 3);
-		assertThrows(ProductException.class,
-				() -> productQueryServiceImpl.findMyProducts("memberId2xxx", of));
 	}
 
 }

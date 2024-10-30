@@ -1,6 +1,9 @@
 package com.mosinsa.product.ui;
 
+import com.mosinsa.product.command.application.ProductRegister;
+import com.mosinsa.product.command.application.ProductRegisterImpl;
 import com.mosinsa.product.command.application.ProductService;
+import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.query.dto.ProductSummary;
 import com.mosinsa.product.command.domain.StockStatus;
 import com.mosinsa.product.query.dto.ProductDetails;
@@ -22,20 +25,24 @@ public class ProductPresentationObjectFactory {
 		return new ProductServiceStub();
 	}
 
+	@Bean
+	public ProductRegister productRegister() {
+		return new ProductRegisterStub();
+	}
 
 	@Bean
 	public ProductQueryService productQueryService() {
 		return new ProductQueryService() {
 			@Override
 			public ProductDetails getProductById(String productId) {
-				return new ProductDetails("id","test", 1000, 10, 10, StockStatus.ON);
+				return new ProductDetails(Product.of("test",1000, null), List.of());
 			}
 
 			@Override
 			public Page<ProductSummary> findProductsByCondition(SearchCondition condition, Pageable pageable) {
 				return new PageImpl<>(
-						List.of(new ProductSummary("", "", 1000),
-								new ProductSummary("", "", 1000))
+						List.of(new ProductSummary("", "", 1000,""),
+								new ProductSummary("", "", 1000,""))
 				);
 			}
 
@@ -43,8 +50,8 @@ public class ProductPresentationObjectFactory {
 			public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
 				return new PageImpl<>(
 						List.of(
-								new ProductSummary("", "", 1000),
-								new ProductSummary("", "", 1000)
+								new ProductSummary("", "", 1000,""),
+								new ProductSummary("", "", 1000,"")
 						)
 				);
 			}

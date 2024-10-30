@@ -1,10 +1,13 @@
 SET FOREIGN_KEY_CHECKS = 0;
+truncate table product;
+truncate table product_options;
+truncate table product_options_value;
+truncate table brand;
 truncate table stock;
 truncate table stock_history;
-truncate table product;
 truncate table category;
-truncate table review;
 truncate table comment;
+truncate table review;
 truncate table reaction;
 truncate table reaction_info;
 SET FOREIGN_KEY_CHECKS = 1;
@@ -73,14 +76,19 @@ values ( 10, 'ON', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
        ( 30, 'SOLD_OUT', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
        ( 30, 'ON', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
        ( 30, 'ON', '2024-05-25 12:20:35', '2024-05-25 12:20:35');
-insert into product (product_id, name, price, category_id, stock_id, created_date, last_modified_date)
+insert into product (product_id, name, price, category_id, brand_id, created_date, last_modified_date)
 values ('productId1', '반팔', 2000, 'categoryId1', 1, '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
        ('productId2', '청바지', 1000, 'categoryId2', 2, '2024-05-25 15:20:35', '2024-05-25 12:20:35'),
        ('productId3', '코트', 3000, 'categoryId3', 3, '2024-05-25 15:21:35', '2024-05-25 12:20:35'),
        ('productId4', '비슬로우', 62910, 'categoryId1', 4, '2024-06-25 15:21:35', '2024-05-25 12:20:35'),
        ('productId5', '검정반팔', 2000, 'categoryId1', 5, '2024-02-25 15:21:35', '2024-05-25 12:20:35');
 
-
+insert into brand(name, description, created_date, last_modified_date)
+values ('test1','test brand', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ('test2','test brand', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ('test3','test brand', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ('test4','test brand', '2024-05-25 12:20:35', '2024-05-25 12:20:35'),
+       ('test5','test brand', '2024-05-25 12:20:35', '2024-05-25 12:20:35');
 
 insert into review
 values ('reviewId1', 'good', '2024-02-25 15:21:35', 'N', 'writer1', 'writerId1', 'productId1', 4),

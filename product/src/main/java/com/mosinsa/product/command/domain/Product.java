@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,32 +18,37 @@ public class Product extends AuditingEntity {
 
 	@EmbeddedId
 	private ProductId id;
-
 	private String name;
 
-	private String brand;
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "brand_id")
+	private Brand brand;
 	@Convert(converter = MoneyConverter.class)
 	@Column(name = "price")
 	private Money price;
-
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "stock_id")
-	private Stock stock;
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	private List<ProductOptions> productOptions = new ArrayList<>();
 
-	public static Product create(String name, Integer price, Category category, long stock) {
+	public static Product of(String name, int price, Category category) {
 		Product product = new Product();
 		product.id = ProductId.newId();
 		product.name = name;
 		product.price = Money.of(price);
 		product.category = category;
-		product.stock = Stock.of(stock);
 		return product;
 	}
+
+	public void addOptions(List<ProductOptions> options){
+		for (ProductOptions option : options) {
+			this.productOptions.add(option);
+			option.setProduct(this);
+		}
+	}
+
 
 	@Override
 	public boolean equals(Object o) {
