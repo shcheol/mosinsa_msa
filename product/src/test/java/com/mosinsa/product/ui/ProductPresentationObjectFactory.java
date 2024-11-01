@@ -35,7 +35,7 @@ public class ProductPresentationObjectFactory {
 		return new ProductQueryService() {
 			@Override
 			public ProductDetails getProductById(String productId) {
-				return new ProductDetails(Product.of("test",1000, null), List.of());
+				return new ProductDetails(Product.of("test",1000, null), List.of(), null);
 			}
 
 			@Override

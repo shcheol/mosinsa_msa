@@ -33,8 +33,7 @@ class ProductControllerTest extends ControllerTest {
 												{
 													"optionsValue":"FREE",
 													"changePrice":1000,
-													"changeType":"PLUS",
-													"stock":10
+													"changeType":"PLUS"
 												}
 											]
 										}
@@ -80,8 +79,7 @@ class ProductControllerTest extends ControllerTest {
 												{
 													"optionsValue":"FREE",
 													"changePrice":1000,
-													"changeType":"PLUS",
-													"stock":10
+													"changeType":"PLUS"
 												}
 											]
 										}
@@ -109,8 +107,7 @@ class ProductControllerTest extends ControllerTest {
 												{
 													"optionsValue":"FREE",
 													"changePrice":1000,
-													"changeType":"PLUS",
-													"stock":10
+													"changeType":"PLUS"
 												}
 											]
 										}
@@ -140,8 +137,7 @@ class ProductControllerTest extends ControllerTest {
 												{
 													"optionsValue":"FREE",
 													"changePrice":1000,
-													"changeType":"PLUS",
-													"stock":10
+													"changeType":"PLUS"
 												}
 											]
 										}

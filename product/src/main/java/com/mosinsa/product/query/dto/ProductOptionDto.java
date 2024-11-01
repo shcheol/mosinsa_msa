@@ -4,6 +4,6 @@ import com.mosinsa.product.command.domain.ProductOption;
 
 import java.util.List;
 
-public record ProductOptionDto(ProductOption optionName, List<ProductOptionsValueDto> productOptionsValues) {
+public record ProductOptionDto(Long id, ProductOption optionName, List<ProductOptionsValueDto> productOptionsValues) {
 
 }

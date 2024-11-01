@@ -1,7 +1,9 @@
 SET FOREIGN_KEY_CHECKS = 0;
 drop table if exists product;
-drop table if exists product_option;
+drop table if exists product_options;
 drop table if exists product_options_value;
+drop table if exists option_combinations;
+drop table if exists option_combination_values;
 drop table if exists brand;
 drop table if exists stock;
 drop table if exists stock_history;
@@ -53,13 +55,33 @@ create table product_options_value
     id                 bigint not null auto_increment,
     change_price       integer,
     change_type        varchar(255),
-    options_value              varchar(255),
+    options_value      varchar(255),
     product_option_id  bigint,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
+
+create table option_combinations
+(
+    id                 bigint not null auto_increment,
+    product_id         varchar(255),
     stock_id           bigint,
     created_date       datetime(6),
     last_modified_date datetime(6),
     primary key (id)
 ) engine = InnoDB;
+
+create table option_combination_values
+(
+    id                       bigint not null auto_increment,
+    option_combinations_id   bigint,
+    product_options_value_id bigint,
+    created_date             datetime(6),
+    last_modified_date       datetime(6),
+    primary key (id)
+) engine = InnoDB;
+
 create table stock
 (
     id                 bigint       not null auto_increment,

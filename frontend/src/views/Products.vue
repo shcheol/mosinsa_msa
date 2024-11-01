@@ -3,7 +3,8 @@
     <div class="main__container">
       <div class="item" v-for="(product, i) in products" :key="product">
         <p @click="productDetails(i)">{{ product.name }}</p>
-        <p>가격 : {{ product.price }} 원</p>
+        <p>{{ product.brand.name }}</p>
+        <p>{{ product.price }} 원</p>
       </div>
     </div>
 
@@ -44,7 +45,6 @@ export default {
   props: ['category', 'selectId'],
   watch: {
     category() {
-      console.log('pro')
       this.categoryId = this.category;
       this.selectedId = this.selectId;
       console.log(this.selectedId);
@@ -57,7 +57,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.selectedId);
     this.getProducts(this.selectedId);
   },
   methods: {
@@ -71,6 +70,7 @@ export default {
       apiBoard.getProducts(categoryId)
           .then((response) => {
             this.products = response.data.content;
+            console.log(this.products)
             this.pageArr = new Array(response.data.totalPages);
             this.first = response.data.first;
             this.last = response.data.last;

@@ -23,17 +23,19 @@ public class ProductRegisterImpl implements ProductRegister {
 	public ProductId register(CreateProductRequest request) {
 		Category category = categoryService.getCategory(request.categoryId());
 
-		List<ProductOptionsValue> of = List.of(
-				ProductOptionsValue.of("FREE", Money.of(0), ChangeType.HOLD)
-		);
-		for (ProductOptionsValue productOptionsValue : of) {
-			productOptionsValue.addStock(Stock.of(200));
-		}
-		ProductOptions po = ProductOptions.of(ProductOption.SIZE);
-		po.addOptionsValue(of);
+		List<ProductOptions> productOptions = request.productOptions().stream()
+				.map(po -> {
+					List<ProductOptionsValue> productOptionsValues = po.productOptionValues()
+							.stream()
+							.map(pov -> ProductOptionsValue.of(pov.optionsValue(), Money.of(pov.changePrice()), pov.changeType()))
+							.toList();
+					ProductOptions of = ProductOptions.of(po.productOption());
+					of.addOptionsValue(productOptionsValues);
+					return of;
+				}).toList();
 
 		Product product = productRepository.save(Product.of(request.name(), request.price(), category));
-		product.addOptions(List.of(po));
+		product.addOptions(productOptions);
 
 		return product.getId();
 	}

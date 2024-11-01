@@ -5,9 +5,7 @@ import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.infra.jpa.CategorySearchCondition;
-import com.mosinsa.product.query.dto.ProductDetails;
-import com.mosinsa.product.query.dto.ProductOptionDto;
-import com.mosinsa.product.query.dto.ProductSummary;
+import com.mosinsa.product.query.dto.*;
 import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.command.domain.ProductRepository;
 import com.mosinsa.product.ui.request.SearchCondition;
@@ -31,7 +29,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
 	private final CategoryService categoryService;
 	private final ProductRepository productRepository;
-	private final OptionStrategyFinder optionStrategyFinder;
+	private final OptionCombinationService optionCombinationService;
 
 	@Override
 	public ProductDetails getProductById(String productId) {
@@ -41,11 +39,18 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
 		List<ProductOptionDto> productOptionDtos = product.getProductOptions()
 				.stream()
-				.map(productOptions -> optionStrategyFinder.findOptionStrategy(productOptions.getOptionName())
-						.getOptionValues(productOptions))
+				.map(productOptions ->
+						new ProductOptionDto(productOptions.getId(),
+								productOptions.getOptionName(),
+								productOptions.getProductOptionsValues()
+										.stream()
+										.map(ProductOptionsValueDto::of).toList()))
 				.toList();
 
-		return new ProductDetails(product, productOptionDtos);
+		OptionCombinationMapDto combinationMap = optionCombinationService.getCombinationMap(product);
+
+
+		return new ProductDetails(product, productOptionDtos, combinationMap);
 	}
 
 	@Override

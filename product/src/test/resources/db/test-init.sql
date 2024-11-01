@@ -2,6 +2,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 truncate table product;
 truncate table product_options;
 truncate table product_options_value;
+truncate table option_combinations;
+truncate table option_combination_values;
 truncate table brand;
 truncate table stock;
 truncate table stock_history;

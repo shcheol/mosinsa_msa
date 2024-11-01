@@ -15,7 +15,7 @@ public record CreateProductRequest(@NotBlank String name,
 
 
 	public record ProductOptionsDto(ProductOption productOption, List<ProductOptionValueDto> productOptionValues) {
-		record ProductOptionValueDto(String optionsValue, int changePrice, ChangeType changeType, int stock){
+		public record ProductOptionValueDto(String optionsValue, int changePrice, ChangeType changeType){
 
 		}
 	}
