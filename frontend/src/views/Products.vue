@@ -1,11 +1,13 @@
 <template>
   <div class="container">
     <div class="main__container">
-      <div class="item" v-for="(product, i) in products" :key="product">
-        <p @click="productDetails(i)">{{ product.name }}</p>
-        <p>{{ product.brand.name }}</p>
+      <div style="display: grid;  grid-template-columns: 1fr 1fr 1fr;">
+      <div @click="productDetails(i)" class="item" v-for="(product, i) in products" :key="product" >
+        <span >{{ product.name }}</span>
+        <p style="color: #888888; font-size: small">{{ product.brand.name }}</p>
         <p>{{ product.price }} 원</p>
       </div>
+    </div>
     </div>
 
     <div class="page-info">
@@ -15,7 +17,7 @@
             <p class='page-link' @click="getProducts(currentPage -1)">Prev</p>
           </li>
           <li v-for="(cur, idx) in pageArr" :key="cur" class='page-item'>
-            <p :class="currentPage === idx? 'page-link active':'page-link'" @click="showProjects(idx)">{{ idx + 1 }}</p>
+            <p :class="currentPage === idx? 'page-link active':'page-link'" @click="getProducts(idx)">{{ idx + 1 }}</p>
           </li>
           <li :class="last? 'page-item disabled' : 'page-item'">
             <p class='page-link' @click="getProducts(currentPage + 1)">Next</p>

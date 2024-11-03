@@ -1,13 +1,11 @@
 package com.mosinsa.product.ui;
 
 import com.mosinsa.product.command.application.ProductRegister;
-import com.mosinsa.product.command.application.ProductRegisterImpl;
 import com.mosinsa.product.command.application.ProductService;
 import com.mosinsa.product.command.domain.Product;
-import com.mosinsa.product.query.dto.ProductSummary;
-import com.mosinsa.product.command.domain.StockStatus;
-import com.mosinsa.product.query.dto.ProductDetails;
 import com.mosinsa.product.query.ProductQueryService;
+import com.mosinsa.product.query.dto.ProductDetails;
+import com.mosinsa.product.query.dto.ProductSummary;
 import com.mosinsa.product.ui.request.SearchCondition;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +33,14 @@ public class ProductPresentationObjectFactory {
 		return new ProductQueryService() {
 			@Override
 			public ProductDetails getProductById(String productId) {
-				return new ProductDetails(Product.of("test",1000, null), List.of(), null);
+				return new ProductDetails(Product.of("test",1000, null), List.of(), null, null);
 			}
 
 			@Override
 			public Page<ProductSummary> findProductsByCondition(SearchCondition condition, Pageable pageable) {
 				return new PageImpl<>(
-						List.of(new ProductSummary("", "", 1000,""),
-								new ProductSummary("", "", 1000,""))
+						List.of(new ProductSummary("", "", 1000,null),
+								new ProductSummary("", "", 1000,null))
 				);
 			}
 
@@ -50,8 +48,8 @@ public class ProductPresentationObjectFactory {
 			public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
 				return new PageImpl<>(
 						List.of(
-								new ProductSummary("", "", 1000,""),
-								new ProductSummary("", "", 1000,"")
+								new ProductSummary("", "", 1000,null),
+								new ProductSummary("", "", 1000,null)
 						)
 				);
 			}

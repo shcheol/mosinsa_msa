@@ -12,6 +12,7 @@ drop table if exists comment;
 drop table if exists review;
 drop table if exists reaction;
 drop table if exists reaction_info;
+drop table if exists sales;
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table category
@@ -26,6 +27,19 @@ create table brand
     id                 bigint not null auto_increment,
     name               varchar(255),
     description        varchar(255),
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
+create table sales
+(
+    id                 bigint not null auto_increment,
+    product_id         varchar(255),
+    sales_policy_type  varchar(255),
+    start_condition    varchar(255),
+    end_condition      varchar(255),
+    discount_type      varchar(255),
+    amount             integer,
     created_date       datetime(6),
     last_modified_date datetime(6),
     primary key (id)

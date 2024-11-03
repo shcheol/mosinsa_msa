@@ -8,21 +8,30 @@
             <option disabled value="">{{ productOption.optionName }}</option>
             <option v-for="(optionValue) in productOption.productOptionsValues" :key="optionValue"
                     :value="optionValue" style="  border: 1px solid #888;border-radius: 8px;">
-              {{ optionValue.optionValue }}
+              <div style="display: inline; padding-right: 10px">
+                {{ optionValue.optionValue }}
+                <div v-if="optionValue.changeType==='PLUS'"> + {{optionValue.changePrice}}</div>
+                <div v-else-if="optionValue.changeType==='MINUS'"> - {{optionValue.changePrice}}</div>
+              </div>
+
             </option>
           </select>
           <br/>
 
         </div>
-        <div v-for="selected in selectedProducts" :key="selected">
+        <div v-for="(selected, idx) in selectedProducts" :key="selected">
           <div>
-            <p v-for="op in selected.options" :key="op">{{ op.name }}</p>
-            <p>{{ selected.stock }}</p>
+            <p style="display: inline; padding-right: 3px" v-for="op in selected.options" :key="op">{{ op.name }}</p>
+            <button class="btn btn-light text-danger text-small btn-sm" style="padding-left: 10px" @click="cancel(idx)">X</button>
+
             <input type="number" class="form-control" id="quantity" name="quantity" v-model="selected.stock" @change="stockChange(selected)"/>
-            <p>{{ selected.price }}</p>
+            <p>{{ selected.totalPrice }}</p>
           </div>
         </div>
 
+        <div>
+          <p>총 결제 금액: {{orderPrice}}</p>
+        </div>
         <button class="btn btn-dark" @click="orders(product.productId, product.price, quantity)">주문하기</button>
       </div>
     </div>
@@ -40,7 +49,12 @@
       </tr>
       <tr>
         <td>가격</td>
-        <td v-if="product!=null">{{ product.price }}</td>
+        <td v-if="product!=null"><div>
+          <p style="font-size: small;color: #888888; text-decoration: line-through; padding-bottom: 1px">{{ product.price }}원</p>
+          <p style="display: inline; color: red; padding-right: 3px">{{product.sales.discountRate}}%</p>
+          <p style="display: inline; color: black">{{product.sales.discountedPrice}}원</p>
+        </div>
+        </td>
       </tr>
       <div v-if="reactionCntInfo!=null" class="likes" style="display: inline;" @click="likes(product.productId)">
         <img v-if="!reactionCntInfo.hasReacted" src="../assets/likes.png" width="50" height="50"
@@ -81,6 +95,7 @@ export default {
       result: [],
       optionLen: 0,
       selectedProducts: [],
+      orderPrice: 0,
     }
   },
   mounted() {
@@ -137,7 +152,8 @@ export default {
           });
     },
     stockChange(selected){
-      selected.price = selected.price * selected.stock;
+      selected.totalPrice = selected.perPrice * selected.stock;
+      this.calculateOrderPrice();
     },
     onChange() {
       for (let i = 0; i < this.optionLen; i++) {
@@ -164,17 +180,27 @@ export default {
         name: this.product.name,
         options: temp,
         stock: 1,
-        price: price,
+        perPrice: price,
+        totalPrice: price*1
       })
 
+      this.calculateOrderPrice();
       this.initResult();
+    },
+    cancel(idx){
+      this.selectedProducts.splice(idx,1);
+      this.calculateOrderPrice();
     },
     initResult() {
       this.result = [];
       for (let i = 0; i < this.optionLen; i++) {
         this.result.push('');
       }
-    }
+    },
+    calculateOrderPrice(){
+      this.orderPrice =0;
+      this.selectedProducts.forEach(sp => this.orderPrice+=sp.totalPrice);
+    },
   }
 
 }

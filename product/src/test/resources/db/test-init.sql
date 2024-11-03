@@ -12,6 +12,7 @@ truncate table comment;
 truncate table review;
 truncate table reaction;
 truncate table reaction_info;
+truncate table sales;
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into category (category_id, name)

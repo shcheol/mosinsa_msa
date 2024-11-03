@@ -36,6 +36,9 @@ public class Product extends AuditingEntity {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
 	private List<OptionCombinations> optionCombinations = new ArrayList<>();
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+	private List<Sales> sales = new ArrayList<>();
+
 	public static Product of(String name, int price, Category category) {
 		Product product = new Product();
 		product.id = ProductId.newId();
@@ -56,6 +59,13 @@ public class Product extends AuditingEntity {
 		for (OptionCombinations optionCombination : optionCombinations) {
 			this.optionCombinations.add(optionCombination);
 			optionCombination.setProduct(this);
+		}
+	}
+
+	public void addSales(List<Sales> sales){
+		for (Sales sale : sales) {
+			this.sales.add(sale);
+			sale.setProduct(this);
 		}
 	}
 

@@ -30,6 +30,7 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 	private final CategoryService categoryService;
 	private final ProductRepository productRepository;
 	private final OptionCombinationService optionCombinationService;
+	private final SalesService salesService;
 
 	@Override
 	public ProductDetails getProductById(String productId) {
@@ -49,8 +50,9 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
 		OptionCombinationMapDto combinationMap = optionCombinationService.getCombinationMap(product);
 
+		SalesDto sales = salesService.calculate(product);
 
-		return new ProductDetails(product, productOptionDtos, combinationMap);
+		return new ProductDetails(product, productOptionDtos, combinationMap, sales);
 	}
 
 	@Override
