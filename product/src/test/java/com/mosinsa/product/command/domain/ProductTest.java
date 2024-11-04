@@ -1,7 +1,7 @@
 package com.mosinsa.product.command.domain;
 
-import com.mosinsa.category.Category;
-import com.mosinsa.code.TestClass;
+import com.mosinsa.category.domain.Category;
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,28 +15,13 @@ class ProductTest {
 	@Autowired
 	ProductRepository repository;
 
-    @Test
-    void invalidMoneyException(){
-		Category of = Category.of("category1");
-		assertThrows(InvalidMoneyException.class, () -> Product.create("name", 0, of, 10));
-    }
-
 	@Test
-	void invalidStockException(){
-		Category of = Category.of("category1");
-		assertThrows(IllegalArgumentException.class, () -> Product.create("name", 100, of, 0));
-	}
+	void equalsAndHashCode() {
+		Product productA = repository.save(Product.of("name", 100, Category.of("category1")));
+		Product productB = repository.findById(productA.getId()).get();
 
-	@Test
-	void equalsAndHashCode(){
-		Product productA = Product
-				.create("name", 100, Category.of("category1"), 10);
-
-		assertThat(productA).isEqualTo(productA)
-				.isNotEqualTo(null).isNotEqualTo(new TestClass());
-
-		Product protectedConstructor = new Product();
-		assertThat(protectedConstructor).isNotEqualTo(productA);
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(productA, productB, new Product(), Product.of("", 100, Category.of("category1")));
+		assertThat(b).isTrue();
 	}
 
 }

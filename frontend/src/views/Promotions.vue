@@ -1,33 +1,32 @@
 <template>
   <div class="container">
-    <h2>진행중인 프로모션</h2>
+    <h5>진행중인 프로모션</h5>
 
-      <div class="main__container">
-        <div class="item" v-for="(promotion) in promotions" :key="promotion" @click="promotionDetails(promotion)">
-          <p v-if="promotion!=null">{{ promotion.title }}</p>
-          <p v-if="promotion!=null">{{ promotion.context }}</p>
-          <p v-if="promotion!=null">기간: {{ dateFormatting(promotion.period.startDate) }} ~ {{dateFormatting(promotion.period.endDate)}}</p>
+    <div class="main_container">
+      <div class="item" v-for="(promotion, idx) in promotions" :key="promotion" @click="promotionDetails(promotion)">
+        <div v-if="promotion!=null && idx === currentPage">
+          <p>{{ promotion.title }}</p>
+          <p>{{ promotion.context }}</p>
+          <p>기간: {{ dateFormatting(promotion.period.startDate) }} ~ {{ dateFormatting(promotion.period.endDate) }}</p>
         </div>
       </div>
-
+    </div>
 
     <div class="page-info">
       <div class="d-flex justify-content-center">
         <ul class="pagination">
-          <li :class="first? 'page-item disabled' : 'page-item'">
-            <p class='page-link' @click="getPromotions(currentPage -1)">Prev</p>
+          <li :class="'page-item'">
+            <p class='page-link' @click="showingPromotion(currentPage-1)">&lt;</p>
           </li>
-          <li v-for="(cur, idx) in pageArr" :key="cur" class='page-item'>
-            <p :class="currentPage === idx? 'page-link active':'page-link'" @click="showProjects(idx)">{{ idx + 1 }}</p>
+          <li v-for="(cur) in pageArr" :key="cur" class='page-item'>
+            <p class='page-link'> {{ currentPage + 1 }}/{{ totalElements }}</p>
           </li>
-          <li :class="last? 'page-item disabled' : 'page-item'">
-            <p class='page-link' @click="getPromotions(currentPage + 1)">Next</p>
+          <li :class="'page-item'">
+            <p class='page-link' @click="showingPromotion(currentPage + 1)"> &gt;</p>
           </li>
         </ul>
       </div>
     </div>
-
-    <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
   </div>
 </template>
 
@@ -41,34 +40,30 @@ export default {
       promotions: null,
       currentPage: 0,
       pageArr: null,
-      first: null,
-      last: null,
+      totalElements: null,
     }
   },
   mounted() {
     this.getPromotions(this.currentPage);
   },
   methods: {
-
-    getPromotions(page){
-      this.currentPage = page;
-      apiBoard.getPromotions(page)
+    showingPromotion(idx) {
+      idx = (idx + this.totalElements) % this.totalElements;
+      this.currentPage = idx;
+    },
+    getPromotions() {
+      apiBoard.getPromotions()
           .then((response) => {
             console.log(response);
             this.promotions = response.data.content;
             this.pageArr = new Array(response.data.totalPages);
-            this.first = response.data.first;
-            this.last = response.data.last;
-          })
-          .catch(function (e) {
-            console.log(e);
+            this.totalElements = response.data.totalElements;
           });
     },
-
     promotionDetails(promotion) {
-      if (!promotion.proceeding){
+      if (!promotion.proceeding) {
         alert("종료된 프로모션입니다.")
-      }else {
+      } else {
         this.$router.push({
           name: 'promotionDetails',
           params: {id: promotion.promotionId}

@@ -12,19 +12,6 @@ import java.util.List;
 
 public class ProductServiceStub implements ProductService {
 	private static boolean called = false;
-    @Override
-    public ProductId createProduct(CreateProductRequest request) {
-        if (request.name().equals("error")) {
-            throw new RuntimeException();
-        }
-        if (request.name().equals("productException4xx")) {
-            throw new ProductException(ProductError.NOT_FOUNT_PRODUCT);
-        }
-        if (request.name().equals("productException5xx")) {
-            throw new ProductException(ProductError.INTERNAL_SERVER_ERROR);
-        }
-        return ProductId.of("id");
-    }
 
     @Override
     public void orderProduct(String customerId, String orderId, List<OrderProductRequest> orderProducts) {

@@ -2,9 +2,8 @@ package com.mosinsa.product.infra.jpa;
 
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
-import com.mosinsa.product.command.application.dto.ProductQueryDto;
-import com.mosinsa.product.command.application.dto.QProductQueryDto;
-import com.mosinsa.product.ui.request.SearchCondition;
+import com.mosinsa.product.command.domain.Product;
+import com.mosinsa.product.command.domain.SalesPolicyType;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,6 +15,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.mosinsa.product.command.domain.QProduct.product;
 import static com.mosinsa.reaction.command.domain.QReaction.reaction;
@@ -27,55 +27,50 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 	private final JPAQueryFactory factory;
 
 	@Override
-	public Page<ProductQueryDto> findByCondition(SearchCondition condition, Pageable pageable) {
+	public Page<Product> findByCondition(CategorySearchCondition condition, Pageable pageable) {
 
-		List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
+		List<Product> fetch = factory.select(product)
 				.from(product)
-				.where(
-						category(condition.categoryId())
-				)
-				.orderBy(
-						product.createdDate.desc()
-				)
+				.leftJoin(product.brand)
+				.fetchJoin()
+				.where(category(condition.ids()),
+						sales(condition.sales()))
+				.orderBy(product.createdDate.desc())
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize()).fetch();
 		return PageableExecutionUtils
 				.getPage(fetch, pageable,
 						factory.select(product.count())
 								.from(product)
-								.where(
-										category(condition.categoryId())
-								)::fetchOne);
-
+								.where(category(condition.ids()),
+										sales(condition.sales()))::fetchOne);
 	}
 
 	@Override
-	public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
-		if (!StringUtils.hasText(memberId)){
+	public Page<Product> findMyProducts(String memberId, Pageable pageable) {
+		if (!StringUtils.hasText(memberId)) {
 			throw new ProductException(ProductError.NOT_FOUNT_PRODUCT);
 		}
-		List<ProductQueryDto> fetch = factory.select(new QProductQueryDto(product))
+		List<Product> fetch = factory.select(product)
 				.from(product)
+				.leftJoin(product.brand)
+				.fetchJoin()
 				.innerJoin(reaction)
 				.on(product.id.id.eq(reaction.targetId))
-				.where(
-						checkMyReaction(memberId),
+				.where(checkMyReaction(memberId),
 						checkTarget(TargetEntity.PRODUCT),
 						checkReactionType(ReactionType.LIKES),
-						checkActive()
-				)
+						checkActive())
 				.orderBy(reaction.lastModifiedDate.desc())
 				.fetch();
 		return PageableExecutionUtils
 				.getPage(fetch, pageable,
 						factory.select(product.count())
 								.from(product)
-								.where(
-										checkMyReaction(memberId),
+								.where(checkMyReaction(memberId),
 										checkTarget(TargetEntity.PRODUCT),
 										checkReactionType(ReactionType.LIKES),
-										checkActive()
-								)::fetchOne);
+										checkActive())::fetchOne);
 	}
 
 	private BooleanExpression checkActive() {
@@ -90,12 +85,16 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 		return reaction.reactionType.eq(likes);
 	}
 
-	private BooleanExpression category(String categoryId) {
-		return categoryId != null ? product.category.id.id.eq(categoryId) : null;
+	private BooleanExpression category(Set<String> ids) {
+		return ids != null && !ids.isEmpty() ? product.category.id.id.in(ids) : null;
 	}
 
 	private BooleanExpression checkTarget(TargetEntity target) {
 		return reaction.targetType.eq(target);
+	}
+
+	private BooleanExpression sales(SalesPolicyType sales) {
+		return sales != null ? product.sales.any().salesPolicy.salesPolicyType.eq(sales) : null;
 	}
 
 

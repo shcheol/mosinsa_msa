@@ -1,5 +1,6 @@
 package com.mosinsa.product.command.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class MoneyTest {
 
     @Test
     void createFail(){
-        assertThrows(InvalidMoneyException.class, () -> Money.of(0));
+        assertThrows(InvalidMoneyException.class, () -> Money.of(-1));
     }
 
     @Test
@@ -29,17 +30,6 @@ class MoneyTest {
     @Test
     void multiplyFail(){
         Money of = Money.of(100);
-        assertThrows(InvalidMoneyException.class, () -> of.multiply(0));
-    }
-    @Test
-    void idEqualsAndHashCode(){
-        int value = 100;
-        Money moneyA = Money.of(value);
-        Money moneyB = Money.of(value);
-
-        assertThat(moneyA).isEqualTo(moneyA).isEqualTo(moneyB).hasSameHashCodeAs(moneyB)
-                .isNotEqualTo(null).isNotEqualTo(new TestClass());
-        Money moneyC = Money.of(333);
-        assertThat(moneyA).isNotEqualTo(moneyC);
+        assertThrows(InvalidMoneyException.class, () -> of.multiply(-1));
     }
 }

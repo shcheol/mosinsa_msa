@@ -1,8 +1,10 @@
 package com.mosinsa.product.command.domain;
 
+import com.mosinsa.code.EqualsAndHashcodeUtils;
 import com.mosinsa.code.TestClass;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,15 +29,11 @@ class ProductIdTest {
 		String value = "id";
 		ProductId idA = ProductId.of(value);
 		ProductId idB = ProductId.of(value);
-
-		assertThat(idA).isEqualTo(idA).isEqualTo(idB).hasSameHashCodeAs(idB)
-				.isNotEqualTo(null).isNotEqualTo(new TestClass());
-
 		ProductId idC = ProductId.of("idxx");
-		assertThat(idA).isNotEqualTo(idC).doesNotHaveSameHashCodeAs(idC);
-
 		ProductId protectedConstructor = new ProductId();
-		assertThat(protectedConstructor.hashCode()).isZero();
+
+		boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(idA, idB, protectedConstructor, idC);
+		assertThat(b).isTrue();
 	}
 
 }

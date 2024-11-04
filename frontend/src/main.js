@@ -7,6 +7,8 @@ import 'vue-loading-overlay/dist/css/index.css';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import dayjs from 'dayjs'
+import VueSidebarMenu from 'vue-sidebar-menu'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
 createApp(App)
-    .use(router).use(store).use(LoadingPlugin).use(dayjs).mount('#app')
+    .use(router).use(store).use(LoadingPlugin).use(VueSidebarMenu).use(dayjs).mount('#app')

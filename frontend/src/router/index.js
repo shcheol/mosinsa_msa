@@ -10,6 +10,15 @@ const routes = [
         component: HomeView
     },
     {
+        path: '/category/:id',
+        name: 'categoryProducts',
+        component: () => import('../views/CategoryProduct.vue'),
+        props: true,
+        meta: {
+            reload: true,
+        }
+    },
+    {
         path: '/products/:id',
         name: 'productDetails',
         component: () => import('../views/ProductDetail.vue'),

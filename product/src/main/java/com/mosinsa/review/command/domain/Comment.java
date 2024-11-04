@@ -1,5 +1,6 @@
 package com.mosinsa.review.command.domain;
 
+import com.mosinsa.common.model.BooleanConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

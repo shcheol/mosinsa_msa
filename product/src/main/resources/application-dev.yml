@@ -30,6 +30,7 @@ spring:
           batch_size: 20
         order_inserts: true
         order_updates: true
+        default_batch_fetch_size: 100
   kafka:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
 #  sql:
@@ -42,6 +43,10 @@ spring:
     redis:
       port: 6666
       host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+    web:
+      pageable:
+        default-page-size: 21
+        max-page-size: 2000
 
 management:
   endpoints:
