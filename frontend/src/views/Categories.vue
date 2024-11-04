@@ -62,7 +62,6 @@ export default {
     getCategories(id) {
       apiBoard.getCategories(id)
           .then((response) => {
-            console.log(response);
             this.categoryMenu = response.data;
             this.hasSubChildCategories = this.categoryMenu.childCategories.at(0).childCategories.length > 0;
             if (this.hasSubChildCategories) {

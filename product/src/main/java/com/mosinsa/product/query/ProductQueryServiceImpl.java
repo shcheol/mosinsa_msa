@@ -60,12 +60,20 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 
 		Set<String> subIds = StringUtils.hasText(condition.categoryId()) ?
 				categoryService.getSubIds(condition.categoryId()) : new HashSet<>();
-		return productRepository.findByCondition(new CategorySearchCondition(subIds), pageable)
-				.map(ProductSummary::of);
+		return productRepository.findByCondition(new CategorySearchCondition(subIds, condition.sales()), pageable)
+				.map(product -> {
+					SalesDto salesDto = salesService.calculate(product);
+					return ProductSummary.of(product, salesDto);
+				});
 	}
 
 	@Override
 	public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
-		return productRepository.findMyProducts(memberId, pageable).map(ProductSummary::of);
+
+		return productRepository.findMyProducts(memberId, pageable)
+				.map(product -> {
+					SalesDto salesDto = salesService.calculate(product);
+					return ProductSummary.of(product, salesDto);
+				});
 	}
 }

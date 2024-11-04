@@ -48,11 +48,14 @@ export default {
         }
         return instance.get(BASE_URL + `product-service/category/${id}`)
     },
-    getProducts: function (categoryId) {
+    getProducts: function (page,categoryId) {
         if (!categoryId){
-            return instance.get(BASE_URL + 'product-service/products')
+            return instance.get(BASE_URL + `product-service/products?page=${page}`)
         }
-        return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
+        return instance.get(BASE_URL + `product-service/products?page=${page}&categoryId=${categoryId}`)
+    },
+    getSaleProducts: function (page,sales) {
+        return instance.get(BASE_URL + `product-service/products?page=${page}&sales=${sales}`)
     },
     getProductReviews: function (productId) {
         return instance.get(BASE_URL + 'product-service/reviews?productId=' + productId)

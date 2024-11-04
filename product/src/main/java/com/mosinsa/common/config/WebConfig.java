@@ -1,13 +1,17 @@
-package com.mosinsa.common.argumentresolver;
+package com.mosinsa.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mosinsa.common.argumentresolver.GuestOrLoginUserArgumentResolver;
+import com.mosinsa.common.argumentresolver.LoginUserArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.Clock;
+import java.time.ZoneId;
 import java.util.List;
 
 @Configuration
@@ -25,5 +29,10 @@ public class WebConfig implements WebMvcConfigurer {
 		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		return objectMapper;
+	}
+
+	@Bean
+	public Clock clock(){
+		return Clock.system(ZoneId.systemDefault());
 	}
 }

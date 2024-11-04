@@ -14,17 +14,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SalesService {
 
-    private final SalesPolicyStrategyProvider salesPolicyProvider;
-    private final DiscountStrategyProvider discountStrategyProvider;
+	private final SalesPolicyStrategyProvider salesPolicyProvider;
+	private final DiscountStrategyProvider discountStrategyProvider;
 
-    public SalesDto calculate(Product product) {
-        List<Sales> sales = product.getSales();
-        Money price = product.getPrice();
-        return sales.stream()
-                .map(sale -> discountStrategyProvider
-                        .provide(sale.getDiscount().getDiscountType())
-                        .calculate(price, sale))
-                .max(Comparator.comparingInt(SalesDto::discountRate))
-                .orElseThrow();
-    }
+	public SalesDto calculate(Product product) {
+
+		List<Sales> sales = product.getSales();
+		Money price = product.getPrice();
+
+		return sales.stream()
+				.filter(sale -> salesPolicyProvider.provide(sale.getSalesPolicy().getSalesPolicyType())
+						.meetCondition(sale))
+				.map(sale -> discountStrategyProvider
+						.provide(sale.getDiscount().getDiscountType())
+						.calculate(price, sale))
+				.max(Comparator.comparingInt(SalesDto::discountRate))
+				.orElse(new SalesDto(price.getValue(), 0));
+	}
 }

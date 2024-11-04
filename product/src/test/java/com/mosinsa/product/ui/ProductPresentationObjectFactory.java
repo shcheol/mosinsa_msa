@@ -39,8 +39,8 @@ public class ProductPresentationObjectFactory {
 			@Override
 			public Page<ProductSummary> findProductsByCondition(SearchCondition condition, Pageable pageable) {
 				return new PageImpl<>(
-						List.of(new ProductSummary("", "", 1000,null),
-								new ProductSummary("", "", 1000,null))
+						List.of(new ProductSummary("", "", 1000,null, null),
+								new ProductSummary("", "", 1000,null, null))
 				);
 			}
 
@@ -48,8 +48,8 @@ public class ProductPresentationObjectFactory {
 			public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
 				return new PageImpl<>(
 						List.of(
-								new ProductSummary("", "", 1000,null),
-								new ProductSummary("", "", 1000,null)
+								new ProductSummary("", "", 1000,null, null),
+								new ProductSummary("", "", 1000,null, null)
 						)
 				);
 			}

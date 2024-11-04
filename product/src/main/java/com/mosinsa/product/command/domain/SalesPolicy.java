@@ -3,10 +3,12 @@ package com.mosinsa.product.command.domain;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.Getter;
 
 import java.util.Objects;
 
 @Embeddable
+@Getter
 public class SalesPolicy {
 
     @Enumerated(EnumType.STRING)

@@ -50,9 +50,14 @@
       <tr>
         <td>가격</td>
         <td v-if="product!=null"><div>
+          <div v-if="product.sales.discountRate!==0">
           <p style="font-size: small;color: #888888; text-decoration: line-through; padding-bottom: 1px">{{ product.price }}원</p>
           <p style="display: inline; color: red; padding-right: 3px">{{product.sales.discountRate}}%</p>
           <p style="display: inline; color: black">{{product.sales.discountedPrice}}원</p>
+          </div>
+          <div v-else>
+            <p style="color: black">{{ product.price }}원</p>
+          </div>
         </div>
         </td>
       </tr>
@@ -110,7 +115,6 @@ export default {
     getProductDetails(productId) {
       apiBoard.getProductDetails(productId)
           .then((response) => {
-            console.log(response);
             this.product = response.data;
             this.optionLen = this.product.productOptions.length;
             this.initResult();
@@ -131,14 +135,12 @@ export default {
       if (this.reactionCntInfo != null) {
         if (!this.reactionCntInfo.hasReacted) {
           apiBoard.postReaction('PRODUCT', productId, 'LIKES')
-              .then((response) => {
-                console.log(response);
+              .then(() => {
                 this.totalReaction(productId)
               });
         } else {
           apiBoard.postReactionCancel('PRODUCT', productId, 'LIKES')
-              .then((response) => {
-                console.log(response);
+              .then(() => {
                 this.totalReaction(productId)
               });
         }
@@ -147,7 +149,6 @@ export default {
     totalReaction(productId) {
       apiBoard.getReactionCount('PRODUCT', productId, 'LIKES')
           .then((response) => {
-            console.log(response);
             this.reactionCntInfo = response.data;
           });
     },
@@ -162,7 +163,7 @@ export default {
         }
       }
 
-      let price = this.product.price;
+      let price = this.product.sales.discountedPrice;
       const temp = [];
       for (let i = 0; i < this.optionLen; i++) {
         temp.push({
@@ -180,7 +181,7 @@ export default {
         name: this.product.name,
         options: temp,
         stock: 1,
-        perPrice: price,
+        perPrice: this.product.sales.discountedPrice,
         totalPrice: price*1
       })
 

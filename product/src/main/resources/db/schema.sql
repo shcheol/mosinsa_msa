@@ -40,6 +40,7 @@ create table sales
     end_condition      varchar(255),
     discount_type      varchar(255),
     amount             integer,
+    active             varchar(255) not null default 'Y',
     created_date       datetime(6),
     last_modified_date datetime(6),
     primary key (id)

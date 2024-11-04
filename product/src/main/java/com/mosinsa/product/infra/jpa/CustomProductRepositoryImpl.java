@@ -3,6 +3,7 @@ package com.mosinsa.product.infra.jpa;
 import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.Product;
+import com.mosinsa.product.command.domain.SalesPolicyType;
 import com.mosinsa.reaction.command.domain.ReactionType;
 import com.mosinsa.reaction.command.domain.TargetEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -32,21 +33,17 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 				.from(product)
 				.leftJoin(product.brand)
 				.fetchJoin()
-				.where(
-						category(condition.ids())
-				)
-				.orderBy(
-						product.createdDate.desc()
-				)
+				.where(category(condition.ids()),
+						sales(condition.sales()))
+				.orderBy(product.createdDate.desc())
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize()).fetch();
 		return PageableExecutionUtils
 				.getPage(fetch, pageable,
 						factory.select(product.count())
 								.from(product)
-								.where(
-										category(condition.ids())
-								)::fetchOne);
+								.where(category(condition.ids()),
+										sales(condition.sales()))::fetchOne);
 	}
 
 	@Override
@@ -60,24 +57,20 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 				.fetchJoin()
 				.innerJoin(reaction)
 				.on(product.id.id.eq(reaction.targetId))
-				.where(
-						checkMyReaction(memberId),
+				.where(checkMyReaction(memberId),
 						checkTarget(TargetEntity.PRODUCT),
 						checkReactionType(ReactionType.LIKES),
-						checkActive()
-				)
+						checkActive())
 				.orderBy(reaction.lastModifiedDate.desc())
 				.fetch();
 		return PageableExecutionUtils
 				.getPage(fetch, pageable,
 						factory.select(product.count())
 								.from(product)
-								.where(
-										checkMyReaction(memberId),
+								.where(checkMyReaction(memberId),
 										checkTarget(TargetEntity.PRODUCT),
 										checkReactionType(ReactionType.LIKES),
-										checkActive()
-								)::fetchOne);
+										checkActive())::fetchOne);
 	}
 
 	private BooleanExpression checkActive() {
@@ -98,6 +91,10 @@ public class CustomProductRepositoryImpl implements CustomProductRepository {
 
 	private BooleanExpression checkTarget(TargetEntity target) {
 		return reaction.targetType.eq(target);
+	}
+
+	private BooleanExpression sales(SalesPolicyType sales) {
+		return sales != null ? product.sales.any().salesPolicy.salesPolicyType.eq(sales) : null;
 	}
 
 

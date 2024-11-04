@@ -27,9 +27,6 @@ export default {
     selectedCategory(id, selectId) {
       this.category = id;
       this.selectId = selectId;
-      console.log('11')
-      console.log(this.category)
-      console.log(this.selectId)
     },
   }
 }

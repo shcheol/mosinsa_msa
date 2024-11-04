@@ -1,6 +1,5 @@
 package com.mosinsa.product.query;
 
-import com.mosinsa.product.command.domain.SalesPolicy;
 import com.mosinsa.product.command.domain.SalesPolicyType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,11 +10,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SalesPolicyStrategyProvider {
 
-    private final List<SalesPolicyStrategy> salesPolicyStrategyList;
+	private final List<SalesPolicyStrategy> salesPolicyStrategyList;
 
-    public SalesPolicyStrategy provide(SalesPolicyType salesPolicyType){
-        return salesPolicyStrategyList.stream()
-                .filter(salesPolicyStrategy -> salesPolicyStrategy.isSupport(salesPolicyType))
-                .findAny().orElseThrow();
-    }
+	public SalesPolicyStrategy provide(SalesPolicyType salesPolicyType) {
+		return salesPolicyStrategyList.stream()
+				.filter(salesPolicyStrategy -> salesPolicyStrategy.isSupport(salesPolicyType))
+				.findAny().orElseThrow();
+	}
 }

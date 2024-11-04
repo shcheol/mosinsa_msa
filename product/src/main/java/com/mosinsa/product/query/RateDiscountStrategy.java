@@ -14,7 +14,10 @@ public class RateDiscountStrategy implements DiscountStrategy {
     public SalesDto calculate(Money price, Sales sale) {
 
         Discount discount = sale.getDiscount();
-        return null;
+		int amount = discount.getAmount();
+
+		int i = price.getValue() - price.getValue() * amount /100;
+		return new SalesDto(i, amount);
     }
 
     @Override

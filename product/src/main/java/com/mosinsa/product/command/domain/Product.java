@@ -63,6 +63,7 @@ public class Product extends AuditingEntity {
 	}
 
 	public void addSales(List<Sales> sales){
+		this.sales.clear();
 		for (Sales sale : sales) {
 			this.sales.add(sale);
 			sale.setProduct(this);

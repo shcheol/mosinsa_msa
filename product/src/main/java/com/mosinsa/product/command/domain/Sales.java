@@ -1,5 +1,6 @@
 package com.mosinsa.product.command.domain;
 
+import com.mosinsa.common.model.BooleanConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -14,6 +15,8 @@ public class Sales extends BaseIdEntity {
     private SalesPolicy salesPolicy;
     @Embedded
     private Discount discount;
+	@Convert(converter = BooleanConverter.class)
+	private boolean active = true;
 
     public static Sales of(SalesPolicy salesPolicy, Discount discount){
         Sales sales = new Sales();
@@ -21,7 +24,6 @@ public class Sales extends BaseIdEntity {
         sales.discount = discount;
         return sales;
     }
-
     protected void setProduct(Product product){
         this.product = product;
     }

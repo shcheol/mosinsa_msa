@@ -15,7 +15,7 @@ public class FixedDiscountStrategy implements DiscountStrategy{
         Discount discount = sale.getDiscount();
         int amount = discount.getAmount();
         Money minus = price.minus(amount);
-        int i = price.getValue() / amount;
+        int i = 100 - (minus.getValue() *100) / price.getValue();
         return new SalesDto(minus.getValue(), i);
     }
 

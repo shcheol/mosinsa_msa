@@ -1,4 +1,4 @@
-package com.mosinsa.review.command.domain;
+package com.mosinsa.common.model;
 
 import jakarta.persistence.AttributeConverter;
 
