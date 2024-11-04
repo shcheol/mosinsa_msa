@@ -11,10 +11,9 @@
 import Promotions from "@/views/Promotions";
 import SimpleCategories from "@/views/SimpleCategories";
 import TimeSaleProducts from "@/views/TimeSaleProducts";
-import Products from "@/views/Products";
 
 export default {
-  components: {TimeSaleProducts, Products, SimpleCategories, Promotions},
+  components: {TimeSaleProducts, SimpleCategories, Promotions},
   data() {
     return {
       temp: [],
