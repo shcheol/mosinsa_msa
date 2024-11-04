@@ -51,8 +51,8 @@ public class ProductQueryServiceImpl implements ProductQueryService {
 		OptionCombinationMapDto combinationMap = optionCombinationService.getCombinationMap(product);
 
 		SalesDto sales = salesService.calculate(product);
-
-		return new ProductDetails(product, productOptionDtos, combinationMap, sales);
+		BrandDto brand = new BrandDto(product.getBrand().getId(), product.getBrand().getName());
+		return new ProductDetails(product, brand, productOptionDtos, combinationMap, sales);
 	}
 
 	@Override

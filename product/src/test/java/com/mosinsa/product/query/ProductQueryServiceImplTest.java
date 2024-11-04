@@ -31,7 +31,7 @@ class ProductQueryServiceImplTest {
 
 	@Test
 	void findByCondition() {
-		SearchCondition searchCondition = new SearchCondition("categoryId1");
+		SearchCondition searchCondition = new SearchCondition("categoryId1", null);
 		Page<ProductSummary> byCondition = productQueryServiceImpl.findProductsByCondition(searchCondition, PageRequest.of(0, 3));
 		int size = byCondition.getContent().size();
 		assertThat(size).isEqualTo(3);

@@ -28,8 +28,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        default_batch_fetch_size: 100
-    #        jdbc:
+#        jdbc:
 #          batch_size: 20
 #        order_inserts: true
 #        order_updates: true
@@ -44,7 +43,7 @@ spring:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
   #  thymeleaf:
   #    prefix: classpath:/templates/
-  #    suffix: .html
+  #    suffix: .html:
   data:
     redis:
       port: 6666

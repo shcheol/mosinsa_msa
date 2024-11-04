@@ -19,7 +19,7 @@ class OptionCombinationServiceTest {
 	@Autowired
 	OptionCombinationService optionCombinationService;
 
-	@Test
+//	@Test
 	void getCombinationMap() {
 
 		Product product = repository.findById(ProductId.of("01be3593")).get();

@@ -4,6 +4,7 @@ import com.mosinsa.product.command.application.ProductRegister;
 import com.mosinsa.product.command.application.ProductService;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.query.ProductQueryService;
+import com.mosinsa.product.query.dto.BrandDto;
 import com.mosinsa.product.query.dto.ProductDetails;
 import com.mosinsa.product.query.dto.ProductSummary;
 import com.mosinsa.product.ui.request.SearchCondition;
@@ -33,7 +34,9 @@ public class ProductPresentationObjectFactory {
 		return new ProductQueryService() {
 			@Override
 			public ProductDetails getProductById(String productId) {
-				return new ProductDetails(Product.of("test",1000, null), List.of(), null, null);
+				Product test = Product.of("test", 1000, null);
+				BrandDto brandDto = new BrandDto(1L, "bName");
+				return new ProductDetails(test, brandDto, List.of(), null, null);
 			}
 
 			@Override

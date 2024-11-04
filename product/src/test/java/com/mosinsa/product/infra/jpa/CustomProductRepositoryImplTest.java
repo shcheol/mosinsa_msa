@@ -3,7 +3,6 @@ package com.mosinsa.product.infra.jpa;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.Product;
 import com.mosinsa.product.command.domain.ProductRepository;
-import com.mosinsa.product.query.dto.ProductSummary;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +26,7 @@ class CustomProductRepositoryImplTest {
 	@Test
 	void findByCategory() {
 
-		Page<Product> byCondition = repository.findByCondition(new CategorySearchCondition(Set.of("categoryId1")), PageRequest.of(0, 3));
+		Page<Product> byCondition = repository.findByCondition(new CategorySearchCondition(Set.of("categoryId1"), null), PageRequest.of(0, 3));
 		int size = byCondition.getContent().size();
 		assertThat(size).isEqualTo(3);
 
@@ -44,7 +43,7 @@ class CustomProductRepositoryImplTest {
 	@Test
 	void findProductsWithNoCategoryId() {
 
-		Page<Product> byCondition = repository.findByCondition(new CategorySearchCondition(null), PageRequest.of(0, 3));
+		Page<Product> byCondition = repository.findByCondition(new CategorySearchCondition(null,null), PageRequest.of(0, 3));
 		int size = byCondition.getContent().size();
 		assertThat(size).isEqualTo(3);
 
