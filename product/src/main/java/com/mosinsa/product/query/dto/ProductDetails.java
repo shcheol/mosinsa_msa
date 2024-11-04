@@ -15,12 +15,12 @@ public class ProductDetails {
 	List<ProductOptionDto> productOptions;
 	OptionCombinationMapDto optionCombinationMap;
 
-    public ProductDetails(Product product, List<ProductOptionDto> productOptionDtos, OptionCombinationMapDto optionCombinationMap, SalesDto sales) {
+    public ProductDetails(Product product, BrandDto brand, List<ProductOptionDto> productOptionDtos, OptionCombinationMapDto optionCombinationMap, SalesDto sales) {
         this.productId = product.getId().getId();
         this.name = product.getName();
         this.price = product.getPrice().getValue();
         this.sales = sales;
-		this.brand = new BrandDto(product.getBrand().getId(), product.getBrand().getName());
+		this.brand = brand;
 		this.productOptions = productOptionDtos;
 		this.optionCombinationMap = optionCombinationMap;
     }

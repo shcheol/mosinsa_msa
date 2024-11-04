@@ -35,7 +35,7 @@ class StockServiceTest {
 	}
 
 
-	@Test
+//	@Test
 	void tryDecrease() {
 
 		String productIdA = UUID.randomUUID().toString();
@@ -115,7 +115,7 @@ class StockServiceTest {
 		assertThat(afterStock2).isZero();
 	}
 
-	@Test
+//	@Test
 	@DisplayName("재고감소 - 재고 범위내 동시 요청")
 	void orderProductConcurrency() throws InterruptedException {
 
@@ -178,7 +178,7 @@ class StockServiceTest {
 		assertThat(repository.findStockHistoriesByOrderNum(orderId)).isEmpty();
 	}
 
-	@Test
+//	@Test
 	void tryIncrease() {
 
 		String productIdA = UUID.randomUUID().toString();

@@ -37,7 +37,7 @@ class ViewProductControllerTest extends ControllerTest {
 
 	@Test
 	void productDetails() throws Exception {
-		mockMvc.perform(get("/products/productId1"))
+		mockMvc.perform(get("/products/01be3593"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("name").value("test"))
 				.andExpect(jsonPath("price").value(1000))
