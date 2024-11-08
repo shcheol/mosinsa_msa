@@ -55,7 +55,7 @@ mosinsa:
       create: mosinsa-customer-create
     promotion:
       participate: mosinsa-promotion-participate
-
+  base-url: 152.67.205.195:8000
 feignclient:
   url:
     customer: 152.67.205.195:8000/customer-service

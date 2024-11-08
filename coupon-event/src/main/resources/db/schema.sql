@@ -53,9 +53,9 @@ create table promotion
     title                  varchar(255),
     contexts               varchar(255),
     date_unit              varchar(255),
+    promotion_condition_id bigint,
     end_date               datetime(6),
     start_date             datetime(6),
-    promotion_condition_id bigint,
     primary key (promotion_id)
 ) engine = InnoDB;
 

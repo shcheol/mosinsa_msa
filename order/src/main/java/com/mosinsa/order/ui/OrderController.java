@@ -1,6 +1,5 @@
 package com.mosinsa.order.ui;
 
-import com.hcs.idempotencyapi.aop.IdempotencyApi;
 import com.mosinsa.order.command.application.OrderService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.CreateOrderRequest;
@@ -19,7 +18,7 @@ public class OrderController {
 	private final OrderService orderService;
 
 	@PostMapping("/order")
-	@IdempotencyApi(storeType = "redisIdempotentKeyStore")
+//	@IdempotencyApi(storeType = "redisIdempotentKeyStore")
 	public ResponseEntity<OrderDetail> orders(@RequestBody CreateOrderRequest orderRequest) {
 
 		OrderDetail orderDto = orderService.order(orderRequest.orderConfirm());

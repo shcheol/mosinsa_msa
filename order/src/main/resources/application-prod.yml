@@ -62,7 +62,6 @@ resilience4j.timelimiter:
       timeoutDuration: 5s
       cancelRunningFuture: true
 
-
 logging:
   level:
     root: info

@@ -1,6 +1,6 @@
 package com.mosinsa.promotion.infra.api;
 
-import com.mosinsa.promotion.infra.api.feignclient.order.OrderSummary;
+import com.mosinsa.promotion.infra.api.httpinterface.OrderSummary;
 
 import java.util.List;
 
