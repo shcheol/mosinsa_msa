@@ -19,6 +19,7 @@ public class PromotionParticipatedEventHandler {
 
 	@KafkaListener(topics = "${mosinsa.topic.promotion.participate}")
 	public void promotionParticipatedEvent(String message) throws JsonProcessingException {
+		log.info("promotionParticipatedEvent: {}",message);
 		ParticipatedEvent participatedEvent = om.readValue(message, ParticipatedEvent.class);
 
 		couponService.issue(participatedEvent.memberId(), participatedEvent.couponGroupSequence());

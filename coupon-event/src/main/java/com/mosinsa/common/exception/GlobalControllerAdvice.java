@@ -24,7 +24,6 @@ public class GlobalControllerAdvice {
 		return GlobalResponseEntity.error(exception.getError().getStatus(), exception.getError().getMessage());
 	}
 
-
 	@ExceptionHandler(ExternalServerException.class)
 	@ResponseBody
 	public static ResponseEntity<BaseResponse> couponExceptionHandler(ExternalServerException exception) {
