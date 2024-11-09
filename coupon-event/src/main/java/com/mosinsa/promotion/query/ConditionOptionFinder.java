@@ -1,6 +1,7 @@
 package com.mosinsa.promotion.query;
 
 import com.mosinsa.promotion.command.domain.PromotionConditions;
+import com.mosinsa.promotion.query.ConditionStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ public class ConditionOptionFinder {
     public ConditionStrategy findConditionOption(PromotionConditions promotionConditions) {
         return conditionStrategies.stream()
                 .filter(conditionStrategy -> conditionStrategy.isSupport(promotionConditions))
-                .findAny().orElseThrow();
+                .findAny()
+                .orElseThrow();
     }
 }

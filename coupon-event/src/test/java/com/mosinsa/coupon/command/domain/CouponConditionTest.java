@@ -16,7 +16,7 @@ class CouponConditionTest {
         CouponCondition couponCondition1 = CouponCondition.of(3000L, date, DiscountPolicy.NONE);
         CouponCondition couponCondition2 = CouponCondition.of(3000L, date, DiscountPolicy.NONE);
         CouponCondition couponCondition3 = CouponCondition.of(3000L, date.plusDays(3), DiscountPolicy.NONE);
-        CouponCondition couponCondition4 = CouponCondition.of(3000L, date, DiscountPolicy.TEN_PERCENTAGE);
+        CouponCondition couponCondition4 = CouponCondition.of(3000L, date, DiscountPolicy.PERCENT_10);
         CouponCondition couponCondition = new CouponCondition();
 
         boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(couponCondition1, couponCondition2, couponCondition, couponCondition3, couponCondition4);

@@ -1,8 +1,9 @@
-package com.mosinsa.promotion.query;
+package com.mosinsa.promotion.query.dateunitstrategy;
 
 import com.mosinsa.promotion.command.domain.DateUnit;
 import com.mosinsa.promotion.command.domain.PromotionHistory;
 import com.mosinsa.promotion.command.domain.PromotionHistoryRepository;
+import com.mosinsa.promotion.query.dateunitstrategy.ParticipateDailyStrategy;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ParticipateDailyStrategyTest {

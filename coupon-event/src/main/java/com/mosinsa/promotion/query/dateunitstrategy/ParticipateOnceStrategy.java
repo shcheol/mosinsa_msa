@@ -1,13 +1,14 @@
-package com.mosinsa.promotion.query;
+package com.mosinsa.promotion.query.dateunitstrategy;
 
 import com.mosinsa.promotion.command.domain.DateUnit;
 import com.mosinsa.promotion.command.domain.PromotionHistory;
+import com.mosinsa.promotion.query.DateUnitStrategy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ParticipateOnceStrategy implements DateUnitStrategy{
+public class ParticipateOnceStrategy implements DateUnitStrategy {
     @Override
     public boolean isParticipated(List<PromotionHistory> historyList) {
         return !historyList.isEmpty();

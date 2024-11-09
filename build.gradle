@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '3.0.7'
-    id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 repositories {
@@ -13,7 +13,11 @@ bootJar.enabled = false
 subprojects {
     group = 'com.mosinsa'
     version = '1.0.0'
-    sourceCompatibility = '17'
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 
     apply plugin: 'java'
     apply plugin: 'java-library'
@@ -21,7 +25,7 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
 
     ext {
-        set('springCloudVersion', "2022.0.3")
+        set('springCloudVersion', "2023.0.2")
     }
 
     configurations {

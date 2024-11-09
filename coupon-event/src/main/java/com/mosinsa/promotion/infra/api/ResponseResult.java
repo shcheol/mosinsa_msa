@@ -1,8 +1,9 @@
 package com.mosinsa.promotion.infra.api;
 
-import feign.FeignException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.function.Supplier;
 
@@ -11,13 +12,12 @@ import java.util.function.Supplier;
 @Slf4j
 public class ResponseResult<T> {
 
-    private static final ResponseResult<?> EMPTY = new ResponseResult<>(0, null, "empty");
-    private final int status;
+    private final HttpStatus status;
     private final String message;
     private final T data;
 
     protected ResponseResult(int status, T data, String message) {
-        this.status = status;
+        this.status = HttpStatus.valueOf(status);
         this.data = data;
         this.message = message;
     }
@@ -28,12 +28,20 @@ public class ResponseResult<T> {
             T t = supplier.get();
             log.info("execute {}", t);
             return new ResponseResult<>(200, t, "");
-        } catch (FeignException ex) {
-            log.error("FeignException", ex);
-            return new ResponseResult<>(ex.status(), null, ex.getLocalizedMessage());
-        } catch (Exception e) {
-            log.error("exception", e);
-            return new ResponseResult<>(500, null, e.getMessage());
+        } catch (ExternalServerException e) {
+            log.error("exception {}", e.getMessage());
+            return new ResponseResult<>(e.getStatus().value(), null, e.getMessage());
+        }
+    }
+
+    public static <T> ResponseResult<T> executeForResponseEntity(Supplier<? extends ResponseEntity<T>> supplier) {
+        log.info("execute supplier");
+        try {
+            ResponseEntity<T> responseEntity = supplier.get();
+            return new ResponseResult<>(responseEntity.getStatusCode().value(), responseEntity.getBody(), "");
+        } catch (ExternalServerException e) {
+            log.error("exception {}", e.getMessage());
+            return new ResponseResult<>(e.getStatus().value(), null, e.getMessage());
         }
     }
 
@@ -52,16 +60,11 @@ public class ResponseResult<T> {
     }
 
     private boolean isSuccess() {
-        return 200 <= status && status < 300;
+        return status.is2xxSuccessful();
     }
 
     private boolean isFailure() {
         return !isSuccess();
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> ResponseResult<T> empty() {
-        return (ResponseResult<T>) EMPTY;
     }
 
     public T get() {

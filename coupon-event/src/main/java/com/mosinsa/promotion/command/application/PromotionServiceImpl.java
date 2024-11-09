@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -24,6 +25,8 @@ public class PromotionServiceImpl implements PromotionService {
     private final QuestRepository questRepository;
     private final MemberParticipatedChecker memberParticipatedChecker;
     private final ProduceTemplate produceTemplate;
+
+    private final CouponGroupSelector couponGroupSelector;
     @Value("${mosinsa.topic.promotion.participate}")
     private String promotionParticipateTopic;
 
@@ -43,10 +46,10 @@ public class PromotionServiceImpl implements PromotionService {
 
         quests.stream().map(quest -> {
                     historyRepository.save(PromotionHistory.of(participateDto.memberId(), quest));
-                    return quest.getCouponGroupInfoList();
+                    return couponGroupSelector.apply(quest.getCouponGroupInfoList());
                 })
-                .flatMap(List::stream)
                 .forEach(couponGroupInfo -> {
+                    System.out.println("couponGroupInfo = " + couponGroupInfo);
                     couponGroupInfo.issue();
                     produceTemplate.produce(promotionParticipateTopic,
                             new ParticipatedEvent(participateDto.memberId(), couponGroupInfo.getCouponGroupSequence()));

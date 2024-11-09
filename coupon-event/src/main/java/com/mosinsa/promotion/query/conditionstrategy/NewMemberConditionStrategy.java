@@ -1,8 +1,9 @@
-package com.mosinsa.promotion.query;
+package com.mosinsa.promotion.query.conditionstrategy;
 
 import com.mosinsa.promotion.command.domain.ConditionOption;
 import com.mosinsa.promotion.command.domain.PromotionConditions;
 import com.mosinsa.promotion.infra.api.OrderAdapter;
+import com.mosinsa.promotion.query.ConditionStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

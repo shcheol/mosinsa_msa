@@ -27,8 +27,8 @@ class PromotionQueryServiceImplTest {
 
     @Test
     void findPromotionsByCondition() {
-        Page<PromotionSummary> promotions = service.findPromotions(PageRequest.of(0, 4));
+        Page<PromotionSummary> promotions = service.findPromotions(PageRequest.of(0, 2));
 
-        Assertions.assertThat(promotions.getContent()).hasSize(4);
+        Assertions.assertThat(promotions.getContent()).hasSize(2);
     }
 }

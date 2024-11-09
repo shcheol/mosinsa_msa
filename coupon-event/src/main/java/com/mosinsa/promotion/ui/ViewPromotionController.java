@@ -32,7 +32,6 @@ public class ViewPromotionController {
 		log.info("{}", promotionId);
 
 		PromotionDetails promotionDetails = promotionQueryService.getPromotionDetails(promotionId, customerInfo.id());
-
 		return ResponseEntity.ok(promotionDetails);
 	}
 

@@ -3,9 +3,6 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
-  servlet:
-    session:
-      tracking-modes: cookie
 spring:
   application:
     name: coupon-service

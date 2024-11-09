@@ -31,11 +31,11 @@ class CouponGroupInfoTest extends InMemoryJpaTest {
     void of(){
         Quest quest = repository.findById(1L).get();
         Assertions.assertThat(quest.getCouponGroupInfoList()).hasSize(1);
-        CouponGroupInfo of = CouponGroupInfo.of(1, 10, DiscountPolicy.TEN_PERCENTAGE, quest);
+        CouponGroupInfo of = CouponGroupInfo.of(1, 10, DiscountPolicy.PERCENT_10, quest);
 
         Assertions.assertThat(of.getCouponGroupSequence()).isEqualTo(1);
         Assertions.assertThat(of.getQuantity()).isEqualTo(10);
-        Assertions.assertThat(of.getDiscountPolicy()).isEqualTo(DiscountPolicy.TEN_PERCENTAGE);
+        Assertions.assertThat(of.getDiscountPolicy()).isEqualTo(DiscountPolicy.PERCENT_10);
         Assertions.assertThat(of.getQuest()).isEqualTo(quest);
 
         Assertions.assertThat(quest.getCouponGroupInfoList()).hasSize(2);
@@ -44,7 +44,7 @@ class CouponGroupInfoTest extends InMemoryJpaTest {
     @Test
     void issue(){
         Quest quest = repository.findById(1L).get();
-        CouponGroupInfo of = CouponGroupInfo.of(1, 2, DiscountPolicy.TEN_PERCENTAGE, quest);
+        CouponGroupInfo of = CouponGroupInfo.of(1, 2, DiscountPolicy.PERCENT_10, quest);
         Assertions.assertThat(of.getQuantity()).isEqualTo(2);
         of.issue();
         Assertions.assertThat(of.getQuantity()).isEqualTo(1);
