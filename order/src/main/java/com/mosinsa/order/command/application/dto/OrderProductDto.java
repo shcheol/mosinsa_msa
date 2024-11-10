@@ -4,7 +4,7 @@ import com.mosinsa.order.command.domain.OrderProduct;
 import lombok.Builder;
 
 @Builder
-public record OrderProductDto(String productId, int price, int quantity, int amounts) {
+public record OrderProductDto(String id, int price, int quantity, int amounts) {
 	public static OrderProductDto of(OrderProduct orderProduct) {
 		return new OrderProductDto(
 				orderProduct.getProductId(),

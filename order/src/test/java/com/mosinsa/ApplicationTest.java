@@ -1,4 +1,4 @@
-package com.mosinsa.order;
+package com.mosinsa;
 
 import com.mosinsa.order.infra.api.feignclient.coupon.CouponClient;
 import com.mosinsa.order.infra.api.feignclient.product.ProductClient;

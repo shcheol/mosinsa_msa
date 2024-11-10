@@ -1,6 +1,6 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.common.ex.OrderException;
 import com.mosinsa.order.infra.api.ExternalServerException;
 import com.mosinsa.order.ui.response.BaseResponse;
 import com.mosinsa.order.ui.response.GlobalResponseEntity;

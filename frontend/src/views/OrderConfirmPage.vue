@@ -1,55 +1,57 @@
 <template>
   <div class="container">
-    <h2>주문정보</h2>
+    <h4>주문정보</h4>
     <br/>
-    <h3>주문 상품</h3>
+    <h5>주문 상품 {{ myOrderProducts.length }}개</h5>
     <div v-for="(op) in myOrderProducts" :key="op">
-      <table class="table">
-        <tbody>
-        <tr>
-          <td>상품번호</td>
-          <td v-if="op!=null">{{ op.productId }}</td>
-        </tr>
-        <tr>
-          <td>가격</td>
-          <td v-if="op!=null">{{ op.price }} 원</td>
-        </tr>
-        <tr>
-          <td>수량</td>
-          <td v-if="op!=null">{{ op.quantity }}</td>
-        </tr>
-        </tbody>
-      </table>
+
+      <div>
+        <div>{{ op.name }}</div>
+        <div v-for="option in op.options" :key="option"
+             style="display: inline;padding-right: 10px; color: #888888; font-size: small">
+          {{ option.name }}
+        </div>
+        <div style="display: inline;padding-right: 10px; color: #888888; font-size: small">/{{ op.stock }}개</div>
+        <div>
+          <div v-if="!op.coupon">
+            <p>{{ op.totalPrice }} 원</p>
+          </div>
+          <div v-else>
+            <p style="font-size: small;color: #888888; text-decoration: line-through; padding-bottom: 1px">
+              {{ op.perPrice }}원</p>
+            <p style="display: inline; color: red">{{ op.totalPrice }}원</p>
+          </div>
+        </div>
+        <button class="btn btn-light btn-outline-dark btn-sm" @click="myCoupons(op)">쿠폰사용</button>
+      </div>
     </div>
 
     <br/>
-    <h3>쿠폰</h3>
     <div>
-      <p v-if="couponId!=null"> {{ couponId }}</p>
-      <button style="float: right" class="btn btn-dark" @click="myCoupons">쿠폰</button>
+      <p>총 결제 금액: {{ totalPrice }}</p>
     </div>
     <br/>
 
-    <h3>배송정보</h3>
+
+    <h5>배송지</h5>
     <div>
       <ul>
         <li>
-          <label>이름: </label>
-          <input type="text" v-model="shippingInfo.receiver.name">
+          <div>이름</div>
+          <input type="text" placeholder="받는분의 이름을 작성하세요." v-model="shippingInfo.receiver.name">
         </li>
         <li>
-          <label>연락처: </label>
-          <input type="text" v-model="shippingInfo.receiver.phoneNumber">
-        </li>
-
-        <li>
-          <label>주소: </label>
-          <input v-model="shippingInfo.address.address1">
-          <input v-model="shippingInfo.address.address2">
-          <input v-model="shippingInfo.address.zipCode">
+          <div>휴대폰번호</div>
+          <input type="text" placeholder="010-xxxx-xxxx" v-model="shippingInfo.receiver.phoneNumber">
         </li>
         <li>
-          <label>비고: </label>
+          <div>주소</div>
+          <input placeholder="시/도" v-model="shippingInfo.address.address1">
+          <input placeholder="구" v-model="shippingInfo.address.address2">
+          <input placeholder="상세주소" v-model="shippingInfo.address.zipCode">
+        </li>
+        <li>
+          <div>요청사항</div>
           <input type="text" placeholder="메시지를 작성하세요." v-model="shippingInfo.message"/>
         </li>
       </ul>
@@ -60,18 +62,18 @@
       <button style="float: right" class="btn btn-dark" @click="orderConfirm(myOrderProducts)">주문하기</button>
     </div>
   </div>
-  <div class="black-bg" v-if="modalState">
-    <div class="white-bg">
-      <h4>쿠폰목록</h4>
+  <div class="black-bg" v-if="modalState" @click="closeModal()">
+    <div class="white-bg" @click="(event) => {event.stopPropagation()}">
+      <h5>쿠폰목록</h5>
       <div v-if="coupons.length > 0">
         <div v-for="(coupon) in coupons" :key="coupon">
-          <p>{{ coupon.details.discountPolicy }}</p>
-          <button @click="useCoupon(coupon.couponId, coupon.details.discountPolicy, coupon.state)">사용하기</button>
+          <p style="display: inline;padding-right: 10px">{{ coupon.details.discountPolicy }}</p>
+          <button class="btn btn-light btn-outline-dark btn-sm"
+                  @click="useCoupon(coupon.couponId, coupon.details.discountPolicy)">적용
+          </button>
         </div>
       </div>
       <div v-else>사용가능한 쿠폰이 없습니다</div>
-
-      <button @click="modalState=!modalState">닫기</button>
     </div>
   </div>
 </template>
@@ -83,9 +85,6 @@ export default {
   data() {
     return {
       modalState: false,
-      productId: null,
-      price: null,
-      quantity: null,
       couponId: null,
       shippingInfo: {
         "message": "",
@@ -95,12 +94,14 @@ export default {
           "address2": "address2"
         },
         "receiver": {
-          "name": "이름",
+          "name": "test",
           "phoneNumber": "010-1111-1111"
         }
       },
-      myOrderProducts: [],
-      coupons: []
+      myOrderProducts: JSON.parse(history.state.orderProduct),
+      coupons: [],
+      totalPrice: 0,
+      temp: null,
     }
   },
   beforeCreate() {
@@ -110,43 +111,67 @@ export default {
     }
   },
   mounted() {
-    this.myOrderProducts = history.state.orderProduct;
-    console.log(this.myOrderProducts);
+    console.log(this.myOrderProducts)
+    this.calculateTotalPrice();
   },
   methods: {
+    closeModal() {
+      this.modalState = false;
+    },
+    calculateTotalPrice() {
+      this.totalPrice = 0;
+      this.myOrderProducts.forEach(op => this.totalPrice += op.totalPrice);
+    },
     orderConfirm(myOrderProducts) {
       this.modalState = false;
-      apiBoard.postOrderConfirm(myOrderProducts, this.couponId, this.shippingInfo).then((response) => {
-        console.log(response);
-        this.$router.push({
-          name: 'orderPage',
-          state: {orderConfirmed: response.data}
-        })
-      }).catch(function (e) {
+      apiBoard.postOrders(myOrderProducts, this.shippingInfo)
+          .then((response) => {
+            console.log(response);
+            this.$router.push({
+              name: 'orderDetails',
+              params: {id: response.data.orderId}
+            })
+          }).catch(function (e) {
         console.log(e);
       });
     },
-    myCoupons() {
+    myCoupons(op) {
       this.modalState = true;
+      this.temp = op;
+      console.log(this.temp);
       apiBoard.getCoupons()
           .then((response) => {
-            console.log(response);
             this.coupons = response.data.filter(c => c.state === "ISSUED")
                 .filter(c => {
                   let current = new Date();
                   let duringDate = new Date(c.details.duringDate);
-                  console.log(duringDate);
                   return current <= duringDate;
                 }).map(c => c);
-            console.log(this.coupons);
-          })
-          .catch(function (e) {
-            console.log(e);
           });
     },
-    useCoupon(id) {
+    useCoupon(id, discount) {
       this.modalState = false;
-      this.couponId = id;
+      let price = 0;
+      if (discount === 'WON_10000') {
+        price = 10000;
+      }
+      if (discount === 'WON_3000') {
+        price = 3000;
+      }
+      if (discount === 'WON_1000') {
+        price = 1000;
+      }
+      if (discount === 'PERCENT_10') {
+        price = this.temp.perPrice * 0.1;
+      }
+      if (discount === 'PERCENT_20') {
+        price = this.temp.perPrice * 0.2;
+      }
+      this.temp.coupon = {
+        id: id,
+      }
+      this.temp.totalPrice -= price;
+      this.calculateTotalPrice();
     }
   }
 }
@@ -158,18 +183,27 @@ div {
 }
 
 .black-bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  padding: 20px;
+  /*display: none; !* Hidden by default *!*/
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .white-bg {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%; /* Could be more or less, depending on screen size */
 }
 
 ul li {

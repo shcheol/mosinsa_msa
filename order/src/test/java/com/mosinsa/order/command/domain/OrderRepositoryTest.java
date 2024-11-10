@@ -1,8 +1,7 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.InMemoryJpaTest;
+import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.order.code.TestClass;
-import com.mosinsa.order.command.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

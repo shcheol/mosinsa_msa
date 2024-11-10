@@ -1,8 +1,8 @@
-package com.mosinsa.order.common.argumentresolver;
+package com.mosinsa.common.argumentresolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mosinsa.order.common.ex.OrderError;
-import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.common.ex.OrderError;
+import com.mosinsa.common.ex.OrderException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.core.MethodParameter;

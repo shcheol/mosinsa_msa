@@ -1,12 +1,9 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.command.application.dto.OrderConfirmDto;
 import com.mosinsa.order.command.domain.*;
-import com.mosinsa.order.common.argumentresolver.CustomerInfo;
 import com.mosinsa.order.query.application.OrderQueryService;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.query.application.dto.OrderSummary;
-import com.mosinsa.order.ui.request.OrderConfirmRequest;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -41,8 +38,4 @@ public class OrderQueryServiceStub implements OrderQueryService {
 		return new OrderDetail(order);
 	}
 
-	@Override
-	public OrderConfirmDto orderConfirm(CustomerInfo customerInfo, OrderConfirmRequest orderConfirmRequest) {
-		return null;
-	}
 }

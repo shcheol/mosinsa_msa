@@ -1,10 +1,8 @@
 package com.mosinsa.order.command.application;
 
-import com.mosinsa.order.command.application.dto.AddressDto;
-import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.command.application.dto.ReceiverDto;
-import com.mosinsa.order.command.application.dto.ShippingInfoDto;
+import com.mosinsa.order.command.application.dto.*;
 import com.mosinsa.order.command.domain.*;
+import com.mosinsa.order.ui.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,9 +17,9 @@ public class PlaceOrderService {
 	private final OrderRepository orderRepository;
 
 	@Transactional
-	public Order order(OrderId orderId, OrderConfirmDto orderConfirmDto) {
+	public Order order(OrderId orderId, OrderInfo orderInfo) {
 
-		ShippingInfoDto shippingInfoDto = orderConfirmDto.shippingInfo();
+		ShippingInfoDto shippingInfoDto = orderInfo.shippingInfo();
 		AddressDto address = shippingInfoDto.address();
 		ReceiverDto receiver = shippingInfoDto.receiver();
 
@@ -30,18 +28,17 @@ public class PlaceOrderService {
 				Receiver.of(receiver.name(), receiver.phoneNumber()),
 				shippingInfoDto.message()
 		);
-		List<OrderProduct> orderProducts = orderConfirmDto.orderProducts().stream()
+		List<OrderProduct> orderProducts = orderInfo.orderProducts().stream()
 				.map(orderProduct -> OrderProduct.of(
-						orderProduct.productId(),
+						orderProduct.id(),
 						orderProduct.price(),
 						orderProduct.quantity())).toList();
 
 		Order order = orderRepository.save(Order.create(orderId,
-				orderConfirmDto.customerId(),
+				orderInfo.customerInfo().id(),
 				orderProducts,
 				shippingInfo,
-				orderConfirmDto.totalAmount()));
-		order.useCoupon(orderConfirmDto.couponId());
+				orderInfo.orderProducts().stream().map(OrderProductDto::amounts).reduce(Integer::sum).get()));
 		return order;
 	}
 

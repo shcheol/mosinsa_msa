@@ -135,10 +135,9 @@ export default {
             "reactionType": reactionType,
         })
     },
-    postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
+    postOrderConfirm: function (myOrderProducts, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
                 "myOrderProducts": myOrderProducts,
-                "couponId": couponId,
                 "shippingInfo": shippingInfo,
             },
             {
@@ -148,9 +147,10 @@ export default {
                 }
             })
     },
-    postOrders: function (orderConfirm) {
+    postOrders: function (myOrderProducts, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/order', {
-                "orderConfirm": orderConfirm
+                "myOrderProducts": myOrderProducts,
+                "shippingInfo": shippingInfo,
             },
             {
                 headers: {

@@ -3,7 +3,6 @@ package com.mosinsa.order.query.application.dto;
 import com.mosinsa.order.command.application.dto.OrderProductDto;
 import com.mosinsa.order.command.application.dto.ShippingInfoDto;
 import com.mosinsa.order.command.domain.Order;
-import com.mosinsa.order.command.domain.OrderCoupon;
 import com.mosinsa.order.command.domain.OrderStatus;
 import lombok.Value;
 

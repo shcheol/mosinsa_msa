@@ -1,4 +1,4 @@
-package com.mosinsa.order;
+package com.mosinsa;
 
 import com.mosinsa.order.code.TestController;
 import com.mosinsa.order.ui.OrderApplicationObjectFactory;

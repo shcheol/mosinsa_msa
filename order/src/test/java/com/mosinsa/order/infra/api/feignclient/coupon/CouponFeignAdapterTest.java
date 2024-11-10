@@ -1,6 +1,6 @@
 package com.mosinsa.order.infra.api.feignclient.coupon;
 
-import com.mosinsa.order.ApplicationTest;
+import com.mosinsa.ApplicationTest;
 import com.mosinsa.order.infra.api.ResponseResult;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

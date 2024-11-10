@@ -1,4 +1,4 @@
-package com.mosinsa.order;
+package com.mosinsa;
 
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -1,4 +1,4 @@
-package com.mosinsa.order.common.ex;
+package com.mosinsa.common.ex;
 
 public class OrderRollbackException extends RuntimeException{
 	public OrderRollbackException() {

@@ -1,7 +1,7 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.common.ex.OrderError;
-import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.common.ex.OrderError;
+import com.mosinsa.common.ex.OrderException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.util.StringUtils;

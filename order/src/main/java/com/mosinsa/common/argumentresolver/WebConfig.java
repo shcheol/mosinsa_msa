@@ -1,4 +1,4 @@
-package com.mosinsa.order.common.argumentresolver;
+package com.mosinsa.common.argumentresolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
