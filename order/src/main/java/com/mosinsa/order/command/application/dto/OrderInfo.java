@@ -8,5 +8,15 @@ import java.util.List;
 @Builder
 public record OrderInfo(CustomerInfo customerInfo,
                         ShippingInfoDto shippingInfo,
-                        List<OrderProductDto> orderProducts) {
+                        List<OrderProductInfo> orderProducts) {
+
+	public record OrderProductInfo(String id, int quantity, int perPrice, int totalPrice, List<ProductOptionsDto> options, CouponDto coupon){
+		public record ProductOptionsDto(Long id, String name){
+
+		}
+
+		public record CouponDto(String id){
+
+		}
+	}
 }

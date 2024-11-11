@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -42,19 +43,18 @@ public class ProductPresentationObjectFactory {
 			@Override
 			public Page<ProductSummary> findProductsByCondition(SearchCondition condition, Pageable pageable) {
 				return new PageImpl<>(
-						List.of(new ProductSummary("", "", 1000,null, null),
-								new ProductSummary("", "", 1000,null, null))
-				);
+						List.of(new ProductSummary("", "", 1000, null, null),
+								new ProductSummary("", "", 1000, null, null)
+						), PageRequest.of(0, 10), 0);
 			}
 
 			@Override
 			public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
 				return new PageImpl<>(
 						List.of(
-								new ProductSummary("", "", 1000,null, null),
-								new ProductSummary("", "", 1000,null, null)
-						)
-				);
+								new ProductSummary("", "", 1000, null, null),
+								new ProductSummary("", "", 1000, null, null)
+						), PageRequest.of(0, 10), 0);
 			}
 		};
 	}

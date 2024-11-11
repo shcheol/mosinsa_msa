@@ -7,6 +7,7 @@ import com.mosinsa.order.query.application.dto.OrderSummary;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -25,9 +26,7 @@ public class OrderQueryServiceStub implements OrderQueryService {
 				shippingInfo, 10000);
 		order1.useCoupon("coupon1");
 
-		return new PageImpl<>(List.of(new OrderSummary(order), new OrderSummary(order1))
-
-		);
+		return new PageImpl<>(List.of(new OrderSummary(order), new OrderSummary(order1)), PageRequest.of(0, 10), 0);
 	}
 
 	@Override

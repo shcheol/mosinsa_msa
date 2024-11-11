@@ -133,6 +133,7 @@ export default {
             })
           }).catch(function (e) {
         console.log(e);
+        alert(e.response.data.message);
       });
     },
     myCoupons(op) {

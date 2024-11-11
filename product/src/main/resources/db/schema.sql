@@ -112,7 +112,7 @@ create table stock_history
     id                 bigint       not null auto_increment,
     order_num          varchar(255) not null,
     member_id          varchar(255) not null,
-    target_id          bigint,
+    target_id          varchar(255) not null,
     quantity           bigint,
     type               varchar(255) not null,
     created_date       datetime(6),

@@ -35,9 +35,8 @@ public class StockService implements StockPort {
         List<Long> execute = operation.decreaseAndGet(stockOperands);
         if (!execute.isEmpty() && execute.stream().allMatch(f -> f >= 0)) {
             historyRepository.saveAll(stockOperands.stream()
-                    .map(op -> StockHistory.of(orderId, customerId, Long.parseLong(op.key()), op.quantity(), StockHistoryType.MINUS))
+                    .map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.MINUS))
                     .toList());
-
             return StockResult.SUCCESS;
         }
         operation.increaseAndGet(stockOperands);
@@ -51,7 +50,7 @@ public class StockService implements StockPort {
 		List<Long> execute = operation.increaseAndGet(stockOperands);
 		if (!execute.isEmpty()) {
 			historyRepository.saveAll(stockOperands.stream()
-					.map(op -> StockHistory.of(orderId, customerId, Long.parseLong(op.key()), op.quantity(), StockHistoryType.PLUS))
+					.map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.PLUS))
 					.toList());
 
 			return StockResult.SUCCESS;

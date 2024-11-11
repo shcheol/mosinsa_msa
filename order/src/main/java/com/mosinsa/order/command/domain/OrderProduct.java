@@ -15,7 +15,6 @@ public class OrderProduct extends IdBaseEntity {
 	@Column(name = "price")
 	private Money price;
 	private int quantity;
-
 	@Convert(converter = MoneyConverter.class)
 	@Column(name = "amounts")
 	private Money amounts;

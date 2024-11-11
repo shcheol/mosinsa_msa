@@ -29,7 +29,13 @@ public class OrderController {
 				.customerInfo(customerInfo)
 				.orderProducts(orderRequest.myOrderProducts()
 						.stream()
-						.map(myOrderProduct -> new OrderProductDto(myOrderProduct.id(), myOrderProduct.perPrice(), myOrderProduct.stock(), myOrderProduct.totalPrice()))
+						.map(myOrderProduct ->
+								new OrderInfo.OrderProductInfo(myOrderProduct.id(), myOrderProduct.stock(), myOrderProduct.perPrice(), myOrderProduct.totalPrice(),
+										myOrderProduct.options()
+												.stream()
+												.map(option -> new OrderInfo.OrderProductInfo.ProductOptionsDto(option.id(), option.name()))
+												.toList(),
+										myOrderProduct.coupon()!=null?new OrderInfo.OrderProductInfo.CouponDto(myOrderProduct.coupon().id()):null))
 						.toList())
 				.shippingInfo(orderRequest.shippingInfo())
 				.build();
@@ -38,7 +44,7 @@ public class OrderController {
 	}
 
 	@PostMapping("/{orderId}/cancel")
-	public ResponseEntity<OrderDetail> cancelOrders(@Login CustomerInfo customerInfo, @PathVariable String orderId) {
+	public ResponseEntity<OrderDetail> cancelOrders(@Login CustomerInfo customerInfo, @PathVariable("orderId") String orderId) {
 
 		OrderDetail cancelOrder = orderService.cancelOrder(orderId);
 		return ResponseEntity.ok(cancelOrder);

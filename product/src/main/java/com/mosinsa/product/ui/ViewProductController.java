@@ -42,7 +42,7 @@ public class ViewProductController {
 
 
 	@GetMapping("/{productId}")
-	public ResponseEntity<ProductDetails> productDetails(@PathVariable String productId) {
+	public ResponseEntity<ProductDetails> productDetails(@PathVariable("productId") String productId) {
 		log.info("getProduct {}", productId);
 
 		ProductDetails productDetails = productQueryService.getProductById(productId);

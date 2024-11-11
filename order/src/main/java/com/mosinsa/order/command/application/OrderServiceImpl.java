@@ -7,7 +7,6 @@ import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.common.ex.OrderRollbackException;
 import com.mosinsa.order.infra.api.CouponAdapter;
 import com.mosinsa.order.infra.api.ProductAdapter;
-import com.mosinsa.order.infra.api.feignclient.product.OrderProductRequest;
 import com.mosinsa.order.infra.api.feignclient.product.OrderProductRequests;
 import com.mosinsa.order.infra.kafka.OrderCanceledEvent;
 import com.mosinsa.order.infra.kafka.ProduceTemplate;
@@ -40,8 +39,15 @@ public class OrderServiceImpl implements OrderService {
 
 		// 상품 수량 감소
 		OrderId orderId = OrderId.newId();
-		OrderProductRequests orderProductRequests = new OrderProductRequests(orderId.getId(), orderInfo.orderProducts().stream()
-				.map(op -> new OrderProductRequest(op.id(), op.quantity())).toList());
+		OrderProductRequests orderProductRequests = new OrderProductRequests(orderId.getId(),
+				orderInfo.orderProducts()
+						.stream()
+						.map(op -> new OrderProductRequests.OrderProductDto(op.id(), op.quantity(),
+								op.options()
+										.stream()
+										.map(option -> new OrderProductRequests.OrderProductDto.ProductOptionsDto(option.id(), option.name()))
+										.toList()))
+						.toList());
 		productAdaptor.orderProducts(orderId.getId(), orderProductRequests).orElseThrow();
 
 		try {
@@ -52,9 +58,9 @@ public class OrderServiceImpl implements OrderService {
 			log.error("order save fail => rollback product stock, coupon usage");
 //			OrderCanceledEvent event = new OrderCanceledEvent(
 //					orderId.getId(),
-//					orderInfo.couponId(),
-//					orderInfo.customerId(),
-//					orderInfo.orderProducts());
+//					orderRequest.couponId(),
+//					orderRequest.customerId(),
+//					orderRequest.orderProducts());
 //			producerTemplate.produce(orderCancelTopic, event);
 			throw new OrderRollbackException(e);
 		}

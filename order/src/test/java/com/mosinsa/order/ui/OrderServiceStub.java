@@ -11,7 +11,7 @@ import java.util.List;
 
 public class OrderServiceStub implements OrderService {
 	@Override
-	public OrderDetail order(OrderInfo orderConfirmDto) {
+	public OrderDetail order(OrderInfo orderInfo) {
 		ShippingInfo of = ShippingInfo.of(Address.of("", "", ""), Receiver.of("", ""), "");
 		Order order = Order.create(OrderId.of("orderId"), "customer", List.of(OrderProduct.of("b", 100, 2)), of, 10000);
 		order.useCoupon("q");

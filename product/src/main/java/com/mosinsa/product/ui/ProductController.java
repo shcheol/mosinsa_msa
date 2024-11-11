@@ -38,7 +38,7 @@ public class ProductController {
 	public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request, @Login CustomerInfo customerInfo) {
 
 		log.info("orderProductRequests {}", request);
-		productService.orderProduct(customerInfo.id(), request.orderId(), request.orderProductRequests());
+		productService.orderProduct(customerInfo.id(), request);
 
 		return ResponseEntity.ok().build();
 	}

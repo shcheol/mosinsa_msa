@@ -18,10 +18,9 @@ public class ProductFeignAdapter implements ProductAdapter {
     private final ProductClient productClient;
 
     @Override
-    public ResponseResult<Void> orderProducts(String orderId, OrderProductRequests orderConfirmDto) {
-
+    public ResponseResult<Void> orderProducts(String orderId, OrderProductRequests orderProductRequests) {
 
         Map<String, Collection<String>> headers = RequestHeaderExtractor.extract();
-        return ResponseResult.execute(() -> productClient.orderProducts(headers, orderConfirmDto));
+        return ResponseResult.execute(() -> productClient.orderProducts(headers, orderProductRequests));
     }
 }

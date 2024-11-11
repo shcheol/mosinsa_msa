@@ -20,7 +20,7 @@ class ViewOrderControllerTest extends ControllerTest {
 	void orderedList() throws Exception {
 		mockMvc.perform(get("/orders"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value(2))
+				.andExpect(jsonPath("totalElements").value(2))
 				.andDo(print());
 	}
 
@@ -32,39 +32,4 @@ class ViewOrderControllerTest extends ControllerTest {
 				.andExpect(jsonPath("orderId").value(orderId))
 				.andDo(print());
 	}
-
-	@Test
-	void orderConfirm() throws Exception {
-		mockMvc.perform(post("/orders/orderConfirm")
-						.header("customer-info", """
-								"{"name":"name","id":"id"}"
-								""")
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.content("""
-								{
-									"couponId":"couponId",
-									"myOrderProducts":[
-										{
-											"productId":"productId",
-											"quantity":2
-										}
-										],
-										"shippingInfo":{
-											"message":"home",
-											"address":{
-												"zipCode":"zipcode",
-												"address1":"address1",
-												"address2":"address2"
-											},
-											"receiver":{
-												"name":"myname",
-												"phoneNumber":"010-1111-1111"
-											}
-										}
-								}
-								"""))
-				.andExpect(status().is2xxSuccessful())
-				.andDo(print());
-	}
-
 }

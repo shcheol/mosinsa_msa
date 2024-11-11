@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2>주문 상세</h2>
+    <h4>주문완료</h4>
 
     <table class="table">
       <tbody>
@@ -9,11 +9,7 @@
         <td v-if="order!=null">{{ order.orderId }}</td>
       </tr>
       <tr>
-        <td>쿠폰</td>
-        <td v-if="order!=null && order.couponId!=null">{{ order.couponId }}</td>
-      </tr>
-      <tr>
-        <td>결제 금액</td>
+        <td>총 금액</td>
         <td v-if="order!=null">{{ order.totalPrice }}</td>
       </tr>
       <tr>
@@ -22,13 +18,13 @@
       </tr>
       </tbody>
     </table>
-    <h3>상품 목록</h3>
+    <h5>상품 목록</h5>
     <div v-if="order!=null">
       <table class="table">
           <tbody v-for="op in order.orderProducts" :key="op">
           <tr>
             <td>상품아이디</td>
-            <td>{{ op.productId }}</td>
+            <td>{{ op.id }}</td>
           </tr>
           <tr>
             <td>가격</td>

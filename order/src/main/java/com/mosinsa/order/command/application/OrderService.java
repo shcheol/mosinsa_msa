@@ -6,7 +6,7 @@ import com.mosinsa.order.ui.request.OrderRequest;
 
 public interface OrderService {
 
-    OrderDetail order(OrderInfo orderRequest);
+    OrderDetail order(OrderInfo orderInfo);
 
     OrderDetail cancelOrder(String orderId);
 }

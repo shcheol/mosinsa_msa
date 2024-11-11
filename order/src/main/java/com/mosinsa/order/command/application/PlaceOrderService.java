@@ -2,7 +2,6 @@ package com.mosinsa.order.command.application;
 
 import com.mosinsa.order.command.application.dto.*;
 import com.mosinsa.order.command.domain.*;
-import com.mosinsa.order.ui.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,15 +30,14 @@ public class PlaceOrderService {
 		List<OrderProduct> orderProducts = orderInfo.orderProducts().stream()
 				.map(orderProduct -> OrderProduct.of(
 						orderProduct.id(),
-						orderProduct.price(),
+						orderProduct.perPrice(),
 						orderProduct.quantity())).toList();
 
-		Order order = orderRepository.save(Order.create(orderId,
+		return orderRepository.save(Order.create(orderId,
 				orderInfo.customerInfo().id(),
 				orderProducts,
 				shippingInfo,
-				orderInfo.orderProducts().stream().map(OrderProductDto::amounts).reduce(Integer::sum).get()));
-		return order;
+				orderInfo.orderProducts().stream().map(OrderInfo.OrderProductInfo::totalPrice).reduce(Integer::sum).get()));
 	}
 
 }
