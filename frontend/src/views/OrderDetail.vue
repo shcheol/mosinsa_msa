@@ -6,7 +6,7 @@
       <tbody>
       <tr>
         <td>주문번호</td>
-        <td v-if="order!=null">{{ order.orderId }}</td>
+        <td v-if="order!=null">{{ order.id }}</td>
       </tr>
       <tr>
         <td>총 금액</td>
@@ -18,30 +18,30 @@
       </tr>
       </tbody>
     </table>
-    <h5>상품 목록</h5>
+    <h5>주문상품</h5>
     <div v-if="order!=null">
-      <table class="table">
-          <tbody v-for="op in order.orderProducts" :key="op">
-          <tr>
-            <td>상품아이디</td>
-            <td>{{ op.id }}</td>
-          </tr>
-          <tr>
-            <td>가격</td>
-            <td>{{ op.price }}</td>
-          </tr>
-          <tr>
-            <td>수량</td>
-            <td>{{ op.quantity }}</td>
-          </tr>
-          <tr>
-            <td>합계</td>
-            <td>{{ op.amounts }}</td>
-          </tr>
-          </tbody>
-      </table>
+      <div v-for="(op) in order.orderProducts" :key="op">
+        <div>
+          <div>{{ op.name }}</div>
+          <div v-for="option in op.productOptions" :key="option"
+               style="display: inline;padding-right: 10px; color: #888888; font-size: small">
+            {{ option.name }}
+          </div>
+          <div style="display: inline;padding-right: 10px; color: #888888; font-size: small">/{{ op.quantity }}개</div>
+          <div>
+            <div v-if="op.orderCoupon.length===0">
+              <p>{{ op.amounts }} 원</p>
+            </div>
+            <div v-else>
+              <p style="font-size: small;color: #888888; text-decoration: line-through; padding-bottom: 1px">
+                {{ op.price }}원</p>
+              <p style="display: inline; color: red">{{ op.amounts }}원</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <button class="btn btn-dark" @click="cancelOrder(order.orderId)">주문취소</button>
+    <button class="btn btn-light btn-outline-dark btn-sm" @click="cancelOrder(order.id)">주문취소</button>
   </div>
 </template>
 
@@ -66,12 +66,12 @@ export default {
   },
   methods: {
     cancelOrder() {
-      apiBoard.cancelOrders(this.order.orderId).then((response) => {
+      apiBoard.cancelOrders(this.order.id).then((response) => {
         console.log(response);
         if (response.status === 200){
           alert("주문이 취소되었습니다.")
         } else{
-          alert("주문 취소 실패")
+          alert("주문 취소 실패1")
         }
       })
           .catch(function (e) {

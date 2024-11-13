@@ -28,16 +28,29 @@ public class PlaceOrderService {
 				shippingInfoDto.message()
 		);
 		List<OrderProduct> orderProducts = orderInfo.orderProducts().stream()
-				.map(orderProduct -> OrderProduct.of(
-						orderProduct.id(),
-						orderProduct.perPrice(),
-						orderProduct.quantity())).toList();
+				.map(orderProduct -> {
+					OrderProduct of = OrderProduct.of(
+							orderProduct.id(),
+							orderProduct.name(),
+							orderProduct.perPrice(),
+							orderProduct.quantity(),
+							orderProduct.totalPrice());
+					of.addProductOptions(orderProduct.options()
+							.stream()
+							.map(option -> ProductOption.of(option.id(), option.name()))
+							.toList());
+					of.addCoupons(orderProduct.coupons()
+							.stream()
+							.map(coupon -> OrderCoupon.of(coupon.id(), coupon.discountPolicy()))
+							.toList());
+					return of;
+				}).toList();
 
 		return orderRepository.save(Order.create(orderId,
 				orderInfo.customerInfo().id(),
-				orderProducts,
+				orderInfo.orderProducts().stream().map(OrderInfo.OrderProductInfo::totalPrice).reduce(Integer::sum).get(),
 				shippingInfo,
-				orderInfo.orderProducts().stream().map(OrderInfo.OrderProductInfo::totalPrice).reduce(Integer::sum).get()));
+				orderProducts));
 	}
 
 }

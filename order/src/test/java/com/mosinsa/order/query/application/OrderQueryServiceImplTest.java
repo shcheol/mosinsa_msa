@@ -37,14 +37,14 @@ class OrderQueryServiceImplTest extends ApplicationTest {
         PageRequest pageable = PageRequest.of(0, 3);
         Page<OrderSummary> myOrdersByCondition = orderQueryService.findMyOrdersByCondition(searchCondition1, pageable);
         assertThat(myOrdersByCondition.getTotalElements()).isEqualTo(2);
-        List<String> ids = myOrdersByCondition.getContent().stream().map(OrderSummary::getOrderId).toList();
+        List<String> ids = myOrdersByCondition.getContent().stream().map(OrderSummary::id).toList();
         assertThat(ids).contains("orderId1", "orderId2");
     }
 
     @Test
     void getOrderDetails() {
         OrderDetail orderId2 = orderQueryService.getOrderDetails("orderId2");
-        assertThat(orderId2.getOrderId()).isEqualTo("orderId2");
+        assertThat(orderId2.id()).isEqualTo("orderId2");
     }
 
     @Test

@@ -113,7 +113,7 @@ export default {
             })
     },
     getLikesProducts: function () {
-        return instance.get(BASE_URL + `product-service/products/my`)
+        return instance.get(BASE_URL + `product-service/products/likes`)
     },
     getProductDetails: function (id) {
         return instance.get(BASE_URL + 'product-service/products/' + id)
@@ -177,7 +177,7 @@ export default {
         return instance.get(BASE_URL + 'order-service/orders/' + id)
     },
     getCoupons: function () {
-        return instance.get(BASE_URL + `coupon-service/coupons/my`)
+        return instance.get(BASE_URL + `coupon-service/coupons`)
     },
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)

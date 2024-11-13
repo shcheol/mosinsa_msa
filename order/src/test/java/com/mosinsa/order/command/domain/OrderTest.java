@@ -19,9 +19,9 @@ class OrderTest extends InMemoryJpaTest {
 
 	@Test
 	void equalsAndHashCode() {
-		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
+		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", "",1000, 1, 1000));
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
-		Order order1 = Order.create(OrderId.newId(), "cId", orderProducts, shippingInfo, 10000);
+		Order order1 = Order.create(OrderId.newId(), "cId", 10000,shippingInfo, orderProducts);
 
 		Order protectedConstructor = new Order();
 		assertThat(protectedConstructor).isNotEqualTo(order1);
@@ -33,8 +33,7 @@ class OrderTest extends InMemoryJpaTest {
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
 		OrderId orderId = OrderId.newId();
 		assertThrows(OrderException.class,
-				() -> Order.create(orderId, "customerId", orderProducts,
-						shippingInfo, 10000));
+				() -> Order.create(orderId, "customerId", 10000, shippingInfo, orderProducts));
 	}
 
 	@Test
@@ -43,26 +42,24 @@ class OrderTest extends InMemoryJpaTest {
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
 		OrderId orderId = OrderId.newId();
 		assertThrows(OrderException.class,
-				() -> Order.create(orderId, "customerId", orderProducts,
-						shippingInfo, 10000));
+				() -> Order.create(orderId, "customerId",10000 ,shippingInfo, orderProducts));
 	}
 
 	@Test
 	void create_주문자x() {
-		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
+		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", "",1000, 1, 1000));
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
 		OrderId orderId = OrderId.newId();
 		assertThrows(OrderException.class,
-				() -> Order.create(orderId, "", orderProducts,
-						shippingInfo, 10000));
+				() -> Order.create(orderId, "",10000 ,shippingInfo, orderProducts));
 	}
 
 
 	@Test
 	void cancelOrder() {
-		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", 1000, 1));
+		List<OrderProduct> orderProducts = List.of(OrderProduct.of("id", "",1000, 1, 1000));
 		ShippingInfo shippingInfo = ShippingInfo.of(address, receiver, "");
-		Order order = Order.create(OrderId.newId(), "cId", orderProducts, shippingInfo, 10000);
+		Order order = Order.create(OrderId.newId(), "cId",10000 ,shippingInfo, orderProducts);
 		order.cancelOrder();
 		assertThrows(AlreadyCanceledException.class, order::cancelOrder);
 

@@ -19,17 +19,17 @@ public enum DiscountPolicy {
     }, WON_10000 {
 		@Override
 		protected int applyDiscountPrice(int value) {
-			return value * 20 / 100;
+			return 10000;
 		}
 	}, WON_3000 {
 		@Override
 		protected int applyDiscountPrice(int value) {
-			return value * 20 / 100;
+			return 3000;
 		}
 	}, WON_1000 {
 		@Override
 		protected int applyDiscountPrice(int value) {
-			return value * 20 / 100;
+			return 1000;
 		}
 	};
 

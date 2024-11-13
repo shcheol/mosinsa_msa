@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class HttpInterfaceOrderAdapter implements OrderAdapter {
+public class OrderHttpInterfaceAdapter implements OrderAdapter {
 
     private final OrderServiceHttpClient orderServiceHttpClient;
 

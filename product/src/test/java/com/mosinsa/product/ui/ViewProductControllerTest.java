@@ -26,7 +26,7 @@ class ViewProductControllerTest extends ControllerTest {
 
 	@Test
 	void findMyProducts() throws Exception {
-		mockMvc.perform(get("/products/my")
+		mockMvc.perform(get("/products/likes")
 						.header("customer-info", """
 								"{"name":"name","id":"id"}"
 								"""))

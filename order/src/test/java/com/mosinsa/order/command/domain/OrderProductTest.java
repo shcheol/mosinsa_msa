@@ -30,6 +30,6 @@ class OrderProductTest extends InMemoryJpaTest {
     void invalidQuantity() {
 
         assertThrows(IllegalArgumentException.class,
-                () -> OrderProduct.of("productId", 1000, 0));
+                () -> OrderProduct.of("productId", "",1000, 0, 1000));
     }
 }

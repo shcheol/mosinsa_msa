@@ -126,9 +126,8 @@ export default {
       }
       this.closeModal();
 
-      // const mappedData = this.selectedProducts;
       this.$router.push({
-        name: 'orderConfirm',
+        name: 'orderPage',
         state: {
           orderProduct: JSON.stringify(this.selectedProducts)
         }
@@ -187,9 +186,10 @@ export default {
         id: this.product.productId,
         name: this.product.name,
         options: temp,
-        stock: 1,
+        quantity: 1,
         perPrice: price,
-        totalPrice: price*1
+        totalPrice: price*1,
+        coupons: []
       })
 
       this.calculateOrderPrice();

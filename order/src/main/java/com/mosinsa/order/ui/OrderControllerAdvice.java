@@ -29,7 +29,7 @@ public class OrderControllerAdvice {
 	@ResponseBody
 	public static ResponseEntity<BaseResponse> externalExceptionHandler(ExternalServerException exception) {
 		log.error("external server error occurred : {}", exception.getMessage(), exception);
-		return GlobalResponseEntity.error(HttpStatus.valueOf(exception.getStatus()), exception.getMessage());
+		return GlobalResponseEntity.error(HttpStatus.valueOf(exception.getStatus().value()), exception.getMessage());
 	}
 
 	@ExceptionHandler(Exception.class)

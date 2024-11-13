@@ -37,9 +37,9 @@ class OrderControllerTest extends ControllerTest {
 								                 "id":1,
 								                 "name":"size"
 								                 }],
-								                 "coupon":{
+								                 "coupons":[{
 								                 "id":"id"
-								                 }
+								                 }]
 								             }
 								         ],
 								         "shippingInfo": {

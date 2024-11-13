@@ -30,7 +30,7 @@ public class ViewProductController {
 		Page<ProductSummary> allProducts = productQueryService.findProductsByCondition(condition, pageable);
 		return ResponseEntity.ok(allProducts);
 	}
-	@GetMapping("/my")
+	@GetMapping("/likes")
 	public ResponseEntity<Page<ProductSummary>> findMyProducts(@Login CustomerInfo customerInfo, Pageable pageable) {
 
 		Page<ProductSummary> allProducts = productQueryService.findMyProducts(customerInfo.id(), pageable);

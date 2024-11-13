@@ -2,6 +2,7 @@ package com.mosinsa.order.query.application;
 
 import com.mosinsa.common.ex.OrderError;
 import com.mosinsa.common.ex.OrderException;
+import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.command.domain.OrderRepository;
 import com.mosinsa.order.query.application.dto.OrderDetail;
@@ -27,12 +28,13 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         if (!StringUtils.hasText(condition.customerId())) {
             throw new OrderException(OrderError.VALIDATION_ERROR);
         }
-        return orderRepository.findOrdersByCondition(condition, pageable).map(OrderSummary::new);
+        return orderRepository.findOrdersByCondition(condition, pageable).map(OrderSummary::of);
     }
 
     @Override
     public OrderDetail getOrderDetails(String orderId) {
-        return new OrderDetail(orderRepository.findById(OrderId.of(orderId))
-                .orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND)));
+		Order order = orderRepository.findOrderDetailsById(OrderId.of(orderId))
+				.orElseThrow(() -> new OrderException(OrderError.ORDER_NOT_FOUND));
+		return OrderDetail.of(order);
     }
 }
