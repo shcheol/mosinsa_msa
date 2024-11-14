@@ -4,7 +4,6 @@ import com.mosinsa.common.ex.ProductError;
 import com.mosinsa.common.ex.ProductException;
 import com.mosinsa.product.command.domain.*;
 import com.mosinsa.product.infra.redis.StockOperand;
-import com.mosinsa.product.ui.request.CancelOrderProductRequest;
 import com.mosinsa.product.ui.request.OrderProductRequests;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,26 +79,19 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public void cancelOrderProduct(String customerId, String orderId, List<CancelOrderProductRequest> requests) {
-		log.info("cancelOrder: {}", requests);
-		List<Product> products = getProductList(requests);
+	public void cancelOrderProduct(String customerId, String orderId, OrderProductRequests orderProductRequests) {
+		log.info("cancelOrder: {}", orderProductRequests);
+		List<OptionCombinations> optionCombinations = getProducts(orderProductRequests.orderProducts());
+		validateStockStatus(optionCombinations);
 
+		List<StockOperand> stockOperands = getStockOperands(orderProductRequests.orderProducts(), optionCombinations);
 
-		List<StockOperand> stockOperands = requests.stream().map(r -> new StockOperand(r.productId(), r.quantity())).toList();
 		StockResult stockResult = stockPort.tryIncrease(customerId, orderId, stockOperands);
 
 		if (StockResult.FAIL.equals(stockResult)) {
 			throw new InvalidStockException();
 		}
 
-//		products.forEach(product -> product.getStock().updateAvailable());
-	}
-
-	private List<Product> getProductList(List<CancelOrderProductRequest> requests) {
-		return requests.stream().filter(request ->
-						stockPort.currentStock(request.productId()) == 0 && request.quantity() > 0)
-				.map(req -> productRepository.findProductDetailById(ProductId.of(req.productId()))
-						.orElseThrow(() -> new ProductException(ProductError.NOT_FOUNT_PRODUCT)))
-				.toList();
+		optionCombinations.forEach(product -> product.getStock().updateAvailable());
 	}
 }

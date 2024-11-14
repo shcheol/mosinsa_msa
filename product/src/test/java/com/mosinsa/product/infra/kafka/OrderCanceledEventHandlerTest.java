@@ -1,6 +1,7 @@
 package com.mosinsa.product.infra.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mosinsa.product.ui.ProductServiceStub;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ class OrderCanceledEventHandlerTest {
 		assertThat(productServiceStub.isCalled()).isFalse();
 
 
-		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(productServiceStub);
+		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(productServiceStub, new ObjectMapper());
 		orderCanceledEventHandler.orderCanceledEvent(data);
 
 		assertThat(productServiceStub.isCalled()).isTrue();
@@ -57,7 +58,7 @@ class OrderCanceledEventHandlerTest {
 				}
 				""";
 
-		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(new ProductServiceStub());
+		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(new ProductServiceStub(), new ObjectMapper());
 		assertThrows(IllegalStateException.class, () -> orderCanceledEventHandler.orderCanceledEvent(data));
 	}
 
@@ -79,7 +80,7 @@ class OrderCanceledEventHandlerTest {
 				}
 				""";
 
-		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(new ProductServiceStub());
+		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(new ProductServiceStub(), new ObjectMapper());
 		assertThrows(JsonProcessingException.class, () -> orderCanceledEventHandler.orderCanceledEvent(data));
 	}
 

@@ -13,18 +13,17 @@ import org.springframework.util.StringUtils;
 @Component
 @RequiredArgsConstructor
 public class OrderCanceledEventHandler {
-
     private final CouponService couponService;
-
 	private final ObjectMapper om;
 
 	@KafkaListener(topics = "${mosinsa.topic.order.cancel}")
 	public void orderCanceledEvent(String message) throws JsonProcessingException {
 		OrderCanceledEvent orderCanceledEvent = om.readValue(message, OrderCanceledEvent.class);
 
-		String couponId = orderCanceledEvent.couponId();
-		if (StringUtils.hasText(couponId)){
-			couponService.cancelCoupon(couponId);
-		}
+		orderCanceledEvent.orderProducts()
+				.forEach(op -> op.coupons()
+						.stream()
+						.filter(c -> StringUtils.hasText(c.id()))
+						.forEach(c -> couponService.cancelCoupon(c.id())));
 	}
 }

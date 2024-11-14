@@ -48,7 +48,11 @@ public class PlaceOrderService {
 
 		return orderRepository.save(Order.create(orderId,
 				orderInfo.customerInfo().id(),
-				orderInfo.orderProducts().stream().map(OrderInfo.OrderProductInfo::totalPrice).reduce(Integer::sum).get(),
+				orderInfo.orderProducts()
+						.stream()
+						.map(OrderInfo.OrderProductInfo::totalPrice)
+						.reduce(Integer::sum)
+						.orElse(0),
 				shippingInfo,
 				orderProducts));
 	}
