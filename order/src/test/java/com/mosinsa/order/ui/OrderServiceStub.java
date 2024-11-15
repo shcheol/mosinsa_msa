@@ -1,6 +1,7 @@
 package com.mosinsa.order.ui;
 
 import com.mosinsa.order.command.application.OrderService;
+import com.mosinsa.order.command.application.dto.CancelOrderInfo;
 import com.mosinsa.order.command.application.dto.OrderInfo;
 import com.mosinsa.order.infra.api.ExternalServerException;
 import com.mosinsa.order.query.application.dto.OrderDetail;
@@ -15,12 +16,12 @@ public class OrderServiceStub implements OrderService {
 	}
 
 	@Override
-	public OrderDetail cancelOrder(String orderId) {
-		if (orderId.equals("exception")) {
+	public OrderDetail cancelOrder(CancelOrderInfo cancelOrderInfo) {
+		if (cancelOrderInfo.orderId().equals("exception")) {
 			throw new RuntimeException();
 		}
 
-		if (orderId.equals("externalServerException")) {
+		if (cancelOrderInfo.orderId().equals("externalServerException")) {
 			throw new ExternalServerException(HttpStatusCode.valueOf(500), "externalServerException");
 		}
 

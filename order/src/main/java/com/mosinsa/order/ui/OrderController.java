@@ -3,6 +3,7 @@ package com.mosinsa.order.ui;
 import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.common.argumentresolver.Login;
 import com.mosinsa.order.command.application.OrderService;
+import com.mosinsa.order.command.application.dto.CancelOrderInfo;
 import com.mosinsa.order.command.application.dto.OrderInfo;
 import com.mosinsa.order.query.application.dto.OrderDetail;
 import com.mosinsa.order.ui.request.OrderRequest;
@@ -48,7 +49,8 @@ public class OrderController {
 	@PostMapping("/{orderId}/cancel")
 	public ResponseEntity<OrderDetail> cancelOrders(@Login CustomerInfo customerInfo, @PathVariable("orderId") String orderId) {
 
-		OrderDetail cancelOrder = orderService.cancelOrder(orderId);
+		CancelOrderInfo cancelOrderInfo = new CancelOrderInfo(customerInfo, orderId);
+		OrderDetail cancelOrder = orderService.cancelOrder(cancelOrderInfo);
 		return ResponseEntity.ok(cancelOrder);
 	}
 

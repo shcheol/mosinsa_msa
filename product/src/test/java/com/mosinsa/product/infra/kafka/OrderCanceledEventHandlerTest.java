@@ -14,20 +14,19 @@ class OrderCanceledEventHandlerTest {
 	void orderCanceled() throws JsonProcessingException {
 		String data = """
 				{
-					"orderId": "orderId",
-					"customerId": "customer1",
-					"couponId": "couponId1",
-					"orderProducts": [
-						{
-							"productId": "productId1",
-							"price": 1000,
-							"quantity": 10,
-							"amounts": 10000
+					"id":"id",
+					"customerInfo":{"id":"customerId1","name":"name"},
+					"orderProducts":[
+						{"id":"9b097516","name":"SA 비건 레더 스퀘어 토트 백_블랙","quantity":1,"perPrice":48000,"totalPrice":48000,
+						"options":[
+							{"id":1923,"name":"YELLOW"},
+							{"id":1929,"name":"M"}
+						],
+						"coupons":[]
 						}
 					]
 				}
 				""";
-
 		ProductServiceStub productServiceStub = new ProductServiceStub();
 		assertThat(productServiceStub.isCalled()).isFalse();
 
@@ -44,15 +43,15 @@ class OrderCanceledEventHandlerTest {
 	void jsonParsing() {
 		String data = """
 				{
-					"orderId": "fail",
-					"customerId": "customer1",
-					"couponId": "couponId1",
-					"orderProducts": [
-						{
-							"productId": "productId1",
-							"price": 1000,
-							"quantity": 10,
-							"amounts": 10000
+					"id":"fail",
+					"customerInfo":{"id":"customerId1","name":"name"},
+					"orderProducts":[
+						{"id":"9b097516","name":"SA 비건 레더 스퀘어 토트 백_블랙","quantity":1,"perPrice":48000,"totalPrice":48000,
+						"options":[
+							{"id":1923,"name":"YELLOW"},
+							{"id":1929,"name":"M"}
+						],
+						"coupons":[]
 						}
 					]
 				}
@@ -65,19 +64,7 @@ class OrderCanceledEventHandlerTest {
 	@Test
 	void jsonParseFail() {
 		String data = """
-				{
-					"orderIdx": "orderId1",
-					"customerIdx": "customer1",
-					"couponId": "couponId1",
-					"orderProducts": [
-						{
-							"productId": "productId1",
-							"price": 1000,
-							"quantity": 10,
-							"amounts": 10000
-						}
-					]
-				}
+				{"id":"48050645-13f2-4b6e-a7dc-196272f13c14","customerInfo":{"idx":"customerId1","name":"name"},"orderProducts":[{"id":"9b097516","name":"SA 비건 레더 스퀘어 토트 백_블랙","quantity":1,"perPrice":48000,"totalPrice":48000,"options":[{"id":1923,"name":"YELLOW"},{"id":1929,"name":"M"}],"coupons":[]}]}
 				""";
 
 		OrderCanceledEventHandler orderCanceledEventHandler = new OrderCanceledEventHandler(new ProductServiceStub(), new ObjectMapper());

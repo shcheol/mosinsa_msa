@@ -2,6 +2,7 @@ package com.mosinsa.order.command.application;
 
 import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.common.ex.OrderRollbackException;
+import com.mosinsa.order.command.application.dto.CancelOrderInfo;
 import com.mosinsa.order.command.application.dto.OrderInfo;
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
@@ -90,16 +91,12 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderDetail cancelOrder(String orderId) {
-		Order cancelOrder = cancelOrderService.cancelOrder(orderId);
+	public OrderDetail cancelOrder(CancelOrderInfo cancelOrderInfo) {
+		Order cancelOrder = cancelOrderService.cancelOrder(cancelOrderInfo.orderId());
 
-//		OrderCanceledEvent event = new OrderCanceledEvent(
-//				cancelOrder.getId().getId(),
-//				cancelOrder.getCustomerId(),
-//				cancelOrder.getOrderCoupon().getCouponId(),
-//				cancelOrder.getOrderProducts().stream().map(OrderProductDto::of).toList());
 		OrderCanceledEvent event = OrderCanceledEvent.builder()
-				.id(orderId)
+				.id(cancelOrderInfo.orderId())
+				.customerInfo(cancelOrderInfo.customerInfo())
 				.orderProducts(cancelOrder.getOrderProducts().stream().map(op -> {
 							List<OrderCanceledEvent.OrderProductInfo.ProductOptionsDto> productOptions = op.getProductOptions()
 									.stream()
