@@ -20,18 +20,18 @@ class ViewProductControllerTest extends ControllerTest {
 	void findAllProducts() throws Exception {
 		mockMvc.perform(get("/products"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value(2))
+				.andExpect(jsonPath("totalElements").value(2))
 				.andDo(print());
 	}
 
 	@Test
 	void findMyProducts() throws Exception {
-		mockMvc.perform(get("/products/my")
+		mockMvc.perform(get("/products/likes")
 						.header("customer-info", """
 								"{"name":"name","id":"id"}"
 								"""))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value(2))
+				.andExpect(jsonPath("totalElements").value(2))
 				.andDo(print());
 	}
 

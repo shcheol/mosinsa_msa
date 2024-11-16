@@ -14,17 +14,23 @@ class OrderCanceledEventHandlerTest {
 	@Test
 	@DisplayName("쿠폰사용한 주문 취소 이벤트")
 	void orderCanceledEvent() throws JsonProcessingException {
-		String message= """
+		String message = """
 				{
-					"orderId": "orderId",
-					"customerId": "customer1",
-					"couponId": "couponId1",
-					"orderProducts": [
+					"id":"id",
+					"customerInfo":{"id":"customerId1","name":"name"},
+					"orderProducts":[
 						{
-							"productId": "productId1",
-							"price": 1000,
-							"quantity": 10,
-							"amounts": 10000
+							"id":"9b097516","name":"SA 비건 레더 스퀘어 토트 백_블랙","quantity":1,"perPrice":48000,"totalPrice":48000,
+							"options":[
+								{"id":1923,"name":"YELLOW"},
+								{"id":1929,"name":"M"}
+							],
+							"coupons":[
+								{
+									"id":"couponId1",
+									"discountPolicy":"PERCENT_10"
+								}
+							]
 						}
 					]
 				}
@@ -40,16 +46,19 @@ class OrderCanceledEventHandlerTest {
 	@Test
 	@DisplayName("쿠폰없는 주문 취소 이벤트")
 	void noCouponOrderCanceledEvent() throws JsonProcessingException {
-		String message= """
+		String message = """
 				{
-					"orderId": "orderId",
-					"customerId": "customer1",
-					"orderProducts": [
+					"id":"id",
+					"customerInfo":{"id":"customerId1","name":"name"},
+					"orderProducts":[
 						{
-							"productId": "productId1",
-							"price": 1000,
-							"quantity": 10,
-							"amounts": 10000
+							"id":"9b097516","name":"SA 비건 레더 스퀘어 토트 백_블랙","quantity":1,"perPrice":48000,"totalPrice":48000,
+							"options":[
+								{"id":1923,"name":"YELLOW"},
+								{"id":1929,"name":"M"}
+							],
+							"coupons":[
+							]
 						}
 					]
 				}

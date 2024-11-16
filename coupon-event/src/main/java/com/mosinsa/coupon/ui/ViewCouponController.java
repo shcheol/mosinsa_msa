@@ -27,7 +27,7 @@ public class ViewCouponController {
         return ResponseEntity.ok(findCoupon);
     }
 
-    @GetMapping("/coupons/my")
+    @GetMapping("/coupons")
     public ResponseEntity<List<CouponDetails>> myCoupons(@Login CustomerInfo customerInfo) {
 
         List<CouponDetails> couponDetails = couponQueryService.getMyCoupons(customerInfo.id());

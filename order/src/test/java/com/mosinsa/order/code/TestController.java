@@ -1,7 +1,7 @@
 package com.mosinsa.order.code;
 
-import com.mosinsa.order.common.argumentresolver.CustomerInfo;
-import com.mosinsa.order.common.argumentresolver.Login;
+import com.mosinsa.common.argumentresolver.CustomerInfo;
+import com.mosinsa.common.argumentresolver.Login;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

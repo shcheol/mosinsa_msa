@@ -1,9 +1,6 @@
 package com.mosinsa.order.command.application;
 
-import com.mosinsa.order.command.application.dto.AddressDto;
-import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.command.application.dto.ReceiverDto;
-import com.mosinsa.order.command.application.dto.ShippingInfoDto;
+import com.mosinsa.order.command.application.dto.*;
 import com.mosinsa.order.command.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +16,9 @@ public class PlaceOrderService {
 	private final OrderRepository orderRepository;
 
 	@Transactional
-	public Order order(OrderId orderId, OrderConfirmDto orderConfirmDto) {
+	public Order order(OrderId orderId, OrderInfo orderInfo) {
 
-		ShippingInfoDto shippingInfoDto = orderConfirmDto.shippingInfo();
+		ShippingInfoDto shippingInfoDto = orderInfo.shippingInfo();
 		AddressDto address = shippingInfoDto.address();
 		ReceiverDto receiver = shippingInfoDto.receiver();
 
@@ -30,19 +27,34 @@ public class PlaceOrderService {
 				Receiver.of(receiver.name(), receiver.phoneNumber()),
 				shippingInfoDto.message()
 		);
-		List<OrderProduct> orderProducts = orderConfirmDto.orderProducts().stream()
-				.map(orderProduct -> OrderProduct.of(
-						orderProduct.productId(),
-						orderProduct.price(),
-						orderProduct.quantity())).toList();
+		List<OrderProduct> orderProducts = orderInfo.orderProducts().stream()
+				.map(orderProduct -> {
+					OrderProduct of = OrderProduct.of(
+							orderProduct.id(),
+							orderProduct.name(),
+							orderProduct.perPrice(),
+							orderProduct.quantity(),
+							orderProduct.totalPrice());
+					of.addProductOptions(orderProduct.options()
+							.stream()
+							.map(option -> ProductOption.of(option.id(), option.name()))
+							.toList());
+					of.addCoupons(orderProduct.coupons()
+							.stream()
+							.map(coupon -> OrderCoupon.of(coupon.id(), coupon.discountPolicy()))
+							.toList());
+					return of;
+				}).toList();
 
-		Order order = orderRepository.save(Order.create(orderId,
-				orderConfirmDto.customerId(),
-				orderProducts,
+		return orderRepository.save(Order.create(orderId,
+				orderInfo.customerInfo().id(),
+				orderInfo.orderProducts()
+						.stream()
+						.map(OrderInfo.OrderProductInfo::totalPrice)
+						.reduce(Integer::sum)
+						.orElse(0),
 				shippingInfo,
-				orderConfirmDto.totalAmount()));
-		order.useCoupon(orderConfirmDto.couponId());
-		return order;
+				orderProducts));
 	}
 
 }

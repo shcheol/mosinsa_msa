@@ -21,14 +21,14 @@ class StockHistoryRepositoryTest {
 
 	@Test
 	void save(){
-		StockHistory of1 = StockHistory.of("orderNum", "memberId", 1L, 10, StockHistoryType.MINUS);
+		StockHistory of1 = StockHistory.of("orderNum", "memberId", "1L", 10, StockHistoryType.MINUS);
 		StockHistory save = repository.save(of1);
 		StockHistory find = repository.findById(save.getId()).get();
 
 		assertThat(find.getId()).isEqualTo(save.getId());
 		assertThat(find.getOrderNum()).isEqualTo("orderNum");
 		assertThat(find.getMemberId()).isEqualTo("memberId");
-		assertThat(find.getTargetId()).isEqualTo(1L);
+		assertThat(find.getTargetId()).isEqualTo("1L");
 		assertThat(find.getQuantity()).isEqualTo(10);
 		assertThat(find.getType()).isEqualTo(StockHistoryType.MINUS);
 		assertThat(find.getCreatedDate()).isBefore(LocalDateTime.now());
@@ -37,8 +37,8 @@ class StockHistoryRepositoryTest {
 
 	@Test
 	void equalsAndHashcode() {
-		StockHistory of = StockHistory.of("orderNum", "memberId", 1L, 10, StockHistoryType.PLUS);
-		StockHistory of1 = StockHistory.of("orderNum", "memberId", 1L, 10, StockHistoryType.MINUS);
+		StockHistory of = StockHistory.of("orderNum", "memberId", "1L", 10, StockHistoryType.PLUS);
+		StockHistory of1 = StockHistory.of("orderNum", "memberId", "1L", 10, StockHistoryType.MINUS);
 		repository.saveAll(List.of(of, of1));
 
 

@@ -34,18 +34,13 @@ spring:
     redis:
       port: 6666
       host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
-feignclient:
-  url:
-    customer: 152.67.205.195:8000/customer-service
-    order: 152.67.205.195:8000/order-service
-    product: 152.67.205.195:8000/product-service
-    coupon: 152.67.205.195:8000/coupon-service
 
 mosinsa:
   topic:
     order:
       create: mosinsa-order-create
       cancel: mosinsa-order-cancel
+  base-url: 152.67.205.195:8000
 
 token:
   access:

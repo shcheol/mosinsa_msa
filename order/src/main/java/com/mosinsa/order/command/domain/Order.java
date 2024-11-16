@@ -1,7 +1,7 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.common.ex.OrderError;
-import com.mosinsa.order.common.ex.OrderException;
+import com.mosinsa.common.ex.OrderError;
+import com.mosinsa.common.ex.OrderException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Table(name = "orders")
@@ -31,18 +30,11 @@ public class Order extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
-	private OrderCoupon orderCoupon;
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
 	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
-	public OrderCoupon getOrderCoupon() {
-		return Optional.ofNullable(this.orderCoupon)
-				.orElse(OrderCoupon.of("", null));
-	}
 
-	public static Order create(OrderId orderId, String customerId, List<OrderProduct> orderProducts, ShippingInfo shippingInfo, int totalPrice) {
+	public static Order create(OrderId orderId, String customerId, int totalPrice, ShippingInfo shippingInfo, List<OrderProduct> orderProducts) {
 		Order order = new Order();
 		order.id = orderId;
 		order.setCustomerId(customerId);
@@ -51,12 +43,6 @@ public class Order extends BaseEntity {
 		order.setShippingInfo(shippingInfo);
 		order.setTotalPrice(Money.of(totalPrice));
 		return order;
-	}
-
-	public void useCoupon(String couponId) {
-		if (StringUtils.hasText(couponId)) {
-			this.orderCoupon = OrderCoupon.of(couponId, this);
-		}
 	}
 
 	private void setTotalPrice(Money totalPrice) {
@@ -77,7 +63,7 @@ public class Order extends BaseEntity {
 
 	private void addOrderProducts(List<OrderProduct> orderProducts) {
 		verifyAtLeastOneOrderProducts(orderProducts);
-		orderProducts.stream().forEach(orderProduct -> {
+		orderProducts.forEach(orderProduct -> {
 			orderProduct.setOrder(this);
 			this.orderProducts.add(orderProduct);
 		});

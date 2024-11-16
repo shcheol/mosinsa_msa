@@ -31,7 +31,7 @@ class ViewCouponControllerTest extends ControllerTest {
 
         String memberId = "memberId";
 
-        mockMvc.perform(get("/coupons/my")
+        mockMvc.perform(get("/coupons")
                         .header("customer-info",
                                 "\"{\"name\":\"name\",\"id\":\"" + memberId + "\"}\"")
                 )

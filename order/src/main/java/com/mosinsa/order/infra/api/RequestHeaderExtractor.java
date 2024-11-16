@@ -13,24 +13,23 @@ import java.util.Map;
 
 public class RequestHeaderExtractor {
 
-	public static Map<String, Collection<String>> extract() {
+	private static final List<String> requiredHeaderKeys = List.of(
+			HttpHeaders.AUTHORIZATION,
+			HeaderConst.REFRESH_TOKEN.key(),
+			HeaderConst.CUSTOMER_INFO.key()
+	);
+
+
+	public static HttpHeaders extract() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		Map<String, Collection<String>> headers = new HashMap<>();
-		String auth = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if (StringUtils.hasText(auth)) {
-			headers.put(HttpHeaders.AUTHORIZATION, List.of(auth));
-		}
-		String token = request.getHeader(HeaderConst.REFRESH_TOKEN.key());
-		if (StringUtils.hasText(token)) {
-			headers.put(HeaderConst.REFRESH_TOKEN.key(), List.of(token));
-		}
-		String userInfo = request.getHeader(HeaderConst.CUSTOMER_INFO.key());
-		if (StringUtils.hasText(userInfo)) {
-			headers.put(HeaderConst.CUSTOMER_INFO.key(), List.of(userInfo));
-		}
+		HttpHeaders headers = new HttpHeaders();
+		requiredHeaderKeys.stream()
+				.filter(rhk -> StringUtils.hasText(request.getHeader(rhk)))
+				.forEach(requiredHeaderKey -> headers.put(requiredHeaderKey, List.of(request.getHeader(requiredHeaderKey))));
 		return headers;
 	}
 
 	private RequestHeaderExtractor() {
 	}
 }
+

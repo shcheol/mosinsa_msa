@@ -1,13 +1,8 @@
 package com.mosinsa.order.infra.api;
 
-import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.command.application.dto.OrderProductDto;
-import com.mosinsa.order.ui.request.OrderConfirmRequest;
-
-import java.util.List;
+import com.mosinsa.order.infra.api.httpinterface.product.OrderProductRequests;
 
 public interface ProductAdapter {
-    List<OrderProductDto> confirm(OrderConfirmRequest orderConfirmRequest);
 
-    ResponseResult<Void> orderProducts(String orderId, OrderConfirmDto orderRequest);
+    ResponseResult<Void> orderProducts(String orderId, OrderProductRequests orderRequest);
 }

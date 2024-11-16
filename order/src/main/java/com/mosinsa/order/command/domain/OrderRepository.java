@@ -11,6 +11,6 @@ public interface OrderRepository extends Repository<Order, OrderId>, CustomOrder
 
     Order save(Order order);
     Optional<Order> findById(OrderId orderId);
-    @Query("select o from Order o inner join fetch o.orderProducts where o.id = :orderId")
+    @Query("select o from Order o inner join fetch o.orderProducts op where o.id = :orderId")
     Optional<Order> findOrderDetailsById(@Param("orderId") OrderId orderId);
 }

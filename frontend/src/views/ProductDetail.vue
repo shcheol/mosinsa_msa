@@ -13,7 +13,6 @@
                 <div v-if="optionValue.changeType==='PLUS'"> + {{optionValue.changePrice}}</div>
                 <div v-else-if="optionValue.changeType==='MINUS'"> - {{optionValue.changePrice}}</div>
               </div>
-
             </option>
           </select>
           <br/>
@@ -32,7 +31,7 @@
         <div>
           <p>총 결제 금액: {{orderPrice}}</p>
         </div>
-        <button class="btn btn-dark" @click="orders(product.productId, product.price, quantity)">주문하기</button>
+        <button class="btn btn-dark" @click="orders()">주문하기</button>
       </div>
     </div>
 
@@ -120,12 +119,18 @@ export default {
             this.initResult();
           });
     },
-    orders(productId, price, quantity) {
+    orders() {
+      if (this.selectedProducts.length ===0){
+        alert("옵션을 선택해주세요");
+        return;
+      }
       this.closeModal();
 
       this.$router.push({
-        name: 'orderConfirm',
-        state: {orderProduct: [{productId: productId, price: price, quantity: quantity}]}
+        name: 'orderPage',
+        state: {
+          orderProduct: JSON.stringify(this.selectedProducts)
+        }
       })
     },
     addCart(product) {
@@ -178,11 +183,13 @@ export default {
       }
 
       this.selectedProducts.push({
+        id: this.product.productId,
         name: this.product.name,
         options: temp,
-        stock: 1,
-        perPrice: this.product.sales.discountedPrice,
-        totalPrice: price*1
+        quantity: 1,
+        perPrice: price,
+        totalPrice: price*1,
+        coupons: []
       })
 
       this.calculateOrderPrice();

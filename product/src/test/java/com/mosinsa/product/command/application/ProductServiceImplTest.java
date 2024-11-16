@@ -44,8 +44,9 @@
 //
 //		OrderProductRequest request = new OrderProductRequest("productId2", 3);
 //		List<OrderProductRequest> list = List.of(request);
+//
 //		assertThrows(AlreadySoldOutException.class,
-//				() -> productService.orderProduct("customerId1", "orderId1", list));
+//				() -> productService.orderProduct("customerId1", list));
 //	}
 //
 //	@Test

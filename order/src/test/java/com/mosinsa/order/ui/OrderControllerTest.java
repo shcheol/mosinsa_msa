@@ -1,12 +1,11 @@
 package com.mosinsa.order.ui;
 
-import com.mosinsa.order.ControllerTest;
+import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,18 +20,26 @@ class OrderControllerTest extends ControllerTest {
 	@Test
 	void order() throws Exception {
 		mockMvc.perform(post("/orders/order")
+						.header("customer-info", """
+								"{"name":"name","id":"id"}"
+								""")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content("""
 								{
-								"orderConfirm":{
-								         "couponId": "couponId",
-								         "customerId": "customerId",
-								         "orderProducts": [
+								         "myOrderProducts": [
 								             {
-								                 "productId": "productId",
-								                 "price": 3000,
-								                 "quantity": 2,
-								                 "amounts": 6000
+								                 "id": "productId",
+								                 "name": "product",
+								                 "perPrice": 3000,
+								                 "totalPrice": 3000,
+								                 "stock": 1,
+								                 "options":[{
+								                 "id":1,
+								                 "name":"size"
+								                 }],
+								                 "coupons":[{
+								                 "id":"id"
+								                 }]
 								             }
 								         ],
 								         "shippingInfo": {
@@ -46,10 +53,8 @@ class OrderControllerTest extends ControllerTest {
 								                 "name": "myname",
 								                 "phoneNumber": "010-1111-1111"
 								             }
-								         },
-								         "totalAmount": 5400
-								     }
-								     }
+								         }
+								     }                               
 								"""))
 				.andExpect(status().is2xxSuccessful())
 				.andDo(print());
@@ -57,14 +62,22 @@ class OrderControllerTest extends ControllerTest {
 
 	@Test
 	void orderCancel() throws Exception {
-		mockMvc.perform(post("/orders/orderId1/cancel"))
+		mockMvc.perform(post("/orders/orderId1/cancel")
+						.header("customer-info", """
+								"{"name":"name","id":"id"}"
+								""")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
 				.andDo(print());
 	}
 
 	@Test
 	void globalExceptionExternalServerException() throws Exception {
-		mockMvc.perform(post("/orders/externalServerException/cancel"))
+		mockMvc.perform(post("/orders/externalServerException/cancel")
+						.header("customer-info", """
+								"{"name":"name","id":"id"}"
+								""")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().is5xxServerError())
 				.andDo(print());
 	}
@@ -72,7 +85,11 @@ class OrderControllerTest extends ControllerTest {
 
 	@Test
 	void globalExceptionCommon() throws Exception {
-		mockMvc.perform(post("/orders/exception/cancel"))
+		mockMvc.perform(post("/orders/exception/cancel")
+						.header("customer-info", """
+								"{"name":"name","id":"id"}"
+								""")
+						.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().is5xxServerError())
 				.andDo(print());
 	}
