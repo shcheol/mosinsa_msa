@@ -92,28 +92,11 @@ export default {
       console.log(event);
       this.disconnect()
     });
-    // this.showLoadingOverlay();
   },
   beforeUnmount() {
     this.disconnect();
   },
   methods: {
-    showLoadingOverlay() {
-      console.log(this.$refs.loadingRef);
-      let loadingInterval = setInterval(function () {
-        if (this.$refs.loadingRef) {
-          this.commentLoader = this.$loading.show({
-            container: this.$refs.loadingRef,
-            width: 64,
-            height: 64,
-            loader: "spinner",
-            canCancel: true,
-            lockScroll: true,
-          }, {});
-          clearInterval(loadingInterval);
-        }
-      }.bind(this), 1000);
-    },
     connect() {
       const serverURL = "/websocket-service/register"
       let socket = new SockJS(serverURL);
@@ -138,18 +121,18 @@ export default {
 
     },
     processSubscribedMessage(message) {
-      if (message.type === "REVIEW") {
-        if (message.likesType === "LIKES") {
+      if (message.target=== "REVIEW") {
+        if (message.reactionType === "LIKES") {
           if (message.canceled) {
-            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+            this.reviewLikesReactionInfoMap.get(message.targetId).reactionCnt -= 1;
           } else {
-            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+            this.reviewLikesReactionInfoMap.get(message.targetId).reactionCnt += 1;
           }
         } else {
           if (message.canceled) {
-            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+            this.reviewDislikesReactionInfoMap.get(message.targetId).reactionCnt -= 1;
           } else {
-            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+            this.reviewDislikesReactionInfoMap.get(message.targetId).reactionCnt += 1;
           }
         }
       }

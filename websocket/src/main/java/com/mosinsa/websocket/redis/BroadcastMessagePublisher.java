@@ -20,7 +20,7 @@ public class BroadcastMessagePublisher {
 
 		redisMessageListenerContainer.addMessageListener(redisSubscriber, new ChannelTopic(channel));
 
-		log.info("broadcast review likes event {}", content);
+		log.info("broadcast event {}", content);
 		redisTemplate.convertAndSend(channel, content);
 	}
 }
