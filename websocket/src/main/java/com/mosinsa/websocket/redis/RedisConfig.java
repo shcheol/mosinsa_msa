@@ -3,6 +3,7 @@ package com.mosinsa.websocket.redis;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,10 +22,11 @@ public class RedisConfig {
 
 	@Bean
 	public LettuceConnectionFactory connectionFactory() {
-		return new LettuceConnectionFactory(redisInfo.getHost(), redisInfo.getPort());
+		return new LettuceConnectionFactory(redisInfo.host(), redisInfo.port());
 	}
 
 	@Bean
+	@Primary
 	public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
 
 		RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();

@@ -1,9 +1,11 @@
 package com.mosinsa.reaction.command.application;
 
 import com.mosinsa.common.aop.RedissonLock;
+import com.mosinsa.common.event.Events;
+import com.mosinsa.common.event.ReactionCanceledEvent;
+import com.mosinsa.common.event.ReactionReactedEvent;
 import com.mosinsa.reaction.command.domain.ReactionInfo;
 import com.mosinsa.reaction.command.domain.ReactionInfoRepository;
-import com.mosinsa.reaction.infra.kafka.ProduceTemplate;
 import com.mosinsa.reaction.query.application.dto.ReactionSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,6 @@ public class ReactionServiceImpl implements ReactionService {
 
 	private final ReactionProcessor processor;
 	private final ReactionInfoRepository repository;
-	private final ProduceTemplate produceTemplate;
 	private static final String REACTION_LOCK_KEY = "reaction_lock_key";
 
 	@Override
@@ -27,8 +28,7 @@ public class ReactionServiceImpl implements ReactionService {
 		ReactionInfo reactionInfo = repository.findReactionInfoByCondition(condition)
 				.orElseGet(() -> repository.save(ReactionInfo.of(condition.target(), condition.targetId(), condition.reactionType())));
 		reactionInfo.increase();
-
-		produceTemplate.produce(condition.target(), condition.targetId(), condition.reactionType(), false);
+		Events.raise(new ReactionReactedEvent(condition.target(), condition.targetId(), condition.reactionType()));
 		return reaction;
 	}
 
@@ -40,8 +40,7 @@ public class ReactionServiceImpl implements ReactionService {
 		ReactionInfo reactionInfo = repository.findReactionInfoByCondition(condition)
 				.orElseGet(() -> repository.save(ReactionInfo.of(condition.target(), condition.targetId(), condition.reactionType())));
 		reactionInfo.decrease();
-
-		produceTemplate.produce(condition.target(), condition.targetId(), condition.reactionType(), true);
+		Events.raise(new ReactionCanceledEvent(condition.target(), condition.targetId(), condition.reactionType()));
 		return cancel;
 	}
 
