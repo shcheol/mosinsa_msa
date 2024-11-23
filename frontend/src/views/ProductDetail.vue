@@ -1,11 +1,37 @@
 <template>
   <div class="container">
 
-    <div class="black-bg" v-if="modalState">
-      <div class="white-bg">
-        <h4>수량</h4>
-        <input type="number" class="form-control" id="quantity" name="quantity" v-model="quantity"/>
-        <button @click="orders(product.productId, product.price, quantity)">주문하기</button>
+    <div class="black-bg" v-if="modalState" @click="closeModal()">
+      <div class="white-bg" @click="(event) => {event.stopPropagation()}">
+        <div v-for="(productOption, idx) in product.productOptions" :key="productOption" style="padding-bottom: 3px;">
+          <select class="select-box" v-model="result[idx]" style="text-align:center;" @change="onChange()">
+            <option disabled value="">{{ productOption.optionName }}</option>
+            <option v-for="(optionValue) in productOption.productOptionsValues" :key="optionValue"
+                    :value="optionValue" style="  border: 1px solid #888;border-radius: 8px;">
+              <div style="display: inline; padding-right: 10px">
+                {{ optionValue.optionValue }}
+                <div v-if="optionValue.changeType==='PLUS'"> + {{optionValue.changePrice}}</div>
+                <div v-else-if="optionValue.changeType==='MINUS'"> - {{optionValue.changePrice}}</div>
+              </div>
+            </option>
+          </select>
+          <br/>
+
+        </div>
+        <div v-for="(selected, idx) in selectedProducts" :key="selected">
+          <div>
+            <p style="display: inline; padding-right: 3px" v-for="op in selected.options" :key="op">{{ op.name }}</p>
+            <button class="btn btn-light text-danger text-small btn-sm" style="padding-left: 10px" @click="cancel(idx)">X</button>
+
+            <input type="number" class="form-control" id="quantity" name="quantity" v-model="selected.stock" @change="stockChange(selected)"/>
+            <p>{{ selected.totalPrice }}</p>
+          </div>
+        </div>
+
+        <div>
+          <p>총 결제 금액: {{orderPrice}}</p>
+        </div>
+        <button class="btn btn-dark" @click="orders()">주문하기</button>
       </div>
     </div>
 
@@ -21,12 +47,18 @@
         <td v-if="product!=null">{{ product.name }}</td>
       </tr>
       <tr>
-        <td>수량</td>
-        <td v-if="product!=null">{{ product.currentStock }}/{{ product.totalStock }}</td>
-      </tr>
-      <tr>
         <td>가격</td>
-        <td v-if="product!=null">{{ product.price }}</td>
+        <td v-if="product!=null"><div>
+          <div v-if="product.sales.discountRate!==0">
+          <p style="font-size: small;color: #888888; text-decoration: line-through; padding-bottom: 1px">{{ product.price }}원</p>
+          <p style="display: inline; color: red; padding-right: 3px">{{product.sales.discountRate}}%</p>
+          <p style="display: inline; color: black">{{product.sales.discountedPrice}}원</p>
+          </div>
+          <div v-else>
+            <p style="color: black">{{ product.price }}원</p>
+          </div>
+        </div>
+        </td>
       </tr>
       <div v-if="reactionCntInfo!=null" class="likes" style="display: inline;" @click="likes(product.productId)">
         <img v-if="!reactionCntInfo.hasReacted" src="../assets/likes.png" width="50" height="50"
@@ -37,12 +69,9 @@
       </div>
       </tbody>
     </table>
-    <button @click="addCart(product)">담기</button>
-    <button @click="modalState=!modalState">주문하기</button>
-    <div>
-      <a class="btn btn-dark" href="/" role="button">첫 화면으로 이동하기</a>
-    </div>
-
+    <button class="btn btn-dark" @click="addCart(product)">담기</button>
+    <button class="btn btn-dark" @click="modalState=!modalState">주문하기</button>
+    <br/>
     <br/>
     <div>
       <Reviews :props-value="productId"/>
@@ -67,26 +96,41 @@ export default {
       quantity: null,
       customerInfo: JSON.parse(localStorage.getItem("customer-info")),
       reactionCntInfo: null,
+      result: [],
+      optionLen: 0,
+      selectedProducts: [],
+      orderPrice: 0,
     }
   },
   mounted() {
     this.productId = this.$route.params.id;
-    apiBoard.getProductDetails(this.productId)
-        .then((response) => {
-          console.log(response);
-          this.product = response.data;
-        });
+    this.getProductDetails(this.productId);
     this.totalReaction(this.productId);
-
   },
   methods: {
-
-    orders(productId, price, quantity) {
+    closeModal() {
       this.modalState = false;
+    },
+    getProductDetails(productId) {
+      apiBoard.getProductDetails(productId)
+          .then((response) => {
+            this.product = response.data;
+            this.optionLen = this.product.productOptions.length;
+            this.initResult();
+          });
+    },
+    orders() {
+      if (this.selectedProducts.length ===0){
+        alert("옵션을 선택해주세요");
+        return;
+      }
+      this.closeModal();
 
       this.$router.push({
-        name: 'orderConfirm',
-        state: {orderProduct: [{productId: productId, price: price, quantity: quantity}]}
+        name: 'orderPage',
+        state: {
+          orderProduct: JSON.stringify(this.selectedProducts)
+        }
       })
     },
     addCart(product) {
@@ -96,14 +140,12 @@ export default {
       if (this.reactionCntInfo != null) {
         if (!this.reactionCntInfo.hasReacted) {
           apiBoard.postReaction('PRODUCT', productId, 'LIKES')
-              .then((response) => {
-                console.log(response);
+              .then(() => {
                 this.totalReaction(productId)
               });
         } else {
           apiBoard.postReactionCancel('PRODUCT', productId, 'LIKES')
-              .then((response) => {
-                console.log(response);
+              .then(() => {
                 this.totalReaction(productId)
               });
         }
@@ -112,10 +154,61 @@ export default {
     totalReaction(productId) {
       apiBoard.getReactionCount('PRODUCT', productId, 'LIKES')
           .then((response) => {
-            console.log(response);
             this.reactionCntInfo = response.data;
           });
-    }
+    },
+    stockChange(selected){
+      selected.totalPrice = selected.perPrice * selected.stock;
+      this.calculateOrderPrice();
+    },
+    onChange() {
+      for (let i = 0; i < this.optionLen; i++) {
+        if (this.result[i] === '') {
+          return;
+        }
+      }
+
+      let price = this.product.sales.discountedPrice;
+      const temp = [];
+      for (let i = 0; i < this.optionLen; i++) {
+        temp.push({
+          id: this.result[i].id,
+          name: this.result[i].optionValue,
+        });
+        if (this.result[i].changeType === 'MINUS') {
+          price -= this.result[i].changePrice;
+        } else if (this.result[i].changeType === 'PLUS') {
+          price += this.result[i].changePrice;
+        }
+      }
+
+      this.selectedProducts.push({
+        id: this.product.productId,
+        name: this.product.name,
+        options: temp,
+        quantity: 1,
+        perPrice: price,
+        totalPrice: price*1,
+        coupons: []
+      })
+
+      this.calculateOrderPrice();
+      this.initResult();
+    },
+    cancel(idx){
+      this.selectedProducts.splice(idx,1);
+      this.calculateOrderPrice();
+    },
+    initResult() {
+      this.result = [];
+      for (let i = 0; i < this.optionLen; i++) {
+        this.result.push('');
+      }
+    },
+    calculateOrderPrice(){
+      this.orderPrice =0;
+      this.selectedProducts.forEach(sp => this.orderPrice+=sp.totalPrice);
+    },
   }
 
 }
@@ -123,18 +216,34 @@ export default {
 
 <style>
 .black-bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: relative;
-  padding: 20px;
+  /*display: none; !* Hidden by default *!*/
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .white-bg {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.select-box {
+  padding: 3px 3px 3px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 100%
 }
 
 ul li {

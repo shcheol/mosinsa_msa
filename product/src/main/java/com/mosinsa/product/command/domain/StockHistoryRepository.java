@@ -6,12 +6,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface StockHistoryRepository extends Repository<StockHistory, String> {
+public interface StockHistoryRepository extends Repository<StockHistory, Long> {
 
-	Optional<StockHistory> findById(String id);
-
+	Optional<StockHistory> findById(Long id);
 	StockHistory save(StockHistory stockHistory);
 	List<StockHistory> saveAll(Iterable<StockHistory> entities);
-
 	List<StockHistory> findStockHistoriesByOrderNum(@Param("orderNum") String orderNum);
 }

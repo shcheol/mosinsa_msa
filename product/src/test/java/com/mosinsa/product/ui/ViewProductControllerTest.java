@@ -3,12 +3,8 @@ package com.mosinsa.product.ui;
 import com.mosinsa.ControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,29 +20,27 @@ class ViewProductControllerTest extends ControllerTest {
 	void findAllProducts() throws Exception {
 		mockMvc.perform(get("/products"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value(2))
+				.andExpect(jsonPath("totalElements").value(2))
 				.andDo(print());
 	}
 
 	@Test
-	void findMYProducts() throws Exception {
-		mockMvc.perform(get("/products/my")
+	void findMyProducts() throws Exception {
+		mockMvc.perform(get("/products/likes")
 						.header("customer-info", """
 								"{"name":"name","id":"id"}"
 								"""))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value(2))
+				.andExpect(jsonPath("totalElements").value(2))
 				.andDo(print());
 	}
 
 	@Test
 	void productDetails() throws Exception {
-		mockMvc.perform(get("/products/productId1"))
+		mockMvc.perform(get("/products/01be3593"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("name").value("test"))
 				.andExpect(jsonPath("price").value(1000))
-				.andExpect(jsonPath("totalStock").value(10))
-				.andExpect(jsonPath("stockStatus").value("ON"))
 				.andExpect(jsonPath("productId").exists())
 				.andDo(print());
 	}

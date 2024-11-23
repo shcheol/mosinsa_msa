@@ -1,21 +1,16 @@
 package com.mosinsa.product.command.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-import java.util.UUID;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Stock {
-
-	@Id
-	@Column(name = "stock_id")
-	private String id;
+public class Stock extends BaseIdEntity {
 
 	private long total;
 
@@ -26,37 +21,32 @@ public class Stock {
 		inputValidCheck(total);
 
 		Stock stock = new Stock();
-		stock.id = UUID.randomUUID().toString();
 		stock.total = total;
-		stock.status = StockStatus.ON;
+		stock.status = total > 0L ? StockStatus.ON : StockStatus.OFF;
 		return stock;
 	}
 
-	public void updateAvailable(){
+	public void updateAvailable() {
 		this.status = StockStatus.ON;
 	}
 
-	public void updateSoldOut(){
+	public void updateSoldOut() {
 		this.status = StockStatus.SOLD_OUT;
 	}
 
 	private static void inputValidCheck(long value) {
-		if (value < 1L) {
-			throw new IllegalArgumentException("수량은 0보다 큰 값이 필요합니다.");
+		if (value < 0L) {
+			throw new InvalidStockException("수량은 0이상이어야 합니다.");
 		}
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Stock stock = (Stock) o;
-		return Objects.equals(this.id, stock.id);
+		return super.equals(o);
 	}
 
 	@Override
 	public int hashCode() {
-		return id != null ? id.hashCode() : 0;
+		return super.hashCode();
 	}
 }

@@ -1,51 +1,123 @@
 SET FOREIGN_KEY_CHECKS = 0;
 drop table if exists product;
+drop table if exists product_options;
+drop table if exists product_options_value;
+drop table if exists option_combinations;
+drop table if exists option_combination_values;
+drop table if exists brand;
 drop table if exists stock;
 drop table if exists stock_history;
-drop table if exists product;
 drop table if exists category;
 drop table if exists comment;
 drop table if exists review;
 drop table if exists reaction;
 drop table if exists reaction_info;
+drop table if exists sales;
 SET FOREIGN_KEY_CHECKS = 1;
 
 create table category
 (
-    category_id varchar(255) not null,
-    name        varchar(255),
+    category_id varchar(255)        not null,
+    name        varchar(255) unique not null,
+    parent_id   varchar(255),
     primary key (category_id)
 ) engine = InnoDB;
-
+create table brand
+(
+    id                 bigint not null auto_increment,
+    name               varchar(255),
+    description        varchar(255),
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
+create table sales
+(
+    id                 bigint not null auto_increment,
+    product_id         varchar(255),
+    sales_policy_type  varchar(255),
+    start_condition    varchar(255),
+    end_condition      varchar(255),
+    discount_type      varchar(255),
+    amount             integer,
+    active             varchar(255) not null default 'Y',
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
 create table product
 (
-    product_id   varchar(255) not null,
-    name         varchar(255),
-    price        integer,
-    category_id  varchar(255),
-    stock_id     varchar(255),
-    created_date timestamp,
+    product_id         varchar(255) not null,
+    name               varchar(255),
+    price              integer,
+    category_id        varchar(255),
+    brand_id           bigint,
+    created_date       timestamp,
+    last_modified_date timestamp,
     primary key (product_id)
+) engine = InnoDB;
+create table product_options
+(
+    id                 bigint not null auto_increment,
+    option_name        varchar(255),
+    product_id         varchar(255),
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
+create table product_options_value
+(
+    id                 bigint not null auto_increment,
+    change_price       integer,
+    change_type        varchar(255),
+    options_value      varchar(255),
+    product_option_id  bigint,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
+
+create table option_combinations
+(
+    id                 bigint not null auto_increment,
+    product_id         varchar(255),
+    stock_id           bigint,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
+) engine = InnoDB;
+
+create table option_combination_values
+(
+    id                       bigint not null auto_increment,
+    option_combinations_id   bigint,
+    product_options_value_id bigint,
+    created_date             datetime(6),
+    last_modified_date       datetime(6),
+    primary key (id)
 ) engine = InnoDB;
 
 create table stock
 (
-    stock_id varchar(255) not null,
-    total    bigint       not null,
-    status   varchar(255) not null,
-    primary key (stock_id)
+    id                 bigint       not null auto_increment,
+    total              bigint       not null,
+    status             varchar(255) not null,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
 ) engine = InnoDB;
 
 create table stock_history
 (
-    stock_history_id varchar(255) not null,
-    order_num        varchar(255) not null,
-    member_id        varchar(255) not null,
-    product_id       varchar(255) not null,
-    quantity         bigint,
-    type             varchar(255) not null,
-    created_date     datetime(6),
-    primary key (stock_history_id)
+    id                 bigint       not null auto_increment,
+    order_num          varchar(255) not null,
+    member_id          varchar(255) not null,
+    target_id          varchar(255) not null,
+    quantity           bigint,
+    type               varchar(255) not null,
+    created_date       datetime(6),
+    last_modified_date datetime(6),
+    primary key (id)
 ) engine = InnoDB;
 
 create table comment

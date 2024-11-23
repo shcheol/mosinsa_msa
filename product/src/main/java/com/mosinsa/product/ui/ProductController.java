@@ -2,6 +2,7 @@ package com.mosinsa.product.ui;
 
 import com.mosinsa.common.argumentresolver.CustomerInfo;
 import com.mosinsa.common.argumentresolver.Login;
+import com.mosinsa.product.command.application.ProductRegister;
 import com.mosinsa.product.command.application.ProductService;
 import com.mosinsa.product.command.domain.ProductId;
 import com.mosinsa.product.ui.request.CreateProductRequest;
@@ -19,26 +20,27 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/products")
-public class 	ProductController {
+public class ProductController {
 
-    private final ProductService productService;
+	private final ProductService productService;
+	private final ProductRegister productRegister;
 
 
-    @PostMapping
-    public ResponseEntity<ProductId> addProduct(@RequestBody CreateProductRequest request) {
+	@PostMapping
+	public ResponseEntity<ProductId> addProduct(@RequestBody CreateProductRequest request) {
 
-        ProductId id = productService.createProduct(request);
+		ProductId id = productRegister.register(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(id);
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).body(id);
+	}
 
-    @PostMapping("/order")
-    public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request, @Login CustomerInfo customerInfo) {
+	@PostMapping("/order")
+	public ResponseEntity<Void> orderProducts(@RequestBody OrderProductRequests request, @Login CustomerInfo customerInfo) {
 
-        log.info("orderProductRequests {}", request);
-        productService.orderProduct(customerInfo.id(), request.orderId(), request.orderProductRequests());
+		log.info("orderProductRequests {}", request);
+		productService.orderProduct(customerInfo.id(), request);
 
-        return ResponseEntity.ok().build();
-    }
+		return ResponseEntity.ok().build();
+	}
 
 }

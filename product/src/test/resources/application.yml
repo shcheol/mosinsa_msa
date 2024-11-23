@@ -43,7 +43,7 @@ spring:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
   #  thymeleaf:
   #    prefix: classpath:/templates/
-  #    suffix: .html
+  #    suffix: .html:
   data:
     redis:
       port: 6666
@@ -60,8 +60,9 @@ mosinsa:
     order:
       create: mosinsa-order-create
       cancel: mosinsa-order-cancel
-      commit: mosinsa-order-commit
-      rollback: mosinsa-order-rollback
+    reaction:
+      react: mosinsa-reaction-react
+      cancel: mosinsa-reaction-cancel
 
 
 token:

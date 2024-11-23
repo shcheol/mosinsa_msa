@@ -1,6 +1,6 @@
 package com.mosinsa.product.command.application;
 
-import com.mosinsa.category.CategoryService;
+import com.mosinsa.category.application.CategoryService;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 

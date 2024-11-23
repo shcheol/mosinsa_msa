@@ -1,4 +1,6 @@
 package com.mosinsa.product.ui.request;
 
-public record SearchCondition(String categoryId) {
+import com.mosinsa.product.command.domain.SalesPolicyType;
+
+public record SearchCondition(String categoryId, SalesPolicyType sales) {
 }

@@ -20,8 +20,8 @@ class RequestHeaderExtractorTest {
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockHttpServletRequest);
         RequestContextHolder.setRequestAttributes(servletRequestAttributes);
-        Map<String, Collection<String>> extract = RequestHeaderExtractor.extract();
-        Assertions.assertThat(extract).isEmpty();
+		HttpHeaders extract = RequestHeaderExtractor.extract();
+		Assertions.assertThat(extract).isEmpty();
     }
 
     @Test
@@ -33,9 +33,9 @@ class RequestHeaderExtractorTest {
         ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockHttpServletRequest);
         RequestContextHolder.setRequestAttributes(servletRequestAttributes);
 
-        Map<String, Collection<String>> extract = RequestHeaderExtractor.extract();
+		HttpHeaders extract = RequestHeaderExtractor.extract();
 
-        Assertions.assertThat(extract).containsEntry(HttpHeaders.AUTHORIZATION, List.of("bearer token"))
+		Assertions.assertThat(extract).containsEntry(HttpHeaders.AUTHORIZATION, List.of("bearer token"))
                 .containsEntry(HeaderConst.REFRESH_TOKEN.key(), List.of("refresh token"))
                 .containsEntry(HeaderConst.CUSTOMER_INFO.key(), List.of("customer info"));
     }

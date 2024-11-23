@@ -2,7 +2,7 @@
   <div class="vl-parent" ref="loadingRef">
     <h3>상품 리뷰 ({{ reviewsNumberOfElements }})</h3>
 
-    <div class="comment-list" >
+    <div class="comment-list">
       <ul>
         <li v-for="(review) in reviews" :key="review">
           <div>
@@ -60,19 +60,12 @@ import apiBoard from "@/api/board";
 import dayjs from "dayjs";
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-import {ref} from 'vue'
 
 
 export default {
   name: "Reviews",
   props: {
     propsValue: String
-  },
-  setup() {
-    const loadingRef = ref(null)
-    return {
-      loadingRef,
-    }
   },
   data() {
     return {
@@ -99,32 +92,11 @@ export default {
       console.log(event);
       this.disconnect()
     });
-    console.log("mounted " + this.loadingRef);
-
-    this.showLoadingOverlay();
-
   },
   beforeUnmount() {
     this.disconnect();
   },
   methods: {
-    showLoadingOverlay() {
-      console.log(this.$refs.loadingRef);
-      let loadingInterval = setInterval(function () {
-        if (this.$refs.loadingRef) {
-          this.commentLoader = this.$loading.show({
-            container: this.$refs.loadingRef,
-            width: 64,
-            height: 64,
-            loader: "spinner",
-            canCancel: true,
-            lockScroll: true,
-          }, {});
-          clearInterval(loadingInterval);
-        }
-      }.bind(this), 1000);
-
-    },
     connect() {
       const serverURL = "/websocket-service/register"
       let socket = new SockJS(serverURL);
@@ -135,25 +107,12 @@ export default {
           {},
           frame => {
             console.log('connect success', frame);
-            try {
-
-              let connectInterval = setInterval(function () {
-                console.log("timeout")
-                if (this.stompClient.connected) {
-                  this.stompClient.subscribe(`/topic/${this.productId}`, response => {
-                    console.log('subscribe message: ', response.body);
-                    const message = JSON.parse(response.body);
-                    console.log(message)
-                    this.processSubscribedMessage(message);
-                  });
-                  clearInterval(connectInterval);
-                }
-              }.bind(this), 1000);
-            } catch (e) {
-              console.log(e);
-            } finally {
-              this.commentLoader.hide();
-            }
+              this.stompClient.subscribe(`/topic/${this.productId}`, response => {
+                console.log('subscribe message: ', response.body);
+                const message = JSON.parse(response.body);
+                console.log(message)
+                this.processSubscribedMessage(message);
+              });
           },
           error => {
             console.log('socket connect fail', error);
@@ -162,18 +121,18 @@ export default {
 
     },
     processSubscribedMessage(message) {
-      if (message.type === "REVIEW") {
-        if (message.likesType === "LIKES") {
+      if (message.target=== "REVIEW") {
+        if (message.reactionType === "LIKES") {
           if (message.canceled) {
-            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+            this.reviewLikesReactionInfoMap.get(message.targetId).reactionCnt -= 1;
           } else {
-            this.reviewLikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+            this.reviewLikesReactionInfoMap.get(message.targetId).reactionCnt += 1;
           }
         } else {
           if (message.canceled) {
-            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt -= 1;
+            this.reviewDislikesReactionInfoMap.get(message.targetId).reactionCnt -= 1;
           } else {
-            this.reviewDislikesReactionInfoMap.get(message.reviewId).reactionCnt += 1;
+            this.reviewDislikesReactionInfoMap.get(message.targetId).reactionCnt += 1;
           }
         }
       }

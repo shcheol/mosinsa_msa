@@ -19,7 +19,7 @@ class ViewReviewControllerTest extends ControllerTest {
 	void productReviews() throws Exception {
 		mockMvc.perform(get("/reviews"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value("2"))
+				.andExpect(jsonPath("totalElements").value("2"))
 				.andDo(print());
 	}
 
@@ -27,7 +27,7 @@ class ViewReviewControllerTest extends ControllerTest {
 	void reviewComments() throws Exception {
 		mockMvc.perform(get("/reviews/reviewId/comments"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("size").value("2"))
+				.andExpect(jsonPath("totalElements").value("2"))
 				.andDo(print());
 	}
 }

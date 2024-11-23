@@ -1,6 +1,6 @@
 package com.mosinsa.reaction.command.domain;
 
-import com.mosinsa.review.command.domain.BooleanConverter;
+import com.mosinsa.common.model.BooleanConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.EntityListeners;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-public class BaseEntity {
+public abstract class BaseEntity {
 
 	@CreatedDate
 	@Column(updatable = false)

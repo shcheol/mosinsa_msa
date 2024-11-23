@@ -1,7 +1,7 @@
 package com.mosinsa;
 
-import com.mosinsa.category.CategoryController;
-import com.mosinsa.category.CategoryObjectFactory;
+import com.mosinsa.category.ui.CategoryController;
+import com.mosinsa.category.application.CategoryObjectFactory;
 import com.mosinsa.code.TestController;
 import com.mosinsa.product.ui.ProductController;
 import com.mosinsa.product.ui.ProductPresentationObjectFactory;

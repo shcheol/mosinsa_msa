@@ -1,8 +1,7 @@
 package com.mosinsa.order.command.domain;
 
-import com.mosinsa.order.InMemoryJpaTest;
+import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.order.code.TestClass;
-import com.mosinsa.order.command.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,15 +35,14 @@ class OrderRepositoryTest extends InMemoryJpaTest {
 
 		Order order = Order.create(OrderId.newId(),
 				"customerId",
-				List.of(OrderProduct.of("productId", 1000, 10)),
+				10000,
 				shippingInfo,
-				10000);
+				List.of(OrderProduct.of("productId", "",1000, 10, 10000)));
 		Order saveOrder = repository.save(order);
 
 		Order findOrder = repository.findById(saveOrder.getId()).get();
 
 		assertThat(findOrder).isEqualTo(saveOrder);
-		assertThat(findOrder.getOrderCoupon().getCouponId()).isEmpty();
 		assertThat(findOrder.getOrderProducts()).hasSize(1);
 		assertThat(findOrder.getOrderProducts().get(0).getId()).isNotNull();
 		assertThat(findOrder.getOrderProducts().get(0).getPrice().getValue()).isEqualTo(1000);

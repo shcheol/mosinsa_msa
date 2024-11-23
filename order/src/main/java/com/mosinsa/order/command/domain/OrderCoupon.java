@@ -5,21 +5,27 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class OrderCoupon extends IdBaseEntity {
+public class OrderCoupon extends BaseIdEntity {
 
 	private String couponId;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
-	private Order order;
+	@Enumerated(EnumType.STRING)
+	private DiscountPolicy discountPolicy;
 
-	public static OrderCoupon of(String couponId, Order order){
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_product_id")
+	private OrderProduct orderProduct;
+
+	public static OrderCoupon of(String couponId, DiscountPolicy discountPolicy) {
 		OrderCoupon orderCoupon = new OrderCoupon();
 		orderCoupon.couponId = couponId;
-		orderCoupon.order = order;
+		orderCoupon.discountPolicy = discountPolicy;
 		return orderCoupon;
 	}
 
+	protected void setOrderProduct(OrderProduct orderProduct){
+		this.orderProduct = orderProduct;
+	}
 	@Override
 	public int hashCode() {
 		return super.hashCode();

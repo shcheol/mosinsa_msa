@@ -7,10 +7,7 @@ spring:
     import: "optional:configserver:http://127.0.0.1:8888/"
   kafka:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
-  data:
-    redis:
-      port: 6666
-      host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+
 management:
   endpoints:
     web:
@@ -20,3 +17,7 @@ management:
     metrics:
       export:
         enabled: true
+
+redis:
+  host: ENC(rXYNXe7i41arx3JPRfmyB/obFH7gRdNL)
+  port: 6666

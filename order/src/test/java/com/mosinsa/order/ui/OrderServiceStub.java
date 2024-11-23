@@ -1,35 +1,30 @@
 package com.mosinsa.order.ui;
 
 import com.mosinsa.order.command.application.OrderService;
-import com.mosinsa.order.command.application.dto.OrderConfirmDto;
-import com.mosinsa.order.command.domain.*;
+import com.mosinsa.order.command.application.dto.CancelOrderInfo;
+import com.mosinsa.order.command.application.dto.OrderInfo;
 import com.mosinsa.order.infra.api.ExternalServerException;
 import com.mosinsa.order.query.application.dto.OrderDetail;
-
-import java.util.List;
+import org.springframework.http.HttpStatusCode;
 
 public class OrderServiceStub implements OrderService {
+
+
 	@Override
-	public OrderDetail order(OrderConfirmDto orderConfirmDto) {
-		ShippingInfo of = ShippingInfo.of(Address.of("", "", ""), Receiver.of("", ""), "");
-		Order order = Order.create(OrderId.of("orderId"), "customer", List.of(OrderProduct.of("b", 100, 2)), of, 10000);
-		order.useCoupon("q");
-		return new OrderDetail(order);
+	public OrderDetail order(OrderInfo orderInfo) {
+		return OrderDtoGenerator.orderDetailForTest();
 	}
 
 	@Override
-	public OrderDetail cancelOrder(String orderId) {
-		if (orderId.equals("exception")){
+	public OrderDetail cancelOrder(CancelOrderInfo cancelOrderInfo) {
+		if (cancelOrderInfo.orderId().equals("exception")) {
 			throw new RuntimeException();
 		}
 
-		if (orderId.equals("externalServerException")){
-			throw new ExternalServerException(500,"externalServerException");
+		if (cancelOrderInfo.orderId().equals("externalServerException")) {
+			throw new ExternalServerException(HttpStatusCode.valueOf(500), "externalServerException");
 		}
 
-		ShippingInfo of = ShippingInfo.of(Address.of("", "", ""), Receiver.of("", ""), "");
-		Order order = Order.create(OrderId.of("orderId"), "customer", List.of(OrderProduct.of("b", 100, 2)), of, 10000);
-		order.useCoupon("q");
-		return new OrderDetail(order);
+		return OrderDtoGenerator.orderDetailForTest();
 	}
 }

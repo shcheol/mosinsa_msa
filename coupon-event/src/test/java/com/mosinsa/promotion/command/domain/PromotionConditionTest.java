@@ -20,7 +20,7 @@ class PromotionConditionTest extends InMemoryJpaTest {
         PromotionCondition condition2 = repository.findDetailsById(PromotionId.of("promotion1")).get()
                 .getPromotionCondition();
         PromotionCondition protectedConstructor = new PromotionCondition();
-        PromotionCondition other = repository.findById(PromotionId.of("promotion4")).get().getPromotionCondition();
+        PromotionCondition other = repository.findById(PromotionId.of("promotion3")).get().getPromotionCondition();
 
         boolean b = EqualsAndHashcodeUtils.equalsAndHashcode(condition1, condition2, protectedConstructor, other);
         assertThat(b).isTrue();

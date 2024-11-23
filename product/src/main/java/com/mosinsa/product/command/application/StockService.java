@@ -37,7 +37,6 @@ public class StockService implements StockPort {
             historyRepository.saveAll(stockOperands.stream()
                     .map(op -> StockHistory.of(orderId, customerId, op.key(), op.quantity(), StockHistoryType.MINUS))
                     .toList());
-
             return StockResult.SUCCESS;
         }
         operation.increaseAndGet(stockOperands);

@@ -1,21 +1,18 @@
 package com.mosinsa.product.ui;
 
-import com.mosinsa.category.Category;
-import com.mosinsa.common.ex.ProductError;
-import com.mosinsa.common.ex.ProductException;
+import com.mosinsa.product.command.application.ProductRegister;
 import com.mosinsa.product.command.application.ProductService;
-import com.mosinsa.product.command.application.dto.ProductQueryDto;
 import com.mosinsa.product.command.domain.Product;
-import com.mosinsa.product.query.ProductDetailDto;
 import com.mosinsa.product.query.ProductQueryService;
-import com.mosinsa.product.ui.request.CancelOrderProductRequest;
-import com.mosinsa.product.ui.request.CreateProductRequest;
-import com.mosinsa.product.ui.request.OrderProductRequest;
+import com.mosinsa.product.query.dto.BrandDto;
+import com.mosinsa.product.query.dto.ProductDetails;
+import com.mosinsa.product.query.dto.ProductSummary;
 import com.mosinsa.product.ui.request.SearchCondition;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -23,39 +20,42 @@ import java.util.List;
 @TestConfiguration
 public class ProductPresentationObjectFactory {
 
-    @Bean
-    public ProductService productService() {
-        return new ProductServiceStub();
-    }
+	@Bean
+	public ProductService productService() {
+		return new ProductServiceStub();
+	}
 
+	@Bean
+	public ProductRegister productRegister() {
+		return new ProductRegisterStub();
+	}
 
-    @Bean
-    public ProductQueryService productQueryService() {
-        return new ProductQueryService() {
-            @Override
-            public ProductDetailDto getProductById(String productId) {
-                return new ProductDetailDto(Product.create("test", 1000, Category.of("category"), 10),5);
-            }
-
-            @Override
-            public Page<ProductQueryDto> findProductsByCondition(SearchCondition condition, Pageable pageable) {
-                return new PageImpl<>(
-                        List.of(
-                                new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
-                                new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
-                        )
-                );
-            }
+	@Bean
+	public ProductQueryService productQueryService() {
+		return new ProductQueryService() {
+			@Override
+			public ProductDetails getProductById(String productId) {
+				Product test = Product.of("test", 1000, null);
+				BrandDto brandDto = new BrandDto(1L, "bName");
+				return new ProductDetails(test, brandDto, List.of(), null, null);
+			}
 
 			@Override
-			public Page<ProductQueryDto> findMyProducts(String memberId, Pageable pageable) {
+			public Page<ProductSummary> findProductsByCondition(SearchCondition condition, Pageable pageable) {
+				return new PageImpl<>(
+						List.of(new ProductSummary("", "", 1000, null, null),
+								new ProductSummary("", "", 1000, null, null)
+						), PageRequest.of(0, 10), 0);
+			}
+
+			@Override
+			public Page<ProductSummary> findMyProducts(String memberId, Pageable pageable) {
 				return new PageImpl<>(
 						List.of(
-								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10)),
-								new ProductQueryDto(Product.create("test", 1000, Category.of("category"), 10))
-						)
-				);
+								new ProductSummary("", "", 1000, null, null),
+								new ProductSummary("", "", 1000, null, null)
+						), PageRequest.of(0, 10), 0);
 			}
 		};
-    }
+	}
 }

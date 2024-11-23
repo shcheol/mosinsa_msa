@@ -42,11 +42,20 @@ instance.interceptors.request.use(
 
 
 export default {
-    getCategories: function () {
-        return instance.get(BASE_URL + 'product-service/category')
+    getCategories: function (id) {
+        if (!id) {
+            return instance.get(BASE_URL + 'product-service/category')
+        }
+        return instance.get(BASE_URL + `product-service/category/${id}`)
     },
-    getProducts: function () {
-        return instance.get(BASE_URL + 'product-service/products')
+    getProducts: function (page,categoryId) {
+        if (!categoryId){
+            return instance.get(BASE_URL + `product-service/products?page=${page}`)
+        }
+        return instance.get(BASE_URL + `product-service/products?page=${page}&categoryId=${categoryId}`)
+    },
+    getSaleProducts: function (page,sales) {
+        return instance.get(BASE_URL + `product-service/products?page=${page}&sales=${sales}`)
     },
     getProductReviews: function (productId) {
         return instance.get(BASE_URL + 'product-service/reviews?productId=' + productId)
@@ -103,11 +112,8 @@ export default {
                 }
             })
     },
-    getProductsInCategory: function (categoryId) {
-        return instance.get(BASE_URL + 'product-service/products?categoryId=' + categoryId)
-    },
     getLikesProducts: function () {
-        return instance.get(BASE_URL + `product-service/products/my`)
+        return instance.get(BASE_URL + `product-service/products/likes`)
     },
     getProductDetails: function (id) {
         return instance.get(BASE_URL + 'product-service/products/' + id)
@@ -129,10 +135,9 @@ export default {
             "reactionType": reactionType,
         })
     },
-    postOrderConfirm: function (myOrderProducts, couponId, shippingInfo) {
+    postOrderConfirm: function (myOrderProducts, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/orderConfirm', {
                 "myOrderProducts": myOrderProducts,
-                "couponId": couponId,
                 "shippingInfo": shippingInfo,
             },
             {
@@ -142,9 +147,10 @@ export default {
                 }
             })
     },
-    postOrders: function (orderConfirm) {
+    postOrders: function (myOrderProducts, shippingInfo) {
         return instance.post(BASE_URL + 'order-service/orders/order', {
-                "orderConfirm": orderConfirm
+                "myOrderProducts": myOrderProducts,
+                "shippingInfo": shippingInfo,
             },
             {
                 headers: {
@@ -171,13 +177,13 @@ export default {
         return instance.get(BASE_URL + 'order-service/orders/' + id)
     },
     getCoupons: function () {
-        return instance.get(BASE_URL + `coupon-service/coupons/my`)
+        return instance.get(BASE_URL + `coupon-service/coupons`)
     },
     getCouponDetails: function (id) {
         return instance.get(BASE_URL + 'coupon-service/coupons/' + id)
     },
-    getPromotions: function (page) {
-        return instance.get(BASE_URL + `coupon-service/promotions?page=${page}`)
+    getPromotions: function () {
+        return instance.get(BASE_URL + `coupon-service/promotions`)
     },
     joinPromotions: function (promotionId, quests) {
         return instance.post(BASE_URL + `coupon-service/promotions/${promotionId}`,

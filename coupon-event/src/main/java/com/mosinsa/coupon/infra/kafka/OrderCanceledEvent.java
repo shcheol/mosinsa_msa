@@ -1,11 +1,19 @@
 package com.mosinsa.coupon.infra.kafka;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mosinsa.common.argumentresolver.CustomerInfo;
+import com.mosinsa.coupon.command.domain.DiscountPolicy;
+
 import java.util.List;
 
-public record OrderCanceledEvent(String orderId, String customerId, String couponId, List<OrderedProduct> orderProducts) {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record OrderCanceledEvent(String id, CustomerInfo customerInfo, List<OrderProductInfo> orderProducts) {
 
-	record OrderedProduct(String productId, int price, int quantity, int amounts){
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public record OrderProductInfo(String id, List<CouponDto> coupons) {
+		public record CouponDto(String id, DiscountPolicy discountPolicy) {
 
+		}
 	}
 }

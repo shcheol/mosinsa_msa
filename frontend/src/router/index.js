@@ -10,15 +10,18 @@ const routes = [
         component: HomeView
     },
     {
+        path: '/category/:id',
+        name: 'categoryProducts',
+        component: () => import('../views/CategoryProduct.vue'),
+        props: true,
+        meta: {
+            reload: true,
+        }
+    },
+    {
         path: '/products/:id',
         name: 'productDetails',
         component: () => import('../views/ProductDetail.vue'),
-        props: true
-    },
-    {
-        path: '/orderConfirm',
-        name: 'orderConfirm',
-        component: () => import('../views/OrderConfirmPage.vue'),
         props: true
     },
     {

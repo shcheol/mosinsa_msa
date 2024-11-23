@@ -13,7 +13,7 @@ public interface QuestRepository extends Repository<Quest, Long> {
 
 	Optional<Quest> findById(Long id);
 
-	@Query(value = "select q from Quest q where q.promotionConditionOption.optionName = :conditionOption")
-	List<Quest> findByConditionOption(@Param("conditionOption") ConditionOption conditionOption);
+	@Query(value = "select q from Quest q join fetch q.promotion where q.promotionConditionOption.optionName = :conditionOption and q.promotion.id = :id")
+	List<Quest> findByConditionOption(@Param("id") PromotionId id,@Param("conditionOption") ConditionOption conditionOption);
 
 }

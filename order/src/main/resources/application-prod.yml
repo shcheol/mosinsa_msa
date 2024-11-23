@@ -28,18 +28,6 @@ spring:
         format_sql: true
   kafka:
     bootstrap-servers: ENC(gXzmjPYMF978IUqq/a1TfTyzeA2fnmqHQR7gWiFYeA7W1N+03uTJZgWK+5ZOZXFrScFDsazkU8SAr9cWwb3JxSxJjcMBPvtC)
-  cloud:
-    openfeign:
-#      circuitbreaker:
-#        enabled: true
-#        alphanumeric-ids:
-#          enabled: true
-      client:
-        config:
-          default:
-            connectTimeout: 1000
-            readTimeout: 3000
-            loggerLevel: basic
   data:
     redis:
       port: 6666
@@ -61,7 +49,6 @@ resilience4j.timelimiter:
     default:
       timeoutDuration: 5s
       cancelRunningFuture: true
-
 
 logging:
   level:

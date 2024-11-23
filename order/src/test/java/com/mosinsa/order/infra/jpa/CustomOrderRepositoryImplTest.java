@@ -1,6 +1,6 @@
 package com.mosinsa.order.infra.jpa;
 
-import com.mosinsa.order.InMemoryJpaTest;
+import com.mosinsa.InMemoryJpaTest;
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderId;
 import com.mosinsa.order.command.domain.OrderRepository;
@@ -8,10 +8,8 @@ import com.mosinsa.order.command.domain.OrderStatus;
 import com.mosinsa.order.ui.request.SearchCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 

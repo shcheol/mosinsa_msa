@@ -7,8 +7,8 @@
         <tbody>
         <tr>
           <td>주문번호</td>
-          <td v-if="order!=null">{{ order.orderId }}</td>
-          <button v-if="order!=null" @click="orderDetails(order.orderId)">주문상세</button>
+          <td v-if="order!=null">{{ order.id }}</td>
+          <button v-if="order!=null" @click="orderDetails(order.id)">주문상세</button>
         </tr>
         <tr>
           <td>결제금액</td>

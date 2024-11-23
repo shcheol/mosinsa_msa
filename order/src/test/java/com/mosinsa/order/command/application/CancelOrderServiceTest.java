@@ -2,8 +2,8 @@ package com.mosinsa.order.command.application;
 
 import com.mosinsa.order.command.domain.Order;
 import com.mosinsa.order.command.domain.OrderStatus;
-import com.mosinsa.order.common.ex.OrderException;
-import com.mosinsa.order.ApplicationTest;
+import com.mosinsa.common.ex.OrderException;
+import com.mosinsa.ApplicationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
