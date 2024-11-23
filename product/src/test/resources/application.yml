@@ -60,8 +60,9 @@ mosinsa:
     order:
       create: mosinsa-order-create
       cancel: mosinsa-order-cancel
-      commit: mosinsa-order-commit
-      rollback: mosinsa-order-rollback
+    reaction:
+      react: mosinsa-reaction-react
+      cancel: mosinsa-reaction-cancel
 
 
 token:

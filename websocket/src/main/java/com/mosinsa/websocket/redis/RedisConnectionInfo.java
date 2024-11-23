@@ -1,14 +1,10 @@
 package com.mosinsa.websocket.redis;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-@Getter
-@Setter
 @ConfigurationProperties(prefix = "redis")
-public class RedisConnectionInfo {
+public record RedisConnectionInfo(@DefaultValue("127.0.0.1") String host,
+								  @DefaultValue("6379") int port) {
 
-		private String host ="127.0.0.1";
-		private int port = 6379;
 }

@@ -16,7 +16,7 @@ public class MessageSubscriber implements MessageListener {
 
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
-		log.info("subscribe");
+		log.info("onMessage {}, {}",message.toString(), new String(pattern));
 		template.convertAndSend("/topic/" + new String(pattern), message.toString());
 	}
 }

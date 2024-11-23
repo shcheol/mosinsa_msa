@@ -1,4 +1,4 @@
-package com.mosinsa.websocket.redis;
+package com.mosinsa.websocket.kafka;
 
 public enum DomainType {
     REVIEW, COMMENT

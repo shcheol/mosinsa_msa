@@ -131,16 +131,6 @@ export default {
     this.disconnect();
   },
   methods: {
-    showLoadingOverlay() {
-      this.loader = this.$loading.show({
-        container: null,
-        width: 100,
-        height: 100,
-        loader: "bars",
-        canCancel: false,
-      });
-
-    },
     connect() {
       const serverURL = "/websocket-service/register"
       let socket = new SockJS(serverURL);
@@ -150,16 +140,12 @@ export default {
           {},
           frame => {
             console.log('connect success', frame);
-            try {
-                  this.stompClient.subscribe(`/topic/${this.review.reviewId}`, response => {
-                    console.log('구독으로 받은 메시지 입니다.', response.body);
-                    const message = JSON.parse(response.body);
-                    console.log(message)
-                    this.processSubscribedMessage(message);
-                  });
-            } finally {
-              this.loader.hide();
-            }
+            this.stompClient.subscribe(`/topic/${this.review.reviewId}`, response => {
+              console.log('구독으로 받은 메시지 입니다.', response.body);
+              const message = JSON.parse(response.body);
+              console.log(message)
+              this.processSubscribedMessage(message);
+            });
           },
           error => {
             console.log('socket connect fail', error);
@@ -167,11 +153,11 @@ export default {
       );
     },
     processSubscribedMessage(message) {
-      if (message.type === "COMMENT") {
+      if (message.target === "COMMENT") {
         this.comments
-            .filter(comment => comment.commentId === message.commentId)
+            .filter(comment => comment.commentId === message.targetId)
             .map(findComment => {
-              if (message.likesType === "LIKES") {
+              if (message.reactionType === "LIKES") {
                 if (message.canceled) {
                   this.commentLikesReactionInfoMap.get(findComment.commentId).reactionCnt -= 1;
                 } else {
